@@ -10,8 +10,8 @@ public class Monopoly {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();
-		final int WINDOW_HEIGHT = 1000;
-		final int WINDOW_WIDTH = 800;
+		final int WINDOW_HEIGHT = 700;
+		final int WINDOW_WIDTH = 1000;
 		final String mainTitle = "Monopoly";
 		
 		mainFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
