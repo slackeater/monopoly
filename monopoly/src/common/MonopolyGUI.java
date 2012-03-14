@@ -5,6 +5,7 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -41,11 +42,14 @@ public class MonopolyGUI extends JFrame {
 	 * @return the left jpanel
 	 */
 	private JPanel leftPanel(){
-		JPanel left = new JPanel();
-		left.setBorder(BorderFactory.createEtchedBorder());
-		left.add(new JLabel("property view property view property view"));
-
-		JPanel property = new JPanel();
+		JPanel left = new JPanel(new GridLayout(2,1));
+		//left.setBorder(BorderFactory.createEtchedBorder());
+		JPanel info = new JPanel();
+		info.setBorder(BorderFactory.createEtchedBorder());
+		info.add(new JLabel("kdhgdslhgdlhgdlhfgldhgd"));
+		
+		left.add(info);
+		left.add(bottomPanel());
 
 		return left;
 	}
@@ -56,27 +60,12 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JPanel rightContainer(){
 		JPanel right = new JPanel(new BorderLayout());
-		right.setBorder(BorderFactory.createEtchedBorder());
-		right.add(topPanel(), BorderLayout.CENTER);
-
-		right.add(bottomPanel(), BorderLayout.SOUTH);
-
+		right.add(drawBoard(), BorderLayout.CENTER);
 		return right;
 	}
 
 	/**
-	 * The top container inside the right container
-	 * @return the top panel
-	 */
-	private JPanel topPanel(){
-		JPanel bottom = new JPanel();
-		bottom.setBorder(BorderFactory.createEtchedBorder());
-		bottom.add(drawBoard());
-		return bottom;	
-	}
-
-	/**
-	 * The bottom container inside the right container
+	 * The bottom container inside the left container
 	 * @return the bottom panel
 	 */
 	private JPanel bottomPanel(){
@@ -91,19 +80,16 @@ public class MonopolyGUI extends JFrame {
 	 * @return
 	 */
 	private JPanel buttonsPanel(){
-		JPanel buttons = new JPanel();
-		JButton buy = new JButton();
-		buy.setText("Buy");
-		JButton sell = new JButton();
-		sell.setText("Sell");
-		JButton mortgage = new JButton();
-		mortgage.setText("Mortgage");
-		JButton unmortgage = new JButton();
-		unmortgage.setText("Unmortgage");
-		JButton throwDice = new JButton();
-		throwDice.setText("Throw Dice");
-		JButton endTurn = new JButton();
-		endTurn.setText("End Turn");
+		JPanel buttons = new JPanel(new GridLayout(0,2,2,2));
+
+		JButton buy = new JButton("Buy");
+		JButton sell = new JButton("Sell");
+		JButton mortgage = new JButton("Mortgage");
+		JButton unmortgage = new JButton("Unmortgage");
+		JButton throwDice = new JButton("Throw dice");
+		JButton endTurn = new JButton("End turn");
+		JButton pauseGame = new JButton("Pause");
+		JButton quitGame = new JButton("Quit");
 
 		buttons.add(buy);
 		buttons.add(sell);
@@ -111,6 +97,8 @@ public class MonopolyGUI extends JFrame {
 		buttons.add(unmortgage);
 		buttons.add(throwDice);
 		buttons.add(endTurn);
+		buttons.add(pauseGame);
+		buttons.add(quitGame);
 
 		return buttons;
 	}
@@ -130,9 +118,7 @@ public class MonopolyGUI extends JFrame {
 
 		for(j = 0 ; j < 11 ; j++){
 			for(i = 0 ; i < 11 ; i++){
-				if(j==0 || j==10) 
-					monopolyTiles[j][i] = new JPanel();
-				else if(i==0 || i==10)
+				if(j==0 || j==10 || i == 0 || i == 10) 
 					monopolyTiles[j][i] = new JPanel();
 				else
 					monopolyTiles[j][i] = new JPanel();
@@ -141,16 +127,12 @@ public class MonopolyGUI extends JFrame {
 
 		for(j = 0 ; j < 11 ; j++){
 			for(i = 0 ; i < 11 ; i++){
-				if(j == 0 || j == 10){
-					monopolyTiles[j][i].setPreferredSize(new Dimension(60,60));
+				if(j == 0 || j == 10 || i == 0 || i == 10){
 					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					monopolyTiles[j][i].add(new JLabel("C: "+j+", "+i));
-					board.add(monopolyTiles[j][i]);
-				}
-				else if(i == 0 || i == 10){
-					monopolyTiles[j][i].setPreferredSize(new Dimension(60,60));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					monopolyTiles[j][i].add(new JLabel("C: "+j+", "+i));
+					JLabel name = new JLabel("<html>Meditterrean<br>avenue</html>");
+					Font myFont = new Font(name.getFont().getFontName(), name.getFont().getStyle(),10);
+					name.setFont(myFont);
+					monopolyTiles[j][i].add(name);
 					board.add(monopolyTiles[j][i]);
 				}
 				else{
