@@ -21,9 +21,11 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
@@ -36,7 +38,6 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public MonopolyGUI(){
-
 		JPanel main = new JPanel(new BorderLayout());
 		main.add(leftPanel(), BorderLayout.WEST);
 		main.add(rightContainer(), BorderLayout.CENTER);
@@ -61,12 +62,20 @@ public class MonopolyGUI extends JFrame {
 		return left;
 	}
 
+	/**
+	 * Draw the info panel
+	 * @return JPanel with the information
+	 */
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
 		info.add(new JLabel("Player 1: 100000$"));
 		return info;
 	}
 
+	/**
+	 * Draw the tabbed panel for the card
+	 * @return JTabbedPane 
+	 */
 	private JTabbedPane cardPanel(){
 		JTabbedPane card = new JTabbedPane();
 		JPanel tab1 = new JPanel();
@@ -78,15 +87,50 @@ public class MonopolyGUI extends JFrame {
 		return card;
 	}
 
+	/**
+	 * Draw the tabbed panel for the chat and history
+	 * @return JTabbedPane
+	 */
 	private JTabbedPane historyChatPanel(){
 		JTabbedPane pane = new JTabbedPane();
+		
 		pane.setBorder(BorderFactory.createEtchedBorder());
 		pane.setSize(new Dimension(100,100));
-		TextArea history = new TextArea(5,25);
+		JTextArea history = new JTextArea(5,25);
+		history.setWrapStyleWord(true);
+		history.setLineWrap(true);
+		history.setEditable(false);
+		
 		JScrollPane scroll = new JScrollPane(history);
-		TextArea chat = new TextArea(5,25);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		
+		
+		JTextArea chat = new JTextArea(5,25);
+		chat.setWrapStyleWord(true);
+		chat.setLineWrap(true);
+		chat.setEditable(false);
+		
 		JScrollPane scrollChat = new JScrollPane(chat);
-		pane.addTab("Chat", scrollChat);
+		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		//button for sending the message
+		JTextField input = new JTextField();
+		JButton send = new JButton("Send");
+		send.setSize(30, 10);
+		
+		JPanel chatArea = new JPanel();
+		chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.PAGE_AXIS));
+		chatArea.add(scrollChat);
+		
+		JPanel inputContainer = new JPanel(new GridLayout(1,2));
+		inputContainer.add(input);
+		inputContainer.add(send);
+		
+		chatArea.add(inputContainer);
+		
+		pane.addTab("Chat", chatArea);
 		pane.addTab("History", scroll);
 		return pane;
 	}
