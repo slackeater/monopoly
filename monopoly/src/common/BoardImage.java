@@ -31,6 +31,6 @@ public class BoardImage extends JPanel{
 	
 	@Override 
 	public void paintComponent(Graphics g){
-		g.drawImage(img, 100, 0, 750, 749, null);
+		g.drawImage(img, 0, 0, 750, 749, null);
 	}
 }
