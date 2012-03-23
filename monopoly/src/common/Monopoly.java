@@ -10,9 +10,10 @@ public class Monopoly {
 	 * Testing setup from the Mac, please excuse the garbage pushes
 	 */
 	public static void main(String[] args) {
+		
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();
-		final int WINDOW_HEIGHT = 700;
+		final int WINDOW_HEIGHT = 780;
 		final int WINDOW_WIDTH = 1000;
 		final String mainTitle = "Monopoly";
 		
