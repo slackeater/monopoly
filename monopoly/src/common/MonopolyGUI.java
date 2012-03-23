@@ -8,10 +8,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.InputStream;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +34,8 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(){
 		JPanel main = new JPanel(new BorderLayout());
 		main.add(leftPanel(), BorderLayout.WEST);
-		main.add(rightContainer(), BorderLayout.CENTER);
+		main.add(drawBoard(), BorderLayout.CENTER);
+		main.add(rightPanel(), BorderLayout.EAST);
 		add(main);
 		pack();
 	}
@@ -53,6 +56,37 @@ public class MonopolyGUI extends JFrame {
 		return left;
 	}
 
+	private JPanel rightPanel(){
+		JPanel right = new JPanel();
+		right.setLayout(new BoxLayout(right, BoxLayout.PAGE_AXIS));
+		//right.setLayout(new GridLayout(3,1));
+		right.setBorder(BorderFactory.createEtchedBorder());
+		right.add(new JLabel("Event window"));
+		
+		JTextArea event = new JTextArea(5,20);
+		event.setWrapStyleWord(true);
+		event.setLineWrap(true);
+		event.setEditable(false);
+
+		JScrollPane scroll = new JScrollPane(event);
+		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+		right.add(scroll);
+		
+		JPanel buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons,BoxLayout.LINE_AXIS));
+		JButton accept = new JButton("Accept");
+		JButton deny = new JButton("Deny");
+		
+		buttons.add(accept);
+		buttons.add(deny);
+		
+		right.add(buttons);
+		
+		return right;
+	}
+	
 	/**
 	 * Draw the info panel
 	 * @return JPanel with the information
@@ -126,16 +160,6 @@ public class MonopolyGUI extends JFrame {
 	}
 
 	/**
-	 * The container panel for the right part
-	 * @return the right container jpanel
-	 */
-	private JPanel rightContainer(){
-		JPanel right = new JPanel(new BorderLayout());
-		right.add(drawBoard(), BorderLayout.CENTER);
-		return right;
-	}
-
-	/**
 	 * The bottom container inside the left container
 	 * @return the bottom panel
 	 */
@@ -174,9 +198,13 @@ public class MonopolyGUI extends JFrame {
 	 * Draw the board
 	 * @return
 	 */
-	private JPanel drawBoard(){
-		JPanel board = new BoardImage();
-		return board;
+	private JScrollPane drawBoard(){
+		ImageIcon ii = new ImageIcon(getClass().getResource("/resources/monopoly.png"));
+	    JScrollPane jsp = new JScrollPane(new JLabel(ii));
+	    jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		//JPanel board = new BoardImage();
+		return jsp;
 	}
 
 }

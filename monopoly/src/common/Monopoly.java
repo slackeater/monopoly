@@ -1,5 +1,8 @@
 package common;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.JFrame;
 
 public class Monopoly {
@@ -13,11 +16,10 @@ public class Monopoly {
 		
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();
-		final int WINDOW_HEIGHT = 765;
-		final int WINDOW_WIDTH = 1000;
 		final String mainTitle = "Monopoly";
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		mainFrame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight());
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
