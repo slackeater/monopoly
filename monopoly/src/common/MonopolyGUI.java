@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -32,11 +33,10 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	public MonopolyGUI(){
-		JPanel main = new JPanel(new BorderLayout());
-		main.add(leftPanel(), BorderLayout.WEST);
-		main.add(drawBoard(), BorderLayout.CENTER);
-		main.add(rightPanel(), BorderLayout.EAST);
-		add(main);
+		JSplitPane splitOne = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel(), drawBoard());
+		JSplitPane splitTwo = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitOne, rightPanel());
+		
+		add(splitTwo);
 		pack();
 	}
 
