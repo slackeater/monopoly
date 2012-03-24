@@ -1,9 +1,12 @@
 package common;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
+
+import org.omg.CosNaming.IstringHelper;
 
 public class Monopoly {
 
@@ -22,7 +25,21 @@ public class Monopoly {
 		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight());
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setVisible(true);
+		//mainFrame.setVisible(true);
+		Network communicate = new Network();
+		
+		System.out.println("Starting the server...");
+		communicate.startServer("192.168.1.2", 1234, 2);
+		
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Stopping the server...");
+		communicate.stopServer();
 	}
 
 }

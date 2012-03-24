@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -36,7 +37,7 @@ public class MonopolyGUI extends JFrame {
 		add(splitTwo);
 		pack();
 
-		System.out.println(lab.getX() + " " + lab.getY());
+		//System.out.println(lab.getX() + " " + lab.getY());
 	}
 
 	/**
