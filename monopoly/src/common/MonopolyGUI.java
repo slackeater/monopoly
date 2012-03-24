@@ -1,7 +1,12 @@
 package common;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -18,7 +23,7 @@ import javax.swing.JTextField;
 
 public class MonopolyGUI extends JFrame {
 
-
+	private JLabel lab;
 	/**
 	 * 
 	 */
@@ -30,6 +35,8 @@ public class MonopolyGUI extends JFrame {
 		
 		add(splitTwo);
 		pack();
+
+		System.out.println(lab.getX() + " " + lab.getY());
 	}
 
 	/**
@@ -192,10 +199,13 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JScrollPane drawBoard(){
 		ImageIcon ii = new ImageIcon(getClass().getResource("/resources/monopoly.png"));
-	    JScrollPane jsp = new JScrollPane(new JLabel(ii));
+		this.lab = new JLabel(ii);
+		
+		//JPanel board = new BoardImage();
+	    JScrollPane jsp = new JScrollPane(lab);
+	    
 	    jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		//JPanel board = new BoardImage();
 		return jsp;
 	}
 
