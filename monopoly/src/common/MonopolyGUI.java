@@ -1,13 +1,13 @@
 package common;
 
-import java.awt.Component;
-import java.awt.Container;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -15,29 +15,29 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.text.LayeredHighlighter;
 
-public class MonopolyGUI extends JFrame {
+public class MonopolyGUI extends JFrame{
 
-	private JLabel lab;
-	/**
-	 * 
-	 */
+	private BoardImage j;
+	private JLayeredPane pane;
 	private static final long serialVersionUID = 1L;
+	int ctr = 20;
+	int count = 3;
 
 	public MonopolyGUI(){
 		JSplitPane splitOne = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel(), drawBoard());
-		JSplitPane splitTwo = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitOne, rightPanel());
+		//JSplitPane splitTwo = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitOne, rightPanel());
 		
-		add(splitTwo);
+		add(splitOne);
 		pack();
-
-		//System.out.println(lab.getX() + " " + lab.getY());
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class MonopolyGUI extends JFrame {
 		//right.setLayout(new GridLayout(3,1));
 		right.setBorder(BorderFactory.createEtchedBorder());
 		right.add(new JLabel("Event window"));
-		
+
 		JTextArea event = new JTextArea(5,20);
 		event.setWrapStyleWord(true);
 		event.setLineWrap(true);
@@ -73,20 +73,20 @@ public class MonopolyGUI extends JFrame {
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		right.add(scroll);
-		
+
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons,BoxLayout.LINE_AXIS));
 		JButton accept = new JButton("Accept");
 		JButton deny = new JButton("Deny");
-		
+
 		buttons.add(accept);
 		buttons.add(deny);
-		
+
 		right.add(buttons);
-		
+
 		return right;
 	}
-	
+
 	/**
 	 * Draw the info panel
 	 * @return JPanel with the information
@@ -108,7 +108,6 @@ public class MonopolyGUI extends JFrame {
 		card.addTab("Front", tab1);
 		card.addTab("Rear", tab2);
 		card.setBorder(BorderFactory.createEtchedBorder());
-		card.setSize(new Dimension(100,100));
 		return card;
 	}
 
@@ -184,6 +183,28 @@ public class MonopolyGUI extends JFrame {
 		JButton throwDice = new JButton("Throw dice");
 		JButton endTurn = new JButton("End turn");
 
+		buy.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println();
+				BoardImage b = new BoardImage(300, 323-ctr);
+				b.setBounds(300,323-ctr, 1000, 1000);
+				b.setOpaque(false);
+				pane.remove(pane.getComponentCount()-2);
+				pane.add(b, JLayeredPane.MODAL_LAYER);
+				//pane.repaint();
+				ctr += 22;
+			
+				repaint();
+				System.out.println(pane.getComponentCount());
+				//pane.remove(count);
+				//count++;
+				System.out.println("ciao");
+				
+			}
+		});
+		
 		buttons.add(buy);
 		buttons.add(sell);
 		buttons.add(mortgage);
@@ -198,16 +219,70 @@ public class MonopolyGUI extends JFrame {
 	 * Draw the board
 	 * @return
 	 */
-	private JScrollPane drawBoard(){
-		ImageIcon ii = new ImageIcon(getClass().getResource("/resources/monopoly.png"));
+	private JLayeredPane drawBoard(){
+		/*ImageIcon ii = new ImageIcon(getClass().getResource("/resources/monopoly.png"));
 		this.lab = new JLabel(ii);
-		
+
 		//JPanel board = new BoardImage();
 	    JScrollPane jsp = new JScrollPane(lab);
-	    
+
 	    jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		return jsp;
-	}
+		return jsp;*/
+		pane = new JLayeredPane();
+		GridBagLayout layout = new GridBagLayout();
 
+		JPanel board = new JPanel(layout);
+		JPanel monopolyTiles[][] = new JPanel[11][11];
+
+		for(int j = 0 ; j < 11 ; j++){
+			for(int i = 0 ; i < 11 ; i++){
+				monopolyTiles[j][i] = new JPanel();
+				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
+				//	monopolyTiles[j][i].set
+					monopolyTiles[j][i].add(new JLabel("Corner"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createRaisedBevelBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				else if(j == 1 && i == 1){
+					JPanel main = new JPanel();
+					main.add(new JLabel("hi"));
+					main.setBackground(Color.GREEN);
+					monopolyTiles[j][i].add(main);
+					monopolyTiles[j][i].setBackground(Color.GREEN);
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 9,9, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				else{
+					monopolyTiles[j][i].add(new JLabel("Tile"));
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+			}
+		}
+
+		pane.add(board, JLayeredPane.DEFAULT_LAYER);
+		board.setBounds(0, 0, 900, 700);
+		j = new BoardImage(300, 300);
+		j.setOpaque(false);
+		j.setBounds(300, 300, 1000, 1000);
+		pane.add(j, JLayeredPane.PALETTE_LAYER);
+		
+		
+	/*	JPanel on = new JPanel();
+		on.add(new JLabel("my label"));
+		JPanel onTwo = new JPanel();
+		onTwo.add(new JLabel("my labelfdf"));
+		pane.add(on, JLayeredPane.DEFAULT_LAYER);
+		pane.add(onTwo, JLayeredPane.PALETTE_LAYER);
+		on.setBounds(0, 0, 100, 100);
+		onTwo.setBounds(0, 0, 100, 100);*/
+		
+		
+		return pane;
+
+	}
 }

@@ -22,11 +22,15 @@ public class Monopoly {
 		final String mainTitle = "Monopoly";
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
+		
 		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight());
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//mainFrame.setVisible(true);
-		Network communicate = new Network();
+		mainFrame.setVisible(true);
+		
+		
+	
+		/*	Network communicate = new Network();
 		
 		System.out.println("Starting the server...");
 		communicate.startServer("192.168.1.2", 1234, 2);
@@ -39,7 +43,7 @@ public class Monopoly {
 		}
 		
 		System.out.println("Stopping the server...");
-		communicate.stopServer();
+		communicate.stopServer();*/
 	}
 
 }
