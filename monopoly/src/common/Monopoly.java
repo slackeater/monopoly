@@ -2,9 +2,14 @@ package common;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import org.omg.CosNaming.IstringHelper;
 
@@ -22,13 +27,17 @@ public class Monopoly {
 		final String mainTitle = "Monopoly";
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
+		JPanel glass = (JPanel) mainFrame.getGlassPane();
+		glass.setVisible(true);
+	    glass.setLayout(null);
+	    JButton glassButton = new JButton("Hide");
+	    glassButton.setBounds((int)dim.getWidth(), (int)dim.getHeight()-40, 40, 40);
+	    glass.add(glassButton);
 		
-		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight());
+		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight()-40);
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
-		
-		
 	
 		/*	Network communicate = new Network();
 		

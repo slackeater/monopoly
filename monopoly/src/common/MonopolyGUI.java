@@ -1,5 +1,6 @@
 package common;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -8,38 +9,55 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.text.LayeredHighlighter;
+import javax.swing.border.Border;
 
-public class MonopolyGUI extends JFrame{
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-	private BoardImage j;
-	private JLayeredPane pane;
+public class MonopolyGUI extends JFrame implements ComponentListener{
+
+	private JPanel board;
+	private JPanel monopolyTiles[][];
+	private JTextArea text;
 	private static final long serialVersionUID = 1L;
-	int ctr = 20;
-	int count = 3;
 
 	public MonopolyGUI(){
-		JSplitPane splitOne = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel(), drawBoard());
-		//JSplitPane splitTwo = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitOne, rightPanel());
-		
-		add(splitOne);
+		setLayout(new BorderLayout());
+		add(leftPanel(), BorderLayout.WEST);
+		add(drawBoard(), BorderLayout.CENTER);
+		addComponentListener(this);
 		pack();
 	}
 
+	public void componentHidden(ComponentEvent e) {
+		System.out.println(e.getComponent().getClass().getName() + " --- Hidden");
+	}
+
+	public void componentMoved(ComponentEvent e) {
+		System.out.println(e.getComponent().getClass().getName() + " --- Moved");
+	}
+
+	public void componentResized(ComponentEvent e) {
+		System.out.println(e.getComponent().getClass().getName() + " --- Resized ");            
+	}
+
+	public void componentShown(ComponentEvent e) {
+		System.out.println(e.getComponent().getClass().getName() + " --- Shown");
+
+	}
 	/**
 	 * Panel for the left container
 	 * @return the left jpanel
@@ -54,37 +72,6 @@ public class MonopolyGUI extends JFrame{
 		left.add(infoPanel());
 		left.add(historyChatPanel());
 		return left;
-	}
-
-	private JPanel rightPanel(){
-		JPanel right = new JPanel();
-		right.setLayout(new BoxLayout(right, BoxLayout.PAGE_AXIS));
-		//right.setLayout(new GridLayout(3,1));
-		right.setBorder(BorderFactory.createEtchedBorder());
-		right.add(new JLabel("Event window"));
-
-		JTextArea event = new JTextArea(5,20);
-		event.setWrapStyleWord(true);
-		event.setLineWrap(true);
-		event.setEditable(false);
-
-		JScrollPane scroll = new JScrollPane(event);
-		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-		right.add(scroll);
-
-		JPanel buttons = new JPanel();
-		buttons.setLayout(new BoxLayout(buttons,BoxLayout.LINE_AXIS));
-		JButton accept = new JButton("Accept");
-		JButton deny = new JButton("Deny");
-
-		buttons.add(accept);
-		buttons.add(deny);
-
-		right.add(buttons);
-
-		return right;
 	}
 
 	/**
@@ -127,7 +114,6 @@ public class MonopolyGUI extends JFrame{
 		JScrollPane scroll = new JScrollPane(history);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
 
 		JTextArea chat = new JTextArea(5,20);
 		chat.setWrapStyleWord(true);
@@ -183,24 +169,26 @@ public class MonopolyGUI extends JFrame{
 		JButton throwDice = new JButton("Throw dice");
 		JButton endTurn = new JButton("End turn");
 
-		buy.addActionListener(new ActionListener() {
+		throwDice.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println();
-				BoardImage b = new BoardImage(300, 323-ctr);
-				b.setBounds(300,323-ctr, 1000, 1000);
-				b.setOpaque(false);
-				pane.remove(pane.getComponentCount()-2);
-				pane.add(b, JLayeredPane.MODAL_LAYER);
-				//pane.repaint();
-				ctr += 22;
-			
-				repaint();
-				System.out.println(pane.getComponentCount());
-				//pane.remove(count);
-				//count++;
-				System.out.println("ciao");
+				// TODO Auto-generated method stub
+				text.append("I'm throwing the dice... \n");
+				Random number = new Random();
+				int value = number.nextInt(11);
+				text.append("The results is: " + value + "\n");
+				
+				((Test) monopolyTiles[0][0]).setDraw(8);
+				monopolyTiles[0][0].repaint();
+				
+				for(int j = 1 ; j < value ; j++){
+						((Test) monopolyTiles[j-1][0]).setDraw(0);
+						monopolyTiles[j-1][0].repaint();
+				
+					((Test) monopolyTiles[j][0]).setDraw(8);
+					monopolyTiles[j][0].repaint();
+				}
 				
 			}
 		});
@@ -219,70 +207,82 @@ public class MonopolyGUI extends JFrame{
 	 * Draw the board
 	 * @return
 	 */
-	private JLayeredPane drawBoard(){
-		/*ImageIcon ii = new ImageIcon(getClass().getResource("/resources/monopoly.png"));
-		this.lab = new JLabel(ii);
-
-		//JPanel board = new BoardImage();
-	    JScrollPane jsp = new JScrollPane(lab);
-
-	    jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		return jsp;*/
-		pane = new JLayeredPane();
+	private JPanel drawBoard(){
 		GridBagLayout layout = new GridBagLayout();
 
-		JPanel board = new JPanel(layout);
-		JPanel monopolyTiles[][] = new JPanel[11][11];
+		board = new JPanel(layout);
+		monopolyTiles = new JPanel[11][11];
 
 		for(int j = 0 ; j < 11 ; j++){
 			for(int i = 0 ; i < 11 ; i++){
-				monopolyTiles[j][i] = new JPanel();
+				monopolyTiles[j][i] = new Test();
 				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
 				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
-				//	monopolyTiles[j][i].set
 					monopolyTiles[j][i].add(new JLabel("Corner"));
 					monopolyTiles[j][i].setBorder(BorderFactory.createRaisedBevelBorder());
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
+				else if((j == 2 && i ==2) || (j == 8 && i == 8)){
+					monopolyTiles[j][i].add(new JButton("Card"));
+					monopolyTiles[j][i].setLayout(new GridLayout(1,1));
+					monopolyTiles[j][i].setBorder(null);
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
 				else if(j == 1 && i == 1){
 					JPanel main = new JPanel();
-					main.add(new JLabel("hi"));
+					main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
+					
+					JPanel notify = new JPanel();
+					notify.setLayout(new BoxLayout(notify, BoxLayout.PAGE_AXIS));
+					notify.setBorder(BorderFactory.createEtchedBorder());
+					
+					JButton buy = new JButton("Buy");
+					JButton auction = new JButton("Auction");
+					
+					JPanel btnPanel = new JPanel();
+					btnPanel.add(buy);
+					btnPanel.add(auction);
+					
+					text = new JTextArea(15, 25);
+					text.setWrapStyleWord(true);
+					text.setLineWrap(true);
+					text.setEditable(false);
+					
+					JScrollPane eventPane = new JScrollPane(text);
+					eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					eventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+					
+					JLabel title = new JLabel("Events");
+					title.setAlignmentY(-40);
+					
+					notify.add(title);
+					notify.add(eventPane);
+					notify.add(btnPanel);
+					
+					main.add(notify, BorderLayout.NORTH);
 					main.setBackground(Color.GREEN);
 					monopolyTiles[j][i].add(main);
 					monopolyTiles[j][i].setBackground(Color.GREEN);
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 9,9, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
-				else{
+				else if(j == 0 || i == 0 || j == 10 || i == 10){
 					monopolyTiles[j][i].add(new JLabel("Tile"));
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
+			/*	else{
+					monopolyTiles[j][i].add(new JLabel(""));
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}*/
 			}
 		}
 
-		pane.add(board, JLayeredPane.DEFAULT_LAYER);
-		board.setBounds(0, 0, 900, 700);
-		j = new BoardImage(300, 300);
-		j.setOpaque(false);
-		j.setBounds(300, 300, 1000, 1000);
-		pane.add(j, JLayeredPane.PALETTE_LAYER);
-		
-		
-	/*	JPanel on = new JPanel();
-		on.add(new JLabel("my label"));
-		JPanel onTwo = new JPanel();
-		onTwo.add(new JLabel("my labelfdf"));
-		pane.add(on, JLayeredPane.DEFAULT_LAYER);
-		pane.add(onTwo, JLayeredPane.PALETTE_LAYER);
-		on.setBounds(0, 0, 100, 100);
-		onTwo.setBounds(0, 0, 100, 100);*/
-		
-		
-		return pane;
+		return board;
 
 	}
 }

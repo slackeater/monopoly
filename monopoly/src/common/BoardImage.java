@@ -34,6 +34,6 @@ public class BoardImage extends JPanel{
 	public void paintComponent(Graphics g){
 		g2 = (Graphics2D)g;
 		g2.setColor(Color.RED);
-		g2.fillOval(x, y, 40, 40);
+		g2.fill3DRect(x, y, 25, 25, true);
 	}
 }
