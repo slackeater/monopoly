@@ -17,7 +17,7 @@ public class Player {
 	private int jailCard;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
-	public Player (String name, Color color, int accout, Socket socket){
+	public Player (String name, Color color, int account, Socket socket){
 		//assumed that 'Go' is position 0
 		this.name = name;
 		//this.color = color;
@@ -29,6 +29,70 @@ public class Player {
 		jailCard = 0;
 		
 		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAccount() {
+		return account;
+	}
+
+	public void setAccount(int account) {
+		this.account = account;
+	}
+
+	public ArrayList<Tile> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(ArrayList<Tile> properties) {
+		this.properties = properties;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
+
+	public boolean isInJail() {
+		return isInJail;
+	}
+
+	public void setInJail(boolean isInJail) {
+		this.isInJail = isInJail;
+	}
+
+	public boolean isTurnToken() {
+		return turnToken;
+	}
+
+	public void setTurnToken(boolean turnToken) {
+		this.turnToken = turnToken;
+	}
+
+	public int getJailCard() {
+		return jailCard;
+	}
+
+	public void setJailCard(int jailCard) {
+		this.jailCard = jailCard;
 	}
 	
 	
