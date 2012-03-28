@@ -4,10 +4,14 @@ public abstract class Property extends AbstractTile{
 
 	protected int price;
 	protected Player owner;
+	protected int mortgageValue;
+	protected boolean mortgageActive;
 	
 	//how are we keeping track of what group a property belongs to?
 	private String group;
 
+
+	public abstract int feeToCharge();
 	
 	public int getPrice() {
 		return price;

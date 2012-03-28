@@ -8,29 +8,52 @@ public class Player {
 
 	private String name;
 	private int account;
-	private ArrayList<AbstractTile> properties;
-	//private Color color;
+	private ArrayList<Tile> properties;
 	private int position;
-	private Socket socket;
 	private boolean isInJail;
 	private boolean turnToken;
 	private int jailCard;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
-	public Player (String name, Color color, int account, Socket socket){
-		//assumed that 'Go' is position 0
+	public Player (String name, int account){
 		this.name = name;
-		//this.color = color;
 		this.account = account;
 		position = 0;
-		this.socket = socket;
 		isInJail = false;
 		turnToken = false;
 		jailCard = 0;
-		
-		
+		properties = new ArrayList<Tile>();
+	}
+	
+	public int numberRailRoadsOwned(){
+		int rrOwned=0;
+		for (Tile t: properties ){
+			if (t instanceof Railroad) rrOwned++;
+		}
+		return rrOwned;
+	}
+	
+	public void addProperty(Tile t){
+		//here we must remove the Tile from the list of the previous owner if it was previously owned
+		Player prevOwner;
+		Property property = (Property)t;
+		if (property.owner != null){
+			prevOwner = property.owner;
+			prevOwner.removeProperty(property);
+
+		}
+		property.setOwner(this);
+		properties.add(property);
 	}
 
+	public boolean removeProperty(Tile t){
+		return properties.remove(t);
+	}
+	
+	public boolean ownsProperty(Tile t){
+		return properties.contains(t);
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -47,11 +70,11 @@ public class Player {
 		this.account = account;
 	}
 
-	public ArrayList<AbstractTile> getProperties() {
+	public ArrayList<Tile> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(ArrayList<AbstractTile> properties) {
+	public void setProperties(ArrayList<Tile> properties) {
 		this.properties = properties;
 	}
 

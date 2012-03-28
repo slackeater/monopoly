@@ -25,33 +25,53 @@ public class StateManager {
 	public void createTiles(){
 
 		int[] terrainPositions = {1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39};
-		//int[] terrainPositions = {1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27};
 				
 		for (int i =0 ; i < terrainPositions.length; i++){
 			int terrainPosition = terrainPositions[i];
 			String tileName = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-name");
 
-			String strTilePrice = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-price");
-			strTilePrice = strTilePrice.trim();
-			int tilePrice = Integer.parseInt(strTilePrice);
+			String toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-price");
+			toParse = toParse.trim();
+			int tilePrice = Integer.parseInt(toParse);
 			
-			String strTileRent = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-price");
-			strTileRent = strTileRent.trim();
-			int tileRent = Integer.parseInt(strTileRent);
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-rent");
+			toParse = toParse.trim();
+			int tileRent = Integer.parseInt(toParse);
 			
-			String strHouseCost = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-houseCost");
-			strHouseCost = strHouseCost.trim();
-			int houseCost = Integer.parseInt(strHouseCost);
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-houseCost");
+			toParse = toParse.trim();
+			int houseCost = Integer.parseInt(toParse);
 			
-			String strHotelCost = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-hotelCost");
-			strHotelCost = strHotelCost.trim();
-			int hotelCost = Integer.parseInt(strHotelCost);
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-hotelCost");
+			toParse = toParse.trim();
+			int hotelCost = Integer.parseInt(toParse);
 			
-			String strMortgageValue = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-mortgageValue");
-			strMortgageValue = strMortgageValue.trim();
-			int mortgageValue = Integer.parseInt(strMortgageValue);
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-rent1house");
+			toParse = toParse.trim();
+			int rent1House = Integer.parseInt(toParse);
 			
-			Terrain t=  new Terrain(tileName, tilePrice, tileRent, houseCost, hotelCost, mortgageValue);
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-rent2house");
+			toParse = toParse.trim();
+			int rent2House = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-rent3house");
+			toParse = toParse.trim();
+			int rent3House = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-rent4house");
+			toParse = toParse.trim();
+			int rent4House = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-renthotel");
+			toParse = toParse.trim();
+			int rentHotel = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString("tile"+terrainPosition+"-mortgageValue");
+			toParse = toParse.trim();
+			int mortgageValue = Integer.parseInt(toParse);
+			
+			
+			Terrain t=  new Terrain(tileName, tilePrice, tileRent, houseCost, hotelCost, mortgageValue, rent1House, rent2House, rent3House, rent4House, rentHotel);
 			tiles[terrainPositions[i]]=t;
 		}
 	}

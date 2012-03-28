@@ -6,22 +6,27 @@ public class Terrain extends Property {
 	private int hotelCost;
 	private int houseCount;
 	private int hotelCount;
-	private int mortgageValue;
-	private boolean mortgageActive;
+
 	
-	private int rent;	
+	private int[] rentRates = new int[5];	
 	private int rent1house;
 	private int rent2house;
 	private int rent3house;
 	private int rent4house;
-	private int rent1hotel;
+	private int renthotel;
 
-	public Terrain (String name, int price, int rent, int houseCost, int hotelCost, int mortgageValue){
+	public Terrain (String name, int price, int rent, int houseCost, int hotelCost, int mortgageValue,
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel){
 		this.name = name;
-		this.id = id;
-		this.rent = rent;
+		//this.id = id;
+		this.rentRates[0] =rent;
+		this.rentRates[1] =rent1house;
+		this.rentRates[2] =rent2house;
+		this.rentRates[3] =rent2house;
+		this.rentRates[4] =rent4house;
+		this.renthotel=renthotel;
 		this.price = price;
-		this.description=description;
+		//this.description=description;
 		this.houseCost = houseCost;
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
@@ -33,6 +38,9 @@ public class Terrain extends Property {
 		houseCount=0;
 	}
 
+	public int feeToCharge(){
+		return rentRates[houseCount] + renthotel*hotelCount;
+	}
 	
 	public int getHouseCost() {
 		return houseCost;
@@ -88,6 +96,9 @@ public class Terrain extends Property {
 				"\nhouseCost: " + houseCost +
 				"\nhotelCost: " + hotelCost +
 				"\nmortgageValue: " + mortgageValue +
-				"\nrent: " + rent;
+				"\nrent: " + rentRates[0] +
+				"\nrent w/Houses" + rentRates[1]+", "+rentRates[2]+", "+rentRates[3]+", "+rentRates[4]+
+				"\nrent w/Hotel" + renthotel +
+				"\nowner: " + owner;
 	}
 }
