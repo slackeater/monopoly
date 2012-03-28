@@ -14,29 +14,19 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private int id;
 	private String description;
 	private String name;
-	private int numberOfTokens;
-	private Token[] tokens;
-	private int X_PADDING = 40;
-	private int Y_PADDING = 40;
+	protected int numberOfTokens = 0;
+	protected Token[] tokens;
 
-	public void setDraw(int numberOfTokens){
-		this.numberOfTokens = numberOfTokens;
-		this.tokens = new Token[this.numberOfTokens];
-
-		//TEST
-		for(int j = 0 ; j < this.numberOfTokens ; j++){
-			tokens[j] = new Token(Color.RED, 20, 20);
-		}
-	}
+	public abstract void setDraw(int numberOfTokens);
 
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
@@ -46,16 +36,21 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	public String getName() {
 		return name;
 	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	@Override 
 	public void paintComponent(Graphics g){
-		Graphics2D g2 = (Graphics2D) g;
+		if(this.numberOfTokens >= 2 && this.numberOfTokens <= 8){
+			Graphics2D g2 = (Graphics2D) g;
 
-		for(int i = 0 ; i < this.numberOfTokens ; i++){
-			g2.drawOval(this.X_PADDING + this.tokens[0].getXratio(), this.Y_PADDING + this.tokens[0].getYratio(), 17, 17);
+			for(int i = 0 ; i < this.numberOfTokens ; i++){
+				System.out.println("inside number");
+				g2.setColor(this.tokens[i].getColor());
+				g2.fillOval((int)(getWidth()*this.tokens[i].getXRatio()), (int)(getHeight()*this.tokens[i].getYRatio()), 17, 17);
+			}
 		}
 	}
 

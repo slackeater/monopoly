@@ -5,25 +5,25 @@ import java.awt.Color;
 public class Token {
 
 	private Color color;
-	private int x_ratio;
-	private int y_ratio;
+	private double xRatio;
+	private double yRatio;
 	
-	public Token(Color c, int x, int y){
+	public Token(Color c, double xRatio, double yRatio){
 		color = c;
-		x_ratio = x;
-		y_ratio = y;
+		this.xRatio = xRatio;
+		this.yRatio = yRatio;
 	}
 	
 	public Color getColor(){
 		return color;
 	}
 	
-	public int getXratio(){
-		return x_ratio;
+	public double getXRatio(){
+		return xRatio;
 	}
 
-	public int getYratio(){
-		return y_ratio;
+	public double getYRatio(){
+		return yRatio;
 	}
 	
 }

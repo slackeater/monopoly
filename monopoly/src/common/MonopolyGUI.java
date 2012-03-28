@@ -82,7 +82,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
 		JLabel lab = new JLabel("Player 1: 100000$");
-		
+
 		info.add(lab);
 		return info;
 	}
@@ -131,11 +131,11 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 		JTextArea input = new JTextArea(2,20);
 		input.setWrapStyleWord(true);
 		input.setLineWrap(true);
-		
+
 		JScrollPane scrollInput = new JScrollPane(input);
 		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
+
 		JPanel chatArea = new JPanel();
 		chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.PAGE_AXIS));
 		chatArea.add(scrollChat);
@@ -177,45 +177,21 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 		JButton endTurn = new JButton("End turn");
 
 		throwDice.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				throwDice.setEnabled(false);
-				// TODO Auto-generated method stub
 				text.append("I'm throwing the dice... \n");
 				Random number = new Random();
 				int value = number.nextInt(11);
 				text.append("The results is: " + value + "\n");
-				
-				((AbstractTile) monopolyTiles[0][0]).setDraw(8);
-				monopolyTiles[0][0].repaint();
-				
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
+
 				for(int j = 1 ; j < value ; j++){
-						((AbstractTile) monopolyTiles[j-1][0]).setDraw(0);
-						monopolyTiles[j-1][0].repaint();
-				
-						try {
-							Thread.sleep(200);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
 					((AbstractTile) monopolyTiles[j][0]).setDraw(8);
 					monopolyTiles[j][0].repaint();
 				}
-				
-				throwDice.setEnabled(true);
 			}
 		});
-		
+
 		buttons.add(buy);
 		buttons.add(sell);
 		buttons.add(mortgage);
@@ -238,7 +214,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 
 		for(int j = 0 ; j < 11 ; j++){
 			for(int i = 0 ; i < 11 ; i++){
-				monopolyTiles[j][i] = new AbstractTile();
+				monopolyTiles[j][i] = new TestTile();
 				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
 				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
@@ -257,34 +233,33 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 				else if(j == 1 && i == 1){
 					JPanel main = new JPanel();
 					main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
-					
+
 					JPanel notify = new JPanel();
 					notify.setLayout(new BoxLayout(notify, BoxLayout.PAGE_AXIS));
 					notify.setBorder(BorderFactory.createEtchedBorder());
-					
+
 					JButton buy = new JButton("Buy");
 					JButton auction = new JButton("Auction");
-					
+
 					JPanel btnPanel = new JPanel();
 					btnPanel.add(buy);
 					btnPanel.add(auction);
-					
+
 					text = new JTextArea(15, 25);
 					text.setWrapStyleWord(true);
 					text.setLineWrap(true);
 					text.setEditable(false);
-					
+
 					JScrollPane eventPane = new JScrollPane(text);
 					eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 					eventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-					
+
 					JLabel title = new JLabel("Events");
-					title.setAlignmentY(-40);
-					
+
 					notify.add(title);
 					notify.add(eventPane);
 					notify.add(btnPanel);
-					
+
 					main.add(notify, BorderLayout.NORTH);
 					main.setBackground(Color.GREEN);
 					monopolyTiles[j][i].add(main);
@@ -297,11 +272,6 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
-			/*	else{
-					monopolyTiles[j][i].add(new JLabel(""));
-					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-				}*/
 			}
 		}
 
