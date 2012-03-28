@@ -21,6 +21,12 @@ public class Monopoly {
 	 * Testing setup from the Mac, please excuse the garbage pushes
 	 */
 	public static void main(String[] args) {
+
+		StateManager sm = new StateManager();
+		
+		
+		
+		
 		
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();

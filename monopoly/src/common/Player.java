@@ -8,7 +8,7 @@ public class Player {
 
 	private String name;
 	private int account;
-	private ArrayList<Tile> properties;
+	private ArrayList<AbstractTile> properties;
 	//private Color color;
 	private int position;
 	private Socket socket;
@@ -47,11 +47,11 @@ public class Player {
 		this.account = account;
 	}
 
-	public ArrayList<Tile> getProperties() {
+	public ArrayList<AbstractTile> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(ArrayList<Tile> properties) {
+	public void setProperties(ArrayList<AbstractTile> properties) {
 		this.properties = properties;
 	}
 
