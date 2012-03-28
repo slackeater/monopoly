@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 
 public class StateManager {
 	Player[] players;
-	AbstractTile[] tiles;
+	public Tile[] tiles;
 	private Locale loc;
 	private ResourceBundle rb;
 	
@@ -32,7 +32,7 @@ public class StateManager {
 	}
 	
 	public void createTiles(){
-		AbstractTile[0] = new Terrain(ResourceBundle.getBundle("gui", loc).getString("file"));
+		tiles[0] = new Terrain(ResourceBundle.getBundle("gui", loc).getString("file"), 0, "five", 0,0,0);
 		
 	}
 	
