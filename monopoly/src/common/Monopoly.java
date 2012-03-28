@@ -22,14 +22,18 @@ public class Monopoly {
 	 */
 	public static void main(String[] args) {
 		
+		JFrame welcome = new WelcomePanel();
+		welcome.setSize(300, 550);
+		welcome.setVisible(true);
+		
 		// TODO Auto-generated method stub
-		JFrame mainFrame = new MonopolyGUI();
+		/*JFrame mainFrame = new MonopolyGUI();
 		final String mainTitle = "Monopoly";
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
 		JPanel glass = (JPanel) mainFrame.getGlassPane();
 		glass.setVisible(true);
-	    glass.setLayout(null);
+	    //glass.setLayout(null);
 	    JButton glassButton = new JButton("Hide");
 	    glassButton.setBounds((int)dim.getWidth(), (int)dim.getHeight()-40, 40, 40);
 	    glass.add(glassButton);
@@ -37,7 +41,7 @@ public class Monopoly {
 		mainFrame.setSize((int)dim.getWidth(), (int)dim.getHeight()-40);
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setVisible(true);
+		mainFrame.setVisible(true);*/
 	
 		/*	Network communicate = new Network();
 		

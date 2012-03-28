@@ -13,6 +13,9 @@ public class StateManager {
 		this.players = players;
 	}
 	
+	public StateManager(){
+		
+	}
 	
 	
 

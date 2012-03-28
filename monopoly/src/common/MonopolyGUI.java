@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.EventListener;
 import java.util.Random;
 
 import javax.swing.BorderFactory;
@@ -80,7 +81,9 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 	 */
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
-		info.add(new JLabel("Player 1: 100000$"));
+		JLabel lab = new JLabel("Player 1: 100000$");
+		
+		info.add(lab);
 		return info;
 	}
 
@@ -113,29 +116,33 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 
 		JScrollPane scroll = new JScrollPane(history);
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		JTextArea chat = new JTextArea(5,20);
+		JTextArea chat = new JTextArea(7,20);
 		chat.setWrapStyleWord(true);
 		chat.setLineWrap(true);
 		chat.setEditable(false);
 
 		JScrollPane scrollChat = new JScrollPane(chat);
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		//button for sending the message
-		JTextField input = new JTextField();
-		JButton send = new JButton("Send");
-		//send.setSize(30, 10);
-
+		JTextArea input = new JTextArea(2,20);
+		input.setWrapStyleWord(true);
+		input.setLineWrap(true);
+		
+		JScrollPane scrollInput = new JScrollPane(input);
+		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 		JPanel chatArea = new JPanel();
 		chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.PAGE_AXIS));
 		chatArea.add(scrollChat);
 
-		JPanel inputContainer = new JPanel(new GridLayout(1,2));
-		inputContainer.add(input);
-		inputContainer.add(send);
+		JPanel inputContainer = new JPanel();
+		inputContainer.setLayout(new BoxLayout(inputContainer, BoxLayout.PAGE_AXIS));
+		inputContainer.add(scrollInput);
 
 		chatArea.add(inputContainer);
 
@@ -166,30 +173,46 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 		JButton sell = new JButton("Sell");
 		JButton mortgage = new JButton("Mortgage");
 		JButton unmortgage = new JButton("Unmortgage");
-		JButton throwDice = new JButton("Throw dice");
+		final JButton throwDice = new JButton("Throw dice");
 		JButton endTurn = new JButton("End turn");
 
 		throwDice.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				throwDice.setEnabled(false);
 				// TODO Auto-generated method stub
 				text.append("I'm throwing the dice... \n");
 				Random number = new Random();
 				int value = number.nextInt(11);
 				text.append("The results is: " + value + "\n");
 				
-				((Test) monopolyTiles[0][0]).setDraw(8);
+				((Tile) monopolyTiles[0][0]).setDraw(8);
 				monopolyTiles[0][0].repaint();
 				
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				for(int j = 1 ; j < value ; j++){
-						((Test) monopolyTiles[j-1][0]).setDraw(0);
+						((Tile) monopolyTiles[j-1][0]).setDraw(0);
 						monopolyTiles[j-1][0].repaint();
 				
-					((Test) monopolyTiles[j][0]).setDraw(8);
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					((Tile) monopolyTiles[j][0]).setDraw(8);
 					monopolyTiles[j][0].repaint();
 				}
 				
+				throwDice.setEnabled(true);
 			}
 		});
 		
@@ -215,7 +238,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 
 		for(int j = 0 ; j < 11 ; j++){
 			for(int i = 0 ; i < 11 ; i++){
-				monopolyTiles[j][i] = new Test();
+				monopolyTiles[j][i] = new Tile();
 				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
 				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
