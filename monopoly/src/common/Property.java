@@ -2,8 +2,8 @@ package common;
 
 public abstract class Property extends AbstractTile{
 
-	private int price;
-	private Player owner;
+	protected int price;
+	protected Player owner;
 	
 	//how are we keeping track of what group a property belongs to?
 	private String group;

@@ -27,6 +27,6 @@ public class GameServer {
 	
 	public void startGame(){
 		Player[] playerArray = (Player[])players.toArray();
-		sm = new StateManager(playerArray); 
+		
 	}
 }
