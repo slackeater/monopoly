@@ -21,6 +21,12 @@ public class Monopoly {
 	 * Testing setup from the Mac, please excuse the garbage pushes
 	 */
 	public static void main(String[] args) {
+
+		//StateManager sm = new StateManager();
+		
+		
+		
+		
 		
 		JFrame welcome = new WelcomePanel();
 		welcome.setSize(300, 550);
