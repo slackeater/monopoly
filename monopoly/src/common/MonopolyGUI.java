@@ -187,7 +187,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 				int value = number.nextInt(11);
 				text.append("The results is: " + value + "\n");
 				
-				((Tile) monopolyTiles[0][0]).setDraw(8);
+				((AbstractTile) monopolyTiles[0][0]).setDraw(8);
 				monopolyTiles[0][0].repaint();
 				
 				try {
@@ -198,7 +198,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 				}
 				
 				for(int j = 1 ; j < value ; j++){
-						((Tile) monopolyTiles[j-1][0]).setDraw(0);
+						((AbstractTile) monopolyTiles[j-1][0]).setDraw(0);
 						monopolyTiles[j-1][0].repaint();
 				
 						try {
@@ -208,7 +208,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 							e1.printStackTrace();
 						}
 						
-					((Tile) monopolyTiles[j][0]).setDraw(8);
+					((AbstractTile) monopolyTiles[j][0]).setDraw(8);
 					monopolyTiles[j][0].repaint();
 				}
 				
@@ -238,7 +238,7 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 
 		for(int j = 0 ; j < 11 ; j++){
 			for(int i = 0 ; i < 11 ; i++){
-				monopolyTiles[j][i] = new Tile();
+				monopolyTiles[j][i] = new AbstractTile();
 				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
 				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
