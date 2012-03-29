@@ -18,4 +18,22 @@ public class Railroad extends Property {
 		int numberOfRRsOwned = this.owner.numberRailRoadsOwned();
 		return rrMultiplier[numberOfRRsOwned-1] * rent;
 	}
+
+
+	public int getRent() {
+		return rent;
+	}
+
+
+	public void setRent(int rent) {
+		this.rent = rent;
+	}
+	
+	public String toString(){
+		return super.toString() + "\nname: " + name +
+				"\nprice: " + this.price +
+				"\nrent: " + this.rent +
+				"\nmortgageValue: " + mortgageValue +
+				"\nowner: " + owner;
+	}
 }

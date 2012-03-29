@@ -74,14 +74,6 @@ public class Terrain extends Property {
 		this.hotelCount = hotelCount;
 	}
 
-	public int getMortgageValue() {
-		return mortgageValue;
-	}
-
-	public void setMortgageValue(int mortgageValue) {
-		this.mortgageValue = mortgageValue;
-	}
-
 	public boolean isMortgageActive() {
 		return mortgageActive;
 	}

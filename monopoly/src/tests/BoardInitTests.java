@@ -20,9 +20,10 @@ public class BoardInitTests {
 	}
 	
 	@Test
-	public void tilesSetWithLocData() {
+	public void tilesCreatedWithCorrectInfo() {
 		StateManager sm = new StateManager();
-		
+		int tileNumber;
+		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);
 		assertTrue(((Terrain)sm.tiles[1]).getName().equals("Mediterranean Avenue"));
 		assertTrue(((Terrain)sm.tiles[1]).getPrice()==60);
@@ -43,6 +44,38 @@ public class BoardInitTests {
 		assertTrue(((Terrain)sm.tiles[39]).getHotelCost()==200);
 		assertTrue(((Terrain)sm.tiles[39]).getMortgageValue()==200);
 		//System.out.println(sm.tiles[39]);
+		
+		////////////////////
+		//Tests some Railroads
+		tileNumber  = 5;
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getName().equals("Reading Railroad"));
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getPrice()==200);
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getRent()==25);
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getMortgageValue()==100);
+		//System.out.println(sm.tiles[tileNumber]);
+		
+		tileNumber  = 25;
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getName().equals("B&O Railroad"));
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getPrice()==200);
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getRent()==25);
+		assertTrue(((Railroad)sm.tiles[tileNumber]).getMortgageValue()==100);
+		//System.out.println(sm.tiles[tileNumber]);
+		
+		
+		////////////////////
+		//Tests some UTILITIES
+		tileNumber  = 12;
+		assertTrue(((Utility)sm.tiles[tileNumber]).getName().equals("Electric Company"));
+		assertTrue(((Utility)sm.tiles[tileNumber]).getPrice()==150);
+		assertTrue(((Utility)sm.tiles[tileNumber]).getMortgageValue()==75);
+		System.out.println(sm.tiles[tileNumber]);
+		
+		tileNumber  = 28;
+		assertTrue(((Utility)sm.tiles[tileNumber]).getName().equals("Water Works"));
+		assertTrue(((Utility)sm.tiles[tileNumber]).getPrice()==150);
+		assertTrue(((Utility)sm.tiles[tileNumber]).getMortgageValue()==75);
+		System.out.println(sm.tiles[tileNumber]);
+		
 	}
 	
 	@Test

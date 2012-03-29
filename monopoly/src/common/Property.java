@@ -37,5 +37,13 @@ public abstract class Property extends AbstractTile{
 		this.group = group;
 	}
 	
+	public int getMortgageValue() {
+		return mortgageValue;
+	}
+
+	public void setMortgageValue(int mortgageValue) {
+		this.mortgageValue = mortgageValue;
+	}
+	
 	
 }

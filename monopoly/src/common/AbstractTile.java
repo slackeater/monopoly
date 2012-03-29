@@ -14,6 +14,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private int id;
 	private String description;
 	protected String name;
+	protected Event event;
 	protected int numberOfTokens = 0;
 	protected Token[] tokens;
 
