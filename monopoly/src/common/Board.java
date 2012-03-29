@@ -7,7 +7,7 @@ import java.util.ResourceBundle;
 
 import javax.swing.JMenu;
 
-public class StateManager {
+public class Board {
 	Player[] players;
 	public Tile[] tiles;
 	private Locale loc;
@@ -15,7 +15,7 @@ public class StateManager {
 	private Player me;
 	private Player currentPlayer;
 
-	public StateManager() {
+	public Board() {
 		// create tiles, cards, and events
 		loc = new Locale("EN");
 		tiles = new Tile[40];

@@ -21,7 +21,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void tilesCreatedWithCorrectInfo() {
-		StateManager sm = new StateManager();
+		Board sm = new Board();
 		int tileNumber;
 		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);
@@ -80,7 +80,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void playerOwnsProperty() {
-		StateManager sm = new StateManager();
+		Board sm = new Board();
 		Player p = new Player("Justin", 5000);
 		Tile t = sm.tiles[1];
 		p.addProperty(t);
@@ -89,7 +89,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void propertyTransfer() {
-		StateManager sm = new StateManager();
+		Board sm = new Board();
 		Player j = new Player("Justin", 5000);
 		Player g = new Player("Giuseppe", 5000);
 		Tile t = sm.tiles[1];

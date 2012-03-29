@@ -8,7 +8,7 @@ public class ChanceEvent extends AbstractTileEvent{
 	int fixedSum;
 	Locale loc;
 	
-	public ChanceEvent(String name, int fixedSum, StateManager sm){
+	public ChanceEvent(String name, int fixedSum, Board sm){
 		super(sm);
 		createChanceCards();
 		this.fixedSum=fixedSum;
