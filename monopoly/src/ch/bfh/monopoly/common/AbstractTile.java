@@ -1,4 +1,4 @@
-package common;
+package ch.bfh.monopoly.common;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -15,7 +15,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private String description;
 	protected String name;
 	protected TileEvent event;
-	protected int numberOfTokens = 0;
+	private int numberOfTokens = 0;
 	//this array of token is used to initialize the tokens
 	//then, only the necessary token will be copied to tokens
 	protected Token[] initTokens = new Token[8];
@@ -33,7 +33,17 @@ public abstract class AbstractTile extends JPanel implements Tile {
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
-	public abstract void setDraw(int numberOfTokens);
+	public void setDraw(int tokNum) {
+		numberOfTokens = tokNum;
+
+		if(numberOfTokens >= 1 && numberOfTokens <= 8){
+			tokens = new Token[numberOfTokens];
+
+			for(int i = 0 ; i < numberOfTokens ; i++){
+				tokens[i] = initTokens[i];
+			}
+		}
+	}
 
 	public int getId() {
 		return id;

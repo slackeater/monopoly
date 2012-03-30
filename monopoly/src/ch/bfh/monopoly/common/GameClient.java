@@ -1,8 +1,9 @@
-package common;
+package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 
-import network.Network;
+import ch.bfh.monopoly.network.Network;
+
 
 public class GameClient {
 	

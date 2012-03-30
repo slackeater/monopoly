@@ -1,4 +1,4 @@
-package common;
+package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package common;
+package ch.bfh.monopoly.common;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

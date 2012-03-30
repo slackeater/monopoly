@@ -1,11 +1,12 @@
-package common;
+package ch.bfh.monopoly.common;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
-import network.Network;
+import ch.bfh.monopoly.network.Network;
+
 
 public class Monopoly {
 	

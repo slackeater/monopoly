@@ -1,4 +1,4 @@
-package tests;
+package ch.bfh.monopoly.tests;
 
 import static org.junit.Assert.assertTrue;
 
@@ -7,7 +7,10 @@ import java.util.Locale;
 
 import org.junit.Before;
 import org.junit.Test;
-import common.*;
+
+import ch.bfh.monopoly.common.*;
+
+
 
 
 

@@ -1,4 +1,4 @@
-package common;
+package ch.bfh.monopoly.common;
 
 public abstract class Property extends AbstractTile{
 

@@ -1,4 +1,4 @@
-package common;
+package ch.bfh.monopoly.common;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

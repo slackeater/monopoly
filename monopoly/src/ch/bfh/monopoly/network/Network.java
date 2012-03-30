@@ -1,4 +1,4 @@
-package network;
+package ch.bfh.monopoly.network;
 
 import java.io.IOException;
 import java.net.Inet4Address;
