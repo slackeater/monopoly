@@ -16,6 +16,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	protected String name;
 	protected TileEvent event;
 	private int numberOfTokens = 0;
+	
 	//this array of token is used to initialize the tokens
 	//then, only the necessary token will be copied to tokens
 	protected Token[] initTokens = new Token[8];
