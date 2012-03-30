@@ -2,6 +2,8 @@ package common;
 
 import java.util.Locale;
 
+import network.Network;
+
 public class GameClient {
 	
 	Player localPlayer;

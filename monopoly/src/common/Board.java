@@ -21,9 +21,5 @@ public class Board {
 
 		TileCreator tc = new TileCreator(loc, gameClient);
 		tiles = tc.getTilesArray();
-		
-
 	}
-
-	
 }

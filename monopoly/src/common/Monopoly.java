@@ -5,6 +5,8 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
+import network.Network;
+
 public class Monopoly {
 	
 	public static Network communicate = new Network();

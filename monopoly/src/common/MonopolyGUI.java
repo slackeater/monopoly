@@ -30,7 +30,7 @@ import javax.swing.border.Border;
 
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
-public class MonopolyGUI extends JFrame implements ComponentListener{
+public class MonopolyGUI extends JFrame {
 
 	private JPanel board;
 	private JPanel monopolyTiles[][];
