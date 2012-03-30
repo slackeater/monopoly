@@ -1,7 +1,11 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.tile;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.MovementEvent;
+import ch.bfh.monopoly.common.TileEvent;
 
 public class Chance extends AbstractTile {
 

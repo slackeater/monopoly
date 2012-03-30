@@ -20,13 +20,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
-import ch.bfh.monopoly.common.AbstractTile;
-import ch.bfh.monopoly.common.Chance;
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.NonProperty;
-import ch.bfh.monopoly.common.Property;
-import ch.bfh.monopoly.common.Terrain;
 import ch.bfh.monopoly.common.TestTile;
+import ch.bfh.monopoly.tile.AbstractTile;
+import ch.bfh.monopoly.tile.Chance;
+import ch.bfh.monopoly.tile.NonProperty;
+import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Terrain;
 
 
 public class MonopolyGUI extends JFrame {

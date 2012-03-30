@@ -1,10 +1,13 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.tile;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
+
+import ch.bfh.monopoly.common.TileEvent;
+import ch.bfh.monopoly.common.Token;
 
 public abstract class AbstractTile extends JPanel implements Tile {
 	/**
