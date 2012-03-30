@@ -1,19 +1,13 @@
 package common;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import org.omg.CosNaming.IstringHelper;
 
 public class Monopoly {
+	
+	public static Network communicate = new Network();
 
 	/**
 	 * @param args   HERE IS MY MARK - IS IT PUSHED?
@@ -22,11 +16,13 @@ public class Monopoly {
 	 */
 	public static void main(String[] args) {
 
-		//StateManager sm = new StateManager();
 		
-	/*	JFrame welcome = new WelcomePanel();
-		welcome.setSize(300, 550);
-		welcome.setVisible(true);*/
+		/*JFrame welcome = new WelcomePanel();
+		welcome.setTitle("Welcome to Monopoly");
+		welcome.setBounds(500, 150, 300, 550);
+		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		welcome.setVisible(true);
+		*/
 		
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();

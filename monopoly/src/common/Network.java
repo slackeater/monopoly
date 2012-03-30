@@ -17,36 +17,27 @@ public class Network {
 	 * Start the server
 	 * @param dottedIP the IP to listen on
 	 * @param port the port to listen on
+	 * @throws IOException 
 	 */
-	public void startServer(String dottedIP, int port, int maxPlayers){
+	public void startServer(String dottedIP, int port, int maxPlayers) throws IOException{
 		InetAddress ip;
 		Socket clientConnection;
 		int ctr = 0;
-		
-		try {
-			ip = Inet4Address.getByName(dottedIP);
-			clients = new NetworkThread[maxPlayers];
-			
-			try {
-				this.srv = new ServerSocket(port, QUEUE_LENGTH, ip);
-			
-				//fill the array of client threads
-				while(ctr < maxPlayers){
-					//accept is blocking
-					clientConnection = this.srv.accept();
-					System.out.println("Accepted client, now starting thread.");
-					
-					clients[ctr] = new NetworkThread(clientConnection, ctr+1);
-					clients[ctr].start();
-					ctr++;
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		ip = Inet4Address.getByName(dottedIP);
+		clients = new NetworkThread[maxPlayers];
+
+		this.srv = new ServerSocket(port, QUEUE_LENGTH, ip);
+
+		//fill the array of client threads
+		while(ctr < maxPlayers){
+			//accept is blocking
+			clientConnection = this.srv.accept();
+			System.out.println("Accepted client, now starting thread.");
+
+			clients[ctr] = new NetworkThread(clientConnection, ctr+1);
+			clients[ctr].start();
+			ctr++;
 		}
 	}
 

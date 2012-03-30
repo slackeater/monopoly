@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.EventListener;
 import java.util.Random;
 
@@ -34,40 +36,24 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 	private JPanel monopolyTiles[][];
 	private JTextArea text;
 	private static final long serialVersionUID = 1L;
+	private int throwValue = 0;
+	private int tempNumPlayers = 2;
 
 	public MonopolyGUI(){
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
-		addComponentListener(this);
+		((AbstractTile)monopolyTiles[throwValue][0]).setDraw(tempNumPlayers);
+		monopolyTiles[throwValue][0].repaint();
 		pack();
 	}
 
-	public void componentHidden(ComponentEvent e) {
-		System.out.println(e.getComponent().getClass().getName() + " --- Hidden");
-	}
-
-	public void componentMoved(ComponentEvent e) {
-		System.out.println(e.getComponent().getClass().getName() + " --- Moved");
-	}
-
-	public void componentResized(ComponentEvent e) {
-		System.out.println(e.getComponent().getClass().getName() + " --- Resized ");            
-	}
-
-	public void componentShown(ComponentEvent e) {
-		System.out.println(e.getComponent().getClass().getName() + " --- Shown");
-
-	}
 	/**
 	 * Panel for the left container
 	 * @return the left jpanel
 	 */
 	private JPanel leftPanel(){
 		JPanel left = new JPanel(new GridLayout(4,1));
-		JPanel info = new JPanel();
-		info.setBorder(BorderFactory.createEtchedBorder());
-
 		left.add(cardPanel());
 		left.add(bottomPanel());
 		left.add(infoPanel());
@@ -97,7 +83,6 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 		JPanel tab2 = new JPanel();
 		card.addTab("Front", tab1);
 		card.addTab("Rear", tab2);
-		card.setBorder(BorderFactory.createEtchedBorder());
 		return card;
 	}
 
@@ -108,7 +93,6 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 	private JTabbedPane historyChatPanel(){
 		JTabbedPane pane = new JTabbedPane();
 
-		pane.setBorder(BorderFactory.createEtchedBorder());
 		JTextArea history = new JTextArea(5,20);
 		history.setWrapStyleWord(true);
 		history.setLineWrap(true);
@@ -157,7 +141,6 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 	 */
 	private JPanel bottomPanel(){
 		JPanel bottom = new JPanel();
-		bottom.setBorder(BorderFactory.createEtchedBorder());
 		bottom.add(buttonsPanel());
 		return bottom;
 	}
@@ -182,13 +165,37 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 			public void actionPerformed(ActionEvent e) {
 				text.append("I'm throwing the dice... \n");
 				Random number = new Random();
-				int value = number.nextInt(11);
+				int value = number.nextInt(7);
 				text.append("The results is: " + value + "\n");
-
-				for(int j = 1 ; j < value ; j++){
-					((AbstractTile) monopolyTiles[j][0]).setDraw(8);
+				
+				for(int j = 1 ; j < (throwValue+value) ; j++){
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					((AbstractTile) monopolyTiles[j-1][0]).setDraw(0);
+					monopolyTiles[j-1][0].repaint();
+					monopolyTiles[j-1][0].revalidate();
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					((AbstractTile) monopolyTiles[j][0]).setDraw(2);
 					monopolyTiles[j][0].repaint();
+					monopolyTiles[j][0].revalidate();
 				}
+
+				((AbstractTile) monopolyTiles[throwValue+value-1][0]).setDraw(0);
+				monopolyTiles[throwValue+value-1][0].repaint();
+				((AbstractTile) monopolyTiles[throwValue+value][0]).setDraw(2);
+				monopolyTiles[throwValue+value][0].repaint();
 			}
 		});
 
@@ -214,12 +221,13 @@ public class MonopolyGUI extends JFrame implements ComponentListener{
 
 		for(int j = 0 ; j < 11 ; j++){
 			for(int i = 0 ; i < 11 ; i++){
+
+
 				monopolyTiles[j][i] = new TestTile();
 				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
 				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
 					monopolyTiles[j][i].add(new JLabel("Corner"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createRaisedBevelBorder());
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
