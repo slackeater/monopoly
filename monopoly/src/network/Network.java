@@ -8,11 +8,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Network {
+public class Network  {
 
 	private ServerSocket srv;
 	final int QUEUE_LENGTH = 20;
 	NetworkThread[] clients;
+
 
 	/**
 	 * Start the server
@@ -54,5 +55,7 @@ public class Network {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 }

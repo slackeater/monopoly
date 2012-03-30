@@ -25,8 +25,8 @@ public class NetworkThread extends Thread{
 		System.out.println("We can receive data.");
 
 		try {
-			in = new ObjectInputStream(sock.getInputStream());
 			out = new ObjectOutputStream(sock.getOutputStream());
+			in = new ObjectInputStream(sock.getInputStream());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -34,6 +34,17 @@ public class NetworkThread extends Thread{
 
 		while(connectionOpen){
 
+			
+			NetMessage n = new NetMessage();
+			try {
+				out.writeObject(n);
+				out.flush();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
 			try {
 				sleep(15000);
 			} catch (InterruptedException e) {
@@ -43,6 +54,14 @@ public class NetworkThread extends Thread{
 		}
 	}
 
+	public void sendNetMessage(NetMessage n){
+		try {
+			out.writeObject(n);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 
 }

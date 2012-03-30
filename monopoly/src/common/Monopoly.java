@@ -26,7 +26,6 @@ public class Monopoly {
 		welcome.setVisible(true);
 		*/
 		
-		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI();
 		final String mainTitle = "Monopoly";
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

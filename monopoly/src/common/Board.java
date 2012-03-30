@@ -14,6 +14,11 @@ public class Board {
 
 	private Player me;
 	private Player currentPlayer;
+	private BoardListener listeners;
+
+		
+
+
 
 	public Board(Locale loc, GameClient gameClient) {
 		// create tiles, cards, and events
@@ -22,4 +27,13 @@ public class Board {
 		TileCreator tc = new TileCreator(loc, gameClient);
 		tiles = tc.getTilesArray();
 	}
+	
+	
+	//Methods for OBSERVER PATTERN
+	public void addListener (Listener l){
+		
+	}
+	
+	public void notifyListeners(){
+		for ()
 }

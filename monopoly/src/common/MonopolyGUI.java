@@ -38,7 +38,15 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
 	private int tempNumPlayers = 2;
-
+	private Board boardObj;
+	
+	private class BoardListener {
+		public void updateGUIdata(Object event){
+			//Subject board calls updateGUIdata and send an event object here
+			//maybe the event has the variables of player data?
+		}
+	}
+	
 	public MonopolyGUI(){
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
@@ -48,6 +56,7 @@ public class MonopolyGUI extends JFrame {
 		pack();
 	}
 
+	
 	/**
 	 * Panel for the left container
 	 * @return the left jpanel
@@ -68,7 +77,7 @@ public class MonopolyGUI extends JFrame {
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
 		JLabel lab = new JLabel("Player 1: 100000$");
-
+		
 		info.add(lab);
 		return info;
 	}
