@@ -12,7 +12,7 @@ public class GameServer {
 	private final int START_MONEY_US = 5000;
 	private final int START_MONEY_SWISS = 200000;
 	
-	private StateManager sm;
+	private Board sm;
 	private ArrayList<Player> players;
 	
 	public GameServer (){
@@ -27,6 +27,6 @@ public class GameServer {
 	
 	public void startGame(){
 		Player[] playerArray = (Player[])players.toArray();
-		sm = new StateManager(playerArray); 
+		sm = new Board(playerArray); 
 	}
 }

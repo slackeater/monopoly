@@ -4,10 +4,14 @@ public abstract class Property extends AbstractTile{
 
 	protected int price;
 	protected Player owner;
+	protected int mortgageValue;
+	protected boolean mortgageActive;
 	
 	//how are we keeping track of what group a property belongs to?
 	private String group;
 
+
+	public abstract int feeToCharge();
 	
 	public int getPrice() {
 		return price;
@@ -31,6 +35,14 @@ public abstract class Property extends AbstractTile{
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+	
+	public int getMortgageValue() {
+		return mortgageValue;
+	}
+
+	public void setMortgageValue(int mortgageValue) {
+		this.mortgageValue = mortgageValue;
 	}
 	
 	

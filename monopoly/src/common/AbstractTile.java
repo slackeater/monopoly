@@ -13,7 +13,8 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String description;
-	private String name;
+	protected String name;
+	protected TileEvent event;
 	protected int numberOfTokens = 0;
 	//this array of token is used to initialize the tokens
 	//then, only the necessary token will be copied to tokens
