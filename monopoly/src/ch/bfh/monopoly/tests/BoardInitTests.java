@@ -45,10 +45,9 @@ public class BoardInitTests {
 		MovementEvent mv = ((MovementEvent)chanceTile.chanceCardDeck[0]);
 		assertTrue(mv.getName().equals("Back you go!"));
 		assertTrue(mv.getNewPosition()== -3);
-
 		mv = ((MovementEvent)chanceTile.chanceCardDeck[1]);
 		assertTrue(mv.getName().equals("Advance to Pennsylvania Railroad"));
-		
+	
 
 	}
 	
