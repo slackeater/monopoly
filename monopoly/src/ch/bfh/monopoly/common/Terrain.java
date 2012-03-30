@@ -38,6 +38,10 @@ public class Terrain extends Property {
 		houseCount=0;
 	}
 
+	public Terrain() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int feeToCharge(){
 		return rentRates[houseCount] + renthotel*hotelCount;
 	}

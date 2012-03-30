@@ -21,6 +21,11 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 import ch.bfh.monopoly.common.AbstractTile;
+import ch.bfh.monopoly.common.Chance;
+import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.NonProperty;
+import ch.bfh.monopoly.common.Property;
+import ch.bfh.monopoly.common.Terrain;
 import ch.bfh.monopoly.common.TestTile;
 
 
@@ -161,7 +166,7 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Timer t = new Timer(2500,this);
+				Timer t = new Timer(1000,this);
 				t.setInitialDelay(2000);
 
 				if(throwValue == 0){
@@ -184,7 +189,7 @@ public class MonopolyGUI extends JFrame {
 				else{
 					((Timer)e.getSource()).stop();
 
-					
+
 					currentPos += throwValue;
 					columnCtr = currentPos;
 					throwValue = 0;
@@ -192,8 +197,8 @@ public class MonopolyGUI extends JFrame {
 
 
 				}
-				
-				
+
+
 			}
 		});
 
@@ -217,26 +222,64 @@ public class MonopolyGUI extends JFrame {
 		board = new JPanel(layout);
 		monopolyTiles = new JPanel[11][11];
 
-		for(int j = 0 ; j < 11 ; j++){
-			for(int i = 0 ; i < 11 ; i++){
+		for(int j = 0 ; j < 11 ; j++){ //columns
+			for(int i = 0 ; i < 11 ; i++){ //rows
 
+				//free parking
+				if(j == 0 && i == 0){
+					monopolyTiles[j][i] = new NonProperty();
+					monopolyTiles[j][i].add(new JLabel("<html>Free<br>Parking</html>"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 
-				monopolyTiles[j][i] = new TestTile();
-				monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-
-				if(j == 0 && i == 0 || j == 10 && i == 0 || j == 0 && i == 10 || j == 10 && i == 10){
-					monopolyTiles[j][i].add(new JLabel("Corner"));
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
-				else if((j == 2 && i ==2) || (j == 8 && i == 8)){
-					monopolyTiles[j][i].add(new JButton("Card"));
-					monopolyTiles[j][i].setLayout(new GridLayout(1,1));
-					monopolyTiles[j][i].setBorder(null);
+				//jail
+				else if(j == 0 && i == 10){
+					monopolyTiles[j][i] = new NonProperty();
+					monopolyTiles[j][i].add(new JLabel("Jail"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//start 
+				else if(j == 10 && i == 10){
+					monopolyTiles[j][i] = new NonProperty();
+					monopolyTiles[j][i].add(new JLabel("<-- Go"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//go to jail
+				else if(j == 10 && i == 0){
+					monopolyTiles[j][i] = new NonProperty();
+					monopolyTiles[j][i].add(new JLabel("Go to jail"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//chance cards
+				else if ((j == 2 && i == 0) || (j == 10 && i == 6) || (j == 2 && i == 10)){
+					monopolyTiles[j][i] = new Chance("Chance", new GameClient());
+					monopolyTiles[j][i].add(new JLabel("Chance"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+				}
+				//community chest
+				else if ((j == 10 && i == 3) || (j == 8 && i == 10) || (j == 0 && i == 3)){
+					//TO CHANGE TO new Community
+					monopolyTiles[j][i] = new Chance("Community", new GameClient());
+					monopolyTiles[j][i].add(new JLabel("Community"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
 				else if(j == 1 && i == 1){
+					monopolyTiles[j][i] = new JPanel();
 					JPanel main = new JPanel();
 					main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
@@ -251,7 +294,7 @@ public class MonopolyGUI extends JFrame {
 					btnPanel.add(buy);
 					btnPanel.add(auction);
 
-					text = new JTextArea(15, 25);
+					text = new JTextArea(15, 23);
 					text.setWrapStyleWord(true);
 					text.setLineWrap(true);
 					text.setEditable(false);
@@ -267,14 +310,24 @@ public class MonopolyGUI extends JFrame {
 					notify.add(btnPanel);
 
 					main.add(notify, BorderLayout.NORTH);
-					main.setBackground(Color.GREEN);
 					monopolyTiles[j][i].add(main);
-					monopolyTiles[j][i].setBackground(Color.GREEN);
+					monopolyTiles[j][i].setOpaque(false);
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 9,9, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
+				else if((j == 2 && i == 2) || (j == 8 && i == 8)){
+					JButton card = new JButton("Card");
+					monopolyTiles[j][i] = new JPanel();
+					monopolyTiles[j][i].add(card);
+					monopolyTiles[j][i].setLayout(new GridLayout(1,1));
+					monopolyTiles[j][i].setBorder(null);
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
 				else if(j == 0 || i == 0 || j == 10 || i == 10){
+					monopolyTiles[j][i] = new Terrain();
 					monopolyTiles[j][i].add(new JLabel("Tile"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
 					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
 							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
