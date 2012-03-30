@@ -1,4 +1,4 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.gui;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -18,6 +18,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+
+import ch.bfh.monopoly.common.Monopoly;
 
 
 public class WelcomePanel extends JFrame{

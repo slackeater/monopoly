@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
+import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.network.Network;
 
 

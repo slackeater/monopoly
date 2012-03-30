@@ -1,4 +1,4 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
+
+import ch.bfh.monopoly.common.AbstractTile;
+import ch.bfh.monopoly.common.TestTile;
 
 
 public class MonopolyGUI extends JFrame {
