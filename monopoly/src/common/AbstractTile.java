@@ -19,9 +19,9 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	//this array of token is used to initialize the tokens
 	//then, only the necessary token will be copied to tokens
 	protected Token[] initTokens = new Token[8];
-	
+
 	protected Token[] tokens;
-	
+
 	public AbstractTile(){
 		initTokens[0] = new Token(Color.RED,0.1,0.375);
 		initTokens[1] = new Token(Color.GREEN, 0.3, 0.375);
@@ -32,7 +32,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
-	
+
 	public abstract void setDraw(int numberOfTokens);
 
 	public int getId() {
@@ -52,21 +52,22 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	@Override 
 	public void paintComponent(Graphics g){
-		if(this.numberOfTokens >= 2 && this.numberOfTokens <= 8){
-			Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2 = (Graphics2D) g;
 
+		if(this.numberOfTokens >= 2 && this.numberOfTokens <= 8){
 			for(int i = 0 ; i < this.numberOfTokens ; i++){
 				g2.setColor(this.tokens[i].getColor());
 				g2.fillOval((int)(getWidth()*this.tokens[i].getXRatio()), (int)(getHeight()*this.tokens[i].getYRatio()), (int)(getHeight()*0.25), (int)(getHeight()*0.25));
 			}
 		}
+	
 	}
 
 

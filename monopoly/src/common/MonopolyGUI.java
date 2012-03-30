@@ -2,19 +2,12 @@ package common;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.EventListener;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -25,10 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
+import javax.swing.Timer;
 
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 public class MonopolyGUI extends JFrame {
 
@@ -37,7 +28,9 @@ public class MonopolyGUI extends JFrame {
 	private JTextArea text;
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
+	private int currentPos = 0;
 	private int tempNumPlayers = 2;
+	private int columnCtr = 1;
 
 	public MonopolyGUI(){
 		setLayout(new BorderLayout());
@@ -159,43 +152,45 @@ public class MonopolyGUI extends JFrame {
 		final JButton throwDice = new JButton("Throw dice");
 		JButton endTurn = new JButton("End turn");
 
+
 		throwDice.addActionListener(new ActionListener() {
+
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				text.append("I'm throwing the dice... \n");
-				Random number = new Random();
-				int value = number.nextInt(7);
-				text.append("The results is: " + value + "\n");
-				
-				for(int j = 1 ; j < (throwValue+value) ; j++){
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					((AbstractTile) monopolyTiles[j-1][0]).setDraw(0);
-					monopolyTiles[j-1][0].repaint();
-					monopolyTiles[j-1][0].revalidate();
-					
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
-					((AbstractTile) monopolyTiles[j][0]).setDraw(2);
-					monopolyTiles[j][0].repaint();
-					monopolyTiles[j][0].revalidate();
+				Timer t = new Timer(2500,this);
+				t.setInitialDelay(2000);
+
+				if(throwValue == 0){
+					text.append("I'm throwing the dice... \n");
+					throwValue = (int)(6*Math.random())+1;
+					text.append("The results is: " + throwValue + "\n");
+					throwDice.setEnabled(false);
+					t.start();
 				}
 
-				((AbstractTile) monopolyTiles[throwValue+value-1][0]).setDraw(0);
-				monopolyTiles[throwValue+value-1][0].repaint();
-				((AbstractTile) monopolyTiles[throwValue+value][0]).setDraw(2);
-				monopolyTiles[throwValue+value][0].repaint();
+				if(columnCtr <= (throwValue+currentPos)){
+					((AbstractTile) monopolyTiles[columnCtr-1][0]).setDraw(0);
+					System.out.println("Deleting on " + (columnCtr-1) + " and 0");
+
+					System.out.println("Drawing on " + (columnCtr) + " and 0");
+					((AbstractTile) monopolyTiles[columnCtr][0]).setDraw(tempNumPlayers);
+					columnCtr++;
+					repaint();
+				}
+				else{
+					((Timer)e.getSource()).stop();
+
+					
+					currentPos += throwValue;
+					columnCtr = currentPos;
+					throwValue = 0;
+					throwDice.setEnabled(true);
+
+
+				}
+				
+				
 			}
 		});
 

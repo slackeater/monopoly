@@ -13,14 +13,17 @@ public class TestTile extends AbstractTile {
 	public TestTile(){
 		super();
 	}
-	
+
 	@Override
 	public void setDraw(int numberOfTokens) {
 		super.numberOfTokens = numberOfTokens;
-		super.tokens = new Token[super.numberOfTokens];
 
-		for(int i = 0 ; i < numberOfTokens ; i++){
-			tokens[i] = super.initTokens[i];
+		if(numberOfTokens >= 2 && numberOfTokens <= 8){
+			super.tokens = new Token[super.numberOfTokens];
+
+			for(int i = 0 ; i < numberOfTokens ; i++){
+				tokens[i] = super.initTokens[i];
+			}
 		}
 	}
 
