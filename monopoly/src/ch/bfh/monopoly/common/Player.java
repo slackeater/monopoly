@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Railroad;
+import ch.bfh.monopoly.tile.Tile;
+
 public class Player {
 
 	private String name;

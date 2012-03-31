@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -16,33 +17,37 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import ch.bfh.monopoly.common.Chance;
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.NonProperty;
-import ch.bfh.monopoly.common.Terrain;
+import ch.bfh.monopoly.tile.Chance;
+import ch.bfh.monopoly.tile.NonProperty;
+import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.Tile;
 
 public class BoardBuilder extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 4140219449792816066L;
+	
+	private final double WEIGHT_TILE_X = 0.1;
+	private final double WEIGHT_TILE_Y = 0.1;
+	
+	private final double WEIGHT_CORNER_X = 0.12;
+	private final double WEIGHT_CORNER_Y = 0.12;
+	
 	private JTextArea eventPane;
 
-	/*this list will be used for computation of dice throw
-	 * instead of monopolyTiles[][]. It is more comfortable
-	 * and we can use the get(index) method to easily set
-	 * the Tile of new tokens
-	 */
-	private List<JPanel> tilesForDice = new ArrayList<JPanel>();
+	private List<Tile> tilesList = new ArrayList<Tile>();
 
 	/**
 	 * Construct a new board
 	 * @param eventPane the JTextArea used to draw event
+	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea eventPane){
+	public BoardBuilder(JTextArea eventPane, List<Tile> tiles){
 		this.eventPane = eventPane;
+		this.tilesList = tiles;
 		setLayout(new GridBagLayout());
+		centralElements();
+		drawBoard();
 	}
 
 	/**
@@ -51,7 +56,7 @@ public class BoardBuilder extends JPanel {
 	 */
 	private void centralElements(){
 
-		/******* event window **************/
+		/******* Event window **************/
 
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
@@ -79,31 +84,31 @@ public class BoardBuilder extends JPanel {
 
 		p.add(notify, BorderLayout.NORTH);
 		p.setOpaque(false);
-		add(p, new GridBagConstraints(1, 1, 9,9, 0.1, 0.1, 
+		add(p, new GridBagConstraints(1, 1, 9,9, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/
 		/****************************************/
 
-		/******* Community chest card **************/
+		/******* Community chest card button **************/
 
 		JButton community = new JButton("Community");
 		JPanel commP = new JPanel();
 		commP.add(community);
 		commP.setLayout(new GridLayout(1,1));
-		add(commP, new GridBagConstraints(2, 2, 1, 1, 0.1, 0.1, 
+		add(commP, new GridBagConstraints(2, 2, 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/
 		/****************************************/
 
-		/******* Chance chest card **************/
+		/******* Chance card button **************/
 
 		JButton chance = new JButton("Chance");
 		JPanel chancePan = new JPanel();
 		chancePan.add(chance);
 		chancePan.setLayout(new GridLayout(1,1));
-		add(chancePan, new GridBagConstraints(8, 8, 1, 1, 0.1, 0.1, 
+		add(chancePan, new GridBagConstraints(8, 8, 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_X, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/
@@ -115,122 +120,20 @@ public class BoardBuilder extends JPanel {
 	 * with the relatives tiles
 	 */
 	private void drawBoard(){
-		//bottom line
-		int j = 0;
-
-		JPanel start = new NonProperty();
-		start.add(new JLabel("<-- Go"));
-		start.setBorder(BorderFactory.createEtchedBorder());
-
-		add(start, new GridBagConstraints(10, 10, 1, 1, 0.12, 0.12, 
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
-		tilesForDice.add(start);
-
-		for(j = 8; j >= 0 ; j++){
-			//first community chest
-			if(j == 8){
-				JPanel comm = new Chance("Community", new GameClient());
-				comm.add(new JLabel("Community"));
-				comm.setBorder(BorderFactory.createEtchedBorder());
-				add(comm, new GridBagConstraints(8, 10, 1, 1, 0.1, 0.1, 
+		int j;
+		
+		for(j = 0 ; j < this.tilesList.size() ; j++){
+			JPanel tile = (JPanel) this.tilesList.get(j);
+			
+			//corner
+			if(j % 10 == 0){
+				add(tile, new GridBagConstraints(tile.getX(), tile.getY(), 1, 1, WEIGHT_CORNER_X, WEIGHT_CORNER_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			}
-			//income tax
-			else if(j == 6){
-				JPanel nonP = new NonProperty();
-				nonP.add(new JLabel("<html>Income<br>Tax</html>"));
-	
-				add(nonP, new GridBagConstraints(6, 10, 1, 1, 0.1, 0.1, 
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-			}
-			//first chance card
-			else if(j == 3){
-				JPanel chance = new NonProperty();
-				chance.add(new JLabel("<html>Free<br>Parking</html>"));
-	
-				add(chance, new GridBagConstraints(3, 10, 1, 1, 0.12, 0.12, 
-						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-			}
+			//other tiles
 			else{
-				JPanel terrain = new Terrain();
-				terrain.add(new JLabel("Terrain"));
-				
-				add(terrain, new GridBagConstraints(j, 10, 1, 1, 0.12, 0.12, 
+				add(tile, new GridBagConstraints(tile.getX(), tile.getY(), 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-			}
-		}
-
-
-		for(int j = 10 ; j >= 0 ; j--){ //columns
-			for(int i = 10 ; i >= 0 ; i--){ //rows
-
-				//free parking
-				if(j == 0 && i == 0){
-					monopolyTiles[j][i] = new NonProperty();
-					monopolyTiles[j][i].add(new JLabel("<html>Free<br>Parking</html>"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				//jail
-				else if(j == 0 && i == 10){
-					monopolyTiles[j][i] = new NonProperty();
-					monopolyTiles[j][i].add(new JLabel("Jail"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				//start 
-				else if(j == 10 && i == 10){
-					monopolyTiles[j][i] = new NonProperty();
-					monopolyTiles[j][i].add(new JLabel("<-- Go"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				//go to jail
-				else if(j == 10 && i == 0){
-					monopolyTiles[j][i] = new NonProperty();
-					monopolyTiles[j][i].add(new JLabel("Go to jail"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				//chance cards
-				else if ((j == 2 && i == 0) || (j == 10 && i == 6) || (j == 2 && i == 10)){
-					monopolyTiles[j][i] = new Chance("Chance", new GameClient());
-					monopolyTiles[j][i].add(new JLabel("Chance"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				//community chest
-				else if ((j == 10 && i == 3) || (j == 8 && i == 10) || (j == 0 && i == 3)){
-					//TO CHANGE TO new Community
-					monopolyTiles[j][i] = new Chance("Community", new GameClient());
-					monopolyTiles[j][i].add(new JLabel("Community"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
-				else if(j == 0 || i == 0 || j == 10 || i == 10){
-					monopolyTiles[j][i] = new Terrain();
-					monopolyTiles[j][i].add(new JLabel("Tile"));
-					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
-					add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1, 
-							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-					tilesForDice.add(monopolyTiles[j][i]);
-				}
 			}
 		}
 

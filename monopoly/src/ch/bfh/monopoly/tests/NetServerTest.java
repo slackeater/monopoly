@@ -2,10 +2,12 @@ package ch.bfh.monopoly.tests;
 
 import static org.junit.Assert.assertTrue;
 import java.io.IOException;
-import network.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import ch.bfh.monopoly.network.Network;
 
 public class NetServerTest {
 

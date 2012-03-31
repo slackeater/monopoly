@@ -7,6 +7,9 @@ import java.util.ResourceBundle;
 
 import javax.swing.JMenu;
 
+import ch.bfh.monopoly.tile.Tile;
+import ch.bfh.monopoly.tile.TileCreator;
+
 public class Board {
 	Player[] players;
 	public Tile[] tiles;

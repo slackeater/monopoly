@@ -1,4 +1,4 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.tile;
 
 public class Railroad extends Property {
 	private int rent;

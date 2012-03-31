@@ -9,6 +9,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.bfh.monopoly.common.*;
+import ch.bfh.monopoly.tile.Chance;
+import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Railroad;
+import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.Tile;
+import ch.bfh.monopoly.tile.Utility;
 
 
 
@@ -31,6 +37,18 @@ public class BoardInitTests {
 	
 	
 	@Test
+	public void boardTilesHaveNames(){
+		Board board= new Board(loc,gc);
+//		for (int i = 0; i<board.tiles.length; i++){
+//			Tile t = board.tiles[i];
+//			assertTrue((t.getName() != null));
+//		}
+		Tile t = board.tiles[1];
+		assertTrue((t.getName() != null));
+
+	}
+	
+	@Test
 	public void chanceCardsCreatedWithCorrectInfo() {
 
 		Board board= new Board(loc,gc);
@@ -45,10 +63,9 @@ public class BoardInitTests {
 		MovementEvent mv = ((MovementEvent)chanceTile.chanceCardDeck[0]);
 		assertTrue(mv.getName().equals("Back you go!"));
 		assertTrue(mv.getNewPosition()== -3);
-
 		mv = ((MovementEvent)chanceTile.chanceCardDeck[1]);
 		assertTrue(mv.getName().equals("Advance to Pennsylvania Railroad"));
-		
+	
 
 	}
 	
@@ -102,13 +119,13 @@ public class BoardInitTests {
 		assertTrue(((Utility)board.tiles[tileNumber]).getName().equals("Electric Company"));
 		assertTrue(((Utility)board.tiles[tileNumber]).getPrice()==150);
 		assertTrue(((Utility)board.tiles[tileNumber]).getMortgageValue()==75);
-		System.out.println(board.tiles[tileNumber]);
+		//System.out.println(board.tiles[tileNumber]);
 		
 		tileNumber  = 28;
 		assertTrue(((Utility)board.tiles[tileNumber]).getName().equals("Water Works"));
 		assertTrue(((Utility)board.tiles[tileNumber]).getPrice()==150);
 		assertTrue(((Utility)board.tiles[tileNumber]).getMortgageValue()==75);
-		System.out.println(board.tiles[tileNumber]);
+		//System.out.println(board.tiles[tileNumber]);
 		
 	}
 	

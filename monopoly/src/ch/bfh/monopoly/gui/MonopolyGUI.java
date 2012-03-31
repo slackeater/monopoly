@@ -22,13 +22,14 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
-import ch.bfh.monopoly.common.AbstractTile;
-import ch.bfh.monopoly.common.Chance;
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.NonProperty;
-import ch.bfh.monopoly.common.Property;
-import ch.bfh.monopoly.common.Terrain;
 import ch.bfh.monopoly.common.TestTile;
+import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.tile.AbstractTile;
+import ch.bfh.monopoly.tile.Chance;
+import ch.bfh.monopoly.tile.NonProperty;
+import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Terrain;
 
 
 public class MonopolyGUI extends JFrame {
@@ -42,17 +43,33 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
 	private int currentPos = 0;
-	private int tempNumPlayers = 2;
+	private int tempNumPlayers = 4;
 	private int columnCtr = 1;
-	private List<JPanel> tilesForDice = new ArrayList<JPanel>();
-
+	private Token newPlace = null;
+	
+	private Token[] initTokens = new Token[8];
+	
+	List<Token> tokensTile = new ArrayList<Token>();
 	public MonopolyGUI(){
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
-		((AbstractTile)tilesForDice.get(0)).setDraw(tempNumPlayers);
-		//((AbstractTile)monopolyTiles[throwValue][0]).setDraw(tempNumPlayers);
-		//monopolyTiles[throwValue][0].repaint();
+		//((AbstractTile)tilesForDice.get(0)).setDraw(tempNumPlayers);
+
+		//it must be moved in another class
+		initTokens[0] = new Token(Color.RED,0.1,0.375);
+		initTokens[1] = new Token(Color.GREEN, 0.3, 0.375);
+		initTokens[2] = new Token(Color.BLUE, 0.5, 0.375);
+		initTokens[3] = new Token(Color.YELLOW, 0.7, 0.375);
+		initTokens[4] = new Token(Color.BLACK, 0.1, 0.700);
+		initTokens[5] = new Token(Color.CYAN, 0.3, 0.700);
+		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
+		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
+
+		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
+		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[1]);
+		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[2]);
+		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);
 		pack();
 	}
 
@@ -172,33 +189,46 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Timer t = new Timer(1000,this);
-				t.setInitialDelay(2000);
-
+				Timer t = new Timer(750,this);
+				t.setInitialDelay(1250);
+			
+				
 				if(throwValue == 0){
 					text.append("I'm throwing the dice... \n");
 					throwValue = (int)(6*Math.random())+1;
 					text.append("The results is: " + throwValue + "\n");
+					
 					throwDice.setEnabled(false);
+					
+					//we remove the token relative to the player with ID 1
+					newPlace = initTokens[0];
 					t.start();
 				}
 
 				if(columnCtr <= ((throwValue+currentPos)%40)){
-					((AbstractTile)tilesForDice.get(columnCtr-1)).setDraw(0);
+					//((AbstractTile)tilesForDice.get(columnCtr-1)).setDraw(0);
 					//repaint();
-					//((AbstractTile) monopolyTiles[columnCtr-1][0]).setDraw(0);
+					
+					System.out.println("REmoving token at column" + (columnCtr-1));
+					((AbstractTile) monopolyTiles[columnCtr-1][0]).removeToken(newPlace);
+					
 					//System.out.println("Deleting on " + (columnCtr-1) + " and 0");
 
-					((AbstractTile)tilesForDice.get(columnCtr)).setDraw(tempNumPlayers);
+					//((AbstractTile)tilesForDice.get(columnCtr)).setDraw(tempNumPlayers);
 					//System.out.println("Drawing on " + (columnCtr) + " and 0");
-					//((AbstractTile) monopolyTiles[columnCtr][0]).setDraw(tempNumPlayers);
+					
+					//build a new list of tokens
+				
+					System.out.println("we are at column " + columnCtr);
+					((AbstractTile) monopolyTiles[columnCtr][0]).addToken(newPlace);
+					
 					columnCtr++;
 					repaint();
 				}
 				else{
 					((Timer)e.getSource()).stop();
 					currentPos = (currentPos+throwValue)%40;
-					columnCtr = currentPos;
+					columnCtr = currentPos+1;
 					throwValue = 0;
 					throwDice.setEnabled(true);
 				}
@@ -222,12 +252,131 @@ public class MonopolyGUI extends JFrame {
 	 * @return
 	 */
 	private JPanel drawBoard(){
+		GridBagLayout layout = new GridBagLayout();
+
+		board = new JPanel(layout);
+		monopolyTiles = new JPanel[11][11];
+
+		for(int j = 0 ; j < 11 ; j++){ //columns
+			for(int i = 0 ; i < 11 ; i++){ //rows
+
+				//free parking
+				if(j == 0 && i == 0){
+					monopolyTiles[j][i] = new NonProperty("test");
+					monopolyTiles[j][i].add(new JLabel("<html>Free<br>Parking</html>"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//jail
+				else if(j == 0 && i == 10){
+					monopolyTiles[j][i] = new NonProperty("test");
+					monopolyTiles[j][i].add(new JLabel("Jail"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//start
+				else if(j == 10 && i == 10){
+					monopolyTiles[j][i] = new NonProperty("test");
+					monopolyTiles[j][i].add(new JLabel("<-- Go"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//go to jail
+				else if(j == 10 && i == 0){
+					monopolyTiles[j][i] = new NonProperty("test");
+					monopolyTiles[j][i].add(new JLabel("Go to jail"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.12, 0.12,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				//chance cards
+				else if ((j == 2 && i == 0) || (j == 10 && i == 6) || (j == 2 && i == 10)){
+					monopolyTiles[j][i] = new Chance("Chance", new GameClient());
+					monopolyTiles[j][i].add(new JLabel("Chance"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
+				}
+				//community chest
+				else if ((j == 10 && i == 3) || (j == 8 && i == 10) || (j == 0 && i == 3)){
+					//TO CHANGE TO new Community
+					monopolyTiles[j][i] = new Chance("Community", new GameClient());
+					monopolyTiles[j][i].add(new JLabel("Community"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				else if(j == 1 && i == 1){
+					monopolyTiles[j][i] = new JPanel();
+					JPanel main = new JPanel();
+					main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
+
+					JPanel notify = new JPanel();
+					notify.setLayout(new BoxLayout(notify, BoxLayout.PAGE_AXIS));
+					notify.setBorder(BorderFactory.createEtchedBorder());
+
+					JButton buy = new JButton("Buy");
+					JButton auction = new JButton("Auction");
+
+					JPanel btnPanel = new JPanel();
+					btnPanel.add(buy);
+					btnPanel.add(auction);
+
+					text = new JTextArea(15, 23);
+					text.setWrapStyleWord(true);
+					text.setLineWrap(true);
+					text.setEditable(false);
+
+					JScrollPane eventPane = new JScrollPane(text);
+					eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					eventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+					JLabel title = new JLabel("Events");
+
+					notify.add(title);
+					notify.add(eventPane);
+					notify.add(btnPanel);
+
+					main.add(notify, BorderLayout.NORTH);
+					monopolyTiles[j][i].add(main);
+					monopolyTiles[j][i].setOpaque(false);
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 9,9, 0.1, 0.1,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				else if((j == 2 && i == 2) || (j == 8 && i == 8)){
+					JButton card = new JButton("Card");
+					monopolyTiles[j][i] = new JPanel();
+					monopolyTiles[j][i].add(card);
+					monopolyTiles[j][i].setLayout(new GridLayout(1,1));
+					monopolyTiles[j][i].setBorder(null);
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+				else if(j == 0 || i == 0 || j == 10 || i == 10){
+					monopolyTiles[j][i] = new Terrain();
+					monopolyTiles[j][i].add(new JLabel("Tile"));
+					monopolyTiles[j][i].setBorder(BorderFactory.createEtchedBorder());
+					board.add(monopolyTiles[j][i], new GridBagConstraints(j, i, 1, 1, 0.1, 0.1,
+							GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+				}
+			}
+		}
+
+		return board;
+		/*
 		this.text = new JTextArea(15,23);
 		text.setWrapStyleWord(true);
 		text.setLineWrap(true);
 		text.setEditable(false);
-		
+
 		JPanel board = new BoardBuilder(this.text);
-		return board;
+		return board;*/
 	}
 }

@@ -1,4 +1,6 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.tile;
+
+import ch.bfh.monopoly.common.Player;
 
 public abstract class Property extends AbstractTile{
 

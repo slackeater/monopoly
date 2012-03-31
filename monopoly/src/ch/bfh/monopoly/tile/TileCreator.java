@@ -1,7 +1,9 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.tile;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import ch.bfh.monopoly.common.GameClient;
 
 public class TileCreator {
 
@@ -17,8 +19,6 @@ public class TileCreator {
 		System.out.println(loc.getLanguage());
 		createProperties();
 		createChanceCommChest(gameClient);
-
-
 	}
 	
 	public Tile[] getTilesArray(){
@@ -29,6 +29,7 @@ public class TileCreator {
 		createTerrains();
 		createRailroads();
 		createUtilities();
+		createCornersAndIncomeTax();
 		//TODO: create GO, FREEPARKING, CHANCE, COMMUNITY CHEST, JAIL, LUXURY TAX
 	}
 	
@@ -38,10 +39,23 @@ public class TileCreator {
 		tiles[22] = c;
 		tiles[36] = c;
 		
-//		CommunityChest cc = new CommunityChest("Community Chest",gameClient);
-//		tiles[2] = cc;
-//		tiles[17] = cc;
-//		tiles[33] = cc;
+		CommunityChest cc = new CommunityChest("Community Chest",gameClient);
+		tiles[2] = cc;
+		tiles[17] = cc;
+		tiles[33] = cc;
+	}
+	
+	public void createCornersAndIncomeTax(){
+		NonProperty c = new NonProperty("Go");
+		tiles[0] = c;
+		 c = new NonProperty("Jail");
+		tiles[10] = c;
+		 c = new NonProperty("Free Parking");
+		tiles[20] = c;
+		 c = new NonProperty("Go to Jail");
+		tiles[30] = c;
+		 c = new NonProperty("Income Tax");
+		tiles[38] = c;
 	}
 	
 	public void createUtilities(){
