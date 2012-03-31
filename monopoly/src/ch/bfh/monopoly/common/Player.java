@@ -41,8 +41,8 @@ public class Player {
 		//here we must remove the Tile from the list of the previous owner if it was previously owned
 		Player prevOwner;
 		Property property = (Property)t;
-		if (property.owner != null){
-			prevOwner = property.owner;
+		if (property.getOwner() != null){
+			prevOwner = property.getOwner();
 			prevOwner.removeProperty(property);
 
 		}
