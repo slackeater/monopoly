@@ -115,7 +115,6 @@ public abstract class AbstractTile extends JPanel implements Tile {
 				}
 			}
 		}
-
 	}
 
 	/**

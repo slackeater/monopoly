@@ -35,10 +35,8 @@ import ch.bfh.monopoly.tile.Terrain;
 
 public class MonopolyGUI extends JFrame {
 
-	private JPanel board;
-
 	//this bidimensional array is only used to draw the JPanel
-	private JPanel monopolyTiles[][];
+	private BoardTile monopolyTiles[][];
 
 	private JTextArea text;
 	private static final long serialVersionUID = 1L;
@@ -49,7 +47,6 @@ public class MonopolyGUI extends JFrame {
 	
 	private Token[] initTokens = new Token[8];
 	
-	List<Token> tokensTile = new ArrayList<Token>();
 	public MonopolyGUI(){
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
@@ -65,10 +62,10 @@ public class MonopolyGUI extends JFrame {
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 
-		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
-		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[1]);
-		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[2]);
-		((AbstractTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);
+		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
+		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[1]);
+		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[2]);
+		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);
 		pack();
 	}
 
@@ -241,8 +238,8 @@ public class MonopolyGUI extends JFrame {
 	private JPanel drawBoard(){
 		GridBagLayout layout = new GridBagLayout();
 
-		board = new JPanel(layout);
-		monopolyTiles = new JPanel[11][11];
+		JPanel board = new JPanel(layout);
+		monopolyTiles = new BoardTile[11][11];
 
 		for(int j = 0 ; j < 11 ; j++){ //columns
 			for(int i = 0 ; i < 11 ; i++){ //rows
