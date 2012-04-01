@@ -54,8 +54,8 @@ public class NetworkClient extends Thread {
 	
 	public void run(){
 		try {
-			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

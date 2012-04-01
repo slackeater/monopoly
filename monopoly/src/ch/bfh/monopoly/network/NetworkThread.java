@@ -25,8 +25,8 @@ public class NetworkThread extends Thread{
 		System.out.println("We can receive data.");
 
 		try {
-			in = new ObjectInputStream(sock.getInputStream());
 			out = new ObjectOutputStream(sock.getOutputStream());
+			in = new ObjectInputStream(sock.getInputStream());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
