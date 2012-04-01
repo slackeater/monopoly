@@ -15,16 +15,9 @@ public class Terrain extends Property {
 	private int rent4house;
 	private int renthotel;
 
-<<<<<<< HEAD
 	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
 			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id){
 		super(name, price, group, mortgageValue, coordX, coordY, id);
-		super();
-=======
-	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id){
-		super(name, price, group, mortgageValue, coordX, coordY, id);
->>>>>>> branch 'master' of https://slackeater@github.com/slackeater/monopoly.git
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -38,14 +31,11 @@ public class Terrain extends Property {
 		this.houseCost = houseCost;
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
-<<<<<<< HEAD
 		
 	
-=======
 		this.setCoordX(coordX);
 		this.setCoordY(coordY);
 		
->>>>>>> branch 'master' of https://slackeater@github.com/slackeater/monopoly.git
 		mortgageActive = false;
 		hotelCount=0;
 		houseCount=0;
