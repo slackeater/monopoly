@@ -34,6 +34,11 @@ public class GameClient {
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
+	
+	public void transferPropertyForPrice(String fromName, String toName, int propertyID, int price){
+		board.transferProperty(fromName, toName, propertyID);
+		board.transferMoney(fromName, toName, price);
+	}
 
 	
 }

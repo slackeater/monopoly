@@ -38,16 +38,7 @@ public class Player {
 	}
 	
 	public void addProperty(Tile t){
-		//here we must remove the Tile from the list of the previous owner if it was previously owned
-		Player prevOwner;
-		Property property = (Property)t;
-		if (property.getOwner() != null){
-			prevOwner = property.getOwner();
-			prevOwner.removeProperty(property);
-
-		}
-		property.setOwner(this);
-		properties.add(property);
+		properties.add(t);
 	}
 
 	public boolean removeProperty(Tile t){
@@ -56,6 +47,14 @@ public class Player {
 	
 	public boolean ownsProperty(Tile t){
 		return properties.contains(t);
+	}
+	
+	public void depositMoney(int value){
+		this.account+=value;
+	}
+	
+	public void withdawMoney(int value){
+		this.account-=value;
 	}
 	
 	public String getName() {
@@ -70,9 +69,10 @@ public class Player {
 		return account;
 	}
 
-	public void setAccount(int account) {
-		this.account = account;
-	}
+	//PROBABLY NOT NEEDED
+//	public void setAccount(int account) {
+//		this.account = account;
+//	}
 
 	public ArrayList<Tile> getProperties() {
 		return properties;
