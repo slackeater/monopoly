@@ -25,6 +25,7 @@ public class BoardInitTests {
 
 	Locale loc;
 	GameClient gc ;
+	int[] terrainPositions = { 1, 3, 6, 8, 9, 11, 13, 14, 16, 18, 19, 21, 23, 24, 26, 27, 29, 31, 32, 34, 37, 39 };
 	/** 
 	 * Setup this test class to test the creation of the board with 
 	 * the local set to English
@@ -78,6 +79,18 @@ public class BoardInitTests {
 		assertTrue(mv.getName().equals("Advance to Pennsylvania Railroad"));
 	
 
+	}
+	
+	@Test
+	public void printNameOfTile(){
+		Board board= new Board(loc,gc);
+		int tileNumber;
+		//Tests some Terrains
+		//System.out.println(sm.tiles[1]);
+		for (int i=0;i<board.tiles.length;i++){
+		System.out.println("Tile"+i+ ":  " +board.tiles[i].getName() + "  :  "+ board.tiles[i].getID());
+		}
+		assertTrue(((Terrain)board.tiles[1]).getName().equals("Mediterranean Avenue"));
 	}
 	
 	@Test

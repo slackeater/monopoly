@@ -26,6 +26,12 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private int numberOfTokens = 0;
 	protected Set<Token> tokens = new HashSet<Token>();
 	
+	public AbstractTile(String name, int coordX, int coordY, int id){
+		this.name= name;
+		this.coordX=coordX;
+		this.coordY=coordY;
+		this.id=id;
+	}
 
 	/**
 	 * Remove a token from this tile

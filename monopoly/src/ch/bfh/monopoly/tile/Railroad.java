@@ -4,11 +4,10 @@ public class Railroad extends Property {
 	private int rent;
 	private int[] rrMultiplier = {1,2,4,8};
 	
-	public Railroad (String name, int price, int rent, int mortgageValue){ 
-		this.name = name;
-		this.price = price;
+
+	public Railroad (String name, int price, int rent, String group, int mortgageValue, int coordX, int coordY, int id){ 
+		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id);
 		this.rent = rent;
-		this.mortgageValue= mortgageValue;
 	} 
 	
 	
@@ -23,7 +22,11 @@ public class Railroad extends Property {
 	public int getRent() {
 		return rent;
 	}
-
+	
+	@Override
+	public int getID(){
+		return super.getId();
+	}
 
 	public void setRent(int rent) {
 		this.rent = rent;

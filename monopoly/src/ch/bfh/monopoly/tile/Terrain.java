@@ -15,9 +15,9 @@ public class Terrain extends Property {
 	private int rent4house;
 	private int renthotel;
 
-	public Terrain (String name, int price, int rent, int houseCost, int hotelCost, int mortgageValue,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, int coordX, int coordY){
-
+	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id){
+		super(name, price, group, mortgageValue, coordX, coordY, id);
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -40,9 +40,7 @@ public class Terrain extends Property {
 		houseCount=0;
 	}
 
-	public Terrain() {
-		// TODO Auto-generated constructor stub
-	}
+
 
 	public int feeToCharge(){
 		return rentRates[houseCount] + renthotel*hotelCount;
@@ -86,6 +84,11 @@ public class Terrain extends Property {
 
 	public void setMortgageActive(boolean mortgageActive) {
 		this.mortgageActive = mortgageActive;
+	}
+	
+	@Override
+	public int getID(){
+		return super.getId();
 	}
 	
 	public String toString(){

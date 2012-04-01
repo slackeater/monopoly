@@ -16,11 +16,11 @@ public class CommunityChest extends AbstractTile {
 	private GameClient gameClient; 
 
 
-	public CommunityChest(String name, GameClient gameClient) {
+	public CommunityChest(String name, int coordX, int coordY, int id, GameClient gameClient) {
+		super(name, coordX, coordY, id);
 		loc = gameClient.getLoc();
 		commChestCardDeck = new TileEvent[16];
 		//createCommChestCards();
-		this.name = name;
 		
 		// constructor should create the chance events, all 20
 	}
@@ -52,6 +52,11 @@ public class CommunityChest extends AbstractTile {
 		}
 	}
 
+	@Override
+	public int getID() {
+		return super.getId();
+	}
+	
 	/**
 	 * LIST HANDLING create array of fixed length which is master list of all
 	 * events

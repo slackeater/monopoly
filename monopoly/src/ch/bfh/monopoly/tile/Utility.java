@@ -2,7 +2,8 @@ package ch.bfh.monopoly.tile;
 
 public class Utility extends Property{
 
-	public Utility (String name, int price, int mortgageValue){ 
+	public Utility (String name, int price,String group, int mortgageValue, int coordX, int coordY, int id){ 
+		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id);
 		this.name = name;
 		this.price = price;
 		this.mortgageValue= mortgageValue;
@@ -14,6 +15,11 @@ public class Utility extends Property{
 		//if owner owns other utility  return randNumber * 10
 		//else return randNumber * 4
 		return 0;
+	}
+	
+	@Override
+	public int getID(){
+		return super.getId();
 	}
 	
 	public String toString(){
