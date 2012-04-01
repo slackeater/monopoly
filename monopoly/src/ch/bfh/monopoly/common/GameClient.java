@@ -21,6 +21,10 @@ public class GameClient {
 	
 	public void initBoard(){
 		board = new Board(loc, this);
+		//a net message should come with the list of player names
+		//until then we have a mock object full of player names
+		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
+		board.createPlayers(playerNames);
 	}
 
 	public Locale getLoc(){

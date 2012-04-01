@@ -13,7 +13,8 @@ public class Board {
 	Player[] players;
 	public Tile[] tiles;
 	private Locale loc;
-
+	private int availableHouses;
+	private int availableHotels;
 	private Player me;
 	private Player currentPlayer;
 
@@ -23,6 +24,30 @@ public class Board {
 
 		TileCreator tc = new TileCreator(loc, gameClient);
 		tiles = tc.getTilesArray();
+		
+		availableHouses=32;
+		availableHotels=12;
+	}
+	
+	public void createPlayers(String[] playerNames){
+		players = new Player[playerNames.length];
+		String bundleData =  ResourceBundle.getBundle("tile", loc).getString("startMoney");
+		bundleData = bundleData.trim();
+		int startMoney = Integer.parseInt(bundleData);
+		for (int i=0; i<playerNames.length; i++){
+			players[i] = new Player(playerNames[i], startMoney);
+		}
+	}
+	
+	public Player getPlayerByName(String name){
+		Player p = null;
+		for (int i=0;i<players.length;i++){
+			String playerName = players[i].getName();
+			if (playerName.equals(name)) 
+				p= players[i];
+		}
+		if (p==null) throw new RuntimeException("Player not found with the given name");
+		return p;
 	}
 	
 	public TileInfo getTileInfoByID(int id){
@@ -88,9 +113,6 @@ public class Board {
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY( t.getCoordY());
 		}
-		
-		
-
 		return tileInfo;
 	}
 }

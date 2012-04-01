@@ -90,14 +90,6 @@ public class Player {
 		this.position = position;
 	}
 
-	public Socket getSocket() {
-		return socket;
-	}
-
-	public void setSocket(Socket socket) {
-		this.socket = socket;
-	}
-
 	public boolean isInJail() {
 		return isInJail;
 	}
