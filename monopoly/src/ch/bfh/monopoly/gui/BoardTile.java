@@ -2,13 +2,17 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.tile.TileInfo;
 
 public class BoardTile extends JPanel{
 
@@ -17,7 +21,36 @@ public class BoardTile extends JPanel{
 	 */
 	private static final long serialVersionUID = 3335141445010622095L;
 	private int numberOfTokens = 0;
-	protected Set<Token> tokens = new HashSet<Token>();
+	private Set<Token> tokens = new HashSet<Token>();
+	private TileInfo ti;
+	
+	/**
+	 * Construct a new BoardTile
+	 * @param ti the TileInfo used to passed the information
+	 */
+	public BoardTile(TileInfo ti){
+		this.ti = ti;
+		setBorder(BorderFactory.createEtchedBorder());
+		setLayout(new GridLayout(2,1));
+		add(new JLabel(ti.getGroup()));
+		add(new JLabel(ti.getName()));
+	}
+	
+	/**
+	 * Get the X coordinate of this tile
+	 * @return an int that correspond to the X coordinate
+	 */
+	public int getTileInfoX(){
+		return ti.getCoordX();
+	}
+	
+	/**
+	 * Get the Y coordinate of this tile
+	 * @return an int that correspond to the Y coordinate
+	 */
+	public int getTileInfoY(){
+		return ti.getCoordY();
+	}
 	
 	/**
 	 * Remove a token from this tile

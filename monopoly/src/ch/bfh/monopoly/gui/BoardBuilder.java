@@ -35,14 +35,14 @@ public class BoardBuilder extends JPanel {
 	
 	private JTextArea eventPane;
 
-	private List<Tile> tilesList = new ArrayList<Tile>();
+	private List<BoardTile> tilesList;
 
 	/**
 	 * Construct a new board
 	 * @param eventPane the JTextArea used to draw event
 	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea eventPane, List<Tile> tiles){
+	public BoardBuilder(JTextArea eventPane, List<BoardTile> tiles){
 		this.eventPane = eventPane;
 		this.tilesList = tiles;
 		setLayout(new GridBagLayout());
@@ -116,23 +116,21 @@ public class BoardBuilder extends JPanel {
 	}
 
 	/**
-	 * Initialize the four sides of the board 
+	 * Initialize the board 
 	 * with the relatives tiles
 	 */
 	private void drawBoard(){
-		int j;
-		
-		for(j = 0 ; j < this.tilesList.size() ; j++){
-			JPanel tile = (JPanel) this.tilesList.get(j);
+		for(int j = 0 ; j < this.tilesList.size() ; j++){
+			BoardTile tile = this.tilesList.get(j);
 			
 			//corner
 			if(j % 10 == 0){
-				add(tile, new GridBagConstraints(tile.getX(), tile.getY(), 1, 1, WEIGHT_CORNER_X, WEIGHT_CORNER_Y, 
+				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_CORNER_X, WEIGHT_CORNER_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			}
 			//other tiles
 			else{
-				add(tile, new GridBagConstraints(tile.getX(), tile.getY(), 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
+				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 			}
 		}

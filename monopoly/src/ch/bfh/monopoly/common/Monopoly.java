@@ -28,11 +28,12 @@ public class Monopoly {
 		//why loc and game client?????
 		Board b = new Board(new Locale("EN"), gc);
 		
+		BoardController bc = new BoardController(b);
 		
 		
 		
 		// TODO Auto-generated method stub
-		JFrame mainFrame = new MonopolyGUI();
+		JFrame mainFrame = new MonopolyGUI(bc);
 		final String mainTitle = "Monopoly";
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		

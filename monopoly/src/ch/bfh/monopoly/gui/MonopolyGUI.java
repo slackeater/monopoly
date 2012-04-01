@@ -32,6 +32,7 @@ import ch.bfh.monopoly.tile.Chance;
 import ch.bfh.monopoly.tile.NonProperty;
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.TileInfo;
 
 
 public class MonopolyGUI extends JFrame {
@@ -42,8 +43,6 @@ public class MonopolyGUI extends JFrame {
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	
 	private BoardController bc;
-	
-	
 	
 	//this bidimensional array is only used to draw the JPanel
 	private BoardTile monopolyTiles[][];
@@ -77,19 +76,24 @@ public class MonopolyGUI extends JFrame {
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 
-		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
+	/*	((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
 		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[1]);
 		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[2]);
-		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);
+		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);*/
 		pack();
 	}
 
+	/**
+	 * Initialise the list of tiles
+	 */
 	private void initTiles(){
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoByID(j);
+			
+			BoardTile bc = new BoardTile(t);
+			
+			this.tiles.add(bc);
 		}
-		
-		
 	}
 	
 	
@@ -223,7 +227,7 @@ public class MonopolyGUI extends JFrame {
 					t.start();
 				}
 
-				if(columnCtr <= ((throwValue+currentPos)%40)){
+				/*if(columnCtr <= ((throwValue+currentPos)%40)){
 					//removing the token at the previous tile
 					((AbstractTile) monopolyTiles[columnCtr-1][0]).removeToken(newPlace);
 					
@@ -240,7 +244,7 @@ public class MonopolyGUI extends JFrame {
 					throwValue = 0;
 					throwDice.setEnabled(true);
 				}
-
+			*/
 
 			}
 		});
@@ -260,7 +264,7 @@ public class MonopolyGUI extends JFrame {
 	 * @return
 	 */
 	private JPanel drawBoard(){
-		GridBagLayout layout = new GridBagLayout();
+		/* layout = new GridBagLayout();
 
 		JPanel board = new JPanel(layout);
 		monopolyTiles = new BoardTile[11][11];
@@ -377,14 +381,14 @@ public class MonopolyGUI extends JFrame {
 			}
 		}
 
-		return board;
-		/*
+		return board;*/
+		
 		this.text = new JTextArea(15,23);
 		text.setWrapStyleWord(true);
 		text.setLineWrap(true);
 		text.setEditable(false);
 
-		JPanel board = new BoardBuilder(this.text);
-		return board;*/
+		JPanel board = new BoardBuilder(this.text, this.tiles);
+		return board;
 	}
 }
