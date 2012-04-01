@@ -9,10 +9,10 @@ public class Terrain extends Property {
 
 	
 	private int[] rentRates = new int[5];	
-	private int rent1house;
-	private int rent2house;
-	private int rent3house;
-	private int rent4house;
+//	private int rent1house;
+//	private int rent2house;
+//	private int rent3house;
+//	private int rent4house;
 	private int renthotel;
 
 	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
@@ -42,6 +42,13 @@ public class Terrain extends Property {
 	}
 
 
+	public int getRentByHouseCount(int houseCount){
+		return rentRates[hotelCount];
+	}
+	
+	public int getRentHotel(){
+		return renthotel;
+	}
 
 	public int feeToCharge(){
 		return rentRates[houseCount] + renthotel*hotelCount;

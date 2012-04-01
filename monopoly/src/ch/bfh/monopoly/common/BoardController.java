@@ -1,4 +1,5 @@
 package ch.bfh.monopoly.common;
+import ch.bfh.monopoly.tile.TileInfo;
 
 public class BoardController {
 
@@ -14,6 +15,10 @@ public class BoardController {
 	
 	public int getYCoordForTileAtIndex(int index){
 		return board.tiles[index].getCoordY();
+	}
+	
+	public TileInfo getTileInfoByID(int id){
+		return board.getTileInfoByID(id);
 	}
 	
 }
