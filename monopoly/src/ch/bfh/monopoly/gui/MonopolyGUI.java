@@ -9,6 +9,8 @@ import java.awt.Insets;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -76,10 +78,10 @@ public class MonopolyGUI extends JFrame {
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 
-	/*	((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[0]);
-		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[1]);
-		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[2]);
-		((BoardTile)monopolyTiles[throwValue][0]).addToken(initTokens[3]);*/
+		tiles.get(0).addToken(initTokens[0]);
+		tiles.get(0).addToken(initTokens[1]);
+		tiles.get(0).addToken(initTokens[2]);
+		tiles.get(0).addToken(initTokens[3]);
 		pack();
 	}
 
@@ -95,7 +97,6 @@ public class MonopolyGUI extends JFrame {
 			this.tiles.add(bc);
 		}
 	}
-	
 	
 	/**
 	 * Panel for the left container
@@ -227,12 +228,12 @@ public class MonopolyGUI extends JFrame {
 					t.start();
 				}
 
-				/*if(columnCtr <= ((throwValue+currentPos)%40)){
+				if(columnCtr <= ((throwValue+currentPos)%40)){
 					//removing the token at the previous tile
-					((AbstractTile) monopolyTiles[columnCtr-1][0]).removeToken(newPlace);
+					tiles.get(columnCtr-1).removeToken(newPlace);
 					
 					//add the token to the tile we are on
-					((AbstractTile) monopolyTiles[columnCtr][0]).addToken(newPlace);
+					tiles.get(columnCtr).addToken(newPlace);
 					
 					columnCtr++;
 					repaint();
@@ -244,8 +245,6 @@ public class MonopolyGUI extends JFrame {
 					throwValue = 0;
 					throwDice.setEnabled(true);
 				}
-			*/
-
 			}
 		});
 

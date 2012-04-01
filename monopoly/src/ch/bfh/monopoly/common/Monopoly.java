@@ -30,8 +30,6 @@ public class Monopoly {
 		
 		BoardController bc = new BoardController(b);
 		
-		
-		
 		// TODO Auto-generated method stub
 		JFrame mainFrame = new MonopolyGUI(bc);
 		final String mainTitle = "Monopoly";

@@ -1,6 +1,8 @@
 package ch.bfh.monopoly.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -32,17 +34,27 @@ public class BoardTile extends JPanel{
 	public BoardTile(TileInfo ti){
 		this.ti = ti;
 		setBorder(BorderFactory.createEtchedBorder());
-		setLayout(new GridLayout(2,1));
-		
+		setLayout(new BorderLayout());
+		//setLayout(null);
+	
+		//System.out.println("Width : " + getWidth());
 		JPanel color = new JPanel();
+		
+		//this.setPreferredSize(new Dimension(300,300));
 
+		//color.setBounds(0, 0, getWidth(), (int)getHeight()/3);
+		
 		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
 		}
 		
-		add(color);
-		add(new JLabel(ti.getName()));
+		add(color, BorderLayout.NORTH);
+		
+		JLabel name = new JLabel(ti.getName());
+		//name.setBounds(0,(int)getHeight()/3, getWidth(), (int)(getHeight()-getHeight()/3));
+		add(name, BorderLayout.CENTER);
 	}
+	
 	
 	/**
 	 * Get the X coordinate of this tile
