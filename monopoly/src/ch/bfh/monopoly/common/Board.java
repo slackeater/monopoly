@@ -69,6 +69,7 @@ public class Board {
 			tileInfo.setMortgageValue(t.getMortgageValue());
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY( t.getCoordY());
+			tileInfo.setRGB(t.getRGB());
 		}
 		if (tile instanceof Railroad){
 			Railroad t = (Railroad)tile;

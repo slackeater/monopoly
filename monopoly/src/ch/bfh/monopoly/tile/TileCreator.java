@@ -83,8 +83,12 @@ public class TileCreator {
 			toParse = ResourceBundle.getBundle("tile", loc).getString(
 					"tile" + i + "-coordY");
 			int coordY = parseResource(toParse);
-
-
+			
+			String rgb = ResourceBundle.getBundle("tile", loc).getString(
+					"tile" + i + "-rgb");
+			
+			rgb = rgb.trim();
+			
 			if (group.equals("railroad"))
 				t = new Railroad(name, price, rent, group, mortgageValue, coordX,coordY,i);
 			else if (group.equals("utility"))
@@ -97,7 +101,7 @@ public class TileCreator {
 				t = new NonProperty(name, coordX, coordY,i);
 			else 
 				t = new Terrain(name,  price, houseCost,  hotelCost,   rent,
-						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i);
+						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i, rgb);
 			tiles[i] = t;
 		}
 	}

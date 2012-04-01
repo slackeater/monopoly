@@ -16,6 +16,7 @@ public class TileInfo {
 	int mortgageValue;
 	int coordX;
 	int coordY;
+	String rgb;
 
 	public TileInfo() {
 		name = null;
@@ -32,6 +33,7 @@ public class TileInfo {
 		mortgageValue = -1;
 		coordX = -1;
 		coordY = -1;
+		rgb = null;
 	}
 
 	public String getName() {
@@ -144,6 +146,14 @@ public class TileInfo {
 
 	public void setCoordY(int coordY) {
 		this.coordY = coordY;
+	}
+	
+	public String getRGB(){
+		return this.rgb;
+	}
+	
+	public void setRGB(String rgb){
+		this.rgb = rgb;
 	}
 
 }

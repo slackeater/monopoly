@@ -14,9 +14,10 @@ public class Terrain extends Property {
 //	private int rent3house;
 //	private int rent4house;
 	private int renthotel;
+	private String rgb;
 
 	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id){
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id, String rgb){
 		super(name, price, group, mortgageValue, coordX, coordY, id);
 		this.name = name;
 		//this.id = id;
@@ -31,10 +32,11 @@ public class Terrain extends Property {
 		this.houseCost = houseCost;
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
+		this.rgb = rgb;
 		
-	
 		this.setCoordX(coordX);
 		this.setCoordY(coordY);
+		
 		
 		mortgageActive = false;
 		hotelCount=0;
@@ -92,6 +94,10 @@ public class Terrain extends Property {
 
 	public void setMortgageActive(boolean mortgageActive) {
 		this.mortgageActive = mortgageActive;
+	}
+	
+	public String getRGB(){
+		return this.rgb;
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -32,7 +33,14 @@ public class BoardTile extends JPanel{
 		this.ti = ti;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(2,1));
-		add(new JLabel(ti.getGroup()));
+		
+		JPanel color = new JPanel();
+
+		if(ti.getRGB() != null){
+			color.setBackground(Color.decode(ti.getRGB()));
+		}
+		
+		add(color);
 		add(new JLabel(ti.getName()));
 	}
 	

@@ -84,7 +84,7 @@ public class BoardBuilder extends JPanel {
 
 		p.add(notify, BorderLayout.NORTH);
 		p.setOpaque(false);
-		add(p, new GridBagConstraints(1, 1, 9,9, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
+		add(p, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/
