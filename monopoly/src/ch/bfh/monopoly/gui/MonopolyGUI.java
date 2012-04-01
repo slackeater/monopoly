@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -43,7 +44,6 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
 	private int currentPos = 0;
-	private int tempNumPlayers = 4;
 	private int columnCtr = 1;
 	private Token newPlace = null;
 	
@@ -54,7 +54,6 @@ public class MonopolyGUI extends JFrame {
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
-		//((AbstractTile)tilesForDice.get(0)).setDraw(tempNumPlayers);
 
 		//it must be moved in another class
 		initTokens[0] = new Token(Color.RED,0.1,0.375);
@@ -186,12 +185,10 @@ public class MonopolyGUI extends JFrame {
 
 		throwDice.addActionListener(new ActionListener() {
 
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Timer t = new Timer(750,this);
 				t.setInitialDelay(1250);
-			
 				
 				if(throwValue == 0){
 					text.append("I'm throwing the dice... \n");
@@ -206,20 +203,10 @@ public class MonopolyGUI extends JFrame {
 				}
 
 				if(columnCtr <= ((throwValue+currentPos)%40)){
-					//((AbstractTile)tilesForDice.get(columnCtr-1)).setDraw(0);
-					//repaint();
-					
-					System.out.println("REmoving token at column" + (columnCtr-1));
+					//removing the token at the previous tile
 					((AbstractTile) monopolyTiles[columnCtr-1][0]).removeToken(newPlace);
 					
-					//System.out.println("Deleting on " + (columnCtr-1) + " and 0");
-
-					//((AbstractTile)tilesForDice.get(columnCtr)).setDraw(tempNumPlayers);
-					//System.out.println("Drawing on " + (columnCtr) + " and 0");
-					
-					//build a new list of tokens
-				
-					System.out.println("we are at column " + columnCtr);
+					//add the token to the tile we are on
 					((AbstractTile) monopolyTiles[columnCtr][0]).addToken(newPlace);
 					
 					columnCtr++;

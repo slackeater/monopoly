@@ -1,14 +1,19 @@
 package ch.bfh.monopoly.tile;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.TileEvent;
@@ -32,7 +37,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	 * @param index the index of the token to be removed
 	 */
 	public void removeToken(Token t){
-			this.tokens.remove(t);
+		this.tokens.remove(t);
 	}
 
 	/**
@@ -96,7 +101,7 @@ public abstract class AbstractTile extends JPanel implements Tile {
 		if(this.numberOfTokens >= 1 && this.numberOfTokens <= 8){
 			for(int i = 0 ; i < this.numberOfTokens ; i++){
 				Iterator<Token> itr = this.tokens.iterator();
-				
+
 				while(itr.hasNext()){
 					Token t = itr.next();
 					g2.setColor(t.getColor());

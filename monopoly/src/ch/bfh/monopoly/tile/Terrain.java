@@ -17,6 +17,7 @@ public class Terrain extends Property {
 
 	public Terrain (String name, int price, int rent, int houseCost, int hotelCost, int mortgageValue,
 			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel){
+		super();
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -31,7 +32,7 @@ public class Terrain extends Property {
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
 		
-		
+	
 		
 		mortgageActive = false;
 		hotelCount=0;
