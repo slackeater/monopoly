@@ -19,7 +19,7 @@ import ch.bfh.monopoly.tile.Utility;
 
 
 
-
+//I can't stand merging
 
 public class BoardInitTests {
 
