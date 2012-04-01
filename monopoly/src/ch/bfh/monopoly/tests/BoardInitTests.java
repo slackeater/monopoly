@@ -14,6 +14,7 @@ import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Railroad;
 import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
+import ch.bfh.monopoly.tile.TileInfo;
 import ch.bfh.monopoly.tile.Utility;
 
 
@@ -40,15 +41,11 @@ public class BoardInitTests {
 	@Test
 	public void boardTilesHaveNames(){
 		Board board= new Board(loc,gc);
-//		for (int i = 0; i<board.tiles.length; i++){
-//			Tile t = board.tiles[i];
-//			assertTrue((t.getName() != null));
-//		}
 		Tile t = board.tiles[1];
 		assertTrue((t.getName() != null));
-
 	}
 	
+	@Test
 	public void boardTilesHaveXYCoord(){
 		Board board= new Board(loc,gc);
 		for (int i = 0; i<board.tiles.length; i++){
@@ -57,6 +54,16 @@ public class BoardInitTests {
 			assertTrue((t.getCoordX() == 0));
 			assertTrue((t.getCoordY() == 0));}
 		}
+	}
+	
+	@Test
+	public void boardControllerGetsTileInformation(){
+		Board board= new Board(loc,gc);
+		BoardController bc = new BoardController(board);
+		TileInfo ti = bc.getTileInfoByID(1);
+		assertTrue(ti.getName().equals("Mediterranean Avenue"));
+		assertTrue(ti.getPrice()==60);
+		assertTrue(ti.getGroup().equals("purple"));
 		
 	}
 	
@@ -88,7 +95,8 @@ public class BoardInitTests {
 		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);
 		for (int i=0;i<board.tiles.length;i++){
-		System.out.println("Tile"+i+ ":  " +board.tiles[i].getName() + "  :  "+ board.tiles[i].getID());
+		System.out.println("Tile"+i+ ":  " +board.tiles[i].getName() + "  :  "+ board.tiles[i].getID() + " xyCoord: " + board.tiles[i].getCoordX()+","+board.tiles[i].getCoordY());
+		
 		}
 		assertTrue(((Terrain)board.tiles[1]).getName().equals("Mediterranean Avenue"));
 	}
