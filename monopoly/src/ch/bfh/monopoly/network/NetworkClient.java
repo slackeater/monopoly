@@ -3,6 +3,7 @@ package ch.bfh.monopoly.network;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -53,9 +54,18 @@ public class NetworkClient extends Thread {
 	}
 	
 	public void run(){
-		try {
+		/*try {
 			in = new ObjectInputStream(socket.getInputStream());
 			out = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		PrintWriter out;
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+			out.println("I'm sendinf some text");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,7 +2,7 @@ package ch.bfh.monopoly.network;
 
 import java.io.Serializable;
 
-public class NetMessage implements Serializable {
+public class NetMessage {
 
 	/**
 	 * 

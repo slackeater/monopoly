@@ -18,7 +18,7 @@ public class NetClientTest {
 	
 	@Test
 	public void testConnection2() {
-		NetworkClient connection = new NetworkClient("192.168.1.8", 1234);
+		NetworkClient connection = new NetworkClient("192.168.1.2", 1234);
 		connection.openConnection();
 		connection.start();
 		//

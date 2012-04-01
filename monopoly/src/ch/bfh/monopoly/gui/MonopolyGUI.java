@@ -23,6 +23,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
 
+import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.TestTile;
 import ch.bfh.monopoly.common.Token;
@@ -35,6 +36,15 @@ import ch.bfh.monopoly.tile.Terrain;
 
 public class MonopolyGUI extends JFrame {
 
+	
+	private final int TILE_NUMBER = 40;
+	
+	private List<BoardTile> tiles = new ArrayList<BoardTile>();
+	
+	private BoardController bc;
+	
+	
+	
 	//this bidimensional array is only used to draw the JPanel
 	private BoardTile monopolyTiles[][];
 
@@ -47,7 +57,12 @@ public class MonopolyGUI extends JFrame {
 	
 	private Token[] initTokens = new Token[8];
 	
-	public MonopolyGUI(){
+	public MonopolyGUI(BoardController bc){
+		this.bc = bc;
+		
+		//initialize the tiles
+		initTiles();
+		
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
@@ -69,6 +84,15 @@ public class MonopolyGUI extends JFrame {
 		pack();
 	}
 
+	private void initTiles(){
+		for(int j = 0 ; j < TILE_NUMBER ; j++){
+			TileInfo t = bc.getTileInfoByID(j);
+		}
+		
+		
+	}
+	
+	
 	/**
 	 * Panel for the left container
 	 * @return the left jpanel
