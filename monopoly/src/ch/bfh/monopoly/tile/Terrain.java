@@ -16,7 +16,8 @@ public class Terrain extends Property {
 	private int renthotel;
 
 	public Terrain (String name, int price, int rent, int houseCost, int hotelCost, int mortgageValue,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel){
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, int coordX, int coordY){
+
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -30,7 +31,8 @@ public class Terrain extends Property {
 		this.houseCost = houseCost;
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
-		
+		this.setCoordX(coordX);
+		this.setCoordY(coordY);
 		
 		
 		mortgageActive = false;

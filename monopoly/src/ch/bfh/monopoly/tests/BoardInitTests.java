@@ -48,6 +48,17 @@ public class BoardInitTests {
 
 	}
 	
+	public void boardTilesHaveXYCoord(){
+		Board board= new Board(loc,gc);
+		for (int i = 0; i<board.tiles.length; i++){
+			Tile t = board.tiles[i];
+			if (t instanceof Terrain){
+			assertTrue((t.getCoordX() == 0));
+			assertTrue((t.getCoordY() == 0));}
+		}
+		
+	}
+	
 	@Test
 	public void chanceCardsCreatedWithCorrectInfo() {
 

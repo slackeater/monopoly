@@ -23,9 +23,9 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private String description;
 	protected String name;
 	protected TileEvent event;
-
 	private int numberOfTokens = 0;
 	protected Set<Token> tokens = new HashSet<Token>();
+	
 
 	/**
 	 * Remove a token from this tile

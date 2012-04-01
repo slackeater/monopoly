@@ -35,6 +35,9 @@ public class TileCreator {
 	
 	public void createChanceCommChest(GameClient gameClient){
 		Chance c = new Chance("Chance",gameClient);
+		
+		//c.setCoordX(coordX);
+		//c.setCoordY(coordY);
 		tiles[7] = c;
 		tiles[22] = c;
 		tiles[36] = c;
@@ -116,9 +119,8 @@ public class TileCreator {
 	}
 
 	public void createTerrains() {
-		int[] terrainPositions = { 1, 3, 6, 8, 9, 11, 13, 14, 16, 18, 19, 21,
-				23, 24, 26, 27, 29, 31, 32, 34, 37, 39 };
-
+		
+				
 		for (int i = 0; i < terrainPositions.length; i++) {
 			
 			int terrainPosition = terrainPositions[i];
@@ -175,10 +177,20 @@ public class TileCreator {
 					"tile" + terrainPosition + "-mortgageValue");
 			toParse = toParse.trim();
 			int mortgageValue = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString(
+					"tile" + terrainPosition + "-coordX");
+			toParse = toParse.trim();
+			int coordX = Integer.parseInt(toParse);
+			
+			toParse = ResourceBundle.getBundle("tile", loc).getString(
+					"tile" + terrainPosition + "-coordY");
+			toParse = toParse.trim();
+			int coordY = Integer.parseInt(toParse);
 
 			Terrain t = new Terrain(tileName, tilePrice, tileRent, houseCost,
 					hotelCost, mortgageValue, rent1House, rent2House,
-					rent3House, rent4House, rentHotel);
+					rent3House, rent4House, rentHotel, coordX, coordY);
 			tiles[terrainPositions[i]] = t;
 		}
 	}
