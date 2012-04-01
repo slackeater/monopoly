@@ -21,8 +21,8 @@ public class NetClientTest {
 		NetworkClient connection = new NetworkClient("192.168.1.2", 1234);
 		connection.openConnection();
 		connection.start();
-		//
-		// }
+	//	while (connection.messageReceived());
+
 	}
 
 	// @Test

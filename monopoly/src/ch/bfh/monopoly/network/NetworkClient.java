@@ -3,17 +3,14 @@ package ch.bfh.monopoly.network;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
 public class NetworkClient extends Thread {
 
-	
 	private Socket socket;
 	final int QUEUE_LENGTH = 20;
 	final String SERVER_ADDR;
@@ -24,79 +21,70 @@ public class NetworkClient extends Thread {
 	static public boolean connectionOpenClient = true;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
-	
+	private boolean messageReceived = false;
 
-	public NetworkClient(String ip, int port){
+	public NetworkClient(String ip, int port) {
 		this.SERVER_ADDR = ip;
 		this.PORT = port;
 		messageQueue = new NetMessage[5];
 	}
-	
-	public boolean hasMessages(){
+
+	public boolean hasMessages() {
 		return (msgCount > 0);
 	}
-	
 
-	public void openConnection(){
-		
+	public void openConnection() {
+
 		try {
 			socket = new Socket(SERVER_ADDR, PORT);
 		} catch (UnknownHostException e) {
-			errorMessage= e.getMessage();
+			errorMessage = e.getMessage();
 			System.out.println(errorMessage);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			errorMessage= e.getMessage();
+			errorMessage = e.getMessage();
 			System.out.println(errorMessage);
-			
+
 		}
-		
+
 	}
-	
-	public void run(){
-		/*try {
-			in = new ObjectInputStream(socket.getInputStream());
+
+	public void run() {
+		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		PrintWriter out;
-		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
-			out.println("I'm sendinf some text");
+			in = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		checkMessages();
+
+	}
+
+	public void checkMessages() {
 		while (connectionOpenClient) {
-			checkMessages();
-		}
-
-	}
-	
-
-	
-	public void checkMessages(){
-		try {
-			Object o;
-			if ( (o= in.readObject()) != null){
-				((NetMessage)o).toString();
+			try {
+				Object o;
+				while ((o = in.readObject()) != null) {
+					((NetMessage) o).toString();
+					messageReceived = true;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
+
+	public boolean messageReceived(){
+		return messageReceived;
+	}
 	
-	
-	
-	public void sendMessage(NetMessage n){
+	public void sendMessage(NetMessage n) {
 		try {
 			out.writeObject(n);
 		} catch (IOException e) {
@@ -105,8 +93,3 @@ public class NetworkClient extends Thread {
 		}
 	}
 }
-
-
-	
-	
-	
