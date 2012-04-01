@@ -8,10 +8,14 @@ public abstract class Property extends AbstractTile{
 	protected Player owner;
 	protected int mortgageValue;
 	protected boolean mortgageActive;
-	
-	//how are we keeping track of what group a property belongs to?
 	private String group;
 
+	public Property(String name, int price, String group, int mortgageValue, int coordX, int coordY,int id){
+		super(name, coordX, coordY,id);
+		this.price=price;
+		this.group=group;
+		this.mortgageValue=mortgageValue;
+	}
 
 	public abstract int feeToCharge();
 	

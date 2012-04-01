@@ -16,11 +16,11 @@ public class Chance extends AbstractTile {
 	private GameClient gameClient; 
 
 
-	public Chance(String name, GameClient gameClient) {
+	public Chance(String name, int coordX, int coordY, int id, GameClient gameClient) {
+		super(name, coordX, coordY,id);
 		loc = gameClient.getLoc();
 		chanceCardDeck = new TileEvent[16];
 		createChanceCards();
-		this.name = name;
 		
 		// constructor should create the chance events, all 20
 	}
@@ -50,6 +50,11 @@ public class Chance extends AbstractTile {
 			MovementEvent evt = new MovementEvent(cardName, cardText, newPosition, gameClient);
 			chanceCardDeck[i] = evt;
 		}
+	}
+
+	@Override
+	public int getID() {
+		return super.getId();
 	}
 
 	/**
