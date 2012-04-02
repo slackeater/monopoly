@@ -46,9 +46,6 @@ public class MonopolyGUI extends JFrame {
 	
 	private BoardController bc;
 	
-	//this bidimensional array is only used to draw the JPanel
-	private BoardTile monopolyTiles[][];
-
 	private JTextArea text;
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
