@@ -245,7 +245,7 @@ public class MonopolyGUI extends JFrame {
 				
 				if(throwValue == 0){
 					text.append("I'm throwing the dice... \n");
-					throwValue = (int)(6*Math.random())+1;
+					throwValue = (int)(12*Math.random())+1;
 					text.append("The results is: " + throwValue + "\n");
 					
 					throwDice.setEnabled(false);

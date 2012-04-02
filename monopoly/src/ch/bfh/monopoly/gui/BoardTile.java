@@ -46,16 +46,28 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	
 		JPanel color = new JPanel();
 		
-		if(ti.getRGB() != null)
+		ButtonListener btnListener = new ButtonListener();
+		
+		if(ti.getGroup() != null && 
+		(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
+		|| !ti.getGroup().equals("Chance"))){
+			//we want a pop-up menu only on the properties where
+			//we can build something or 
+			this.addMouseListener(btnListener);
+		}
+		
+		//check if there is a color
+		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
+			btnListener.addPopUp(popMenu());
+		}
 		
 		add(color, BorderLayout.NORTH);
 		
 		JLabel name = new JLabel(ti.getName());
 		add(name, BorderLayout.CENTER);
 		
-		PopupListener popupListener = new PopupListener(popMenu());
-		this.addMouseListener(popupListener);
+		
 	}
 	
 	
@@ -155,14 +167,17 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		
 	}
 	
-	class PopupListener extends MouseAdapter{
+	class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
 		 
-        PopupListener(JPopupMenu popupMenu) {
-            popup = popupMenu;
-        }
- 
+		public void addPopUp(JPopupMenu pop){
+			this.popup = pop;
+		}
+		
         public void mousePressed(MouseEvent e) {
+        	if(e.getButton() == MouseEvent.BUTTON1){
+        		System.out.println("leftbtn");
+        	}
             maybeShowPopup(e);
         }
  
@@ -171,7 +186,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
         }
  
         private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger()) {
+            if (e.isPopupTrigger() && popup != null) {
                 popup.show(e.getComponent(),
                            e.getX(), e.getY());
             }
