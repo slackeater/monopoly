@@ -45,7 +45,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		this.ti = ti;
 		this.tab = tab;
 		setBorder(BorderFactory.createEtchedBorder());
-		setLayout(new BorderLayout());
+		setLayout(new GridLayout(3,1));
 
 		JPanel color = new JPanel();
 
@@ -65,10 +65,10 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 			btnListener.addPopUp(popMenu());
 		}
 
-		add(color, BorderLayout.NORTH);
+		add(color);
 
 		JLabel name = new JLabel(ti.getName());
-		add(name, BorderLayout.CENTER);
+		add(name);
 
 
 	}
