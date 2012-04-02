@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import ch.bfh.monopoly.common.TileEvent;
 import ch.bfh.monopoly.common.Token;
 
-public abstract class AbstractTile extends JPanel implements Tile {
+public abstract class AbstractTile implements Tile {
 
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -28,30 +28,12 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	private String description;
 	protected String name;
 	protected TileEvent event;
-	private int numberOfTokens = 0;
-	protected Set<Token> tokens = new HashSet<Token>();
 	
 	public AbstractTile(String name, int coordX, int coordY, int id){
 		this.name= name;
 		this.coordX=coordX;
 		this.coordY=coordY;
 		this.id=id;
-	}
-
-	/**
-	 * Remove a token from this tile
-	 * @param index the index of the token to be removed
-	 */
-	public void removeToken(Token t){
-		this.tokens.remove(t);
-	}
-
-	/**
-	 * Add a token to this tile
-	 * @param t the token to be added
-	 */
-	public void addToken(Token t){
-		this.tokens.add(t);
 	}
 
 	/**
@@ -93,28 +75,6 @@ public abstract class AbstractTile extends JPanel implements Tile {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Draw the tokens on this tile
-	 */
-	@Override 
-	public void paintComponent(Graphics g){
-		Graphics2D g2 = (Graphics2D) g;
-
-		this.numberOfTokens = tokens.size();
-
-		if(this.numberOfTokens >= 1 && this.numberOfTokens <= 8){
-			for(int i = 0 ; i < this.numberOfTokens ; i++){
-				Iterator<Token> itr = this.tokens.iterator();
-
-				while(itr.hasNext()){
-					Token t = itr.next();
-					g2.setColor(t.getColor());
-					g2.fillOval((int)(getWidth()*t.getXRatio()), (int)(getHeight()*t.getYRatio()), (int)(getHeight()*0.25), (int)(getHeight()*0.25));
-				}
-			}
-		}
 	}
 
 	/**

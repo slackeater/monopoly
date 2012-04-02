@@ -24,7 +24,7 @@ public class Terrain extends Property {
 		this.rentRates[0] =rent;
 		this.rentRates[1] =rent1house;
 		this.rentRates[2] =rent2house;
-		this.rentRates[3] =rent2house;
+		this.rentRates[3] =rent3house;
 		this.rentRates[4] =rent4house;
 		this.renthotel=renthotel;
 		this.price = price;
@@ -45,7 +45,7 @@ public class Terrain extends Property {
 
 
 	public int getRentByHouseCount(int houseCount){
-		return rentRates[hotelCount];
+		return rentRates[houseCount];
 	}
 	
 	public int getRentHotel(){

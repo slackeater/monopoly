@@ -2,7 +2,8 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -34,43 +35,45 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	private int numberOfTokens = 0;
 	private Set<Token> tokens = new HashSet<Token>();
 	private TileInfo ti;
-	
+	private JPanel tab;
+
 	/**
 	 * Construct a new BoardTile
 	 * @param ti the TileInfo used to passed the information
 	 */
-	public BoardTile(TileInfo ti){
+	public BoardTile(TileInfo ti, JPanel tab){
 		this.ti = ti;
+		this.tab = tab;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new BorderLayout());
-	
+
 		JPanel color = new JPanel();
-		
+
 		ButtonListener btnListener = new ButtonListener();
-		
+
 		if(ti.getGroup() != null && 
-		(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
-		|| !ti.getGroup().equals("Chance"))){
+				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
+						|| !ti.getGroup().equals("Chance"))){
 			//we want a pop-up menu only on the properties where
 			//we can build something or 
 			this.addMouseListener(btnListener);
 		}
-		
+
 		//check if there is a color
 		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
 			btnListener.addPopUp(popMenu());
 		}
-		
+
 		add(color, BorderLayout.NORTH);
-		
+
 		JLabel name = new JLabel(ti.getName());
 		add(name, BorderLayout.CENTER);
-		
-		
+
+
 	}
-	
-	
+
+
 	/**
 	 * Get the X coordinate of this tile
 	 * @return an int that correspond to the X coordinate
@@ -78,7 +81,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	public int getTileInfoX(){
 		return ti.getCoordX();
 	}
-	
+
 	/**
 	 * Get the Y coordinate of this tile
 	 * @return an int that correspond to the Y coordinate
@@ -86,7 +89,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	public int getTileInfoY(){
 		return ti.getCoordY();
 	}
-	
+
 	/**
 	 * Remove a token from this tile
 	 * @param index the index of the token to be removed
@@ -103,34 +106,93 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		this.tokens.add(t);
 	}
 
+	private void addInformationOnTab(){
+		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());
+		Font f2 = new Font(getFont().getName(), Font.BOLD, getFont().getSize());
+		
+		JLabel name = new JLabel(ti.getName());
+		name.setAlignmentX(Component.CENTER_ALIGNMENT);
+		name.setFont(f2);
+		
+		if(ti.getRGB() != null){
+			tab.setBackground(Color.decode(ti.getRGB()));
+		}
+		else{
+			tab.setBackground(Color.WHITE);
+		}
+		
+		
+		JLabel price = new JLabel("Price: " + Integer.toString(ti.getPrice()));
+		price.setAlignmentX(Component.CENTER_ALIGNMENT);
+		price.setFont(f);
+	
+		JLabel rent = new JLabel("Rent: " + Integer.toString(ti.getRent()));
+		rent.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rent.setFont(f);
+		
+		JLabel rent1 = new JLabel("With 1 house: " + Integer.toString(ti.getRent1house()));
+		rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rent1.setFont(f);
+		
+		JLabel rent2 = new JLabel("With 2 houses: " + Integer.toString(ti.getRent2house()));
+		rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rent2.setFont(f);
+		
+		JLabel rent3 = new JLabel("With 3 houses: " + Integer.toString(ti.getRent3house()));
+		rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rent3.setFont(f);
+		
+		JLabel rent4 = new JLabel("With 4 houses: " + Integer.toString(ti.getRent4house()));
+		rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
+		rent4.setFont(f);
+		
+		JLabel hotel = new JLabel("With hotel: " + Integer.toString(ti.getRenthotel()));
+		hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		hotel.setFont(f);
+		
+		tab.removeAll();
+		
+		tab.add(name);
+		tab.add(price);
+		tab.add(rent);
+		tab.add(rent1);
+		tab.add(rent2);
+		tab.add(rent3);
+		tab.add(rent4);
+		tab.add(hotel);
+
+		tab.revalidate();
+		tab.repaint();
+	}
+	
 	/**
 	 * Creates a popup menu for this tile
 	 * @return a JPopupMenu with the actions possible for this tile
 	 */
 	private JPopupMenu popMenu(){
 		JPopupMenu pop = new JPopupMenu();
-		
+
 		JMenuItem buyHouse = new JMenuItem("Buy house");
 		buyHouse.addActionListener(this);
-		
+
 		JMenuItem buyHouseRow = new JMenuItem("Buy house row");
 		buyHouseRow.addActionListener(this);
-		
+
 		JMenuItem buyHotel = new JMenuItem("Buy hotel");
 		buyHotel.addActionListener(this);
-		
+
 		JMenuItem buyHotelRow = new JMenuItem("Buy hotel row");
 		buyHotelRow.addActionListener(this);
-		
+
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
 		pop.add(buyHotel);
 		pop.add(buyHotelRow);
-		
+
 		return pop;
 	}
-	
-	
+
+
 	/**
 	 * Draw the tokens on this tile
 	 */
@@ -157,40 +219,42 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
-		 
+
 		public void addPopUp(JPopupMenu pop){
 			this.popup = pop;
 		}
-		
-        public void mousePressed(MouseEvent e) {
-        	if(e.getButton() == MouseEvent.BUTTON1){
-        		System.out.println("leftbtn");
-        	}
-            maybeShowPopup(e);
-        }
- 
-        public void mouseReleased(MouseEvent e) {
-            maybeShowPopup(e);
-        }
- 
-        private void maybeShowPopup(MouseEvent e) {
-            if (e.isPopupTrigger() && popup != null) {
-                popup.show(e.getComponent(),
-                           e.getX(), e.getY());
-            }
-        }
+
+		public void mousePressed(MouseEvent e) {
+			if(e.getButton() == MouseEvent.BUTTON1){
+				addInformationOnTab();
+			}
+			else{
+			maybeShowPopup(e);
+			}
+		}
+
+		public void mouseReleased(MouseEvent e) {
+			maybeShowPopup(e);
+		}
+
+		private void maybeShowPopup(MouseEvent e) {
+			if (e.isPopupTrigger() && popup != null) {
+				popup.show(e.getComponent(),
+						e.getX(), e.getY());
+			}
+		}
 	}
-	
+
 }

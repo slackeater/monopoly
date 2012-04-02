@@ -48,10 +48,9 @@ public class MonopolyGUI extends JFrame {
 	
 	private BoardController bc;
 	
-	
-	
 	private JTextArea text;
 	private JTextArea chat;
+	private JPanel tab1;
 	
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
@@ -63,12 +62,13 @@ public class MonopolyGUI extends JFrame {
 	
 	public MonopolyGUI(BoardController bc){
 		this.bc = bc;
+				
+		setLayout(new BorderLayout());
+		add(leftPanel(), BorderLayout.WEST);
 		
 		//initialize the tiles
 		initTiles();
 		
-		setLayout(new BorderLayout());
-		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
 
 		//it must be moved in another class
@@ -95,7 +95,7 @@ public class MonopolyGUI extends JFrame {
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoByID(j);
 			
-			BoardTile bc = new BoardTile(t);
+			BoardTile bc = new BoardTile(t, tab1);
 			
 			this.tiles.add(bc);
 		}
@@ -132,7 +132,9 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JTabbedPane cardPanel(){
 		JTabbedPane card = new JTabbedPane();
-		JPanel tab1 = new JPanel();
+		tab1 = new JPanel();
+		tab1.setLayout(new BoxLayout(tab1, BoxLayout.PAGE_AXIS));
+		
 		JPanel tab2 = new JPanel();
 		card.addTab("Front", tab1);
 		card.addTab("Rear", tab2);
