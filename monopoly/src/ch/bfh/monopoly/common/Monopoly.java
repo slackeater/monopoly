@@ -25,7 +25,6 @@ public class Monopoly {
 		//FOR TEST - INITIALIZE GAME
 		GameClient gc = new GameClient();
 		
-		//why loc and game client?????
 		Board b = new Board(new Locale("EN"), gc);
 		
 		BoardController bc = new BoardController(b);
@@ -40,20 +39,6 @@ public class Monopoly {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
 	
-		/*	Network communicate = new Network();
-		
-		System.out.println("Starting the server...");
-		communicate.startServer("192.168.1.2", 1234, 2);
-		
-		try {
-			Thread.sleep(15000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("Stopping the server...");
-		communicate.stopServer();*/
 	}
 
 }

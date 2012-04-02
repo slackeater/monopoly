@@ -6,18 +6,26 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
-public class BoardTile extends JPanel{
+public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 	/**
 	 * 
@@ -35,24 +43,19 @@ public class BoardTile extends JPanel{
 		this.ti = ti;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new BorderLayout());
-		//setLayout(null);
 	
-		//System.out.println("Width : " + getWidth());
 		JPanel color = new JPanel();
 		
-		//this.setPreferredSize(new Dimension(300,300));
-
-		//color.setBounds(0, 0, getWidth(), (int)getHeight()/3);
-		
-		if(ti.getRGB() != null){
+		if(ti.getRGB() != null)
 			color.setBackground(Color.decode(ti.getRGB()));
-		}
 		
 		add(color, BorderLayout.NORTH);
 		
 		JLabel name = new JLabel(ti.getName());
-		//name.setBounds(0,(int)getHeight()/3, getWidth(), (int)(getHeight()-getHeight()/3));
 		add(name, BorderLayout.CENTER);
+		
+		PopupListener popupListener = new PopupListener(popMenu());
+		this.addMouseListener(popupListener);
 	}
 	
 	
@@ -88,6 +91,33 @@ public class BoardTile extends JPanel{
 		this.tokens.add(t);
 	}
 
+	/**
+	 * Creates a popup menu for this tile
+	 * @return a JPopupMenu with the actions possible for this tile
+	 */
+	private JPopupMenu popMenu(){
+		JPopupMenu pop = new JPopupMenu();
+		
+		JMenuItem buyHouse = new JMenuItem("Buy house");
+		buyHouse.addActionListener(this);
+		
+		JMenuItem buyHouseRow = new JMenuItem("Buy house row");
+		buyHouseRow.addActionListener(this);
+		
+		JMenuItem buyHotel = new JMenuItem("Buy hotel");
+		buyHotel.addActionListener(this);
+		
+		JMenuItem buyHotelRow = new JMenuItem("Buy hotel row");
+		buyHotelRow.addActionListener(this);
+		
+		pop.add(buyHouse);
+		pop.add(buyHouseRow);
+		pop.add(buyHotel);
+		pop.add(buyHotelRow);
+		
+		return pop;
+	}
+	
 	
 	/**
 	 * Draw the tokens on this tile
@@ -109,6 +139,43 @@ public class BoardTile extends JPanel{
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	class PopupListener extends MouseAdapter{
+		JPopupMenu popup;
+		 
+        PopupListener(JPopupMenu popupMenu) {
+            popup = popupMenu;
+        }
+ 
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+ 
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+ 
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                popup.show(e.getComponent(),
+                           e.getX(), e.getY());
+            }
+        }
 	}
 	
 }
