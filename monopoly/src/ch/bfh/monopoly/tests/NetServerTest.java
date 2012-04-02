@@ -26,7 +26,7 @@ public class NetServerTest {
 		System.out.println("Starting the server...");
 
 		try {
-			communicate.startServer("192.168.1.2", 1234, 2);
+			communicate.startServer("192.168.1.8", 1234, 2);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
