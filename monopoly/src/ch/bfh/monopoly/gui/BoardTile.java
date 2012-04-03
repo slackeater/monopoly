@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -36,6 +37,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	private Set<Token> tokens = new HashSet<Token>();
 	private TileInfo ti;
 	private JPanel tab;
+	private boolean displayInfo = false;
 
 	/**
 	 * Construct a new BoardTile
@@ -57,6 +59,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 			//we want a pop-up menu only on the properties where
 			//we can build something or 
 			this.addMouseListener(btnListener);
+			displayInfo = true;
 		}
 
 		//check if there is a color
@@ -107,64 +110,66 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	}
 
 	private void addInformationOnTab(){
-		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());
-		Font f2 = new Font(getFont().getName(), Font.BOLD, getFont().getSize());
-		
-		JLabel name = new JLabel(ti.getName());
-		name.setAlignmentX(Component.CENTER_ALIGNMENT);
-		name.setFont(f2);
-		
-		if(ti.getRGB() != null){
-			tab.setBackground(Color.decode(ti.getRGB()));
-		}
-		else{
-			tab.setBackground(Color.WHITE);
-		}
-		
-		
-		JLabel price = new JLabel("Price: " + Integer.toString(ti.getPrice()));
-		price.setAlignmentX(Component.CENTER_ALIGNMENT);
-		price.setFont(f);
-	
-		JLabel rent = new JLabel("Rent: " + Integer.toString(ti.getRent()));
-		rent.setAlignmentX(Component.CENTER_ALIGNMENT);
-		rent.setFont(f);
-		
-		JLabel rent1 = new JLabel("With 1 house: " + Integer.toString(ti.getRent1house()));
-		rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
-		rent1.setFont(f);
-		
-		JLabel rent2 = new JLabel("With 2 houses: " + Integer.toString(ti.getRent2house()));
-		rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
-		rent2.setFont(f);
-		
-		JLabel rent3 = new JLabel("With 3 houses: " + Integer.toString(ti.getRent3house()));
-		rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
-		rent3.setFont(f);
-		
-		JLabel rent4 = new JLabel("With 4 houses: " + Integer.toString(ti.getRent4house()));
-		rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
-		rent4.setFont(f);
-		
-		JLabel hotel = new JLabel("With hotel: " + Integer.toString(ti.getRenthotel()));
-		hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		hotel.setFont(f);
-		
-		tab.removeAll();
-		
-		tab.add(name);
-		tab.add(price);
-		tab.add(rent);
-		tab.add(rent1);
-		tab.add(rent2);
-		tab.add(rent3);
-		tab.add(rent4);
-		tab.add(hotel);
+		if(displayInfo){
+			Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());
+			Font f2 = new Font(getFont().getName(), Font.BOLD, getFont().getSize());
 
-		tab.revalidate();
-		tab.repaint();
+			JLabel name = new JLabel(ti.getName());
+			name.setAlignmentX(Component.CENTER_ALIGNMENT);
+			name.setFont(f2);
+
+			if(ti.getRGB() != null){
+				tab.setBackground(Color.decode(ti.getRGB()));
+			}
+			else{
+				tab.setBackground(Color.WHITE);
+			}
+
+
+			JLabel price = new JLabel("Price: " + Integer.toString(ti.getPrice()));
+			price.setAlignmentX(Component.CENTER_ALIGNMENT);
+			price.setFont(f);
+
+			JLabel rent = new JLabel("Rent: " + Integer.toString(ti.getRent()));
+			rent.setAlignmentX(Component.CENTER_ALIGNMENT);
+			rent.setFont(f);
+
+			JLabel rent1 = new JLabel("With 1 house: " + Integer.toString(ti.getRent1house()));
+			rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
+			rent1.setFont(f);
+
+			JLabel rent2 = new JLabel("With 2 houses: " + Integer.toString(ti.getRent2house()));
+			rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
+			rent2.setFont(f);
+
+			JLabel rent3 = new JLabel("With 3 houses: " + Integer.toString(ti.getRent3house()));
+			rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
+			rent3.setFont(f);
+
+			JLabel rent4 = new JLabel("With 4 houses: " + Integer.toString(ti.getRent4house()));
+			rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
+			rent4.setFont(f);
+
+			JLabel hotel = new JLabel("With hotel: " + Integer.toString(ti.getRenthotel()));
+			hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
+			hotel.setFont(f);
+
+			tab.removeAll();
+
+			tab.add(name);
+			tab.add(price);
+			tab.add(rent);
+			tab.add(rent1);
+			tab.add(rent2);
+			tab.add(rent3);
+			tab.add(rent4);
+			tab.add(hotel);
+
+			tab.revalidate();
+			tab.repaint();
+		}
 	}
-	
+
 	/**
 	 * Creates a popup menu for this tile
 	 * @return a JPopupMenu with the actions possible for this tile
@@ -184,12 +189,46 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		JMenuItem buyHotelRow = new JMenuItem("Buy hotel row");
 		buyHotelRow.addActionListener(this);
 
+		JMenuItem sellHouse = new JMenuItem("Sell house");
+		sellHouse.addActionListener(this);
+		
+		JMenuItem sellHotel = new JMenuItem("Sell hotel");
+		sellHotel.addActionListener(this);
+		
+		JMenuItem sellHouseRow = new JMenuItem("Sell house row");
+		sellHouseRow.addActionListener(this);
+		
+		JMenuItem sellHotelRow = new JMenuItem("Sell hotel row");
+		sellHotelRow.addActionListener(this);
+	
+		
+		JMenuItem mortgage = new JMenuItem("Mortgage");
+		mortgage.addActionListener(this);
+		
+		JMenuItem unmortgage = new JMenuItem("Unmortgage");
+		unmortgage.addActionListener(this);
+		
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
 		pop.add(buyHotel);
 		pop.add(buyHotelRow);
+		pop.addSeparator();
+		pop.add(sellHouse);
+		pop.add(sellHouseRow);
+		pop.add(sellHotel);
+		pop.add(sellHotelRow);
+		pop.addSeparator();
+		pop.add(mortgage);
+		pop.add(unmortgage);
 
 		return pop;
+	}
+
+	/**
+	 * Show tile's information in card's box
+	 */
+	public void showCard(){
+		addInformationOnTab();
 	}
 
 
@@ -199,6 +238,9 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	@Override 
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
+		g2.setRenderingHint(
+		        RenderingHints.KEY_TEXT_ANTIALIASING,
+		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
 		this.numberOfTokens = tokens.size();
 
@@ -241,7 +283,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 				addInformationOnTab();
 			}
 			else{
-			maybeShowPopup(e);
+				maybeShowPopup(e);
 			}
 		}
 

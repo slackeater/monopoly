@@ -2,6 +2,8 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -13,6 +15,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -26,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
@@ -41,34 +46,33 @@ import ch.bfh.monopoly.tile.TileInfo;
 
 public class MonopolyGUI extends JFrame {
 
-	
 	private final int TILE_NUMBER = 40;
-	
+
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
-	
+
 	private BoardController bc;
-	
+
 	private JTextArea text;
 	private JTextArea chat;
 	private JPanel tab1;
-	
+
 	private static final long serialVersionUID = 1L;
 	private int throwValue = 0;
 	private int currentPos = 0;
-	private int columnCtr = 1;
+	private int step = 0;
 	private Token newPlace = null;
-	
+
 	private Token[] initTokens = new Token[8];
-	
+
 	public MonopolyGUI(BoardController bc){
 		this.bc = bc;
-				
+
 		setLayout(new BorderLayout());
 		add(leftPanel(), BorderLayout.WEST);
-		
+
 		//initialize the tiles
 		initTiles();
-		
+
 		add(drawBoard(), BorderLayout.CENTER);
 
 		//it must be moved in another class
@@ -94,19 +98,20 @@ public class MonopolyGUI extends JFrame {
 	private void initTiles(){
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoByID(j);
-			
+
 			BoardTile bc = new BoardTile(t, tab1);
-			
+
 			this.tiles.add(bc);
 		}
 	}
-	
+
 	/**
 	 * Panel for the left container
 	 * @return the left jpanel
 	 */
 	private JPanel leftPanel(){
-		JPanel left = new JPanel(new GridLayout(4,1));
+		JPanel left = new JPanel();
+		left.setLayout(new BoxLayout(left, BoxLayout.PAGE_AXIS));
 		left.add(cardPanel());
 		left.add(bottomPanel());
 		left.add(infoPanel());
@@ -120,9 +125,75 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
-		JLabel lab = new JLabel("Player 1: 100000$");
+		info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
 
-		info.add(lab);
+		for(int j = 0 ; j < 8 ; j++){
+
+			final JPanel terrainUp = new JPanel();
+			final JPanel terrainDown = new JPanel();
+			JLabel name = new JLabel("Player" + j + " 100000 $");
+
+			name.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+			JPanel mainCtr = new JPanel();
+			mainCtr.setLayout(new BoxLayout(mainCtr, BoxLayout.PAGE_AXIS));
+
+			terrainUp.setLayout(new BoxLayout(terrainUp, BoxLayout.LINE_AXIS));
+			terrainUp.setVisible(false);
+
+			terrainDown.setLayout(new BoxLayout(terrainDown, BoxLayout.LINE_AXIS));
+			terrainDown.setVisible(false);
+
+			JPanel userTerrain[] = new JPanel[32];
+
+			for(int i = 0 ; i < 32 ; i++){
+				userTerrain[i] = new JPanel();
+				userTerrain[i].setMaximumSize(new Dimension(20,20));
+
+				if(i == 2 || i == 6 || i == 10 || i == 14 || i == 21 || i == 24 || i == 29)
+					userTerrain[i].setBackground(Color.GRAY);
+				else	
+					userTerrain[i].setBackground(Color.WHITE);	
+
+				userTerrain[i].setBorder(BorderFactory.createEtchedBorder());
+
+				if(i < 18)
+					terrainUp.add(userTerrain[i]);
+				else
+					terrainDown.add(userTerrain[i]);
+			}
+
+			name.addMouseListener(new MouseListener() {
+				@Override
+				public void mouseReleased(MouseEvent e) {}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					boolean visibility = terrainDown.isVisible();
+					
+					terrainDown.setVisible(!visibility);
+					terrainUp.setVisible(!visibility);
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {}
+
+				@Override
+				public void mouseClicked(MouseEvent e) {}
+			});
+
+			mainCtr.add(name);
+			mainCtr.add(terrainUp);
+			mainCtr.add(terrainDown);
+
+			info.add(mainCtr);
+		}
+
 		return info;
 	}
 
@@ -134,7 +205,7 @@ public class MonopolyGUI extends JFrame {
 		JTabbedPane card = new JTabbedPane();
 		tab1 = new JPanel();
 		tab1.setLayout(new BoxLayout(tab1, BoxLayout.PAGE_AXIS));
-		
+
 		JPanel tab2 = new JPanel();
 		card.addTab("Front", tab1);
 		card.addTab("Rear", tab2);
@@ -171,19 +242,19 @@ public class MonopolyGUI extends JFrame {
 		input.setWrapStyleWord(true);
 		input.setLineWrap(true);
 		input.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				//if we press the enter key
@@ -191,7 +262,7 @@ public class MonopolyGUI extends JFrame {
 					chat.append(input.getText());
 					input.setText("");
 				}
-				
+
 			}
 		});
 
@@ -229,14 +300,12 @@ public class MonopolyGUI extends JFrame {
 	 * @return the JPanel with the buttons
 	 */
 	private JPanel buttonsPanel(){
-		JPanel buttons = new JPanel(new GridLayout(0,2));
+		JPanel buttons = new JPanel();
+		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
 
-		JButton buy = new JButton("Buy");
-		JButton sell = new JButton("Sell");
-		JButton mortgage = new JButton("Mortgage");
-		JButton unmortgage = new JButton("Unmortgage");
 		final JButton throwDice = new JButton("Throw dice");
-		JButton endTurn = new JButton("End turn");
+		JButton useJailCard = new JButton("Jail Card");
+		useJailCard.setEnabled(false);
 
 		throwDice.addActionListener(new ActionListener() {
 
@@ -244,45 +313,49 @@ public class MonopolyGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Timer t = new Timer(750,this);
 				t.setInitialDelay(1250);
-				
+
 				if(throwValue == 0){
+					step = 0;
 					text.append("I'm throwing the dice... \n");
 					throwValue = (int)(12*Math.random())+1;
 					text.append("The results is: " + throwValue + "\n");
-					
+
 					throwDice.setEnabled(false);
-					
+
 					//we remove the token relative to the player with ID 1
 					newPlace = initTokens[0];
 					t.start();
 				}
 
-				if(columnCtr <= ((throwValue+currentPos)%40)){
+				//move the token for "step" times
+				if(step < throwValue){
+					step++;
+
 					//removing the token at the previous tile
-					tiles.get(columnCtr-1).removeToken(newPlace);
-					
+					tiles.get((currentPos+step-1)%40).removeToken(newPlace);
+
 					//add the token to the tile we are on
-					tiles.get(columnCtr).addToken(newPlace);
-					
-					columnCtr++;
+					tiles.get((currentPos+step)%40).addToken(newPlace);
+
 					repaint();
 				}
-				else{
+				else if(step == throwValue){
 					((Timer)e.getSource()).stop();
+
+					//show tile's information in the card box
+					tiles.get((currentPos+throwValue)%40).showCard();
+
 					currentPos = (currentPos+throwValue)%40;
-					columnCtr = currentPos+1;
 					throwValue = 0;
+					step = 0;
 					throwDice.setEnabled(true);
 				}
 			}
 		});
 
-		buttons.add(buy);
-		buttons.add(sell);
-		buttons.add(mortgage);
-		buttons.add(unmortgage);
 		buttons.add(throwDice);
-		buttons.add(endTurn);
+		buttons.add(useJailCard);
+
 
 		return buttons;
 	}

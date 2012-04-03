@@ -69,7 +69,7 @@ public class Board {
 	public void createTileSubjects() {
 		// create list of "Tile" Subjects
 		for (int i = 0; i < 40; i++) {
-			tileSubjects[i] = new ConcreteSubject(i);
+			//tileSubjects[i] = new ConcreteSubject(i);
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.naming.CommunicationException;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,6 +29,9 @@ public class WelcomePanel extends JFrame{
 	private static final long serialVersionUID = 1L;
 
 
+	/**
+	 * Construct a WelcomePanel
+	 */
 	public WelcomePanel(){
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
@@ -40,9 +44,13 @@ public class WelcomePanel extends JFrame{
 		add(main);
 	}
 
+	/**
+	 * Draw the panel with the image
+	 * @return a JPanel with the logo of monopoly
+	 */
 	private JPanel imageLogo(){
 		JPanel img = new JPanel();
-		java.net.URL urlImg = Monopoly.class.getResource("/resources/welcomelogo.png");
+		java.net.URL urlImg = Monopoly.class.getResource("/ch/bfh/monopoly/resources/welcomelogo.png");
 		ImageIcon logo = new ImageIcon(urlImg);
 		JLabel imgLab = new JLabel(logo);
 		img.setMaximumSize(new Dimension(300,114));
@@ -51,45 +59,61 @@ public class WelcomePanel extends JFrame{
 		return img;
 	}
 
+	/**
+	 * Draw the panel with the configuration for join a game
+	 * @return a JPanel with the fields and button for join a game
+	 */
 	private JPanel clientConfig(){
 		JPanel client = new JPanel();
 		client.setLayout(new BoxLayout(client, BoxLayout.PAGE_AXIS));
-		client.setBorder(BorderFactory.createTitledBorder("Client configuration"));
+		client.setBorder(BorderFactory.createTitledBorder("Join a game"));
+		client.setMaximumSize(new Dimension(300,0));
 
 		JLabel labelIP = new JLabel("IP");
 		JTextField serverIP = new JTextField();
-		serverIP.setMaximumSize(new Dimension(300,20));
+		
+		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
+		serverIP.setMaximumSize(new Dimension(125,20));
 
 		JLabel labelPort = new JLabel("Port");
 		JTextField serverPort = new JTextField();
-		serverPort.setMaximumSize(new Dimension(300,20));
-
-
+		
+		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
+		serverPort.setMaximumSize(new Dimension(125,20));
 
 		JButton connect = new JButton("Connect");
+		
 		client.add(labelIP);
 		client.add(serverIP);
 		client.add(labelPort);
 		client.add(serverPort);
-
+		client.add(Box.createRigidArea(new Dimension(0,10)));
 		client.add(connect);
-
-		client.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		return client;
 	}
 
+	/**
+	 * Draw the panel with used to start a new server
+	 * @return a JPanel with the fields and button used to start monopoly a server 
+	 */
 	private JPanel serverConfig(){
 		JPanel client = new JPanel();
 		client.setLayout(new BoxLayout(client, BoxLayout.PAGE_AXIS));
-		client.setBorder(BorderFactory.createTitledBorder("Server configuration"));
+		client.setBorder(BorderFactory.createTitledBorder("Start a server"));
+		client.setMaximumSize(new Dimension(300,0));
 
 		JLabel labelIP = new JLabel("IP");
+		
 		final JTextField serverIP = new JTextField();
-		serverIP.setMaximumSize(new Dimension(300,20));
+		serverIP.setMaximumSize(new Dimension(125,20));
+		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
 		JLabel labelPort = new JLabel("Port");
+		
 		final JTextField serverPort = new JTextField();
-		serverPort.setMaximumSize(new Dimension(300,20));
+		serverPort.setMaximumSize(new Dimension(125,20));
+		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		JLabel player = new JLabel("Players");
 
@@ -97,11 +121,13 @@ public class WelcomePanel extends JFrame{
 		JSpinner spinPanel = new JSpinner(numPlayers);
 		spinPanel.setMaximumSize(new Dimension(50,50));
 		spinPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		
+		
 
 		final JButton connect = new JButton("Start server");
 
 		connect.addActionListener(new ActionListener() {
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				connect.setEnabled(false);
@@ -126,8 +152,6 @@ public class WelcomePanel extends JFrame{
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
 				}
-
-			
 			}
 		});
 
@@ -137,6 +161,8 @@ public class WelcomePanel extends JFrame{
 		client.add(serverPort);
 		client.add(player);
 		client.add(spinPanel);
+		
+		client.add(Box.createRigidArea(new Dimension(0,10)));
 		client.add(connect);
 
 		client.setAlignmentX(Component.LEFT_ALIGNMENT);

@@ -7,6 +7,7 @@ import java.util.Locale;
 import javax.swing.JFrame;
 
 import ch.bfh.monopoly.gui.MonopolyGUI;
+import ch.bfh.monopoly.gui.WelcomePanel;
 import ch.bfh.monopoly.network.Network;
 
 
@@ -15,15 +16,15 @@ public class Monopoly {
 	public static Network communicate = new Network();
 
 	public static void main(String[] args) {
-		/*JFrame welcome = new WelcomePanel();
+		JFrame welcome = new WelcomePanel();
 		welcome.setTitle("Welcome to Monopoly");
 		welcome.setBounds(500, 150, 300, 550);
 		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		welcome.setVisible(true);
-		*/
+		
 		
 		//FOR TEST - INITIALIZE GAME
-		GameClient gc = new GameClient();
+		/*GameClient gc = new GameClient();
 		
 		Board b = new Board(new Locale("EN"), gc);
 		
@@ -38,7 +39,7 @@ public class Monopoly {
 		mainFrame.setTitle(mainTitle);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
-	
+	*/
 	}
 
 }
