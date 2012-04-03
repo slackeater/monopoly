@@ -2,6 +2,7 @@ package ch.bfh.monopoly.common;
 
 import java.awt.Color;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -18,6 +19,38 @@ public class Board {
 	private int availableHotels;
 	private Player me;
 	private Player currentPlayer;
+	private Subject[] tileSubjects;
+
+	private class ConcreteSubject implements Subject {
+		private int tileListenerID;
+
+		public ConcreteSubject(int tileID) {
+			this.tileListenerID = tileID;
+		}
+
+		ArrayList<TileListener> listeners = new ArrayList<TileListener>();
+
+		public void addListener(TileListener tl) {
+			listeners.add(tl);
+		}
+
+		public void removeListener(TileListener tl) {
+			listeners.remove(tl);
+		}
+
+		public void notifyListeners() {
+			Tile t = getTileByID(tileListenerID);
+			Terrain terrain = ((Terrain) t);
+			TileStateInfo tsi = new TileStateInfo(
+					terrain.getHouseCount(),
+					terrain.getHotelCount(), 
+					terrain.getOwner().getName(),
+					terrain.isMortgageActive());
+			for (TileListener tl : listeners) {
+				tl.updateTile(tsi);
+			}
+		}
+	}
 
 	public Board(Locale loc, GameClient gameClient) {
 		// create tiles, cards, and events
@@ -28,6 +61,20 @@ public class Board {
 
 		availableHouses = 32;
 		availableHotels = 12;
+
+		createTileSubjects();
+
+	}
+
+	public void createTileSubjects() {
+		// create list of "Tile" Subjects
+		for (int i = 0; i < 40; i++) {
+			tileSubjects[i] = new ConcreteSubject(i);
+		}
+	}
+
+	public Subject[] getTileSubjectList() {
+		return tileSubjects;
 	}
 
 	public void transferProperty(String fromName, String toName, int tileID) {
