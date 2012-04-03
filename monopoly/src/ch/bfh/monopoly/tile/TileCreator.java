@@ -14,7 +14,6 @@ public class TileCreator {
 		// create tiles, cards, and events
 		this.loc = loc;
 		tiles = new Tile[40];
-		System.out.println(loc.getLanguage());
 		createTiles(gameClient);
 	}
 
