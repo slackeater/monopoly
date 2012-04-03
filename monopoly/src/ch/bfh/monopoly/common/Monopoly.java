@@ -18,7 +18,7 @@ public class Monopoly {
 	public static void main(String[] args) {
 		JFrame welcome = new WelcomePanel();
 		welcome.setTitle("Welcome to Monopoly");
-		welcome.setBounds(500, 150, 300, 550);
+		welcome.setBounds(500, 50, 300, 650);
 		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		welcome.setVisible(true);
 		

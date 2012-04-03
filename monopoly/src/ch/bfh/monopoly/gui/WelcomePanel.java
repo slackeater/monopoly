@@ -11,6 +11,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -122,9 +123,12 @@ public class WelcomePanel extends JFrame{
 		spinPanel.setMaximumSize(new Dimension(50,50));
 		spinPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
+		JLabel labelLang = new JLabel("Locale");
+		String menuLang[] = {"French", "English"};
+		JComboBox langs = new JComboBox(menuLang);
+		langs.setMaximumSize(new Dimension(125,20));
+		langs.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		
-
 		final JButton connect = new JButton("Start server");
 
 		connect.addActionListener(new ActionListener() {
@@ -161,6 +165,8 @@ public class WelcomePanel extends JFrame{
 		client.add(serverPort);
 		client.add(player);
 		client.add(spinPanel);
+		client.add(labelLang);
+		client.add(langs);
 		
 		client.add(Box.createRigidArea(new Dimension(0,10)));
 		client.add(connect);
