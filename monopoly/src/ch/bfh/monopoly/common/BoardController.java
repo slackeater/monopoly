@@ -24,5 +24,4 @@ public class BoardController {
 	public Subject[] getTileSubjectList(){
 		return board.getTileSubjectList();
 	}
-	
 }

@@ -12,14 +12,15 @@ import javax.swing.JMenu;
 import ch.bfh.monopoly.tile.*;
 
 public class Board {
-	Player[] players;
+	private Player[] players;
 	public Tile[] tiles;
 	private Locale loc;
 	private int availableHouses;
 	private int availableHotels;
-	private Player me;
+	private Player localPlayer;
 	private Player currentPlayer;
 	private Subject[] tileSubjects;
+	private Color[] tokenColor;
 
 	private class ConcreteSubject implements Subject {
 		private int tileListenerID;
@@ -55,7 +56,7 @@ public class Board {
 	public Board(Locale loc, GameClient gameClient) {
 		// create tiles, cards, and events
 		this.loc = loc;
-
+		
 		TileCreator tc = new TileCreator(loc, gameClient);
 		tiles = tc.getTilesArray();
 
@@ -124,6 +125,8 @@ public class Board {
 		toPlayer.depositMoney(price);
 	}
 
+	//why createPlayers???? Every client must receive a list of players
+	//from the server and then copy it to the board
 	public void createPlayers(String[] playerNames) {
 		players = new Player[playerNames.length];
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(

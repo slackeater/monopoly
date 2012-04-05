@@ -17,6 +17,7 @@ public class Player {
 	private boolean isInJail;
 	private boolean turnToken;
 	private int jailCard;
+	private Token t;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
 	public Player (String name, int account){
@@ -114,5 +115,12 @@ public class Player {
 		this.jailCard = jailCard;
 	}
 	
+	public void setToken(Token t){
+		this.t = t;
+	}
+	
+	public Token getToken(){
+		return this.t;
+	}
 	
 }

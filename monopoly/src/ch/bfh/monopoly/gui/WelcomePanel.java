@@ -28,12 +28,13 @@ public class WelcomePanel extends JFrame{
 
 	private JTextArea info;
 	private static final long serialVersionUID = 1L;
-
+	private JFrame board;
 
 	/**
 	 * Construct a WelcomePanel
 	 */
-	public WelcomePanel(){
+	public WelcomePanel(JFrame board){
+		this.board = board;
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
@@ -145,13 +146,17 @@ public class WelcomePanel extends JFrame{
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
 					
-					try {
+					dispose();
+					board.setVisible(true);
+					board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+					/*try {
 						Monopoly.communicate.startServer(ip, port, maxPlayers);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
-					}
+					}*/
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
@@ -175,6 +180,10 @@ public class WelcomePanel extends JFrame{
 		return client;
 	}
 
+	/**
+	 * Draw the text area with the informational messages
+	 * @return a JScrollPane used to alert the player
+	 */
 	private JScrollPane infoArea(){
 		info = new JTextArea();
 		info.setEditable(false);
