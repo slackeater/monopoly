@@ -12,7 +12,7 @@ public class Network {
 
 	private ServerSocket srv;
 	final int QUEUE_LENGTH = 20;
-	NetworkThread[] clients;
+	NetworkServer[] clients;
 
 	/**
 	 * Start the server
@@ -26,7 +26,7 @@ public class Network {
 		int ctr = 0;
 
 		ip = Inet4Address.getByName(dottedIP);
-		clients = new NetworkThread[maxPlayers];
+		clients = new NetworkServer[maxPlayers];
 
 		this.srv = new ServerSocket(port, QUEUE_LENGTH, ip);
 
@@ -36,7 +36,7 @@ public class Network {
 			clientConnection = this.srv.accept();
 			System.out.println("Accepted client, now starting thread.");
 
-			clients[ctr] = new NetworkThread(clientConnection, ctr+1);
+			clients[ctr] = new NetworkServer(clientConnection, ctr+1);
 			clients[ctr].start();
 			ctr++;
 		}
@@ -47,7 +47,7 @@ public class Network {
 	 */
 	public void stopServer(){
 		try {
-			NetworkThread.connectionOpen = false;
+			NetworkServer.connectionOpen = false;
 			this.srv.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

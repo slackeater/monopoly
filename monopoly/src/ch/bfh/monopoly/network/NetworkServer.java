@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class NetworkThread extends Thread{
+public class NetworkServer extends Thread{
 
 	private Socket sock;
 	int clientID;
@@ -13,7 +13,7 @@ public class NetworkThread extends Thread{
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 
-	public NetworkThread(Socket sock, int clientID){
+	public NetworkServer(Socket sock, int clientID){
 		this.sock = sock;
 		this.clientID = clientID;
 	}

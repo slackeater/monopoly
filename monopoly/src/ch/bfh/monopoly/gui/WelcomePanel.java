@@ -3,6 +3,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -144,17 +145,17 @@ public class WelcomePanel extends JFrame{
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
 					
-					dispose();
-					board.setVisible(true);
-					board.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-					/*try {
+					try {
 						Monopoly.communicate.startServer(ip, port, maxPlayers);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
-					}*/
+					}
+					
+					dispose();
+					board.setVisible(true);
+					board.setExtendedState(JFrame.MAXIMIZED_BOTH);
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
