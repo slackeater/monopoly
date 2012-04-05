@@ -262,18 +262,17 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
+	public void actionPerformed(ActionEvent e) {}
 
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// TODO Auto-generated method stub
+	public void itemStateChanged(ItemEvent e) {}
 
-	}
-
+	/**
+	 * Inner class used to show the popup menu 
+	 * @author snake
+	 *
+	 */
 	class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
 
