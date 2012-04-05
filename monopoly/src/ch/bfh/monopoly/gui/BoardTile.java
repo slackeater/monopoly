@@ -1,6 +1,5 @@
 package ch.bfh.monopoly.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -29,10 +28,8 @@ import ch.bfh.monopoly.tile.TileInfo;
 
 public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3335141445010622095L;
+	
 	private int numberOfTokens = 0;
 	private Set<Token> tokens = new HashSet<Token>();
 	private TileInfo ti;
@@ -70,10 +67,12 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 		add(color);
 
+		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
+		
 		JLabel name = new JLabel(ti.getName());
+		name.setFont(f);
+		
 		add(name);
-
-
 	}
 
 
@@ -109,6 +108,10 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		this.tokens.add(t);
 	}
 
+	/**
+	 * Add the information of a tile (rent, name,costs, etc.) to 
+	 * the tabbed pane
+	 */
 	private void addInformationOnTab(){
 		if(displayInfo){
 			Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());

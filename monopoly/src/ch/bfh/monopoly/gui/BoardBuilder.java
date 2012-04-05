@@ -29,7 +29,6 @@ public class BoardBuilder extends JPanel {
 	
 	private final double WEIGHT_TILE_X = 0.1;
 	private final double WEIGHT_TILE_Y = 0.1;
-	
 	private final double WEIGHT_CORNER_X = 0.12;
 	private final double WEIGHT_CORNER_Y = 0.12;
 	
