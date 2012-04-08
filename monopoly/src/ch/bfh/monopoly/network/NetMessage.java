@@ -21,4 +21,8 @@ public class NetMessage implements Serializable{
 		return m.getInt();
 	}
 	
+	public Messages getMessageType(){
+		return m;
+	}
+	
 }

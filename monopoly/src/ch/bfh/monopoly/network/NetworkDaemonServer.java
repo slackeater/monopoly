@@ -30,6 +30,7 @@ public class NetworkDaemonServer extends Thread{
 
 		try {
 			in = new ObjectInputStream(sock.getInputStream());
+			out = new ObjectOutputStream(sock.getOutputStream());
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -40,10 +41,15 @@ public class NetworkDaemonServer extends Thread{
 			try {
 				NetMessage n = (NetMessage) in.readObject();
 				System.out.println(n.getMessageCode());
+							
+				NetMessage ack = new NetMessage(Messages.ACKNOWLEDGE);
+				
+				out.writeObject(ack);
+				out.flush();
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				System.out.println("Something went wrong with the connection with the client");
+				//System.out.println("Something went wrong with the connection with the client");
 				//e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
@@ -53,6 +59,7 @@ public class NetworkDaemonServer extends Thread{
 		
 		try {
 			in.close();
+			out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

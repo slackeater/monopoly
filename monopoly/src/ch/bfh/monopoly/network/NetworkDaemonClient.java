@@ -33,6 +33,7 @@ public class NetworkDaemonClient extends Thread{
 		System.out.println("I'M THE CLIENT THREAD");
 		try {
 			out = new ObjectOutputStream(sock.getOutputStream());
+			in = new ObjectInputStream(sock.getInputStream());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -41,28 +42,28 @@ public class NetworkDaemonClient extends Thread{
 		while(connectionOpen){
 			if(this.queue.size() > 1){
 				try {
-					//send a BUY_HOTEL message
-
-
 					out.writeObject(queue.get(msgCounter));
 					queue.remove(msgCounter);
 					out.flush();
 
 					System.out.println("WE are sending a message: " + msgCounter);
+					
+
+					NetMessage n = (NetMessage) in.readObject();
+
+					if(Messages.ACKNOWLEDGE == n.getMessageType()){
+						System.out.println("Server response: " + Messages.ACKNOWLEDGE.getInt() + " (999 indicates acknowledge)");
+					}
+
 					sleep(7500);
-					//msgCounter++;
 
-					//out.close();
-
-					/*in = new ObjectInputStream(sock.getInputStream());
-
-				NetMessage n = (NetMessage) in.readObject();
-				System.out.println(n.toString());*/
-					//in.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -72,6 +73,15 @@ public class NetworkDaemonClient extends Thread{
 			}
 
 		}
+
+		try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

@@ -29,7 +29,10 @@ public enum Messages {
 	SELL_CARD(330),
 	
 	MORTGAGE(400),
-	UNMORTGAGE(410)
+	UNMORTGAGE(410),
+	
+	//probably only for test
+	ACKNOWLEDGE(999)
 	
 	;
 	
