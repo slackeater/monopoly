@@ -8,8 +8,17 @@ public class NetMessage implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private Messages m;
+	
 
-	public String toString(){
-		return "I am net message, send from above";
+	public NetMessage(Messages m){
+		this.m = m;
 	}
+
+	//only for test
+	public int getMessageCode(){
+		return m.getInt();
+	}
+	
 }

@@ -14,7 +14,8 @@ import java.nio.channels.SocketChannel;
 public class Network {
 
 	private ServerSocketChannel srv;
-	NetworkListener[] clients;
+	NetworkDaemonServer[] clients;
+	private NetworkDaemonClient n;
 
 	/**
 	 * Start the server
@@ -28,7 +29,7 @@ public class Network {
 		int ctr = 0;
 
 		ip = Inet4Address.getByName(dottedIP);
-		clients = new NetworkListener[maxPlayers];
+		clients = new NetworkDaemonServer[maxPlayers];
 
 		srv = ServerSocketChannel.open();
 		srv.socket().bind(new InetSocketAddress(ip,port));
@@ -39,7 +40,7 @@ public class Network {
 			clientConnection = srv.accept();
 			//System.out.println("Accepted client, now starting thread.");
 
-			clients[ctr] = new NetworkListener(clientConnection.socket(), ctr+1);
+			clients[ctr] = new NetworkDaemonServer(clientConnection.socket(), ctr+1);
 			clients[ctr].start();
 			ctr++;
 			
@@ -52,12 +53,41 @@ public class Network {
 	 */
 	public void stopServer(){
 		try {
-			NetworkListener.connectionOpen = false;
+			NetworkDaemonServer.connectionOpen = false;
 			this.srv.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public void addMsg(NetMessage m){
+		n.addMsg(m);
+	}
+	
+	
+	/**
+	 * Start a client
+	 * @param ip the ip of the server
+	 * @param port the port of the server
+	 */
+	public void startClient(String ip, int port){
+		try {
+			Socket s = new Socket(ip, port);
+			
+			//start a thread for the client
+			n = new NetworkDaemonClient(s, 1);
+			n.start();
+			
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 
 }

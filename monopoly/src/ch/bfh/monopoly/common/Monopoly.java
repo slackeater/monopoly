@@ -27,7 +27,7 @@ public class Monopoly {
 		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		welcome.setVisible(true);*/
 		
-		communicate.startServer("192.168.1.2", 1234, 1);
+		communicate.startServer("192.168.1.2", 1234, 3);
 	}
 
 }

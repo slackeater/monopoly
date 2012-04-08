@@ -33,9 +33,6 @@ public class Network {
 	public void startClient(String ip, int port){
 		
 		
-			if(100 == Messages.DICE_ROLL.getInt()){
-				
-			}
 			client=null;
 			try {
 				client = new Socket(ip, port);
