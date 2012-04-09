@@ -46,9 +46,8 @@ public class NetworkDaemonClient extends Thread{
 					queue.remove(msgCounter);
 					out.flush();
 
-					System.out.println("WE are sending a message: " + msgCounter);
+					System.out.println("We are sending a message: " + msgCounter);
 					
-
 					NetMessage n = (NetMessage) in.readObject();
 
 					if(Messages.ACKNOWLEDGE == n.getMessageType()){

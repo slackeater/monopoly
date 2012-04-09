@@ -3,6 +3,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -11,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,6 +36,7 @@ public class WelcomePanel extends JFrame{
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(JFrame board){
+
 		this.board = board;
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
@@ -131,9 +135,16 @@ public class WelcomePanel extends JFrame{
 		
 		final JButton connect = new JButton("Start server");
 
-		connect.addActionListener(new ActionListener() {
+		connect.addMouseListener(new MouseListener() {
+			
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
 				int port, maxPlayers;
 				String ip;
@@ -146,6 +157,7 @@ public class WelcomePanel extends JFrame{
 							" and port " + port + " with " + maxPlayers + " players...\n");
 					
 					try {
+						Monopoly.communicate.setNotificationArea(info);
 						Monopoly.communicate.startServer(ip, port, maxPlayers);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
@@ -160,9 +172,31 @@ public class WelcomePanel extends JFrame{
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
 				}
+				
+			
+				// TODO Auto-generated method stub
+				
 			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+			
+				
 		});
-
+		
 		client.add(labelIP);
 		client.add(serverIP);
 		client.add(labelPort);

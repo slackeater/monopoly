@@ -15,7 +15,7 @@ public class Monopoly {
 	public static Network communicate = new Network();
 
 	public static void main(String[] args) throws IOException {
-		/*GameClient gc = new GameClient();
+		GameClient gc = new GameClient();
 
 		Board b = new Board(new Locale("EN"), gc);
 
@@ -25,9 +25,9 @@ public class Monopoly {
 		welcome.setTitle("Welcome to Monopoly");
 		welcome.setBounds(500, 50, 300, 650);
 		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		welcome.setVisible(true);*/
+		welcome.setVisible(true);
 		
-		communicate.startServer("192.168.1.2", 1234, 3);
+		//communicate.startServer("192.168.1.2", 1234, 3);
 	}
 
 }

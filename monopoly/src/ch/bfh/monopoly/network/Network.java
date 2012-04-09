@@ -10,12 +10,22 @@ import java.net.UnknownHostException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+
 
 public class Network {
 
 	private ServerSocketChannel srv;
 	NetworkDaemonServer[] clients;
 	private NetworkDaemonClient n;
+
+	//very ugly
+	private JTextArea cmp;
+
+	public void setNotificationArea(JTextArea cmp){
+		this.cmp = cmp;
+	}
 
 	/**
 	 * Start the server
@@ -33,18 +43,36 @@ public class Network {
 
 		srv = ServerSocketChannel.open();
 		srv.socket().bind(new InetSocketAddress(ip,port));
-		
+		srv.configureBlocking(false);
+
 		//fill the array of client threads
 		while(ctr < maxPlayers){
-			System.out.println("Waiting for players");
-			clientConnection = srv.accept();
-			//System.out.println("Accepted client, now starting thread.");
-
-			clients[ctr] = new NetworkDaemonServer(clientConnection.socket(), ctr+1);
-			clients[ctr].start();
-			ctr++;
+			cmp.append("Waiting for clients...\n");
 			
-			System.out.println("We have " + ctr + " players connected");
+			
+			clientConnection = srv.accept();
+
+			if(clientConnection != null){
+				clients[ctr] = new NetworkDaemonServer(clientConnection.socket(), ctr+1);
+				clients[ctr].start();
+				ctr++;
+
+				cmp.append("One client connected\n");
+
+			}
+			else{
+				try {
+					Thread.sleep(2500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				cmp.append("....\n");
+			}
+			
+			cmp.repaint();
+			cmp.validate();
 		}
 	}
 
@@ -60,13 +88,17 @@ public class Network {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+	/**
+	 * PROBABLY ONLY FOR TEST
+	 * Add a message to the queue of this client
+	 * @param m
+	 */
 	public void addMsg(NetMessage m){
 		n.addMsg(m);
 	}
-	
-	
+
+
 	/**
 	 * Start a client
 	 * @param ip the ip of the server
@@ -75,11 +107,11 @@ public class Network {
 	public void startClient(String ip, int port){
 		try {
 			Socket s = new Socket(ip, port);
-			
+
 			//start a thread for the client
 			n = new NetworkDaemonClient(s, 1);
 			n.start();
-			
+
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,6 +120,6 @@ public class Network {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 }
