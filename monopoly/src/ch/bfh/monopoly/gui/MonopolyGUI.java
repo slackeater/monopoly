@@ -40,7 +40,7 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
-	private final int MYTERRAIN_PANEL = 36;
+	private final int MYTERRAIN_NUM_OF_PANELS = 36;
 	private final int MYTERRAIN_PANEL_SIZE = 20;
 	private final int PLAYER_LABEL_SPACE = 4;
 	private final int DICE_MOVEMENT_DELAY = 750;
@@ -188,7 +188,7 @@ public class MonopolyGUI extends JFrame {
 		info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
 		
 		//instance a bi-dimensional array of JPanel
-		myTerrain = new JPanel[playerNumber][MYTERRAIN_PANEL];
+		myTerrain = new JPanel[playerNumber][MYTERRAIN_NUM_OF_PANELS];
 
 		//for each player
 		for(int j = 0 ; j < playerNumber ; j++){
@@ -211,7 +211,7 @@ public class MonopolyGUI extends JFrame {
 			terrainDown.setVisible(false);
 
 			//for all the possible ownable tiles
-			for(int i = 0 ; i < MYTERRAIN_PANEL ; i++){
+			for(int i = 0 ; i < MYTERRAIN_NUM_OF_PANELS ; i++){
 				myTerrain[j][i] = new JPanel();
 				myTerrain[j][i].setMaximumSize(new Dimension(MYTERRAIN_PANEL_SIZE,MYTERRAIN_PANEL_SIZE));
 				myTerrain[j][i].setBorder(BorderFactory.createEtchedBorder());

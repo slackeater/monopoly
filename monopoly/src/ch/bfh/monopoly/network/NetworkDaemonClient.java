@@ -13,8 +13,8 @@ public class NetworkDaemonClient extends Thread{
 	private Socket sock;
 	int clientID;
 	static public boolean connectionOpen = true;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 	private List<NetMessage> queue = new ArrayList<NetMessage>(); 
 
 	public NetworkDaemonClient(Socket sock, int clientID){

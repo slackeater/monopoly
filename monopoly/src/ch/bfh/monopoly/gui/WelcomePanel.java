@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.gui;
 import java.awt.Component;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,7 +46,7 @@ public class WelcomePanel extends JFrame{
 		main.add(clientConfig());
 		main.add(serverConfig());
 		main.add(infoArea());
-
+	
 		add(main);
 	}
 
@@ -159,15 +160,17 @@ public class WelcomePanel extends JFrame{
 					try {
 						Monopoly.communicate.setNotificationArea(info);
 						Monopoly.communicate.startServer(ip, port, maxPlayers);
+						
+						dispose();
+						board.setVisible(true);
+						board.setExtendedState(JFrame.MAXIMIZED_BOTH);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
 					}
 					
-					dispose();
-					board.setVisible(true);
-					board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+					
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);

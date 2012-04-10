@@ -11,10 +11,10 @@ import java.util.List;
 public class NetworkDaemonServer extends Thread{
 
 	private Socket sock;
-	int clientID;
+	private int clientID;
 	static public boolean connectionOpen = true;
-	ObjectInputStream in;
-	ObjectOutputStream out;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 
 
 	public NetworkDaemonServer(Socket sock, int clientID){
@@ -33,7 +33,6 @@ public class NetworkDaemonServer extends Thread{
 			out = new ObjectOutputStream(sock.getOutputStream());
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -48,11 +47,8 @@ public class NetworkDaemonServer extends Thread{
 				out.flush();
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				//System.out.println("Something went wrong with the connection with the client");
-				//e.printStackTrace();
+				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -61,7 +57,6 @@ public class NetworkDaemonServer extends Thread{
 			in.close();
 			out.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
