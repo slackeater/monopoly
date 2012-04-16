@@ -67,7 +67,7 @@ public class Board {
 
 		availableHouses = 32;
 		availableHotels = 12;
-
+		tileSubjects=new Subject[40];
 		createTileSubjects();
 
 	}
