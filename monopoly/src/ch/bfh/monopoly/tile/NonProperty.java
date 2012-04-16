@@ -8,8 +8,4 @@ public class NonProperty extends AbstractTile {
 		this.name = name;
 	}
 
-	@Override
-	public int getID() {
-		return super.getId();
-	}
 }

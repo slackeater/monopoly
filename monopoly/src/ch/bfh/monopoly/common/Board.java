@@ -84,7 +84,7 @@ public class Board {
 	public void createTileSubjects() {
 		// create list of "Tile" Subjects
 		for (int i = 0; i < 40; i++) {
-			//tileSubjects[i] = new ConcreteSubject(i);
+			tileSubjects[i] = new ConcreteSubject(i);
 		}
 	}
 
@@ -186,6 +186,7 @@ public class Board {
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
 			tileInfo.setRGB(t.getRGB());
+			tileInfo.setID(t.getID());
 		}
 		if (tile instanceof Railroad) {
 			Railroad t = (Railroad) tile;

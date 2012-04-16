@@ -23,11 +23,6 @@ public class Railroad extends Property {
 		return rent;
 	}
 	
-	@Override
-	public int getID(){
-		return super.getId();
-	}
-
 	public void setRent(int rent) {
 		this.rent = rent;
 	}

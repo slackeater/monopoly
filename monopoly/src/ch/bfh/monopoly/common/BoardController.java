@@ -27,4 +27,8 @@ public class BoardController {
 	public Subject[] getTileSubjectList(){
 		return board.getTileSubjectList();
 	}
+	
+	public Subject getTileSubjectAtIndex(int i){
+		return board.getTileSubjectAtIndex(i);
+	}
 }

@@ -17,11 +17,6 @@ public class Utility extends Property{
 		return 0;
 	}
 	
-	@Override
-	public int getID(){
-		return super.getId();
-	}
-	
 	public String toString(){
 		return super.toString() + "\nname: " + name +
 				"\nprice: " + this.price +

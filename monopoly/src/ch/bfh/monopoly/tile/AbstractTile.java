@@ -40,7 +40,7 @@ public abstract class AbstractTile implements Tile {
 	 * Get the id of this tile
 	 * @return an int that correspond to the id 
 	 */
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 
