@@ -103,14 +103,11 @@ public class Terrain extends Property {
 		return this.rgb;
 	}
 	
-<<<<<<< HEAD
 	@Override
 	public int getID(){
 		return super.getID();
 	}
 	
-=======
->>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
 	public String toString(){
 		return super.toString() + "\nname: " + name +
 				"\nprice: " + this.price +
