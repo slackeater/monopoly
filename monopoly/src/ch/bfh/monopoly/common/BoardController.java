@@ -8,6 +8,9 @@ public class BoardController {
 	public BoardController(Board board){
 		this.board = board;
 	}
+	public buyHouse(int tileID){
+		board.buyHouse(tileID);
+	}
 	
 	public int getXCoordForTileAtIndex(int index){
 		return board.tiles[index].getCoordX();

@@ -39,6 +39,11 @@ public class GameClient {
 		board.transferProperty(fromName, toName, propertyID);
 		board.transferMoney(fromName, toName, price);
 	}
+	
+	//TODO needs functionality of buying for a certain player (current player)
+	public void buyHouse(Tile t){
+		board.buyHouse();
+	}
 
 	
 }

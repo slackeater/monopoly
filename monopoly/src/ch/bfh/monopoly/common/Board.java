@@ -53,6 +53,11 @@ public class Board {
 		}
 	}
 
+	public Subject getTileSubjectAtIndex(int index){
+		return tileSubjects[index];
+	}
+	
+	
 	public Board(Locale loc, GameClient gameClient) {
 		// create tiles, cards, and events
 		this.loc = loc;
@@ -65,6 +70,15 @@ public class Board {
 
 		createTileSubjects();
 
+	}
+	
+	public void buyHouse(int tileID){
+		Tile t = tiles[tileID];
+		if (!(t instanceof Terrain)) throw new RuntimeException("Tile must be a terrain in order to build houses on it");
+		Terrain terrain = (Terrain)t;
+		terrain.buildHouse();
+		int id = terrain.getID();
+		tileSubjects[id].notifyListeners();
 	}
 
 	public void createTileSubjects() {

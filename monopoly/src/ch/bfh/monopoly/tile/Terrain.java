@@ -43,7 +43,10 @@ public class Terrain extends Property {
 		houseCount=0;
 	}
 
-
+	public void buildHouse(){
+		houseCount++;
+	}
+	
 	public int getRentByHouseCount(int houseCount){
 		return rentRates[houseCount];
 	}
