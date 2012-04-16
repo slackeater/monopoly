@@ -20,7 +20,7 @@ public class TestClient {
 		NetMessage five = new NetMessage(Messages.SELL_CARD);
 				
 		try {
-			n.startClient("localhost", 1234);
+			n.startClient("147.87.123.220", 1234);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

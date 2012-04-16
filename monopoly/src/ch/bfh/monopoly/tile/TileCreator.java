@@ -24,66 +24,67 @@ public class TileCreator {
 
 	public void createTiles(GameClient gameClient) {
 		Tile t =null;
-
+		ResourceBundle res = ResourceBundle.getBundle("tile", loc);
+		
 		for (int i = 0; i < 40; i++) {
 
-			String name = ResourceBundle.getBundle("tile", loc).getString(
+			String name = res.getString(
 					"tile" + i + "-name");
 			name = name.trim();
 
-			String toParse = ResourceBundle.getBundle("tile", loc).getString(
+			String toParse = res.getString(
 					"tile" + i + "-price");
 			int price = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-houseCost");
 			int houseCost = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-hotelCost");
 			int hotelCost = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-rent");
 			int rent = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-rent1house");
 			int rent1house = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-rent2house");
 			int rent2house = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-rent3house");
 			int rent3house = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-rent4house");
 			int rent4house = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-renthotel");
 			int renthotel = parseResource(toParse);
 
-			String group = ResourceBundle.getBundle("tile", loc).getString(
+			String group = res.getString(
 					"tile" + i + "-group");
 			group = group.trim();
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-mortgageValue");
 			int mortgageValue = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-coordX");
 			int coordX = parseResource(toParse);
 
-			toParse = ResourceBundle.getBundle("tile", loc).getString(
+			toParse = res.getString(
 					"tile" + i + "-coordY");
 			int coordY = parseResource(toParse);
 			
-			String rgb = ResourceBundle.getBundle("tile", loc).getString(
+			String rgb = res.getString(
 					"tile" + i + "-rgb");
 			
 			rgb = rgb.trim();

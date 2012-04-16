@@ -23,11 +23,11 @@ public class Monopoly {
 		JFrame mainFrame = new MonopolyGUI(bc);
 		mainFrame.setVisible(true);
 		mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		/*JFrame welcome = new WelcomePanel(mainFrame);
-		welcome.setTitle("Welcome to Monopoly");
-		welcome.setBounds(500, 50, 300, 650);
-		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		welcome.setVisible(true);*/
+//		JFrame welcome = new WelcomePanel(mainFrame);
+//		welcome.setTitle("Welcome to Monopoly");
+//		welcome.setBounds(500, 50, 300, 650);
+//		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		welcome.setVisible(true);
 		
 		//communicate.startServer("192.168.1.2", 1234, 3);
 	}

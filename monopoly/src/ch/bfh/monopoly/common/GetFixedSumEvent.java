@@ -1,10 +1,10 @@
 package ch.bfh.monopoly.common;
 
-public class getFixedSumEvent extends AbstractTileEvent{
+public class GetFixedSumEvent extends AbstractTileEvent{
 	
 	int fixedSum;
 	
-	public getFixedSumEvent(String name, int fixedSum, Board board){
+	public GetFixedSumEvent(String name, int fixedSum, Board board){
 		super(board);
 		this.fixedSum=fixedSum;
 		this.name=name;

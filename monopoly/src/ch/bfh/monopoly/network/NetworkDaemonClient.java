@@ -49,7 +49,6 @@ public class NetworkDaemonClient extends Thread{
 
 		while(connectionOpen){
 			
-			System.out.println("ciao");
 				//if there are messages in the queue, send it to the server
 				if(this.queue.size() > 1){
 					try {

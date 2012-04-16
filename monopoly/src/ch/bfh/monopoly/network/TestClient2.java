@@ -20,7 +20,7 @@ public class TestClient2 {
 		NetMessage five = new NetMessage(Messages.QUIT_GAME);
 				
 		try {
-			n.startClient("127.0.0.1", 1234);
+			n.startClient("147.87.123.220", 1234);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

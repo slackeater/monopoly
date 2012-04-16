@@ -55,6 +55,8 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	
 	private JPanel color;
 
+	
+	
 	/**
 	 * Construct a new BoardTile
 	 * @param ti the TileInfo used to passed the information
@@ -353,5 +355,4 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 			}
 		}
 	}
-
 }
