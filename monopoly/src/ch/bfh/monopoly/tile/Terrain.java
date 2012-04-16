@@ -105,7 +105,7 @@ public class Terrain extends Property {
 	
 	@Override
 	public int getID(){
-		return super.getId();
+		return super.getID();
 	}
 	
 	public String toString(){
