@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import ch.bfh.monopoly.network.Messages;
+import ch.bfh.monopoly.network.NetMessage;
 
 public class Network {
 
@@ -112,6 +113,15 @@ public class Network {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Send a NetMessage to all the client 
+	 * @param msg
+	 */
+	public void sendBroadcast(NetMessage msg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -1,45 +1,53 @@
 package ch.bfh.monopoly.tests;
 
-import static org.junit.Assert.assertTrue;
 import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import ch.bfh.monopoly.common.NetworkController;
 import ch.bfh.monopoly.network.Network;
 
 public class NetServerTest {
 
-	Network communicate ;
+	NetworkController nc = new NetworkController();
 	
 	@Before
 	public void setup() {
-		communicate = new Network();
-		//communicate.stopServer();
+	
 	}
 	
 	@Test
-	public void server(){
-	
-
+	public void startServer(){
+		
+		String ip = "192.168.1.2";
+		int port = 1234;
+		int players = 2;
+		
 		System.out.println("Starting the server...");
 
 		try {
-			communicate.startServer("192.168.1.8", 1234, 2);
+			nc.startServer(ip,port,players);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 
-
+	@Test
+	public void stopServer(){
+		
+	}
+	
+	
 
 	@After
 	public void cleanUp() {
 		System.out.println("Stopping the server...");
-		communicate.stopServer();
-
+		nc.stopServer();
 	}
 
 }

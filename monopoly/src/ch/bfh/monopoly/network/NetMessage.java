@@ -13,7 +13,7 @@ public class NetMessage implements Serializable{
 	private Player player;
 	private Property property;
 	private Locale loc;
-	private String terrainGroup;
+	private String string;
 	private int intgerValue;
 	private Player playerToKick;
 	private boolean kickAnswer;
@@ -86,13 +86,13 @@ public class NetMessage implements Serializable{
 	}
 
 	/** Construct a NetMessage
-	 * @param player a player who wants to sell / buy a row of building
-	 * @param terrainGroup the name of the group
+	 * @param player a player who wants to sell / buy a row of building / send a chat message
+	 * @param s the name of the group / the chat message
 	 * @param m the message type
 	 */
-	public NetMessage(Player player, String terrainGroup, Messages m) {
+	public NetMessage(Player player, String s, Messages m) {
 		this.player = player;
-		this.terrainGroup = terrainGroup;
+		this.string = s;
 		this.m = m;
 	}
 

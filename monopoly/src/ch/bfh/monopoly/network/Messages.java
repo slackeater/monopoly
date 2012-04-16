@@ -14,6 +14,7 @@ public enum Messages {
 	KICK_PLAYER(150),
 	KICK_ANSWER(160),
 	QUIT_GAME(170),
+	CHAT_MSG(180),
 	
 	BUY_HOUSE(200),
 	BUY_HOUSEROW(205),

@@ -139,10 +139,7 @@ public class WelcomePanel extends JFrame{
 		connect.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent e) {}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -158,7 +155,6 @@ public class WelcomePanel extends JFrame{
 							" and port " + port + " with " + maxPlayers + " players...\n");
 					
 					try {
-						Monopoly.communicate.setNotificationArea(info);
 						Monopoly.communicate.startServer(ip, port, maxPlayers);
 						
 						dispose();
@@ -175,29 +171,16 @@ public class WelcomePanel extends JFrame{
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
 				}
-				
-			
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent e) {}
 			
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e) {}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
-			
-				
+			public void mouseClicked(MouseEvent e) {}	
 		});
 		
 		client.add(labelIP);

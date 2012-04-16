@@ -2,6 +2,7 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,6 +19,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -29,12 +32,28 @@ import ch.bfh.monopoly.tile.TileInfo;
 public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 	private static final long serialVersionUID = 3335141445010622095L;
-	
+
 	private int numberOfTokens = 0;
+	private int houseCount = 0;
+	private boolean isHotel = false;
+
 	private Set<Token> tokens = new HashSet<Token>();
 	private TileInfo ti;
 	private JPanel tab;
 	private boolean displayInfo = false;
+
+	private JMenuItem buyHouse;
+	private JMenuItem buyHouseRow;
+	private JMenuItem buyHotel;
+	private JMenuItem buyHotelRow;
+	private JMenuItem sellHouse;
+	private JMenuItem sellHotel;
+	private JMenuItem sellHouseRow;
+	private JMenuItem sellHotelRow;
+	private JMenuItem mortgage;
+	private JMenuItem unmortgage;
+	
+	private JPanel color;
 
 	/**
 	 * Construct a new BoardTile
@@ -46,7 +65,8 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
-		JPanel color = new JPanel();
+		color = new JPanel();
+		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
 		ButtonListener btnListener = new ButtonListener();
 
@@ -68,10 +88,10 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 		add(color);
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
-		
+
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
-		
+
 		add(name);
 	}
 
@@ -120,14 +140,18 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 			JLabel name = new JLabel(ti.getName());
 			name.setAlignmentX(Component.CENTER_ALIGNMENT);
 			name.setFont(f2);
-
-			if(ti.getRGB() != null){
-				tab.setBackground(Color.decode(ti.getRGB()));
-			}
-			else{
-				tab.setBackground(Color.WHITE);
-			}
-
+				
+			JPanel color = new JPanel();
+			
+			color.setBorder(BorderFactory.createEtchedBorder());
+			color.setMaximumSize(new Dimension(tab.getWidth(), getHeight()/3));
+			
+			if(ti.getRGB() != null)
+				color.setBackground(Color.decode(ti.getRGB()));
+			else
+				color.setBackground(Color.WHITE);
+			
+			color.add(name);
 
 			JLabel price = new JLabel("Price: " + Integer.toString(ti.getPrice()));
 			price.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -159,7 +183,8 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 			tab.removeAll();
 
-			tab.add(name);
+		
+			tab.add(color);
 			tab.add(price);
 			tab.add(rent);
 			tab.add(rent1);
@@ -180,37 +205,36 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	private JPopupMenu popMenu(){
 		JPopupMenu pop = new JPopupMenu();
 
-		JMenuItem buyHouse = new JMenuItem("Buy house");
+		buyHouse = new JMenuItem("Buy house");
 		buyHouse.addActionListener(this);
 
-		JMenuItem buyHouseRow = new JMenuItem("Buy house row");
+		buyHouseRow = new JMenuItem("Buy house row");
 		buyHouseRow.addActionListener(this);
 
-		JMenuItem buyHotel = new JMenuItem("Buy hotel");
+		buyHotel = new JMenuItem("Buy hotel");
 		buyHotel.addActionListener(this);
 
-		JMenuItem buyHotelRow = new JMenuItem("Buy hotel row");
+		buyHotelRow = new JMenuItem("Buy hotel row");
 		buyHotelRow.addActionListener(this);
 
-		JMenuItem sellHouse = new JMenuItem("Sell house");
+		sellHouse = new JMenuItem("Sell house");
 		sellHouse.addActionListener(this);
-		
-		JMenuItem sellHotel = new JMenuItem("Sell hotel");
+
+		sellHotel = new JMenuItem("Sell hotel");
 		sellHotel.addActionListener(this);
-		
-		JMenuItem sellHouseRow = new JMenuItem("Sell house row");
+
+		sellHouseRow = new JMenuItem("Sell house row");
 		sellHouseRow.addActionListener(this);
-		
-		JMenuItem sellHotelRow = new JMenuItem("Sell hotel row");
+
+		sellHotelRow = new JMenuItem("Sell hotel row");
 		sellHotelRow.addActionListener(this);
-	
-		
-		JMenuItem mortgage = new JMenuItem("Mortgage");
+
+		mortgage = new JMenuItem("Mortgage");
 		mortgage.addActionListener(this);
-		
-		JMenuItem unmortgage = new JMenuItem("Unmortgage");
+
+		unmortgage = new JMenuItem("Unmortgage");
 		unmortgage.addActionListener(this);
-		
+
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
 		pop.add(buyHotel);
@@ -242,8 +266,8 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setRenderingHint(
-		        RenderingHints.KEY_TEXT_ANTIALIASING,
-		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+				RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
 		this.numberOfTokens = tokens.size();
 
@@ -262,7 +286,36 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 
 
 	@Override
-	public void actionPerformed(ActionEvent e) {}
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(buyHouse)){
+			if(houseCount < 4){
+				JPanel house = new JPanel();
+				house.setBackground(Color.RED);
+				house.setBorder(BorderFactory.createRaisedBevelBorder());
+				house.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
+
+				color.add(house);
+
+				houseCount++;
+				revalidate();
+			}
+		}
+		else if(e.getSource().equals(buyHotel)){
+			if(!isHotel && houseCount == 4){
+				color.removeAll();
+				JPanel hotel = new JPanel();
+				hotel.setBackground(Color.GREEN);
+				hotel.setBorder(BorderFactory.createRaisedBevelBorder());
+				hotel.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
+				
+				color.add(hotel);
+				repaint();
+				revalidate();
+				isHotel = true;
+				
+			}
+		}
+	}
 
 
 	@Override

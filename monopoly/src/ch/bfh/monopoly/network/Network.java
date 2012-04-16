@@ -4,28 +4,16 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
-import javax.swing.JComponent;
-import javax.swing.JTextArea;
-
-
 public class Network {
 
 	private ServerSocketChannel srv;
-	NetworkDaemonServer[] clients;
+	private NetworkDaemonServer[] serverSideThread;
 	private NetworkDaemonClient n;
-
-	//very ugly
-	private JTextArea cmp;
-
-	public void setNotificationArea(JTextArea cmp){
-		this.cmp = cmp;
-	}
 
 	/**
 	 * Start the server
@@ -39,7 +27,7 @@ public class Network {
 		int ctr = 0;
 
 		ip = Inet4Address.getByName(dottedIP);
-		clients = new NetworkDaemonServer[maxPlayers];
+		serverSideThread = new NetworkDaemonServer[maxPlayers];
 
 		srv = ServerSocketChannel.open();
 		srv.socket().bind(new InetSocketAddress(ip,port));
@@ -47,32 +35,28 @@ public class Network {
 
 		//fill the array of client threads
 		while(ctr < maxPlayers){
-			cmp.append("Waiting for clients...\n");
-			
+			System.out.println("Waiting for clients...");
 			
 			clientConnection = srv.accept();
 
 			if(clientConnection != null){
-				clients[ctr] = new NetworkDaemonServer(clientConnection.socket(), ctr+1);
-				clients[ctr].start();
+				serverSideThread[ctr] = new NetworkDaemonServer(clientConnection.socket(), ctr+1, serverSideThread);
+				serverSideThread[ctr].start();
 				ctr++;
 
-				cmp.append("One client connected\n");
+				System.out.println("One client connected");
 
 			}
 			else{
 				try {
 					Thread.sleep(2500);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-				cmp.append("....\n");
+				System.out.println("....");
 			}
 			
-			cmp.repaint();
-			cmp.validate();
 		}
 	}
 
@@ -103,22 +87,15 @@ public class Network {
 	 * Start a client
 	 * @param ip the ip of the server
 	 * @param port the port of the server
+	 * @throws IOException 
+	 * @throws UnknownHostException 
 	 */
-	public void startClient(String ip, int port){
-		try {
+	public void startClient(String ip, int port) throws UnknownHostException, IOException{
 			Socket s = new Socket(ip, port);
 
 			//start a thread for the client
 			n = new NetworkDaemonClient(s, 1);
 			n.start();
-
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 

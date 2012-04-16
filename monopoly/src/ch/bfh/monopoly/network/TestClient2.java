@@ -3,7 +3,7 @@ package ch.bfh.monopoly.network;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-public class TestClient {
+public class TestClient2 {
 
 	/**
 	 * @param args
@@ -12,15 +12,15 @@ public class TestClient {
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
 		Network n = new Network();
-
-		NetMessage one = new NetMessage(Messages.AUCTION);
-		NetMessage two = new NetMessage(Messages.BUY_HOTEL);
-		NetMessage three = new NetMessage(Messages.BUY_HOUSE);
-		NetMessage four = new NetMessage(Messages.BUY_HOUSEROW);
-		NetMessage five = new NetMessage(Messages.SELL_CARD);
+	
+		NetMessage one = new NetMessage(Messages.MORTGAGE);
+		NetMessage two = new NetMessage(Messages.UNMORTGAGE);
+		NetMessage three = new NetMessage(Messages.KICK_PLAYER);
+		NetMessage four = new NetMessage(Messages.KICK_ANSWER);
+		NetMessage five = new NetMessage(Messages.QUIT_GAME);
 				
 		try {
-			n.startClient("localhost", 1234);
+			n.startClient("127.0.0.1", 1234);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -29,7 +29,6 @@ public class TestClient {
 			e1.printStackTrace();
 		}
 		
-
 		n.addMsg(one);
 		Thread.sleep(5000);
 		n.addMsg(two);
