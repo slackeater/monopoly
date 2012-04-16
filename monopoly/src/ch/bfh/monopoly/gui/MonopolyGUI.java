@@ -27,6 +27,7 @@ import javax.swing.Timer;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.common.Subject;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
@@ -145,10 +146,13 @@ public class MonopolyGUI extends JFrame {
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoByID(j);
 
-			BoardTile bc = new BoardTile(t, tab1);
-
-			this.tiles.add(bc);
+			BoardTile bt = new BoardTile(t, tab1, this.bc);
+//
+	Subject s = this.bc.getTileSubjectAtIndex(j);
+			this.tiles.add(bt);
+			s.addListener(bt);
 		}
+		
 		
 		//add the tokens to the first tile
 		for(int i = 0 ; i < playerNumber ; i++){

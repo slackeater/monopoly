@@ -31,5 +31,4 @@ public class Monopoly {
 		
 		//communicate.startServer("192.168.1.2", 1234, 3);
 	}
-
 }

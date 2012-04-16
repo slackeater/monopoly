@@ -26,10 +26,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.TileListener;
+import ch.bfh.monopoly.common.TileStateInfo;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
-public class BoardTile extends JPanel implements ActionListener, ItemListener{
+public class BoardTile extends JPanel implements ActionListener, ItemListener, TileListener{
 
 	private static final long serialVersionUID = 3335141445010622095L;
 
@@ -41,6 +44,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	private TileInfo ti;
 	private JPanel tab;
 	private boolean displayInfo = false;
+	private BoardController bc;
 
 	private JMenuItem buyHouse;
 	private JMenuItem buyHouseRow;
@@ -61,9 +65,10 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	 * Construct a new BoardTile
 	 * @param ti the TileInfo used to passed the information
 	 */
-	public BoardTile(TileInfo ti, JPanel tab){
+	public BoardTile(TileInfo ti, JPanel tab, BoardController bc){
 		this.ti = ti;
 		this.tab = tab;
+		this.bc = bc;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -290,17 +295,19 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(buyHouse)){
-			if(houseCount < 4){
-				JPanel house = new JPanel();
-				house.setBackground(Color.RED);
-				house.setBorder(BorderFactory.createRaisedBevelBorder());
-				house.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
-
-				color.add(house);
-
-				houseCount++;
-				revalidate();
-			}
+			bc.buyHouse(ti.getID());
+			
+//			if(houseCount < 4){
+//				JPanel house = new JPanel();
+//				house.setBackground(Color.RED);
+//				house.setBorder(BorderFactory.createRaisedBevelBorder());
+//				house.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
+//
+//				color.add(house);
+//
+//				houseCount++;
+//				revalidate();
+//			}
 		}
 		else if(e.getSource().equals(buyHotel)){
 			if(!isHotel && houseCount == 4){
@@ -354,5 +361,12 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener{
 						e.getX(), e.getY());
 			}
 		}
+	}
+
+	@Override
+	public void updateTile(TileStateInfo tsi) {
+		System.out.println("ciao");
+		repaint();
+		revalidate();
 	}
 }

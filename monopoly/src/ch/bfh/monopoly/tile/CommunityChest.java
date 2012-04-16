@@ -52,11 +52,6 @@ public class CommunityChest extends AbstractTile {
 		}
 	}
 
-	@Override
-	public int getID() {
-		return super.getId();
-	}
-	
 	/**
 	 * LIST HANDLING create array of fixed length which is master list of all
 	 * events

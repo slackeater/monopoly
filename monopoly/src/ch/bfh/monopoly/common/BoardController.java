@@ -8,7 +8,7 @@ public class BoardController {
 	public BoardController(Board board){
 		this.board = board;
 	}
-	public buyHouse(int tileID){
+	public void buyHouse(int tileID){
 		board.buyHouse(tileID);
 	}
 	
@@ -26,5 +26,9 @@ public class BoardController {
 	
 	public Subject[] getTileSubjectList(){
 		return board.getTileSubjectList();
+	}
+	
+	public Subject getTileSubjectAtIndex(int i){
+		return board.getTileSubjectAtIndex(i);
 	}
 }

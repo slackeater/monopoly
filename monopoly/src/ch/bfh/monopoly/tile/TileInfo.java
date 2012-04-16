@@ -16,6 +16,7 @@ public class TileInfo {
 	int mortgageValue;
 	int coordX;
 	int coordY;
+	int id;
 	String rgb;
 
 	public TileInfo() {
@@ -33,6 +34,7 @@ public class TileInfo {
 		mortgageValue = -1;
 		coordX = -1;
 		coordY = -1;
+		id = -1;
 		rgb = null;
 	}
 
@@ -154,6 +156,14 @@ public class TileInfo {
 	
 	public void setRGB(String rgb){
 		this.rgb = rgb;
+	}
+	
+	public int getID(){
+		return this.id;
+	}
+	
+	public void setID(int id){
+		this.id = id;
 	}
 
 }
