@@ -1,6 +1,5 @@
 package ch.bfh.monopoly.networkJustin;
 
-
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

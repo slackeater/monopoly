@@ -29,7 +29,6 @@ public class BoardBuilder extends JPanel {
 	
 	private final double WEIGHT_TILE_X = 0.1;
 	private final double WEIGHT_TILE_Y = 0.1;
-	
 	private final double WEIGHT_CORNER_X = 0.12;
 	private final double WEIGHT_CORNER_Y = 0.12;
 	
@@ -67,10 +66,14 @@ public class BoardBuilder extends JPanel {
 
 		JButton buy = new JButton("Buy");
 		JButton auction = new JButton("Auction");
+		JButton throwDice = new JButton("Throw Dice");
+		JButton useCard = new JButton("Jail card");
 
 		JPanel btnPanel = new JPanel();
 		btnPanel.add(buy);
 		btnPanel.add(auction);
+		btnPanel.add(throwDice);
+		btnPanel.add(useCard);
 
 		JScrollPane eventPane = new JScrollPane(this.eventPane);
 		eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

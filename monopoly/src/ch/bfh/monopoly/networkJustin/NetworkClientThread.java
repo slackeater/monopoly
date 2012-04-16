@@ -41,6 +41,7 @@ public class NetworkClientThread extends Thread {
 				o = ois.readObject();
 				System.out.println(o);
 				System.out.println(((NetMessage) o).getMessageTime());
+				
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

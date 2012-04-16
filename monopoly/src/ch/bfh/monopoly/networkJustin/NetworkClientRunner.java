@@ -15,7 +15,7 @@ public class NetworkClientRunner {
 		// TODO Auto-generated method stub
 
 		Network connection = new Network();
-		connection.startClient("89.236.128.227", 1235);
+		connection.startClient("192.168.1.2", 1234);
 //		NetworkClient connection = new NetworkClient("192.168.1.8", 1235);
 //		connection.openConnection();
 //		connection.start();
