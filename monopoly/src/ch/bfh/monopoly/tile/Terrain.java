@@ -103,11 +103,6 @@ public class Terrain extends Property {
 		return this.rgb;
 	}
 	
-	@Override
-	public int getID(){
-		return super.getID();
-	}
-	
 	public String toString(){
 		return super.toString() + "\nname: " + name +
 				"\nprice: " + this.price +
