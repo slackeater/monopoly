@@ -10,23 +10,18 @@ import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.security.KeyStore.Builder;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.border.Border;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.TileListener;
@@ -34,7 +29,7 @@ import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
-public class BoardTile extends JPanel implements ActionListener, TileListener{
+public class BoardTile extends JPanel implements TileListener{
 
 	private static final long serialVersionUID = 3335141445010622095L;
 
@@ -47,6 +42,8 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 	private JPanel tab;
 	private boolean displayInfo = false;
 	private BoardController bc;
+	
+	private RightClick rc;
 
 	private JMenuItem buyHouse;
 	private JMenuItem buyHouseRow;
@@ -82,12 +79,13 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
 		ButtonListener btnListener = new ButtonListener();
+		rc = new RightClick();
 
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
 						|| !ti.getGroup().equals("Chance"))){
 			//we want a pop-up menu only on the properties where
-			//we can build something or 
+			//we can build something 
 			this.addMouseListener(btnListener);
 			displayInfo = true;
 		}
@@ -219,34 +217,34 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		JPopupMenu pop = new JPopupMenu();
 
 		buyHouse = new JMenuItem("Buy house");
-		buyHouse.addActionListener(this);
+		buyHouse.addActionListener(rc);
 
 		buyHouseRow = new JMenuItem("Buy house row");
-		buyHouseRow.addActionListener(this);
+		buyHouseRow.addActionListener(rc);
 
 		buyHotel = new JMenuItem("Buy hotel");
-		buyHotel.addActionListener(this);
+		buyHotel.addActionListener(rc);
 
 		buyHotelRow = new JMenuItem("Buy hotel row");
-		buyHotelRow.addActionListener(this);
+		buyHotelRow.addActionListener(rc);
 
 		sellHouse = new JMenuItem("Sell house");
-		sellHouse.addActionListener(this);
+		sellHouse.addActionListener(rc);
 
 		sellHotel = new JMenuItem("Sell hotel");
-		sellHotel.addActionListener(this);
+		sellHotel.addActionListener(rc);
 
 		sellHouseRow = new JMenuItem("Sell house row");
-		sellHouseRow.addActionListener(this);
+		sellHouseRow.addActionListener(rc);
 
 		sellHotelRow = new JMenuItem("Sell hotel row");
-		sellHotelRow.addActionListener(this);
+		sellHotelRow.addActionListener(rc);
 
 		mortgage = new JMenuItem("Mortgage");
-		mortgage.addActionListener(this);
+		mortgage.addActionListener(rc);
 
 		unmortgage = new JMenuItem("Unmortgage");
-		unmortgage.addActionListener(this);
+		unmortgage.addActionListener(rc);
 
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
@@ -327,26 +325,6 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		revalidate();
 	}
 
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		buyHouseClicked = false;
-		buyHotelClicked = false;
-		
-		if(e.getSource().equals(buyHouse)){
-			buyHouseClicked = true;
-			bc.buyHouse(ti.getID());
-		}
-		else if(e.getSource().equals(buyHotel)){
-			System.out.println("clicked on hotels");
-			buyHotelClicked = true;
-			
-			// TODO change to buyHotel !!!!!!!!!!!
-			bc.buyHouse(ti.getID());
-		}
-	}
-
 	/**
 	 * Inner class used to show the popup menu 
 	 * @author snake
@@ -368,10 +346,6 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 			}
 		}
 
-		public void mouseReleased(MouseEvent e) {
-			maybeShowPopup(e);
-		}
-
 		private void maybeShowPopup(MouseEvent e) {
 			if (e.isPopupTrigger() && popup != null) {
 				popup.show(e.getComponent(),
@@ -380,6 +354,32 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		}
 	}
 
+	/**
+	 * Inner class used to manage the mouse click on the menu
+	 * @author snake, shrevek
+	 *
+	 */
+	class RightClick implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			buyHouseClicked = false;
+			buyHotelClicked = false;
+			
+			if(e.getSource().equals(buyHouse)){
+				buyHouseClicked = true;
+				bc.buyHouse(ti.getID());
+			}
+			else if(e.getSource().equals(buyHotel)){
+				System.out.println("clicked on hotels");
+				buyHotelClicked = true;
+				
+				// TODO change to buyHotel !!!!!!!!!!!
+				bc.buyHouse(ti.getID());
+			}
+		}	
+	}
+	
 	@Override
 	public void updateTile(TileStateEvent tsi) {
 		if(buyHouseClicked){
