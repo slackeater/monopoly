@@ -48,22 +48,9 @@ public class BoardTile extends JPanel{
 	private JPanel tab;
 	private boolean displayInfo = false;
 	private BoardController bc;
-<<<<<<< HEAD
-=======
+
 	private GameController gc;
 
-	private JMenuItem buyHouse;
-	private JMenuItem buyHouseRow;
-	private JMenuItem buyHotel;
-	private JMenuItem buyHotelRow;
-	private JMenuItem sellHouse;
-	private JMenuItem sellHotel;
-	private JMenuItem sellHouseRow;
-	private JMenuItem sellHotelRow;
-	private JMenuItem mortgage;
-	private JMenuItem unmortgage;
->>>>>>> branch 'master' of https://slackeater@github.com/slackeater/monopoly.git
-	
 	//used when we right click on a tile
 	private PerformActionMenu ac;
 	
@@ -86,11 +73,7 @@ public class BoardTile extends JPanel{
 		this.ti = ti;
 		this.tab = tab;
 		this.bc = bc;
-<<<<<<< HEAD
-		
-=======
 		this.gc = gc;
->>>>>>> branch 'master' of https://slackeater@github.com/slackeater/monopoly.git
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -341,29 +324,6 @@ public class BoardTile extends JPanel{
 		revalidate();
 	}
 
-<<<<<<< HEAD
-=======
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		buyHouseClicked = false;
-		buyHotelClicked = false;
-		
-		if(e.getSource().equals(buyHouse)){
-			buyHouseClicked = true;
-			gc.buyHouse(ti.getID());
-		}
-		else if(e.getSource().equals(buyHotel)){
-			System.out.println("clicked on hotels");
-			buyHotelClicked = true;
-			
-			// TODO change to buyHotel !!!!!!!!!!!
-			gc.buyHouse(ti.getID());
-		}
-	}
-
->>>>>>> branch 'master' of https://slackeater@github.com/slackeater/monopoly.git
 	/**
 	 * Inner class used to show the popup menu 
 	 * @author snake, shrevek
@@ -408,13 +368,13 @@ public class BoardTile extends JPanel{
 			
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
-				bc.buyHouse(ti.getID());
+				gc.buyHouse(ti.getID());
 			}
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
 		
 				// TODO change to buyHotel !!!!!!!!!!!
-				bc.buyHouse(ti.getID());
+				gc.buyHouse(ti.getID());
 			}
 		}	
 	}
@@ -424,7 +384,6 @@ public class BoardTile extends JPanel{
 	 * @author snake, shrevek
 	 */
 	private class InformationUpdate implements TileListener{
-	
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 			if(buyHouseClicked){
