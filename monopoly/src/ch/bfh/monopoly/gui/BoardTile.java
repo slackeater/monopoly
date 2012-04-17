@@ -29,7 +29,12 @@ import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
-public class BoardTile extends JPanel implements TileListener{
+/**
+ * This class represent a tile on the board
+ * @author snake
+ *
+ */
+public class BoardTile extends JPanel{
 
 	private static final long serialVersionUID = 3335141445010622095L;
 
@@ -43,27 +48,20 @@ public class BoardTile extends JPanel implements TileListener{
 	private boolean displayInfo = false;
 	private BoardController bc;
 	
-	private RightClick rc;
-
-	private JMenuItem buyHouse;
-	private JMenuItem buyHouseRow;
-	private JMenuItem buyHotel;
-	private JMenuItem buyHotelRow;
-	private JMenuItem sellHouse;
-	private JMenuItem sellHotel;
-	private JMenuItem sellHouseRow;
-	private JMenuItem sellHotelRow;
-	private JMenuItem mortgage;
-	private JMenuItem unmortgage;
+	//used when we right click on a tile
+	private PerformActionMenu ac;
 	
+	//used to update the tile
+	private InformationUpdate iu = new InformationUpdate();
+
+	private JMenuItem buyHouse, buyHouseRow, buyHotel, buyHotelRow, sellHouse, sellHotel, sellHouseRow,
+	sellHotelRow, mortgage, unmortgage;
+
 	private JPanel color;
 	
 	//to check if we have clicked over a button
-	private boolean buyHouseClicked = false;
-	private boolean buyHotelClicked = false;
+	private boolean buyHouseClicked = false, buyHotelClicked = false;
 
-	
-	
 	/**
 	 * Construct a new BoardTile
 	 * @param ti the TileInfo used to passed the information
@@ -72,6 +70,7 @@ public class BoardTile extends JPanel implements TileListener{
 		this.ti = ti;
 		this.tab = tab;
 		this.bc = bc;
+		
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -79,7 +78,7 @@ public class BoardTile extends JPanel implements TileListener{
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
 		ButtonListener btnListener = new ButtonListener();
-		rc = new RightClick();
+		ac = new PerformActionMenu();
 
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
@@ -90,7 +89,7 @@ public class BoardTile extends JPanel implements TileListener{
 			displayInfo = true;
 		}
 
-		//check if there is a color
+		//check if there is a color and add the menu
 		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
 			btnListener.addPopUp(popMenu());
@@ -99,7 +98,6 @@ public class BoardTile extends JPanel implements TileListener{
 		add(color);
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
-
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
 
@@ -194,7 +192,6 @@ public class BoardTile extends JPanel implements TileListener{
 
 			tab.removeAll();
 
-		
 			tab.add(color);
 			tab.add(price);
 			tab.add(rent);
@@ -217,34 +214,34 @@ public class BoardTile extends JPanel implements TileListener{
 		JPopupMenu pop = new JPopupMenu();
 
 		buyHouse = new JMenuItem("Buy house");
-		buyHouse.addActionListener(rc);
+		buyHouse.addActionListener(ac);
 
 		buyHouseRow = new JMenuItem("Buy house row");
-		buyHouseRow.addActionListener(rc);
+		buyHouseRow.addActionListener(ac);
 
 		buyHotel = new JMenuItem("Buy hotel");
-		buyHotel.addActionListener(rc);
+		buyHotel.addActionListener(ac);
 
 		buyHotelRow = new JMenuItem("Buy hotel row");
-		buyHotelRow.addActionListener(rc);
+		buyHotelRow.addActionListener(ac);
 
 		sellHouse = new JMenuItem("Sell house");
-		sellHouse.addActionListener(rc);
+		sellHouse.addActionListener(ac);
 
 		sellHotel = new JMenuItem("Sell hotel");
-		sellHotel.addActionListener(rc);
+		sellHotel.addActionListener(ac);
 
 		sellHouseRow = new JMenuItem("Sell house row");
-		sellHouseRow.addActionListener(rc);
+		sellHouseRow.addActionListener(ac);
 
 		sellHotelRow = new JMenuItem("Sell hotel row");
-		sellHotelRow.addActionListener(rc);
+		sellHotelRow.addActionListener(ac);
 
 		mortgage = new JMenuItem("Mortgage");
-		mortgage.addActionListener(rc);
+		mortgage.addActionListener(ac);
 
 		unmortgage = new JMenuItem("Unmortgage");
-		unmortgage.addActionListener(rc);
+		unmortgage.addActionListener(ac);
 
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
@@ -318,7 +315,6 @@ public class BoardTile extends JPanel implements TileListener{
 			building.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
 			houseCount++;
 			color.add(building);
-			System.out.println(houseCount);
 		}
 		
 		repaint();
@@ -327,10 +323,9 @@ public class BoardTile extends JPanel implements TileListener{
 
 	/**
 	 * Inner class used to show the popup menu 
-	 * @author snake
-	 *
+	 * @author snake, shrevek
 	 */
-	class ButtonListener extends MouseAdapter{
+	private class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
 
 		public void addPopUp(JPopupMenu pop){
@@ -338,15 +333,17 @@ public class BoardTile extends JPanel implements TileListener{
 		}
 
 		public void mousePressed(MouseEvent e) {
-			if(e.getButton() == MouseEvent.BUTTON1){
+			//left click
+			if(e.getButton() == MouseEvent.BUTTON1){ 
 				addInformationOnTab();
 			}
-			else{
-				maybeShowPopup(e);
+			//right click
+			else if(e.getButton() == MouseEvent.BUTTON3){
+				showPopup(e);
 			}
 		}
 
-		private void maybeShowPopup(MouseEvent e) {
+		private void showPopup(MouseEvent e) {
 			if (e.isPopupTrigger() && popup != null) {
 				popup.show(e.getComponent(),
 						e.getX(), e.getY());
@@ -357,9 +354,9 @@ public class BoardTile extends JPanel implements TileListener{
 	/**
 	 * Inner class used to manage the mouse click on the menu
 	 * @author snake, shrevek
-	 *
+	 * 
 	 */
-	class RightClick implements ActionListener{
+	private class PerformActionMenu implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
@@ -371,22 +368,41 @@ public class BoardTile extends JPanel implements TileListener{
 				bc.buyHouse(ti.getID());
 			}
 			else if(e.getSource().equals(buyHotel)){
-				System.out.println("clicked on hotels");
 				buyHotelClicked = true;
-				
+		
 				// TODO change to buyHotel !!!!!!!!!!!
 				bc.buyHouse(ti.getID());
 			}
 		}	
 	}
 	
-	@Override
-	public void updateTile(TileStateEvent tsi) {
-		if(buyHouseClicked){
-			drawBuilding(false);
+	/**
+	 * Inner class used to update the information on this tile
+	 * @author snake, shrevek
+	 */
+	private class InformationUpdate implements TileListener{
+	
+		@Override
+		public void updateTile(TileStateEvent tsi) {
+			if(buyHouseClicked){
+				drawBuilding(false);
+			}
+			else if(buyHotelClicked){
+				drawBuilding(true);
+			}
 		}
-		else if(buyHotelClicked){
-			drawBuilding(true);
-		}
+	}
+	
+	/**
+	 * This method is called by an external
+	 * class to update the information on this tile
+	 * @param tsi
+	 */
+	public void updateTile(TileStateEvent tsi){
+		iu.updateTile(tsi);
+	}
+	
+	public TileListener getTileListener(){
+		return this.iu;
 	}
 }

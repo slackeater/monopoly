@@ -148,9 +148,9 @@ public class MonopolyGUI extends JFrame {
 
 			BoardTile bt = new BoardTile(t, tab1, this.bc);
 //
-	Subject s = this.bc.getTileSubjectAtIndex(j);
+			Subject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
-			s.addListener(bt);
+			s.addListener(bt.getTileListener());
 		}
 		
 		
