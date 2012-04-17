@@ -42,7 +42,7 @@ public class Board {
 		public void notifyListeners() {
 			Tile t = getTileByID(tileListenerID);
 			Terrain terrain = ((Terrain) t);
-			TileStateInfo tsi = new TileStateInfo(
+			TileStateEvent tsi = new TileStateEvent(
 					terrain.getHouseCount(),
 					terrain.getHotelCount(), 
 					"bob",//terrain.getOwner().getName(),

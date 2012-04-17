@@ -30,7 +30,7 @@ import javax.swing.border.Border;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.TileListener;
-import ch.bfh.monopoly.common.TileStateInfo;
+import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
@@ -380,10 +380,8 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		}
 	}
 
-	
-	
 	@Override
-	public void updateTile(TileStateInfo tsi) {
+	public void updateTile(TileStateEvent tsi) {
 		if(buyHouseClicked){
 			drawBuilding(false);
 		}
