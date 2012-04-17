@@ -14,6 +14,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.security.KeyStore.Builder;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -25,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.border.Border;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.TileListener;
@@ -32,7 +34,7 @@ import ch.bfh.monopoly.common.TileStateInfo;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
-public class BoardTile extends JPanel implements ActionListener, ItemListener, TileListener{
+public class BoardTile extends JPanel implements ActionListener, TileListener{
 
 	private static final long serialVersionUID = 3335141445010622095L;
 
@@ -58,6 +60,10 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener, T
 	private JMenuItem unmortgage;
 	
 	private JPanel color;
+	
+	//to check if we have clicked over a button
+	private boolean buyHouseClicked = false;
+	private boolean buyHotelClicked = false;
 
 	
 	
@@ -290,45 +296,56 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener, T
 			}
 		}
 	}
+	
+	/**
+	 * Draw a building
+	 * @param type boolean true == hotel ; false == house
+	 */
+	public void drawBuilding(boolean type){
+		JPanel building = new JPanel();
+		building.setBorder(BorderFactory.createRaisedBevelBorder());
 
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(buyHouse)){
-			bc.buyHouse(ti.getID());
+		//if true is hotel
+		if(type && !isHotel && houseCount == 4){
+			color.removeAll();
+			building.setBackground(Color.GREEN);
+			building.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
 			
-//			if(houseCount < 4){
-//				JPanel house = new JPanel();
-//				house.setBackground(Color.RED);
-//				house.setBorder(BorderFactory.createRaisedBevelBorder());
-//				house.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
-//
-//				color.add(house);
-//
-//				houseCount++;
-//				revalidate();
-//			}
+			//we have drawn an hotel
+			isHotel = true;
+			color.add(building);
 		}
-		else if(e.getSource().equals(buyHotel)){
-			if(!isHotel && houseCount == 4){
-				color.removeAll();
-				JPanel hotel = new JPanel();
-				hotel.setBackground(Color.GREEN);
-				hotel.setBorder(BorderFactory.createRaisedBevelBorder());
-				hotel.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
-				
-				color.add(hotel);
-				repaint();
-				revalidate();
-				isHotel = true;
-				
-			}
+		else if(!type && houseCount < 4){
+			building.setBackground(Color.RED);
+			building.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
+			houseCount++;
+			color.add(building);
+			System.out.println(houseCount);
 		}
+		
+		repaint();
+		revalidate();
 	}
 
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {}
+	public void actionPerformed(ActionEvent e) {
+		
+		buyHouseClicked = false;
+		buyHotelClicked = false;
+		
+		if(e.getSource().equals(buyHouse)){
+			buyHouseClicked = true;
+			bc.buyHouse(ti.getID());
+		}
+		else if(e.getSource().equals(buyHotel)){
+			System.out.println("clicked on hotels");
+			buyHotelClicked = true;
+			
+			// TODO change to buyHotel !!!!!!!!!!!
+			bc.buyHouse(ti.getID());
+		}
+	}
 
 	/**
 	 * Inner class used to show the popup menu 
@@ -363,10 +380,15 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener, T
 		}
 	}
 
+	
+	
 	@Override
 	public void updateTile(TileStateInfo tsi) {
-		System.out.println("ciao");
-		repaint();
-		revalidate();
+		if(buyHouseClicked){
+			drawBuilding(false);
+		}
+		else if(buyHotelClicked){
+			drawBuilding(true);
+		}
 	}
 }
