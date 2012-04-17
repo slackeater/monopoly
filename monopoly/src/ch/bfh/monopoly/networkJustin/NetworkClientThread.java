@@ -1,4 +1,6 @@
 package ch.bfh.monopoly.networkJustin;
+
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -35,19 +37,17 @@ public class NetworkClientThread extends Thread {
 		}
 
 		while (true) {
-
-			Object o;
 			try {
-				o = ois.readObject();
+				Object o;
+				int toRead = ois.available();
+				for (int i = 0; i < toRead; i++) {
+					o = ois.readByte();
+				}
+			} catch (EOFException e) {
 				System.out.println(o);
 				System.out.println(((NetMessage) o).getMessageTime());
-				
-
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
 			}
+
 		}
 
 	}

@@ -1,12 +1,12 @@
 package ch.bfh.monopoly.common;
 
-public class TileStateInfo {
+public class TileStateEvent {
 	private final int houseCount;
 	private final int hotelsCount;
 	private final String owner;
 	private final boolean mortgageActive;
 	
-	public TileStateInfo(int houseCount, int hotelCount, String owner, boolean mortgageActive){
+	public TileStateEvent(int houseCount, int hotelCount, String owner, boolean mortgageActive){
 		this.houseCount=houseCount;
 		this.hotelsCount=hotelCount;
 		this.owner=owner;

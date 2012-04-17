@@ -28,7 +28,7 @@ import javax.swing.JPopupMenu;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.TileListener;
-import ch.bfh.monopoly.common.TileStateInfo;
+import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
 
@@ -364,7 +364,7 @@ public class BoardTile extends JPanel implements ActionListener, ItemListener, T
 	}
 
 	@Override
-	public void updateTile(TileStateInfo tsi) {
+	public void updateTile(TileStateEvent tsi) {
 		System.out.println("ciao");
 		repaint();
 		revalidate();
