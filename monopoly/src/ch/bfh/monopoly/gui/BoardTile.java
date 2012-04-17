@@ -29,6 +29,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.border.Border;
 
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.TileListener;
 import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
@@ -47,6 +48,7 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 	private JPanel tab;
 	private boolean displayInfo = false;
 	private BoardController bc;
+	private GameController gc;
 
 	private JMenuItem buyHouse;
 	private JMenuItem buyHouseRow;
@@ -71,10 +73,11 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 	 * Construct a new BoardTile
 	 * @param ti the TileInfo used to passed the information
 	 */
-	public BoardTile(TileInfo ti, JPanel tab, BoardController bc){
+	public BoardTile(TileInfo ti, JPanel tab, BoardController bc, GameController gc){
 		this.ti = ti;
 		this.tab = tab;
 		this.bc = bc;
+		this.gc = gc;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -336,14 +339,14 @@ public class BoardTile extends JPanel implements ActionListener, TileListener{
 		
 		if(e.getSource().equals(buyHouse)){
 			buyHouseClicked = true;
-			bc.buyHouse(ti.getID());
+			gc.buyHouse(ti.getID());
 		}
 		else if(e.getSource().equals(buyHotel)){
 			System.out.println("clicked on hotels");
 			buyHotelClicked = true;
 			
 			// TODO change to buyHotel !!!!!!!!!!!
-			bc.buyHouse(ti.getID());
+			gc.buyHouse(ti.getID());
 		}
 	}
 

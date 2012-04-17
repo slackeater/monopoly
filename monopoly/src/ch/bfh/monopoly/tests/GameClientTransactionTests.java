@@ -22,12 +22,11 @@ public class GameClientTransactionTests {
 
 	@Before
 	public void setup() {
-		loc = new Locale("EN");
-		gc = new GameClient();
-		board = new Board(loc, gc);
+		gc = new GameClient(new Locale("EN"));
+		board = new Board(gc);
 		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
 				"Elie" };
-		board.createPlayers(playerNames);
+		board.createPlayers(playerNames, gc.getLoc());
 	}
 
 	@Test

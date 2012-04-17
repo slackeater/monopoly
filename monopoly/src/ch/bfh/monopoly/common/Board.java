@@ -14,7 +14,6 @@ import ch.bfh.monopoly.tile.*;
 public class Board {
 	private Player[] players;
 	public Tile[] tiles;
-	private Locale loc;
 	private int availableHouses;
 	private int availableHotels;
 	private Player localPlayer;
@@ -58,17 +57,16 @@ public class Board {
 	}
 	
 	
-	public Board(Locale loc, GameClient gameClient) {
+	public Board(GameClient gameClient) {
 		// create tiles, cards, and events
-		this.loc = loc;
-		
-		TileCreator tc = new TileCreator(loc, gameClient);
+		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
 
 		availableHouses = 32;
 		availableHotels = 12;
 		tileSubjects=new Subject[40];
 		createTileSubjects();
+		
 
 	}
 	
@@ -143,7 +141,7 @@ public class Board {
 
 	//why createPlayers???? Every client must receive a list of players
 	//from the server and then copy it to the board
-	public void createPlayers(String[] playerNames) {
+	public void createPlayers(String[] playerNames, Locale loc) {
 		players = new Player[playerNames.length];
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
 				"startMoney");

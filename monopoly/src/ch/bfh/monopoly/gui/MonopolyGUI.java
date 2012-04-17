@@ -26,6 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.common.Subject;
 import ch.bfh.monopoly.common.Token;
@@ -86,6 +87,7 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private int playerNumber;
 	private BoardController bc;
+	private GameController gc;
 	
 	//TEMP TEMP TEMP
 	private List<Player> pl = new ArrayList<Player>();
@@ -94,7 +96,7 @@ public class MonopolyGUI extends JFrame {
 	 * Construct a MonopolyGUI
 	 * @param bc the board controller used to query the board
 	 */
-	public MonopolyGUI(BoardController bc){
+	public MonopolyGUI(BoardController bc, GameController gc){
 	
 		/**
 		 * ONLY FOR TEST
@@ -123,6 +125,7 @@ public class MonopolyGUI extends JFrame {
 		 */
 		
 		this.bc = bc;
+		this.gc = gc;
 			
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
@@ -146,7 +149,7 @@ public class MonopolyGUI extends JFrame {
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoByID(j);
 
-			BoardTile bt = new BoardTile(t, tab1, this.bc);
+			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
 //
 	Subject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);

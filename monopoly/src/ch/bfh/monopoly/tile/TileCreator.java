@@ -10,9 +10,9 @@ public class TileCreator {
 	public Tile[] tiles;
 	private Locale loc;
 
-	public TileCreator(Locale loc, GameClient gameClient) {
+	public TileCreator(GameClient gameClient) {
 		// create tiles, cards, and events
-		this.loc = loc;
+		this.loc = gameClient.getLoc();
 		tiles = new Tile[40];
 		createTiles(gameClient);
 	}
