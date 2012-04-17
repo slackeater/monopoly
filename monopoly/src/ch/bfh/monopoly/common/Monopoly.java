@@ -15,12 +15,12 @@ public class Monopoly {
 	public static NetworkController communicate = new NetworkController();
 
 	public static void main(String[] args) throws IOException {
-		GameClient gc = new GameClient();
-
-		Board b = new Board(new Locale("EN"), gc);
-
-		BoardController bc = new BoardController(b);
-		JFrame mainFrame = new MonopolyGUI(bc);
+		
+		GameClient gameClient = new GameClient(new Locale("EN"));
+		GameController gc = new GameController(gameClient);
+		BoardController bc = new BoardController(gameClient.getBoard());
+		
+		JFrame mainFrame = new MonopolyGUI(bc,gc);
 		mainFrame.setVisible(true);
 		mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 //		JFrame welcome = new WelcomePanel(mainFrame);

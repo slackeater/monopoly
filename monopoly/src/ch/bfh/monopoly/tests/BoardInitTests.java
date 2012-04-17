@@ -33,21 +33,20 @@ public class BoardInitTests {
 	 * */
 	@Before
 	public void setup(){
-		loc = new Locale("EN");
-		gc = new GameClient();
+		gc = new GameClient(new Locale("EN"));
 	}
 	
 	
 	@Test
 	public void boardTilesHaveNames(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		Tile t = board.getTileByID(1);
 		assertTrue((t.getName() != null));
 	}
 	
 	@Test
 	public void boardTilesHaveXYCoord(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		for (int i = 0; i<TILES_LENGTH; i++){
 			Tile t = board.getTileByID(i);
 			if (t instanceof Terrain){
@@ -58,7 +57,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void boardControllerGetsTileInformation(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		BoardController bc = new BoardController(board);
 		TileInfo ti = bc.getTileInfoByID(1);
 		assertTrue(ti.getName().equals("Mediterranean Avenue"));
@@ -69,7 +68,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void chanceCardsCreatedWithCorrectInfo() {
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		assertTrue(((Chance)board.getTileByID(7)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileByID(22)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileByID(36)).getName().equals("Chance"));
@@ -84,7 +83,7 @@ public class BoardInitTests {
 	
 	@Test
 	public void printNameOfTile(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 //		for (int i = 0; i < board.tiles.length; i++) {
 //			System.out.println("Tile" + i + ":  " + board.tiles[i].getName()
 //					+ "  :  " + board.tiles[i].getID() + " xyCoord: "
@@ -97,7 +96,7 @@ public class BoardInitTests {
 	@Test
 	public void tilesCreatedWithCorrectInfo() {
 
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		int tileNumber;
 		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);

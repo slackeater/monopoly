@@ -21,25 +21,24 @@ public class PlayerCreationTests {
 	
 	@Before
 	public void setup(){
-		loc = new Locale("EN");
-		gc = new GameClient();
+		gc = new GameClient(new Locale("EN"));
 	}
 	
 	
 	@Test
 	public void playerObjectsHaveCorrentNames(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		board.createPlayers(playerNames);
+		board.createPlayers(playerNames,gc.getLoc());
 		Player p = board.getPlayerByName("Justin");
 		assertTrue(p.getName().equals("Justin"));
 	}
 	
 	@Test
 	public void playerJailStatusChanges(){
-		Board board= new Board(loc,gc);
+		Board board= new Board(gc);
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		board.createPlayers(playerNames);
+		board.createPlayers(playerNames, gc.getLoc());
 		Player p = board.getPlayerByName("Justin");
 		p.setInJail(true);
 		assertTrue(p.isInJail());

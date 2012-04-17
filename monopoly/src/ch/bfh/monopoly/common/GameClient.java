@@ -13,36 +13,41 @@ public class GameClient {
 	Locale loc;
 	Board board;
 	
-	public GameClient () {
+	public GameClient (Locale loc) {
 		
 		//loc should be received from a netmessage sent when the server calls startGame();
-		loc = new Locale("EN");
+		this.loc = loc;
+		
+		//TODO this list must be received from a netMessage when the game starts
+		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
+		
 	}
 	
-	public void initBoard(){
-		board = new Board(loc, this);
+	public void initBoard(String[] playerNames){
 		//a net message should come with the list of player names
 		//until then we have a mock object full of player names
-		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		board.createPlayers(playerNames);
+		board.createPlayers(playerNames, loc);
 	}
 
 	public Locale getLoc(){
 		return loc;
 	}
 
+	public Board getBoard(){
+		return this.board;
+	}
+	
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	
+	public void buyHouse(int tileID){
+		board.buyHouse(tileID);
 	}
 	
 	public void transferPropertyForPrice(String fromName, String toName, int propertyID, int price){
 		board.transferProperty(fromName, toName, propertyID);
 		board.transferMoney(fromName, toName, price);
-	}
-	
-	//TODO needs functionality of buying for a certain player (current player)
-	public void buyHouse(Tile t){
-		board.buyHouse();
 	}
 
 	
