@@ -20,7 +20,7 @@ public class GameClient {
 		
 		//TODO this list must be received from a netMessage when the game starts
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		
+		board = new Board(this);
 	}
 	
 	public void initBoard(String[] playerNames){
