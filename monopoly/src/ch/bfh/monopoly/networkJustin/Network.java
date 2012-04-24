@@ -11,8 +11,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import ch.bfh.monopoly.network.Messages;
-import ch.bfh.monopoly.network.NetMessage;
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 
 public class Network {
 

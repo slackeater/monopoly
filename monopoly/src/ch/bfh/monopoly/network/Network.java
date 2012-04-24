@@ -9,6 +9,8 @@ import java.net.UnknownHostException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import ch.bfh.monopoly.net.NetMessage;
+
 public class Network {
 
 	private ServerSocketChannel srv;

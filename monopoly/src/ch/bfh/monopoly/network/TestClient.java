@@ -3,6 +3,9 @@ package ch.bfh.monopoly.network;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
+
 public class TestClient {
 
 	/**

@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import ch.bfh.monopoly.common.Monopoly;
+import ch.bfh.monopoly.net.ServerHandler;
 
 
 public class WelcomePanel extends JFrame{
@@ -46,7 +47,7 @@ public class WelcomePanel extends JFrame{
 		main.add(clientConfig());
 		main.add(serverConfig());
 		main.add(infoArea());
-	
+
 		add(main);
 	}
 
@@ -77,18 +78,18 @@ public class WelcomePanel extends JFrame{
 
 		JLabel labelIP = new JLabel("IP");
 		JTextField serverIP = new JTextField();
-		
+
 		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
 		serverIP.setMaximumSize(new Dimension(125,20));
 
 		JLabel labelPort = new JLabel("Port");
 		JTextField serverPort = new JTextField();
-		
+
 		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
 		serverPort.setMaximumSize(new Dimension(125,20));
 
 		JButton connect = new JButton("Connect");
-		
+
 		client.add(labelIP);
 		client.add(serverIP);
 		client.add(labelPort);
@@ -110,13 +111,13 @@ public class WelcomePanel extends JFrame{
 		client.setMaximumSize(new Dimension(300,0));
 
 		JLabel labelIP = new JLabel("IP");
-		
+
 		final JTextField serverIP = new JTextField();
 		serverIP.setMaximumSize(new Dimension(125,20));
 		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		JLabel labelPort = new JLabel("Port");
-		
+
 		final JTextField serverPort = new JTextField();
 		serverPort.setMaximumSize(new Dimension(125,20));
 		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -127,20 +128,20 @@ public class WelcomePanel extends JFrame{
 		JSpinner spinPanel = new JSpinner(numPlayers);
 		spinPanel.setMaximumSize(new Dimension(50,50));
 		spinPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		JLabel labelLang = new JLabel("Locale");
 		String menuLang[] = {"French", "English"};
 		JComboBox langs = new JComboBox(menuLang);
 		langs.setMaximumSize(new Dimension(125,20));
 		langs.setAlignmentX(Component.LEFT_ALIGNMENT);
-		
+
 		final JButton connect = new JButton("Start server");
 
 		connect.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
@@ -155,34 +156,39 @@ public class WelcomePanel extends JFrame{
 							" and port " + port + " with " + maxPlayers + " players...\n");
 					
 					try {
-						Monopoly.communicate.startServer(ip, port, maxPlayers);
-						
-						dispose();
-						board.setVisible(true);
-						board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+						Monopoly.communicate.startServer(ip, port);
+
+						while(true){
+							System.out.println(ServerHandler.sessionSize);
+													
+							if(ServerHandler.sessionSize == maxPlayers){
+								dispose();
+								board.setVisible(true);
+								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+								break;
+							}
+						}
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
-					}
-					
-					
+					} 
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
 				}
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent e) {}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {}
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {}	
 		});
-		
+
 		client.add(labelIP);
 		client.add(serverIP);
 		client.add(labelPort);
@@ -191,7 +197,7 @@ public class WelcomePanel extends JFrame{
 		client.add(spinPanel);
 		client.add(labelLang);
 		client.add(langs);
-		
+
 		client.add(Box.createRigidArea(new Dimension(0,10)));
 		client.add(connect);
 

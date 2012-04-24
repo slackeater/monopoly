@@ -3,14 +3,15 @@ package ch.bfh.monopoly.common;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import ch.bfh.monopoly.network.Messages;
-import ch.bfh.monopoly.network.NetMessage;
-import ch.bfh.monopoly.network.Network;
+import ch.bfh.monopoly.net.ClientHandler;
+import ch.bfh.monopoly.net.Network;
+import ch.bfh.monopoly.net.ServerHandler;
 
 
 public class NetworkController {
 
 	private Network n;
+	private ServerHandler srvHandler;
 	
 	/**
 	 * Construct a network controller
@@ -26,8 +27,9 @@ public class NetworkController {
 	 * @param players the number of players
 	 * @throws IOException When the fields are not correctly filled
 	 */
-	public void startServer(String ip, int port, int players) throws IOException{
-		n.startServer(ip, port, players);
+	public void startServer(String ip, int port) throws IOException{
+		this.srvHandler = new ServerHandler();
+		n.startServer(ip, port, srvHandler);
 	}
 	
 	/**
@@ -37,26 +39,17 @@ public class NetworkController {
 	 * @throws IOException 
 	 * @throws UnknownHostException 
 	 */
-	public void startClient(String ip, int port) throws UnknownHostException, IOException{
-		n.startClient(ip, port);
+	public void startClient(String ip, int port, ClientHandler cliHandler) throws UnknownHostException, IOException{
+		n.startClient(ip, port, cliHandler);
 	}
 	
 	/**
-	 * Add a message to the thread queue. This will be sent to the server
-	 * @param msg the NetMessage to send
+	 * Get the number of sessions opened after calling startServer
+	 * @return
 	 */
-	public void enqueueMessage(NetMessage msg){
-		n.addMsg(msg);
+	public int getServerOpenedSession() {
+		int sessions = this.srvHandler.getOpenedSessions();
+		return sessions;
+		
 	}
-	
-	
-	/**
-	 * Send a chat message
-	 * @param p the player who sent the message 
-	 * @param s the message
-	 */
-	public void sendChatMessage(Player p, String s){
-		n.addMsg(new NetMessage(p, s, Messages.CHAT_MSG));
-	}
-	
 }
