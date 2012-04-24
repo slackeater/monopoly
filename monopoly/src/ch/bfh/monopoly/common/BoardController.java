@@ -10,11 +10,11 @@ public class BoardController {
 	}
 	
 	public int getXCoordForTileAtIndex(int index){
-		return board.tiles[index].getCoordX();
+		return board.getTileByID(index).getCoordX();
 	}
 	
 	public int getYCoordForTileAtIndex(int index){
-		return board.tiles[index].getCoordY();
+		return board.getTileByID(index).getCoordY();
 	}
 	
 	public TileInfo getTileInfoByID(int id){

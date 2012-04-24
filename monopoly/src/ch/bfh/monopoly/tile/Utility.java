@@ -11,6 +11,7 @@ public class Utility extends Property{
 		this.mortgageValue= mortgageValue;
 	} 
 	
+	// TODO this method need to be implemented in a TileEvent and accessed through event manager
 	public int feeToCharge(){
 		//check if owner of this utility owns the other utility
 		//generate a random number to simulate ROLL
@@ -24,6 +25,19 @@ public class Utility extends Property{
 				"\nprice: " + this.price +
 				"\nmortgageValue: " + mortgageValue +
 				"\nowner: " + owner;
+	}
+
+	
+	@Override
+	public String getEventDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void performEvent() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

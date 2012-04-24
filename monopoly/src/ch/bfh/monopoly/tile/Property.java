@@ -3,7 +3,7 @@ package ch.bfh.monopoly.tile;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
 
-public abstract class Property extends AbstractTile{
+public abstract class Property extends AbstractTile implements IProperty{
 
 	protected int price;
 	protected Player owner;

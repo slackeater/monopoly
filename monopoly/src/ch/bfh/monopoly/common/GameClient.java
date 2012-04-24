@@ -3,6 +3,7 @@ package ch.bfh.monopoly.common;
 import java.util.Locale;
 
 import ch.bfh.monopoly.network.Network;
+import ch.bfh.monopoly.tile.IProperty;
 
 
 public class GameClient {
@@ -31,6 +32,11 @@ public class GameClient {
 
 	public Locale getLoc(){
 		return loc;
+	}
+	
+	public int getFeeForTileAtId(int tileId){
+		IProperty p = (IProperty)board.getTileByID(tileId);
+		return p.feeToCharge();
 	}
 
 	public Board getBoard(){
