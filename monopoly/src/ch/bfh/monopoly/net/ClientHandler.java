@@ -12,6 +12,8 @@ import org.apache.mina.core.session.IoSession;
  */
 public class ClientHandler implements IoHandler {
 
+	private boolean sessionOpened = false;
+	
 	@Override
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
 			throws Exception {
@@ -19,6 +21,10 @@ public class ClientHandler implements IoHandler {
 		
 	}
 
+	public boolean isSessionOpened(){
+		return sessionOpened;
+	}
+	
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
@@ -55,6 +61,8 @@ public class ClientHandler implements IoHandler {
 	@Override
 	public void sessionOpened(IoSession arg0) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("session opened with the server");
+		this.sessionOpened = true;
 		
 	}
 

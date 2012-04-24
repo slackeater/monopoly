@@ -24,7 +24,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
+import org.apache.mina.core.session.IoSession;
+
 import ch.bfh.monopoly.common.Monopoly;
+import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.ServerHandler;
 
 
@@ -77,18 +80,69 @@ public class WelcomePanel extends JFrame{
 		client.setMaximumSize(new Dimension(300,0));
 
 		JLabel labelIP = new JLabel("IP");
-		JTextField serverIP = new JTextField();
+		final JTextField serverIP = new JTextField();
 
 		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
 		serverIP.setMaximumSize(new Dimension(125,20));
 
 		JLabel labelPort = new JLabel("Port");
-		JTextField serverPort = new JTextField();
+		final JTextField serverPort = new JTextField();
 
 		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
 		serverPort.setMaximumSize(new Dimension(125,20));
 
-		JButton connect = new JButton("Connect");
+		final JButton connect = new JButton("Connect");
+		
+		connect.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				connect.setEnabled(false);
+				int port, maxPlayers;
+				String ip;
+
+				try{
+					ip = serverIP.getText();
+					port = Integer.parseInt(serverPort.getText());
+					
+					info.append("Connecting to " + ip + "and port " + port + "\n");
+					
+					try {
+						ClientHandler cliHandler = new ClientHandler();
+						IoSession cliSession = Monopoly.communicate.startClient(ip, port, cliHandler);
+
+						while(true){
+							if(cliHandler.isSessionOpened()){
+								dispose();
+								board.setVisible(true);
+								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+								break;
+							}
+						}
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						info.append(e1.getMessage()+"\n");
+						connect.setEnabled(true);
+					} 
+				}catch(NumberFormatException e1){
+					info.append("Please fill in all the fields\n");
+					connect.setEnabled(true);
+				}
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {}
+			
+		});
 
 		client.add(labelIP);
 		client.add(serverIP);

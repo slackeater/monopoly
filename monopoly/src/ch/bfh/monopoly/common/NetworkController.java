@@ -3,6 +3,8 @@ package ch.bfh.monopoly.common;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import org.apache.mina.core.session.IoSession;
+
 import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.Network;
 import ch.bfh.monopoly.net.ServerHandler;
@@ -38,9 +40,10 @@ public class NetworkController {
 	 * @param port the port of the server
 	 * @throws IOException 
 	 * @throws UnknownHostException 
+	 * @return an IoSession used to communicate with the server
 	 */
-	public void startClient(String ip, int port, ClientHandler cliHandler) throws UnknownHostException, IOException{
-		n.startClient(ip, port, cliHandler);
+	public IoSession startClient(String ip, int port, ClientHandler cliHandler) throws UnknownHostException, IOException{
+		return n.startClient(ip, port, cliHandler);
 	}
 	
 	/**
