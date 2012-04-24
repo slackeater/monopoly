@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.tile;
 
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.event.EventManager;
 
 public abstract class Property extends AbstractTile{
 
@@ -10,14 +11,12 @@ public abstract class Property extends AbstractTile{
 	protected boolean mortgageActive;
 	private String group;
 
-	public Property(String name, int price, String group, int mortgageValue, int coordX, int coordY,int id){
-		super(name, coordX, coordY,id);
+	public Property(String name, int price, String group, int mortgageValue, int coordX, int coordY,int id,EventManager em){
+		super(name, coordX, coordY,id,em);
 		this.price=price;
 		this.group=group;
 		this.mortgageValue=mortgageValue;
 	}
-
-	public abstract int feeToCharge();
 	
 	public int getPrice() {
 		return price;

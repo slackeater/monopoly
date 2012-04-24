@@ -5,5 +5,8 @@ public interface Tile{
 	int getID();
 	int getCoordX();
 	int getCoordY();
+	public String getEventDescription();
+	public void performEvent();
+	
 	
 }

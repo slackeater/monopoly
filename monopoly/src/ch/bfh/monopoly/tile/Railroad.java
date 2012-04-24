@@ -1,12 +1,14 @@
 package ch.bfh.monopoly.tile;
 
+import ch.bfh.monopoly.event.EventManager;
+
 public class Railroad extends Property {
 	private int rent;
 	private int[] rrMultiplier = {1,2,4,8};
 	
 
-	public Railroad (String name, int price, int rent, String group, int mortgageValue, int coordX, int coordY, int id){ 
-		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id);
+	public Railroad (String name, int price, int rent, String group, int mortgageValue, int coordX, int coordY, int id,EventManager em){ 
+		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id,em);
 		this.rent = rent;
 	} 
 	
@@ -18,6 +20,17 @@ public class Railroad extends Property {
 		return rrMultiplier[numberOfRRsOwned-1] * rent;
 	}
 
+	@Override
+	public final String getEventDescription() {
+		return em.getEventDescriptionById(id);
+	}
+
+	@Override
+	public void performEvent() {
+		em.performEventForTileAtId(id);
+	}
+	
+	
 
 	public int getRent() {
 		return rent;

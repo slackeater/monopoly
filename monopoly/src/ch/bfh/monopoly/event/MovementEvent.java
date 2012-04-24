@@ -1,20 +1,26 @@
-package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.event;
+
+import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.Player;
 
 public class MovementEvent extends AbstractTileEvent {
 
 	int newPosition;
-
-	public MovementEvent(String name, String cardText, int newPosition,
+	
+	public MovementEvent(String name, String eventDescription, int newPosition,
 			GameClient gameClient) {
-		super(gameClient);
+		super(name, eventDescription, gameClient);
 		this.newPosition = newPosition;
-		this.name = name;
-		this.cardText = cardText;
+
 	}
 
-	public void run() {
-		// How do you send text to GUI???
-		
+	@Override
+	public String getEventDescription() {
+		return eventDescription;
+	}
+
+	@Override
+	public void performEvent() {
 		Player currentPlayer = gameClient.getCurrentPlayer();
 		if (newPosition > 0) {
 			//set player's position to the new position
@@ -28,13 +34,6 @@ public class MovementEvent extends AbstractTileEvent {
 			//set player's position back three spaces
 			currentPlayer.setPosition(currentPlayer.getPosition()-3);
 		}
-	}
-
-	public int getNewPosition() {
-		return newPosition;
-	}
-
-	public void setNewPosition(int newPosition) {
-		this.newPosition = newPosition;
+		
 	}
 }

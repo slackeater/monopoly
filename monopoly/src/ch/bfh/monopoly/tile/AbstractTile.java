@@ -16,24 +16,27 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
-import ch.bfh.monopoly.common.TileEvent;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.event.TileEvent;
 
 public abstract class AbstractTile implements Tile {
 
 	private static final long serialVersionUID = 1L;
-	private int id;
+	protected int id;
 	private int coordX;
 	private int coordY;
 	private String description;
 	protected String name;
 	protected TileEvent event;
+	protected EventManager em;
 	
-	public AbstractTile(String name, int coordX, int coordY, int id){
+	public AbstractTile(String name, int coordX, int coordY, int id,EventManager em){
 		this.name= name;
 		this.coordX=coordX;
 		this.coordY=coordY;
 		this.id=id;
+		this.em=em;
 	}
 
 	/**
@@ -48,7 +51,7 @@ public abstract class AbstractTile implements Tile {
 	 * Set the id for this tile
 	 * @param id the id of this tile
 	 */
-	public void setId(int id) {
+	public void setID(int id) {
 		this.id = id;
 	}
 

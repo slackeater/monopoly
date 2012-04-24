@@ -1,9 +1,11 @@
 package ch.bfh.monopoly.tile;
 
+import ch.bfh.monopoly.event.EventManager;
+
 public class Utility extends Property{
 
-	public Utility (String name, int price,String group, int mortgageValue, int coordX, int coordY, int id){ 
-		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id);
+	public Utility (String name, int price,String group, int mortgageValue, int coordX, int coordY, int id,EventManager em){ 
+		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id,em);
 		this.name = name;
 		this.price = price;
 		this.mortgageValue= mortgageValue;

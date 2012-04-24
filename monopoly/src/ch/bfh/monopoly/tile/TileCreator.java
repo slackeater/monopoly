@@ -4,16 +4,19 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.event.EventManager;
 
 public class TileCreator {
 
 	public Tile[] tiles;
 	private Locale loc;
-
+	private EventManager em;
+	
 	public TileCreator(GameClient gameClient) {
 		// create tiles, cards, and events
 		this.loc = gameClient.getLoc();
 		tiles = new Tile[40];
+		em = new EventManager(gameClient);
 		createTiles(gameClient);
 	}
 
@@ -90,18 +93,18 @@ public class TileCreator {
 			rgb = rgb.trim();
 			
 			if (group.equals("railroad"))
-				t = new Railroad(name, price, rent, group, mortgageValue, coordX,coordY,i);
+				t = new Railroad(name, price, rent, group, mortgageValue, coordX,coordY,i,em);
 			else if (group.equals("utility"))
-				t = new Utility(name, price, group, mortgageValue, coordX, coordY, i);
+				t = new Utility(name, price, group, mortgageValue, coordX, coordY, i,em);
 			else if (group.equals("Chance"))
-				t = new Chance(name,coordX, coordY, i, gameClient);
+				t = new Chance(name,coordX, coordY, i, gameClient,em);
 			else if (group.equals("Community Chest"))
-				t = new CommunityChest(name, coordX, coordY, i, gameClient);
+				t = new CommunityChest(name, coordX, coordY, i, gameClient,em);
 			else if (group.equals("cornersAndTax"))
-				t = new NonProperty(name, coordX, coordY,i);
+				t = new NonProperty(name, coordX, coordY,i,em);
 			else 
 				t = new Terrain(name,  price, houseCost,  hotelCost,   rent,
-						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i, rgb);
+						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i, rgb,em);
 			tiles[i] = t;
 		}
 	}

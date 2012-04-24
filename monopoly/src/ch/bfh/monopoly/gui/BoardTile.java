@@ -400,8 +400,8 @@ public class BoardTile extends JPanel{
 	 * class to update the information on this tile
 	 * @param tsi
 	 */
-	public void updateTile(TileStateEvent tsi){
-		iu.updateTile(tsi);
+	public void updateTile(TileStateEvent tse){
+		iu.updateTile(tse);
 	}
 	
 	public TileListener getTileListener(){

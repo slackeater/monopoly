@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.bfh.monopoly.common.*;
+import ch.bfh.monopoly.event.MovementEvent;
 import ch.bfh.monopoly.tile.Chance;
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Railroad;
@@ -67,18 +68,11 @@ public class BoardInitTests {
 	}
 	
 	@Test
-	public void chanceCardsCreatedWithCorrectInfo() {
+	public void chanceCardsCreated() {
 		Board board= new Board(gc);
 		assertTrue(((Chance)board.getTileByID(7)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileByID(22)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileByID(36)).getName().equals("Chance"));
-
-		Chance chanceTile = (Chance)board.getTileByID(36);
-		MovementEvent mv = ((MovementEvent)chanceTile.chanceCardDeck[0]);
-		assertTrue(mv.getName().equals("Back you go!"));
-		assertTrue(mv.getNewPosition()== -3);
-		mv = ((MovementEvent)chanceTile.chanceCardDeck[1]);
-		assertTrue(mv.getName().equals("Advance to Pennsylvania Railroad"));
 	}
 	
 	@Test

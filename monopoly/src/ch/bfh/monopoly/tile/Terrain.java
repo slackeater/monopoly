@@ -1,24 +1,20 @@
 package ch.bfh.monopoly.tile;
 
+import ch.bfh.monopoly.event.EventManager;
+
 public class Terrain extends Property {
 
 	private int houseCost;
 	private int hotelCost;
 	private int houseCount;
 	private int hotelCount;
-
-	
 	private int[] rentRates = new int[5];	
-//	private int rent1house;
-//	private int rent2house;
-//	private int rent3house;
-//	private int rent4house;
 	private int renthotel;
 	private String rgb;
 
 	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id, String rgb){
-		super(name, price, group, mortgageValue, coordX, coordY, id);
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id, String rgb, EventManager em){
+		super(name, price, group, mortgageValue, coordX, coordY, id,em);
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -28,7 +24,6 @@ public class Terrain extends Property {
 		this.rentRates[4] =rent4house;
 		this.renthotel=renthotel;
 		this.price = price;
-		//this.description=description;
 		this.houseCost = houseCost;
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
@@ -43,6 +38,8 @@ public class Terrain extends Property {
 		houseCount=0;
 	}
 
+	
+	
 	public void buildHouse(){
 		houseCount++;
 	}
@@ -113,5 +110,13 @@ public class Terrain extends Property {
 				"\nrent w/Houses" + rentRates[1]+", "+rentRates[2]+", "+rentRates[3]+", "+rentRates[4]+
 				"\nrent w/Hotel" + renthotel +
 				"\nowner: " + owner;
+	}
+
+
+
+	@Override
+	public void performEvent() {
+		// TODO Auto-generated method stub
+		
 	}
 }
