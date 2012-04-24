@@ -32,6 +32,10 @@ public class GameClient {
 	public Locale getLoc(){
 		return loc;
 	}
+	
+	public int getFeeForTileAtId(int tileId){
+		return 0;
+	}
 
 	public Board getBoard(){
 		return this.board;

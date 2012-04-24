@@ -13,7 +13,7 @@ import ch.bfh.monopoly.tile.*;
 
 public class Board {
 	private Player[] players;
-	public Tile[] tiles;
+	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
 	private Player localPlayer;
