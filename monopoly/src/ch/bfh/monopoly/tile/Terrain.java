@@ -119,4 +119,10 @@ public class Terrain extends Property {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public String getEventDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
