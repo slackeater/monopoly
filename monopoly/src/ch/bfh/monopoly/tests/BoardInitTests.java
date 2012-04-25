@@ -21,8 +21,6 @@ import ch.bfh.monopoly.tile.Utility;
 
 
 
-//I can't stand merging
-
 public class BoardInitTests {
 	final int TILES_LENGTH = 40;
 	Locale loc;
@@ -38,6 +36,9 @@ public class BoardInitTests {
 	}
 	
 	
+	/**
+	 * check that the tiles have been initialized with a value from the resource bundle
+	 */
 	@Test
 	public void boardTilesHaveNames(){
 		Board board= new Board(gc);
@@ -45,6 +46,9 @@ public class BoardInitTests {
 		assertTrue((t.getName() != null));
 	}
 	
+	/**
+	 * check that the tiles have been initialized with x and y coordinates
+	 */
 	@Test
 	public void boardTilesHaveXYCoord(){
 		Board board= new Board(gc);
@@ -56,6 +60,9 @@ public class BoardInitTests {
 		}
 	}
 	
+	/**
+	 * check that a tile has been initialized with the information from the resource bundle
+	 */
 	@Test
 	public void boardControllerGetsTileInformation(){
 		Board board= new Board(gc);
@@ -67,6 +74,10 @@ public class BoardInitTests {
 		
 	}
 	
+	
+	/**
+	 * check that the chance cards are created with the name chance
+	 */
 	@Test
 	public void chanceCardsCreated() {
 		Board board= new Board(gc);
@@ -74,6 +85,7 @@ public class BoardInitTests {
 		assertTrue(((Chance)board.getTileByID(22)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileByID(36)).getName().equals("Chance"));
 	}
+	
 	
 	@Test
 	public void printNameOfTile(){
@@ -87,6 +99,10 @@ public class BoardInitTests {
 		assertTrue(((Terrain)board.getTileByID(1)).getName().equals("Mediterranean Avenue"));
 	}
 	
+	
+	/**
+	 * check that various tiles have been initialized with the proper information from the resource bundle
+	 */
 	@Test
 	public void tilesCreatedWithCorrectInfo() {
 

@@ -21,6 +21,11 @@ public class Board {
 	private Subject[] tileSubjects;
 	private Color[] tokenColor;
 
+	/**
+	 * inner class responsible for registering listeners from the GUI
+	 * and notifying these listeners when changes to the instance variables 
+	 * of the outer class are changed
+	 */
 	private class ConcreteSubject implements Subject {
 		private int tileListenerID;
 
@@ -52,24 +57,30 @@ public class Board {
 		}
 	}
 
+	/**
+	 * returns a Subject / Concreted Subject which corresponds to a tile at the given index
+	 */
 	public Subject getTileSubjectAtIndex(int index){
 		return tileSubjects[index];
 	}
+	
 	
 	
 	public Board(GameClient gameClient) {
 		// create tiles, cards, and events
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
-
 		availableHouses = 32;
 		availableHotels = 12;
 		tileSubjects=new Subject[40];
 		createTileSubjects();
-		
-
 	}
 	
+	/**
+	 * buy a house for a given property
+	 * 	checks that the tileID provided refers to a terrain
+	 * @param tileID the tile number of the property to build a house on
+	 */
 	public void buyHouse(int tileID){
 		Tile t = tiles[tileID];
 		if (!(t instanceof Terrain)) throw new RuntimeException("Tile must be a terrain in order to build houses on it");
@@ -79,6 +90,10 @@ public class Board {
 		tileSubjects[id].notifyListeners();
 	}
 
+	/**
+	 * creates 40 ConreceteSubject instances, 1 for every tile on the board
+	 * 	each is associated with a given tile through the index number
+	 */
 	public void createTileSubjects() {
 		// create list of "Tile" Subjects
 		for (int i = 0; i < 40; i++) {
@@ -86,10 +101,14 @@ public class Board {
 		}
 	}
 
-	public Subject[] getTileSubjectList() {
-		return tileSubjects;
-	}
-
+	/**
+	 * transfers a given property from one player to another
+	 * 	checks if property to transfer is a Property
+	 * @param fromName name of the player to take property from
+	 * @param toName name of the player to give the property to
+	 * @param price the price the property has been sold for
+	 * @param propertyID the tile number of the property that was sold
+	 */
 	public void transferProperty(String fromName, String toName, int tileID) {
 		Tile t = tiles[tileID];
 		if (t instanceof Property) {
@@ -108,6 +127,16 @@ public class Board {
 		return tiles[tileID];
 	}
 
+	/**
+	 * adds a given property to a player's list of properties
+	 * tileID must refer to a property
+	 * the property must have no OWNER, meaning this property comes from the bank
+	 * TODO the precondition that the property be owned by the bank make this method a bit limited, reevaluate the condition
+	 * @param fromName name of the player to take property from
+	 * @param toName name of the player to give the property to
+	 * @param price the price the property has been sold for
+	 * @param propertyID the tile number of the property that was sold
+	 */
 	public void addPropertyToPlayer(String toName, int tileID) {
 		Tile t = tiles[tileID];
 		if (t instanceof Property) {
@@ -127,6 +156,12 @@ public class Board {
 
 	}
 
+	/**
+	 * transfers a given amount of money from one player to another
+	 * @param fromName name of the player to take money from
+	 * @param toName name of the player to give the money to
+	 * @param price the amount of money to transfer
+	 */
 	public void transferMoney(String fromName, String toName, int price) {
 		Player fromPlayer = getPlayerByName(fromName);
 		if (price > fromPlayer.getAccount())
@@ -139,8 +174,13 @@ public class Board {
 		toPlayer.depositMoney(price);
 	}
 
-	//why createPlayers???? Every client must receive a list of players
-	//from the server and then copy it to the board
+
+	/**
+	 * create the player objects from the list of strings that comes from the server when the game begins
+	 * @param playerNames this list of player names of hte player participating in this game
+	 * @param the locale that was chosen: needed to give the players the correct starting balance in there account
+	 * TODO resolve open question: why createPlayers???? Every client must receive a list of players from the server and then copy it to the board
+	 */
 	public void createPlayers(String[] playerNames, Locale loc) {
 		players = new Player[playerNames.length];
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
@@ -152,6 +192,10 @@ public class Board {
 		}
 	}
 
+	/**
+	 * get the player object whose name field corresponds to a given name
+	 * @param name the string of the name of the player
+	 */
 	public Player getPlayerByName(String name) {
 		Player p = null;
 		for (int i = 0; i < players.length; i++) {
@@ -164,6 +208,10 @@ public class Board {
 		return p;
 	}
 
+	/**
+	 * creates an object with all the static tile information to be sent to the GUI
+	 * @param id is the id of the tile for which we want to get information
+	 */
 	public TileInfo getTileInfoByID(int id) {
 		TileInfo tileInfo = new TileInfo();
 		Tile tile = tiles[id];
