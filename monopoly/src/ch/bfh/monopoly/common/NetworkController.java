@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import org.apache.mina.core.session.IoSession;
 
 import ch.bfh.monopoly.net.ClientHandler;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.net.Network;
 import ch.bfh.monopoly.net.ServerHandler;
 
@@ -13,7 +14,9 @@ import ch.bfh.monopoly.net.ServerHandler;
 public class NetworkController {
 
 	private Network n;
-	private ServerHandler srvHandler;
+	private ServerHandler srvHandler = new ServerHandler();
+	
+	private ClientHandler cliHandler = new ClientHandler();
 	
 	/**
 	 * Construct a network controller
@@ -30,7 +33,6 @@ public class NetworkController {
 	 * @throws IOException When the fields are not correctly filled
 	 */
 	public void startServer(String ip, int port) throws IOException{
-		this.srvHandler = new ServerHandler();
 		n.startServer(ip, port, srvHandler);
 	}
 	
@@ -42,17 +44,32 @@ public class NetworkController {
 	 * @throws UnknownHostException 
 	 * @return an IoSession used to communicate with the server
 	 */
-	public IoSession startClient(String ip, int port, ClientHandler cliHandler) throws UnknownHostException, IOException{
-		return n.startClient(ip, port, cliHandler);
+	public IoSession startClient(String ip, int port) throws UnknownHostException, IOException{
+		
+		return n.startClient(ip, port, this.cliHandler);
+	}
+	
+	/**
+	 * Check if a session from the client to the server is opened
+	 * @return a boolean value, true if the session is opened
+	 */
+	public boolean gameCanBegin(){
+		return cliHandler.gameCanBegin();
 	}
 	
 	/**
 	 * Get the number of sessions opened after calling startServer
-	 * @return
+	 * @return the number of sessions opened on this server
 	 */
 	public int getServerOpenedSession() {
-		int sessions = this.srvHandler.getOpenedSessions();
-		return sessions;
-		
+		return srvHandler.getOpenedSessions();
 	}
+	
+	/**
+	 * Send a broadcast to the connected client
+	 */
+	public void sendBroadcast(NetMessage n){
+		srvHandler.sendBroadcast(n);
+	}
+	
 }

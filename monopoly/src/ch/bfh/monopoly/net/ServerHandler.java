@@ -17,7 +17,6 @@ import ch.bfh.monopoly.common.Monopoly;
  */
 public class ServerHandler implements IoHandler{
 
-	public static int sessionSize;
 	private List<IoSession> sessions = new ArrayList<IoSession>(); 
 
 	/**
@@ -25,8 +24,7 @@ public class ServerHandler implements IoHandler{
 	 * @return an int representing the number of sessions opened
 	 */
 	public int getOpenedSessions(){
-		return 0;
-		//this.sessionSize;
+		return this.sessions.size();
 	}
 
 	@Override
@@ -36,6 +34,19 @@ public class ServerHandler implements IoHandler{
 
 	}
 
+	/**
+	 * Send a broadcast message to the session of this server
+	 * @param n the NetMessage to broadcast
+	 */
+	public void sendBroadcast(NetMessage n){
+		System.out.println("sending broadcast");
+		
+		for(int j = 0 ; j < sessions.size() ; j++){
+			System.out.println(sessions.get(j));
+			sessions.get(j).write(n);
+		}
+	}
+	
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
@@ -44,15 +55,15 @@ public class ServerHandler implements IoHandler{
 
 		System.out.println("BROADCASTING...");
 
-		for(int j = 0 ; j < sessions.size() ; j++){
-			if(sessions.get(j) != arg0)
-				sessions.get(j).write(n);
-		}
+		//when we receive a message, we must broadcast it
+		sendBroadcast(n);
+		
 	}
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
 		// TODO Auto-generated method stub
+		System.out.println("message sent");
 
 	}
 
@@ -66,9 +77,8 @@ public class ServerHandler implements IoHandler{
 	@Override
 	public void sessionCreated(IoSession arg0) throws Exception {
 		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
+		System.out.println("session created");
 		sessions.add(arg0);
-		sessionSize = sessions.size();
 	}
 
 	@Override

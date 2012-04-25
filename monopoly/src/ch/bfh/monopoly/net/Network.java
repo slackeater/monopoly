@@ -24,7 +24,6 @@ public class Network {
 	 * @throws IOException
 	 */
 	public void startServer(String ip, int port, ServerHandler srvHandler) throws IOException{
-		srvHandler = new ServerHandler();
 		IoAcceptor acc = new NioSocketAcceptor();
 		acc.setHandler(srvHandler);
 		acc.getFilterChain().addLast("logger", new LoggingFilter());
@@ -40,7 +39,6 @@ public class Network {
 	 * @return IoSession the session that can be used to send message
 	 */
 	public IoSession startClient(String ip, int port, ClientHandler cliHandler){
-		cliHandler = new ClientHandler();
 		IoConnector ic = new NioSocketConnector();
 		ic.getFilterChain().addLast("logger", new LoggingFilter());
 		ic.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));

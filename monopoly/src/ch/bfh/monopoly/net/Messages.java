@@ -15,6 +15,7 @@ public enum Messages {
 	KICK_ANSWER(160),
 	QUIT_GAME(170),
 	CHAT_MSG(180),
+	GAME_START(190),
 	
 	BUY_HOUSE(200),
 	BUY_HOUSEROW(205),
@@ -31,6 +32,8 @@ public enum Messages {
 	
 	MORTGAGE(400),
 	UNMORTGAGE(410),
+	
+	
 	
 	//probably only for test
 	ACKNOWLEDGE(999)

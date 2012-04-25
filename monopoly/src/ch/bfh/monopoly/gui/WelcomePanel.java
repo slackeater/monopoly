@@ -29,6 +29,8 @@ import org.apache.mina.core.session.IoSession;
 import ch.bfh.monopoly.common.Monopoly;
 import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.ServerHandler;
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 
 
 public class WelcomePanel extends JFrame{
@@ -101,7 +103,7 @@ public class WelcomePanel extends JFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
-				int port, maxPlayers;
+				int port;
 				String ip;
 
 				try{
@@ -111,11 +113,11 @@ public class WelcomePanel extends JFrame{
 					info.append("Connecting to " + ip + "and port " + port + "\n");
 					
 					try {
-						ClientHandler cliHandler = new ClientHandler();
-						IoSession cliSession = Monopoly.communicate.startClient(ip, port, cliHandler);
+						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
 
 						while(true){
-							if(cliHandler.isSessionOpened()){
+							Thread.sleep(1500);
+							if(Monopoly.communicate.gameCanBegin()){
 								dispose();
 								board.setVisible(true);
 								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -126,6 +128,9 @@ public class WelcomePanel extends JFrame{
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					} 
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
@@ -213,9 +218,12 @@ public class WelcomePanel extends JFrame{
 						Monopoly.communicate.startServer(ip, port);
 
 						while(true){
-							System.out.println(ServerHandler.sessionSize);
-													
-							if(ServerHandler.sessionSize == maxPlayers){
+							Thread.sleep(1500);
+							
+							//maxPlayers-1 because the server is itself a client
+							if(Monopoly.communicate.getServerOpenedSession() == maxPlayers-1){
+								NetMessage gameStart = new NetMessage(Messages.GAME_START);
+								Monopoly.communicate.sendBroadcast(gameStart);
 								dispose();
 								board.setVisible(true);
 								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -226,6 +234,9 @@ public class WelcomePanel extends JFrame{
 						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					} 
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
