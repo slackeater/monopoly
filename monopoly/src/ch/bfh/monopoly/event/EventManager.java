@@ -6,18 +6,19 @@ import ch.bfh.monopoly.common.GameClient;
 
 public class EventManager {
 	
-	TileEvent[] tileEvents = new TileEvent[40];
-	TileEvent[] chanceEvents = new TileEvent[16];
+	BoardEvent[] tileEvents = new BoardEvent[40];
+	BoardEvent[] chanceEvents = new BoardEvent[16];
 	GameClient gameClient;
 	
 	public EventManager(GameClient gameClient) {
 		this.gameClient = gameClient;
+		createTileEvents();
 		createChanceMovementEvents();
 		//TODO create 1 singled out event for testing... will remove later
 		createGoToJailEvent();
 	}
 
-	TileEvent[] masterList;
+	BoardEvent[] masterList;
 
 	public String getEventDescriptionById(int tileId) {
 		return tileEvents[tileId].getEventDescription();
@@ -33,26 +34,35 @@ public class EventManager {
 		
 		for(int i=0;i<7;i++){
 			String name = res.getString(
-					"card"  +i+ "-name");
+					"chance"  +i+ "-name");
 			name = name.trim();
 			
 			String cardText = res.getString(
-					"card"  +i+ "-cardText");
+					"chance"  +i+ "-cardText");
 			name = name.trim();
 			
 			String toParse = res.getString(
-					"card"  +i+ "-newPosition");
+					"chance"  +i+ "-newPosition");
 			int newPosition = Integer.parseInt(toParse);
 			
-			TileEvent te = new MovementEvent(name, cardText, newPosition, gameClient);
+			BoardEvent te = new MovementEvent(name, cardText, newPosition, gameClient);
 			chanceEvents[i]=te;
 			
 		}
 	}
 	
 	public void createGoToJailEvent(){
-		TileEvent te = new GoToJailEvent("Go To Jail", "You go directly to jail, do not pass go, do not collect 200 dollars", 10, gameClient);
+		BoardEvent te = new GoToJailEvent("Go To Jail", "You go directly to jail, do not pass go, do not collect 200 dollars", 10, gameClient);
 		tileEvents[30]=te;
+	}
+	
+	public void createTileEvents(){
+		int[] terrainAndRRSpaces = {1,3,5,6,8,9,11,13,14,15,16,18,19,21,23,24,25,26,27,29,31,32,34,35,37,39};
+		SimpleFeeEvent sfe = new SimpleFeeEvent("Pay Rent", gameClient);
+		for (int i=0;i<terrainAndRRSpaces.length;i++){
+			int boardPosition = terrainAndRRSpaces[i];
+			tileEvents[boardPosition]=sfe;
+		}
 	}
 }
 

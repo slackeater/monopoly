@@ -16,21 +16,19 @@ public class Board {
 	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
-	private Player localPlayer;
-	private Player currentPlayer;
 	private Subject[] tileSubjects;
 	private Color[] tokenColor;
 
 	/**
-	 * inner class responsible for registering listeners from the GUI
-	 * and notifying these listeners when changes to the instance variables 
-	 * of the outer class are changed
+	 * inner class responsible for registering listeners from the GUI and
+	 * notifying these listeners when changes to the instance variables of the
+	 * outer class are changed
 	 */
 	private class ConcreteSubject implements Subject {
-		private int tileListenerID;
+		private int tileListenerId;
 
-		public ConcreteSubject(int tileID) {
-			this.tileListenerID = tileID;
+		public ConcreteSubject(int tileId) {
+			this.tileListenerId = tileId;
 		}
 
 		ArrayList<TileListener> listeners = new ArrayList<TileListener>();
@@ -44,12 +42,10 @@ public class Board {
 		}
 
 		public void notifyListeners() {
-			Tile t = getTileByID(tileListenerID);
+			Tile t = getTileById(tileListenerId);
 			Terrain terrain = ((Terrain) t);
-			TileStateEvent tsi = new TileStateEvent(
-					terrain.getHouseCount(),
-					terrain.getHotelCount(), 
-					"bob",//terrain.getOwner().getName(),
+			TileStateEvent tsi = new TileStateEvent(terrain.getHouseCount(),
+					terrain.getHotelCount(), "bob",// terrain.getOwner().getName(),
 					terrain.isMortgageActive());
 			for (TileListener tl : listeners) {
 				tl.updateTile(tsi);
@@ -58,41 +54,44 @@ public class Board {
 	}
 
 	/**
-	 * returns a Subject / Concreted Subject which corresponds to a tile at the given index
+	 * returns a Subject / Concreted Subject which corresponds to a tile at the
+	 * given index
 	 */
-	public Subject getTileSubjectAtIndex(int index){
+	public Subject getTileSubjectAtIndex(int index) {
 		return tileSubjects[index];
 	}
-	
-	
-	
+
 	public Board(GameClient gameClient) {
 		// create tiles, cards, and events
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
 		availableHouses = 32;
 		availableHotels = 12;
-		tileSubjects=new Subject[40];
+		tileSubjects = new Subject[40];
 		createTileSubjects();
 	}
-	
+
 	/**
-	 * buy a house for a given property
-	 * 	checks that the tileID provided refers to a terrain
-	 * @param tileID the tile number of the property to build a house on
+	 * buy a house for a given property checks that the tileId provIded refers
+	 * to a terrain
+	 * 
+	 * @param tileId
+	 *            the tile number of the property to build a house on
 	 */
-	public void buyHouse(int tileID){
-		Tile t = tiles[tileID];
-		if (!(t instanceof Terrain)) throw new RuntimeException("Tile must be a terrain in order to build houses on it");
-		Terrain terrain = (Terrain)t;
+	public void buyHouse(int tileId) {
+		Tile t = tiles[tileId];
+		if (!(t instanceof Terrain))
+			throw new RuntimeException(
+					"Tile must be a terrain in order to build houses on it");
+		Terrain terrain = (Terrain) t;
 		terrain.buildHouse();
-		int id = terrain.getID();
+		int id = terrain.getId();
 		tileSubjects[id].notifyListeners();
 	}
 
 	/**
-	 * creates 40 ConreceteSubject instances, 1 for every tile on the board
-	 * 	each is associated with a given tile through the index number
+	 * creates 40 ConreceteSubject instances, 1 for every tile on the board each
+	 * is associated with a given tile through the index number
 	 */
 	public void createTileSubjects() {
 		// create list of "Tile" Subjects
@@ -102,65 +101,75 @@ public class Board {
 	}
 
 	/**
-	 * transfers a given property from one player to another
-	 * 	checks if property to transfer is a Property
-	 * @param fromName name of the player to take property from
-	 * @param toName name of the player to give the property to
-	 * @param price the price the property has been sold for
-	 * @param propertyID the tile number of the property that was sold
+	 * transfers a given property from one player to another checks if property
+	 * to transfer is a Property
+	 * 
+	 * @param fromName
+	 *            name of the player to take property from
+	 * @param toName
+	 *            name of the player to give the property to
+	 * @param price
+	 *            the price the property has been sold for
+	 * @param propertyId
+	 *            the tile number of the property that was sold
 	 */
-	public void transferProperty(String fromName, String toName, int tileID) {
-		Tile t = tiles[tileID];
+	public void transferProperty(String fromName, String toName, int tileId) {
+		Tile t = tiles[tileId];
 		if (t instanceof Property) {
 			Player fromPlayer = getPlayerByName(fromName);
 			Player toPlayer = getPlayerByName(toName);
 			((Property) t).setOwner(toPlayer);
 			fromPlayer.removeProperty(t);
 			toPlayer.addProperty(t);
-			tileSubjects[tileID].notifyListeners();
+			tileSubjects[tileId].notifyListeners();
 		} else
 			throw new RuntimeException(
 					"cannot complete transfer: object to transfer is not a property");
 	}
 
-	public Tile getTileByID(int tileID) {
-		return tiles[tileID];
+	public Tile getTileById(int tileId) {
+		return tiles[tileId];
 	}
 
 	/**
-	 * adds a given property to a player's list of properties
-	 * tileID must refer to a property
-	 * the property must have no OWNER, meaning this property comes from the bank
-	 * TODO the precondition that the property be owned by the bank make this method a bit limited, reevaluate the condition
-	 * @param fromName name of the player to take property from
-	 * @param toName name of the player to give the property to
-	 * @param price the price the property has been sold for
-	 * @param propertyID the tile number of the property that was sold
+	 * adds a given property to a player's list of properties tileId must refer
+	 * to a property the property must have no OWNER, meaning this property
+	 * comes from the bank TODO the precondition that the property be owned by
+	 * the bank make this method a bit limited, reevaluate the condition
+	 * 
+	 * @param fromName
+	 *            name of the player to take property from
+	 * @param toName
+	 *            name of the player to give the property to
+	 * @param price
+	 *            the price the property has been sold for
+	 * @param propertyId
+	 *            the tile number of the property that was sold
 	 */
-	public void addPropertyToPlayer(String toName, int tileID) {
-		Tile t = tiles[tileID];
-		if (t instanceof Property) {
-			Property p = ((Property) t);
-			if (p.getOwner() != null) {
-				throw new RuntimeException(
-						"Property is already owned: cannot add properyt to player -> use transferProperty");
-			} else {
-				Player toPlayer = getPlayerByName(toName);
-				toPlayer.addProperty(p);
-				p.setOwner(toPlayer);
-				tileSubjects[tileID].notifyListeners();
-			}
-		} else
+	public void addPropertyToPlayer(String toName, int tileId) {
+		Tile t = tiles[tileId];
+		Property p = castTileToProperty(t);
+		if (p.getOwner() != null) {
 			throw new RuntimeException(
-					"cannot complete transfer: object to transfer is not a property");
+					"Property is already owned: cannot add properyt to player -> use transferProperty");
+		} else {
+			Player toPlayer = getPlayerByName(toName);
+			toPlayer.addProperty(p);
+			p.setOwner(toPlayer);
+			tileSubjects[tileId].notifyListeners();
+		}
 
 	}
 
 	/**
 	 * transfers a given amount of money from one player to another
-	 * @param fromName name of the player to take money from
-	 * @param toName name of the player to give the money to
-	 * @param price the amount of money to transfer
+	 * 
+	 * @param fromName
+	 *            name of the player to take money from
+	 * @param toName
+	 *            name of the player to give the money to
+	 * @param price
+	 *            the amount of money to transfer
 	 */
 	public void transferMoney(String fromName, String toName, int price) {
 		Player fromPlayer = getPlayerByName(fromName);
@@ -174,12 +183,18 @@ public class Board {
 		toPlayer.depositMoney(price);
 	}
 
-
 	/**
-	 * create the player objects from the list of strings that comes from the server when the game begins
-	 * @param playerNames this list of player names of hte player participating in this game
-	 * @param the locale that was chosen: needed to give the players the correct starting balance in there account
-	 * TODO resolve open question: why createPlayers???? Every client must receive a list of players from the server and then copy it to the board
+	 * create the player objects from the list of strings that comes from the
+	 * server when the game begins
+	 * 
+	 * @param playerNames
+	 *            this list of player names of hte player participating in this
+	 *            game
+	 * @param the
+	 *            locale that was chosen: needed to give the players the correct
+	 *            starting balance in there account TODO resolve open question:
+	 *            why createPlayers???? Every client must receive a list of
+	 *            players from the server and then copy it to the board
 	 */
 	public void createPlayers(String[] playerNames, Locale loc) {
 		players = new Player[playerNames.length];
@@ -194,7 +209,9 @@ public class Board {
 
 	/**
 	 * get the player object whose name field corresponds to a given name
-	 * @param name the string of the name of the player
+	 * 
+	 * @param name
+	 *            the string of the name of the player
 	 */
 	public Player getPlayerByName(String name) {
 		Player p = null;
@@ -208,13 +225,64 @@ public class Board {
 		return p;
 	}
 
+	public boolean playerIsOwnerOfTile(String playerName, int tileId){
+		Property p = castTileToProperty(tiles[tileId]);
+		String ownerName = p.getOwner().getName();
+		return (playerName.equals(ownerName));
+	}
+
 	/**
-	 * creates an object with all the static tile information to be sent to the GUI
-	 * @param id is the id of the tile for which we want to get information
+	 * casts a tile to a property if it is a property, otherwise throw an
+	 * exception
+	 * 
+	 * @param t
+	 *            the tile to cast
+	 * @return the tile casted to a property
 	 */
-	public TileInfo getTileInfoByID(int id) {
+	public Property castTileToProperty(Tile t) {
+		if (!(t instanceof Property))
+			throw new RuntimeException(
+					"cannot complete transfer: object to transfer is not a property");
+		return ((Property) t);
+	}
+
+	/**
+	 * buy a property that is currently owned by the bank at the price that is written on the card
+	 * @param tileId the id of the property to be bought
+	 */
+	public void buyPropertyFromBank(String currentPlayer, int tileId){
+		Tile t = tiles[tileId];
+		Property p = castTileToProperty(t);
+		if (!(p.getOwner().getName().equals("bank")))
+			throw new RuntimeException("The property to be bought is not owned by the bank, use transfer property instead");
+		int priceOfProperty = p.getPrice();
+		if (!playerHasSufficientFunds(currentPlayer, priceOfProperty))
+			throw new RuntimeException("Player Does not have enough money to by the property from the bank");
+		Player player = getPlayerByName(currentPlayer);
+		player.addProperty(p);
+		p.setOwner(player);
+		player.withdawMoney(p.getPrice());
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param playerName the player to check the account of
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean playerHasSufficientFunds(String playerName, int fee){
+		return (getPlayerByName(playerName).getAccount() > fee);
+	}
+
+	/**
+	 * creates an object with all the static tile information to be sent to the
+	 * GUI
+	 * 
+	 * @param Id
+	 *            is the Id of the tile for which we want to get information
+	 */
+	public TileInfo getTileInfoById(int Id) {
 		TileInfo tileInfo = new TileInfo();
-		Tile tile = tiles[id];
+		Tile tile = tiles[Id];
 		if (tile instanceof Terrain) {
 			Terrain t = (Terrain) tile;
 			tileInfo.setName(t.getName());
@@ -232,7 +300,7 @@ public class Board {
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
 			tileInfo.setRGB(t.getRGB());
-			tileInfo.setID(t.getID());
+			tileInfo.setId(t.getId());
 		}
 		if (tile instanceof Railroad) {
 			Railroad t = (Railroad) tile;
@@ -279,4 +347,5 @@ public class Board {
 		}
 		return tileInfo;
 	}
+	
 }

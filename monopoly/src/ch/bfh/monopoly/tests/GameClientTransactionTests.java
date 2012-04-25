@@ -17,16 +17,13 @@ import ch.bfh.monopoly.tile.Tile;
 public class GameClientTransactionTests {
 
 	Locale loc;
-	GameClient gc;
+	GameClient gameClient;
 	Board board;
 
 	@Before
 	public void setup() {
-		gc = new GameClient(new Locale("EN"));
-		board = new Board(gc);
-		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
-				"Elie" };
-		board.createPlayers(playerNames, gc.getLoc());
+		gameClient = new GameClient(new Locale("EN"));
+		board = gameClient.getBoard();
 	}
 
 	/**
@@ -36,7 +33,7 @@ public class GameClientTransactionTests {
 	@Test
 	public void addPropertyToPlayer() {
 		Player p = board.getPlayerByName("Justin");
-		Tile t = board.getTileByID(1);
+		Tile t = board.getTileById(1);
 		board.addPropertyToPlayer("Justin", 1);
 		// System.out.println(((Property)t).getOwner().getName());
 		assertTrue(((Property) t).getOwner() == p);
@@ -51,10 +48,10 @@ public class GameClientTransactionTests {
 	public void transferPropertiesChangesOwners() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-		Tile t = board.getTileByID(1);
-		board.addPropertyToPlayer(jus.getName(), t.getID());
+		Tile t = board.getTileById(1);
+		board.addPropertyToPlayer(jus.getName(), t.getId());
 		assertTrue(((Property) t).getOwner() == jus);
-		board.transferProperty(jus.getName(), giu.getName(), t.getID());
+		board.transferProperty(jus.getName(), giu.getName(), t.getId());
 		assertTrue(((Property) t).getOwner() == giu);
 	}
 	
@@ -67,7 +64,7 @@ public class GameClientTransactionTests {
 	public void transferPropertyPlayerDoesNotOwn() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-		Tile t = board.getTileByID(1);
+		Tile t = board.getTileById(1);
 		try {
 			board.transferProperty(jus.getName(), giu.getName(), 3);
 			fail("FAIL: player can sell a property he does not own");
@@ -109,7 +106,6 @@ public class GameClientTransactionTests {
 	public void cannotTransferMoreThanYouHave() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-
 		try {
 			board.transferMoney(jus.getName(), giu.getName(), 2000);
 			fail("FAIL: program allows a transfer for an amount larger than that of the player's account balance");
@@ -118,4 +114,52 @@ public class GameClientTransactionTests {
 		}
 	}
 
+	
+	/**
+	 *  check that the method gameClient.buyPropertyFromBank deducts the money from the players account correctly
+	 */
+	@Test
+	public void buyPropertyFromBankWithdrawsCorrectly() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		int previousBalance = p.getAccount();
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(tileId);
+		Tile t = board.getTileById(tileId);
+		Property prop =(Property)t;
+		int priceOfProperty = prop.getPrice();
+		int newBalance = p.getAccount();
+		assertTrue(newBalance==(previousBalance-priceOfProperty));
+	}
+	
+	
+	/**
+	 *  check that a player can by a property from the bank, only if the bank owns it
+	 */
+	@Test
+	public void buyPropertyFromBank() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(tileId);
+		Tile t = board.getTileById(tileId);
+		assertTrue(((Property)t).getOwner()==p);
+	}
+	
+	/**
+	 *  check that a player cannot buy a property from the bank, unless he has enough money
+	 */
+	@Test
+	public void propertyFromBankInsufficientFunds() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		p.withdawMoney(p.getAccount()-1);
+		gameClient.setCurrentPlayer(p);
+		try {
+			gameClient.buyPropertyFromBank(tileId);
+			fail("FAIL: Player bought a property from the bank, but had insufficient funds");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }

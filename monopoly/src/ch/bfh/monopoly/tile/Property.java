@@ -11,10 +11,11 @@ public abstract class Property extends AbstractTile implements IProperty{
 	protected boolean mortgageActive;
 	private String group;
 
-	public Property(String name, int price, String group, int mortgageValue, int coordX, int coordY,int id,EventManager em){
+	public Property(String name, int price, String group, int mortgageValue, int coordX, int coordY,int id,EventManager em, Player bank){
 		super(name, coordX, coordY,id,em);
 		this.price=price;
 		this.group=group;
+		this.owner = bank;
 		this.mortgageValue=mortgageValue;
 	}
 	

@@ -42,7 +42,7 @@ public class BoardInitTests {
 	@Test
 	public void boardTilesHaveNames(){
 		Board board= new Board(gc);
-		Tile t = board.getTileByID(1);
+		Tile t = board.getTileById(1);
 		assertTrue((t.getName() != null));
 	}
 	
@@ -53,7 +53,7 @@ public class BoardInitTests {
 	public void boardTilesHaveXYCoord(){
 		Board board= new Board(gc);
 		for (int i = 0; i<TILES_LENGTH; i++){
-			Tile t = board.getTileByID(i);
+			Tile t = board.getTileById(i);
 			if (t instanceof Terrain){
 			assertTrue((t.getCoordX() >= 0));
 			assertTrue((t.getCoordY() >= 0));}
@@ -67,7 +67,7 @@ public class BoardInitTests {
 	public void boardControllerGetsTileInformation(){
 		Board board= new Board(gc);
 		BoardController bc = new BoardController(board);
-		TileInfo ti = bc.getTileInfoByID(1);
+		TileInfo ti = bc.getTileInfoById(1);
 		assertTrue(ti.getName().equals("Mediterranean Avenue"));
 		assertTrue(ti.getPrice()==60);
 		assertTrue(ti.getGroup().equals("purple"));
@@ -81,9 +81,9 @@ public class BoardInitTests {
 	@Test
 	public void chanceCardsCreated() {
 		Board board= new Board(gc);
-		assertTrue(((Chance)board.getTileByID(7)).getName().equals("Chance"));
-		assertTrue(((Chance)board.getTileByID(22)).getName().equals("Chance"));
-		assertTrue(((Chance)board.getTileByID(36)).getName().equals("Chance"));
+		assertTrue(((Chance)board.getTileById(7)).getName().equals("Chance"));
+		assertTrue(((Chance)board.getTileById(22)).getName().equals("Chance"));
+		assertTrue(((Chance)board.getTileById(36)).getName().equals("Chance"));
 	}
 	
 	
@@ -92,11 +92,11 @@ public class BoardInitTests {
 		Board board= new Board(gc);
 //		for (int i = 0; i < board.tiles.length; i++) {
 //			System.out.println("Tile" + i + ":  " + board.tiles[i].getName()
-//					+ "  :  " + board.tiles[i].getID() + " xyCoord: "
+//					+ "  :  " + board.tiles[i].getId() + " xyCoord: "
 //					+ board.tiles[i].getCoordX() + ","
 //					+ board.tiles[i].getCoordY());
 //		}
-		assertTrue(((Terrain)board.getTileByID(1)).getName().equals("Mediterranean Avenue"));
+		assertTrue(((Terrain)board.getTileById(1)).getName().equals("Mediterranean Avenue"));
 	}
 	
 	
@@ -110,55 +110,55 @@ public class BoardInitTests {
 		int tileNumber;
 		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);
-		assertTrue((board.getTileByID(1).getName()).equals("Mediterranean Avenue"));
-		assertTrue(((Terrain)board.getTileByID(1)).getPrice()==60);
-		assertTrue(((Terrain)board.getTileByID(1)).getHouseCost()==50);
-		assertTrue(((Terrain)board.getTileByID(1)).getHotelCost()==50);
-		assertTrue(((Terrain)board.getTileByID(1)).getMortgageValue()==30);
+		assertTrue((board.getTileById(1).getName()).equals("Mediterranean Avenue"));
+		assertTrue(((Terrain)board.getTileById(1)).getPrice()==60);
+		assertTrue(((Terrain)board.getTileById(1)).getHouseCost()==50);
+		assertTrue(((Terrain)board.getTileById(1)).getHotelCost()==50);
+		assertTrue(((Terrain)board.getTileById(1)).getMortgageValue()==30);
 	
-		assertTrue(((Terrain)board.getTileByID(14)).getName().equals("Virginia Avenue"));
-		assertTrue(((Terrain)board.getTileByID(14)).getPrice()==160);
-		assertTrue(((Terrain)board.getTileByID(14)).getHouseCost()==100);
-		assertTrue(((Terrain)board.getTileByID(14)).getHotelCost()==100);
-		assertTrue(((Terrain)board.getTileByID(14)).getMortgageValue()==80);
-		//System.out.println(sm.getTileByID(14));
+		assertTrue(((Terrain)board.getTileById(14)).getName().equals("Virginia Avenue"));
+		assertTrue(((Terrain)board.getTileById(14)).getPrice()==160);
+		assertTrue(((Terrain)board.getTileById(14)).getHouseCost()==100);
+		assertTrue(((Terrain)board.getTileById(14)).getHotelCost()==100);
+		assertTrue(((Terrain)board.getTileById(14)).getMortgageValue()==80);
+		//System.out.println(sm.getTileById(14));
 		
-		assertTrue(((Terrain)board.getTileByID(39)).getName().equals("Boardwalk"));
-		assertTrue(((Terrain)board.getTileByID(39)).getPrice()==400);
-		assertTrue(((Terrain)board.getTileByID(39)).getHouseCost()==200);
-		assertTrue(((Terrain)board.getTileByID(39)).getHotelCost()==200);
-		assertTrue(((Terrain)board.getTileByID(39)).getMortgageValue()==200);
+		assertTrue(((Terrain)board.getTileById(39)).getName().equals("Boardwalk"));
+		assertTrue(((Terrain)board.getTileById(39)).getPrice()==400);
+		assertTrue(((Terrain)board.getTileById(39)).getHouseCost()==200);
+		assertTrue(((Terrain)board.getTileById(39)).getHotelCost()==200);
+		assertTrue(((Terrain)board.getTileById(39)).getMortgageValue()==200);
 		//System.out.println(sm.tiles[39]);
 		
 		////////////////////
 		//Tests some Railroads
 		tileNumber  = 5;
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getName().equals("Reading Railroad"));
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getPrice()==200);
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getRent()==25);
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getMortgageValue()==100);
-		//System.out.println(sm.getTileByID(tileNumber));
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getName().equals("Reading Railroad"));
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getPrice()==200);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getRent()==25);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getMortgageValue()==100);
+		//System.out.println(sm.getTileById(tileNumber));
 		
 		tileNumber  = 25;
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getName().equals("B&O Railroad"));
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getPrice()==200);
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getRent()==25);
-		assertTrue(((Railroad)board.getTileByID(tileNumber)).getMortgageValue()==100);
-		//System.out.println(sm.getTileByID(tileNumber));
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getName().equals("B&O Railroad"));
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getPrice()==200);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getRent()==25);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).getMortgageValue()==100);
+		//System.out.println(sm.getTileById(tileNumber));
 		
 		
 		////////////////////
 		//Tests some UTILITIES
 		tileNumber  = 12;
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getName().equals("Electric Company"));
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getPrice()==150);
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getMortgageValue()==75);
-		//System.out.println(board.getTileByID(tileNumber));
+		assertTrue(((Utility)board.getTileById(tileNumber)).getName().equals("Electric Company"));
+		assertTrue(((Utility)board.getTileById(tileNumber)).getPrice()==150);
+		assertTrue(((Utility)board.getTileById(tileNumber)).getMortgageValue()==75);
+		//System.out.println(board.getTileById(tileNumber));
 		
 		tileNumber  = 28;
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getName().equals("Water Works"));
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getPrice()==150);
-		assertTrue(((Utility)board.getTileByID(tileNumber)).getMortgageValue()==75);
+		assertTrue(((Utility)board.getTileById(tileNumber)).getName().equals("Water Works"));
+		assertTrue(((Utility)board.getTileById(tileNumber)).getPrice()==150);
+		assertTrue(((Utility)board.getTileById(tileNumber)).getMortgageValue()==75);
 		//System.out.println(board.tiles[tileNumber]);
 		
 	}

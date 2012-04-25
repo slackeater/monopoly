@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
 
 public class Terrain extends Property {
@@ -13,8 +14,8 @@ public class Terrain extends Property {
 	private String rgb;
 
 	public Terrain (String name, int price,int houseCost, int hotelCost,  int rent,
-			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id, String rgb, EventManager em){
-		super(name, price, group, mortgageValue, coordX, coordY, id,em);
+			int rent1house, int rent2house,int rent3house, int rent4house, int renthotel, String group, int mortgageValue,int coordX, int coordY, int id, String rgb, EventManager em,Player bank){
+		super(name, price, group, mortgageValue, coordX, coordY, id,em,bank);
 		this.name = name;
 		//this.id = id;
 		this.rentRates[0] =rent;
@@ -116,13 +117,12 @@ public class Terrain extends Property {
 
 	@Override
 	public void performEvent() {
-		// TODO Auto-generated method stub
+		em.performEventForTileAtId(id);
 		
 	}
 
 	@Override
 	public String getEventDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return em.getEventDescriptionById(id);
 	}
 }

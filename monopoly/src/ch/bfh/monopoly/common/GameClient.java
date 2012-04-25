@@ -4,35 +4,28 @@ import java.util.Locale;
 
 import ch.bfh.monopoly.network.Network;
 import ch.bfh.monopoly.tile.IProperty;
+import ch.bfh.monopoly.tile.Property;
 
 
 public class GameClient {
 	
-	Player localPlayer;
-	Player currentPlayer;
-	Network communicate;
-	Locale loc;
-	Board board;
+	private Player localPlayer;
+	private Player currentPlayer;
+	private Player bank;
+	private Locale loc;
+	private Board board;
 	
 	public GameClient (Locale loc) {
-		
+		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
 		this.loc = loc;
 		
 		//TODO this list must be received from a netMessage when the game starts
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
 		board = new Board(this);
-	}
-	
-	/**
-	 * performs tasks necessary when the program first sets up the board and GUI
-	 * TODO this is poorly named, and maybe misplaced?
-	 */
-	public void initBoard(String[] playerNames){
-		//a net message should come with the list of player names
-		//until then we have a mock object full of player names
 		board.createPlayers(playerNames, loc);
 	}
+	
 
 	public Locale getLoc(){
 		return loc;
@@ -43,10 +36,13 @@ public class GameClient {
 	 * @param tileID the tile number of the property
 	 */
 	public int getFeeForTileAtId(int tileId){
-		IProperty p = (IProperty)board.getTileByID(tileId);
+		IProperty p = (IProperty)board.getTileById(tileId);
 		return p.feeToCharge();
 	}
 
+	/**
+	 * TODO  ONLY FOR TESTING, REMOVE OR COMMENT OUT FOR FINAL PRODUCT
+	 */
 	public Board getBoard(){
 		return this.board;
 	}
@@ -94,7 +90,7 @@ public class GameClient {
 	 */
 	public String getEventDescription(){
 		int currentPos = currentPlayer.getPosition();
-		String eventDescription =board.getTileByID(currentPos).getEventDescription();
+		String eventDescription =board.getTileById(currentPos).getEventDescription();
 		return eventDescription;
 	}
 	
@@ -103,7 +99,61 @@ public class GameClient {
 	 */
 	public void performEvent(){
 		int currentPos = currentPlayer.getPosition();
-		board.getTileByID(currentPos).performEvent();
+		board.getTileById(currentPos).performEvent();
+	}
+	
+	/**
+	 * checks if a given player is the owner of a given tile
+	 * @param playerName  the player's name to check
+	 * @param tileId  tile to check ownership of
+	 */
+	public boolean playerIsOwnerOfTile(String playerName, int tileId){
+		return board.playerIsOwnerOfTile(playerName, tileId);
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean hasSufficientFunds(int fee){
+		return board.playerHasSufficientFunds(currentPlayer.getName(), fee);
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param playerName the player to check the account of
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean playerHasSufficientFunds(String playerName, int fee){
+		return board.playerHasSufficientFunds(playerName, fee);
+	}
+	
+	/**
+	 * get the bank player
+	 * @return bank player
+	 */
+	public Player getBankPlayer(){
+		return bank;
+	}
+	
+	/**
+	 * checks if the utilities are owned by the same player
+	 * this is used by the PayUtilityEvent to calculate the fee to charge
+	 * @return true if both utility tiles are owned by the same player
+	 */
+	public boolean hasBothUtilities(){
+		String ownerOfUtility1 = ((Property)board.getTileById(12)).getOwner().getName();
+		String ownerOfUtility2 = ((Property)board.getTileById(28)).getOwner().getName();
+		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
+	}
+	
+	/**
+	 * the current player buys a given property
+	 * this method is called when the property is owned by the bank
+	 * @param tileId the id of the tile to be bought
+	 */
+	public void buyPropertyFromBank(int tileId){
+		board.buyPropertyFromBank(currentPlayer.getName(), tileId);
 	}
 	
 }
