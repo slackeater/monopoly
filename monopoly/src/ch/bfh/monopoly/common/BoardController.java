@@ -21,10 +21,6 @@ public class BoardController {
 		return board.getTileInfoByID(id);
 	}
 	
-	public Subject[] getTileSubjectList(){
-		return board.getTileSubjectList();
-	}
-	
 	public Subject getTileSubjectAtIndex(int i){
 		return board.getTileSubjectAtIndex(i);
 	}

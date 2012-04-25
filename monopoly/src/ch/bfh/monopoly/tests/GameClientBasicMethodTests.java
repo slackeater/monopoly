@@ -33,22 +33,53 @@ public class GameClientBasicMethodTests {
 	public void returnsCorrectFeeForHouses() {
 		int fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 2);
-		//get fee for tile 1 with 1 house 
+		// get fee for tile 1 with 1 house
 		gameClient.buyHouse(1);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 10);
-		//get fee for tile 1 with 2 houses 
+		// get fee for tile 1 with 2 houses
 		gameClient.buyHouse(1);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 30);
-		//get fee for tile 1 with 3 houses 
+		// get fee for tile 1 with 3 houses
 		gameClient.buyHouse(1);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 90);
-		//get fee for tile 1 with 4 houses 
+		// get fee for tile 1 with 4 houses
 		gameClient.buyHouse(1);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 160);
-
 	}
+
+	/**
+	 * check that the method gameClient.advanceCurrentPlayerNSpaces
+	 * advances the position of a player a given number n spaces forward
+	 */
+	@Test
+	public void playersPositionAdvancesNSpaces() {
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		gameClient.advanceCurrentPlayerNSpaces(4);
+		int newPosition = gameClient.getCurrentPlayer().getPosition();
+		assertTrue(newPosition == 4);
+		
+		gameClient.advanceCurrentPlayerNSpaces(10);
+		newPosition = gameClient.getCurrentPlayer().getPosition();
+		assertTrue(newPosition == 14);
+	}
+	
+	/**
+	 * check that the method gameClient.advanceCurrentPlayerNSpaces
+	 * properly adjusts the player's position if a tour around the board is completed
+	 */
+	@Test
+	public void playerCompletesTourAroundBoard() {
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		gameClient.getCurrentPlayer().setPosition(36);
+		gameClient.advanceCurrentPlayerNSpaces(10);
+		int newPosition = gameClient.getCurrentPlayer().getPosition();
+		assertTrue(newPosition == 6);
+	}
+
 }

@@ -29,6 +29,10 @@ public class GameClientTransactionTests {
 		board.createPlayers(playerNames, gc.getLoc());
 	}
 
+	/**
+	 * check that the method addPropertyToPlayer gives a property to a give player
+	 * and updates that property's owner field 
+	 */
 	@Test
 	public void addPropertyToPlayer() {
 		Player p = board.getPlayerByName("Justin");
@@ -39,6 +43,10 @@ public class GameClientTransactionTests {
 
 	}
 
+	/**
+	 * check that the method transferProperty() takes a given property from one player
+	 * and gives it to another and updates the owner field of that property
+	 */
 	@Test
 	public void transferPropertiesChangesOwners() {
 		Player jus = board.getPlayerByName("Justin");
@@ -49,7 +57,30 @@ public class GameClientTransactionTests {
 		board.transferProperty(jus.getName(), giu.getName(), t.getID());
 		assertTrue(((Property) t).getOwner() == giu);
 	}
+	
+	
+	/**
+	 * check that the a player cannot transfer a property to another player 
+	 * unless he owns the property
+	 */
+	@Test
+	public void transferPropertyPlayerDoesNotOwn() {
+		Player jus = board.getPlayerByName("Justin");
+		Player giu = board.getPlayerByName("Giuseppe");
+		Tile t = board.getTileByID(1);
+		try {
+			board.transferProperty(jus.getName(), giu.getName(), 3);
+			fail("FAIL: player can sell a property he does not own");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 
+	
+	/**
+	 * check that the player's were created with the proper balance based upon the a given local
+	 * in this case the local is EN for all tests
+	 */
 	@Test
 	public void playersStartWithCorrectBalance() {
 		Player jus = board.getPlayerByName("Justin");
@@ -58,6 +89,10 @@ public class GameClientTransactionTests {
 		assertTrue(giu.getAccount() == 1500);
 	}
 
+	/**
+	 * check that money can be sent from one player to another, and the money is deducted from one player and added
+	 * to another player's account.  
+	 */
 	@Test
 	public void moneyTransfersBetweenPlayers() {
 		Player jus = board.getPlayerByName("Justin");
@@ -67,6 +102,9 @@ public class GameClientTransactionTests {
 		assertTrue(giu.getAccount() == 2000);
 	}
 
+	/**
+	 * check that it is not possible to transfer more money than a given account contains
+	 */
 	@Test
 	public void cannotTransferMoreThanYouHave() {
 		Player jus = board.getPlayerByName("Justin");
