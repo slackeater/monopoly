@@ -17,16 +17,13 @@ import ch.bfh.monopoly.tile.Tile;
 public class GameClientTransactionTests {
 
 	Locale loc;
-	GameClient gc;
+	GameClient gameClient;
 	Board board;
 
 	@Before
 	public void setup() {
-		gc = new GameClient(new Locale("EN"));
-		board = new Board(gc);
-		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
-				"Elie" };
-		board.createPlayers(playerNames, gc.getLoc());
+		gameClient = new GameClient(new Locale("EN"));
+		board = gameClient.getBoard();
 	}
 
 	/**
@@ -117,4 +114,52 @@ public class GameClientTransactionTests {
 		}
 	}
 
+	
+	/**
+	 *  check that the method gameClient.buyPropertyFromBank deducts the money from the players account correctly
+	 */
+	@Test
+	public void buyPropertyFromBankWithdrawsCorrectly() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		int previousBalance = p.getAccount();
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(tileId);
+		Tile t = board.getTileById(tileId);
+		Property prop =(Property)t;
+		int priceOfProperty = prop.getPrice();
+		int newBalance = p.getAccount();
+		assertTrue(newBalance==(previousBalance-priceOfProperty));
+	}
+	
+	
+	/**
+	 *  check that a player can by a property from the bank, only if the bank owns it
+	 */
+	@Test
+	public void buyPropertyFromBank() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(tileId);
+		Tile t = board.getTileById(tileId);
+		assertTrue(((Property)t).getOwner()==p);
+	}
+	
+	/**
+	 *  check that a player cannot buy a property from the bank, unless he has enough money
+	 */
+	@Test
+	public void propertyFromBankInsufficientFunds() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		p.withdawMoney(p.getAccount()-1);
+		gameClient.setCurrentPlayer(p);
+		try {
+			gameClient.buyPropertyFromBank(tileId);
+			fail("FAIL: Player bought a property from the bank, but had insufficient funds");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }

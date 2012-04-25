@@ -4,16 +4,16 @@ import java.util.Locale;
 
 import ch.bfh.monopoly.network.Network;
 import ch.bfh.monopoly.tile.IProperty;
+import ch.bfh.monopoly.tile.Property;
 
 
 public class GameClient {
 	
-	Player localPlayer;
-	Player currentPlayer;
+	private Player localPlayer;
+	private Player currentPlayer;
 	private Player bank;
-	Network communicate;
-	Locale loc;
-	Board board;
+	private Locale loc;
+	private Board board;
 	
 	public GameClient (Locale loc) {
 		bank = new Player("bank", 100000000);
@@ -23,17 +23,9 @@ public class GameClient {
 		//TODO this list must be received from a netMessage when the game starts
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
 		board = new Board(this);
-	}
-	
-	/**
-	 * performs tasks necessary when the program first sets up the board and GUI
-	 * TODO this is poorly named, and maybe misplaced?
-	 */
-	public void initBoard(String[] playerNames){
-		//a net message should come with the list of player names
-		//until then we have a mock object full of player names
 		board.createPlayers(playerNames, loc);
 	}
+	
 
 	public Locale getLoc(){
 		return loc;
@@ -48,6 +40,9 @@ public class GameClient {
 		return p.feeToCharge();
 	}
 
+	/**
+	 * TODO  ONLY FOR TESTING, REMOVE OR COMMENT OUT FOR FINAL PRODUCT
+	 */
 	public Board getBoard(){
 		return this.board;
 	}
@@ -121,7 +116,7 @@ public class GameClient {
 	 * @param fee  the amount of the fee to be paid
 	 */
 	public boolean hasSufficientFunds(int fee){
-		return (currentPlayer.getAccount()>fee);
+		return board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
 	
 	/**
@@ -130,7 +125,7 @@ public class GameClient {
 	 * @param fee  the amount of the fee to be paid
 	 */
 	public boolean playerHasSufficientFunds(String playerName, int fee){
-		return board.getPlayerByName(playerName).getAccount() > fee;
+		return board.playerHasSufficientFunds(playerName, fee);
 	}
 	
 	/**
@@ -139,6 +134,26 @@ public class GameClient {
 	 */
 	public Player getBankPlayer(){
 		return bank;
+	}
+	
+	/**
+	 * checks if the utilities are owned by the same player
+	 * this is used by the PayUtilityEvent to calculate the fee to charge
+	 * @return true if both utility tiles are owned by the same player
+	 */
+	public boolean hasBothUtilities(){
+		String ownerOfUtility1 = ((Property)board.getTileById(12)).getOwner().getName();
+		String ownerOfUtility2 = ((Property)board.getTileById(28)).getOwner().getName();
+		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
+	}
+	
+	/**
+	 * the current player buys a given property
+	 * this method is called when the property is owned by the bank
+	 * @param tileId the id of the tile to be bought
+	 */
+	public void buyPropertyFromBank(int tileId){
+		board.buyPropertyFromBank(currentPlayer.getName(), tileId);
 	}
 	
 }

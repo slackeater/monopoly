@@ -23,10 +23,7 @@ public class GameClientBasicMethodTests {
 	@Before
 	public void setup() {
 		gameClient = new GameClient(new Locale("EN"));
-		board = new Board(gameClient);
-		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
-				"Elie" };
-		board.createPlayers(playerNames, gameClient.getLoc());
+		board = gameClient.getBoard();
 	}
 
 	@Test
@@ -80,6 +77,40 @@ public class GameClientBasicMethodTests {
 		gameClient.advanceCurrentPlayerNSpaces(10);
 		int newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 6);
+	}
+	
+	/**
+	 * Test that the gameClient.hasSufficientFunds method returns
+	 * false when a the currentPlayer doesn't have enough money to pay a given fee
+	 */
+	@Test
+	public void currentPlayerHasSufficientFunds(){
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		assertTrue(!gameClient.hasSufficientFunds(2000));
+	}
+	
+	/**
+	 * Test that the gameClient.playerHasSufficientFunds method returns
+	 * false when a player other than the currentPlayer doesn't have enough money to pay a given fee
+	 */
+	@Test
+	public void otherPlayerHasSufficientFunds(){
+		Player p = board.getPlayerByName("Justin");
+		Player p2 = board.getPlayerByName("Giuseppe");
+		gameClient.setCurrentPlayer(p);
+		assertTrue(!gameClient.playerHasSufficientFunds("Giuseppe",2000));
+	}
+	
+	/**
+	 * test that when one player owns both utility tiles that gameClient.hasBothUtilites
+	 * returns true
+	 * @return true if 1 player owns both utilities
+	 */
+	@Test
+	public void playerHasBothUtilities(){
+		Player p = board.getPlayerByName("Justin");
+
 	}
 
 }

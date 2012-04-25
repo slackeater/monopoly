@@ -16,8 +16,6 @@ public class Board {
 	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
-	private Player localPlayer;
-	private Player currentPlayer;
 	private Subject[] tileSubjects;
 	private Color[] tokenColor;
 
@@ -249,6 +247,33 @@ public class Board {
 	}
 
 	/**
+	 * buy a property that is currently owned by the bank at the price that is written on the card
+	 * @param tileId the id of the property to be bought
+	 */
+	public void buyPropertyFromBank(String currentPlayer, int tileId){
+		Tile t = tiles[tileId];
+		Property p = castTileToProperty(t);
+		if (!(p.getOwner().getName().equals("bank")))
+			throw new RuntimeException("The property to be bought is not owned by the bank, use transfer property instead");
+		int priceOfProperty = p.getPrice();
+		if (!playerHasSufficientFunds(currentPlayer, priceOfProperty))
+			throw new RuntimeException("Player Does not have enough money to by the property from the bank");
+		Player player = getPlayerByName(currentPlayer);
+		player.addProperty(p);
+		p.setOwner(player);
+		player.withdawMoney(p.getPrice());
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param playerName the player to check the account of
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean playerHasSufficientFunds(String playerName, int fee){
+		return (getPlayerByName(playerName).getAccount() > fee);
+	}
+
+	/**
 	 * creates an object with all the static tile information to be sent to the
 	 * GUI
 	 * 
@@ -322,4 +347,5 @@ public class Board {
 		}
 		return tileInfo;
 	}
+	
 }
