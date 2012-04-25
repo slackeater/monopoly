@@ -2,7 +2,7 @@ package ch.bfh.monopoly.event;
 
 import ch.bfh.monopoly.common.GameClient;
 
-public abstract class AbstractTileEvent implements TileEvent{
+public abstract class AbstractTileEvent implements BoardEvent{
 
 		protected String name;
 		protected String eventDescription;

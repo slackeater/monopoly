@@ -368,13 +368,13 @@ public class BoardTile extends JPanel{
 			
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
-				gc.buyHouse(ti.getID());
+				gc.buyHouse(ti.getId());
 			}
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
 		
 				// TODO change to buyHotel !!!!!!!!!!!
-				gc.buyHouse(ti.getID());
+				gc.buyHouse(ti.getId());
 			}
 		}	
 	}

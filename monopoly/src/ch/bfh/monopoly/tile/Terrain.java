@@ -116,7 +116,7 @@ public class Terrain extends Property {
 
 	@Override
 	public void performEvent() {
-		// TODO Auto-generated method stub
+		em.performEventForTileAtId(id);
 		
 	}
 

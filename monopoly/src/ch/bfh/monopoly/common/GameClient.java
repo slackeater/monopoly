@@ -43,7 +43,7 @@ public class GameClient {
 	 * @param tileID the tile number of the property
 	 */
 	public int getFeeForTileAtId(int tileId){
-		IProperty p = (IProperty)board.getTileByID(tileId);
+		IProperty p = (IProperty)board.getTileById(tileId);
 		return p.feeToCharge();
 	}
 
@@ -94,7 +94,7 @@ public class GameClient {
 	 */
 	public String getEventDescription(){
 		int currentPos = currentPlayer.getPosition();
-		String eventDescription =board.getTileByID(currentPos).getEventDescription();
+		String eventDescription =board.getTileById(currentPos).getEventDescription();
 		return eventDescription;
 	}
 	
@@ -103,7 +103,17 @@ public class GameClient {
 	 */
 	public void performEvent(){
 		int currentPos = currentPlayer.getPosition();
-		board.getTileByID(currentPos).performEvent();
+		board.getTileById(currentPos).performEvent();
+	}
+	
+	/**
+	 * checks if a given player is the owner of a given tile
+	 * @param playerName  the player's name to check
+	 * @param tileId  tile to check ownership of
+	 */
+	public boolean playerIsOwnerOfTile(String playerName, int tileId){
+		return board.playerIsOwnerOfTile(playerName, tileId);
+		
 	}
 	
 }

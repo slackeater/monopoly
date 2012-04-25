@@ -6,8 +6,8 @@ import ch.bfh.monopoly.common.GameClient;
 
 public class EventManager {
 	
-	TileEvent[] tileEvents = new TileEvent[40];
-	TileEvent[] chanceEvents = new TileEvent[16];
+	BoardEvent[] tileEvents = new BoardEvent[40];
+	BoardEvent[] chanceEvents = new BoardEvent[16];
 	GameClient gameClient;
 	
 	public EventManager(GameClient gameClient) {
@@ -17,7 +17,7 @@ public class EventManager {
 		createGoToJailEvent();
 	}
 
-	TileEvent[] masterList;
+	BoardEvent[] masterList;
 
 	public String getEventDescriptionById(int tileId) {
 		return tileEvents[tileId].getEventDescription();
@@ -44,14 +44,14 @@ public class EventManager {
 					"card"  +i+ "-newPosition");
 			int newPosition = Integer.parseInt(toParse);
 			
-			TileEvent te = new MovementEvent(name, cardText, newPosition, gameClient);
+			BoardEvent te = new MovementEvent(name, cardText, newPosition, gameClient);
 			chanceEvents[i]=te;
 			
 		}
 	}
 	
 	public void createGoToJailEvent(){
-		TileEvent te = new GoToJailEvent("Go To Jail", "You go directly to jail, do not pass go, do not collect 200 dollars", 10, gameClient);
+		BoardEvent te = new GoToJailEvent("Go To Jail", "You go directly to jail, do not pass go, do not collect 200 dollars", 10, gameClient);
 		tileEvents[30]=te;
 	}
 }

@@ -2,7 +2,7 @@ package ch.bfh.monopoly.tile;
 
 public interface Tile{
 	String getName();
-	int getID();
+	int getId();
 	int getCoordX();
 	int getCoordY();
 	public String getEventDescription();

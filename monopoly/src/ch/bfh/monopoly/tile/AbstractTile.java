@@ -18,7 +18,7 @@ import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.event.EventManager;
-import ch.bfh.monopoly.event.TileEvent;
+import ch.bfh.monopoly.event.BoardEvent;
 
 public abstract class AbstractTile implements Tile {
 
@@ -28,7 +28,7 @@ public abstract class AbstractTile implements Tile {
 	private int coordY;
 	private String description;
 	protected String name;
-	protected TileEvent event;
+	protected BoardEvent event;
 	protected EventManager em;
 	
 	public AbstractTile(String name, int coordX, int coordY, int id,EventManager em){
@@ -43,7 +43,7 @@ public abstract class AbstractTile implements Tile {
 	 * Get the id of this tile
 	 * @return an int that correspond to the id 
 	 */
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 
@@ -51,7 +51,7 @@ public abstract class AbstractTile implements Tile {
 	 * Set the id for this tile
 	 * @param id the id of this tile
 	 */
-	public void setID(int id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

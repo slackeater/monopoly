@@ -147,7 +147,7 @@ public class MonopolyGUI extends JFrame {
 	private void init(){
 		//Initialize all the tiles with the information 
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
-			TileInfo t = bc.getTileInfoByID(j);
+			TileInfo t = bc.getTileInfoById(j);
 
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
 //

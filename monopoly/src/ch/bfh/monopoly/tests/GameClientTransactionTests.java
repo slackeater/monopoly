@@ -36,7 +36,7 @@ public class GameClientTransactionTests {
 	@Test
 	public void addPropertyToPlayer() {
 		Player p = board.getPlayerByName("Justin");
-		Tile t = board.getTileByID(1);
+		Tile t = board.getTileById(1);
 		board.addPropertyToPlayer("Justin", 1);
 		// System.out.println(((Property)t).getOwner().getName());
 		assertTrue(((Property) t).getOwner() == p);
@@ -51,10 +51,10 @@ public class GameClientTransactionTests {
 	public void transferPropertiesChangesOwners() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-		Tile t = board.getTileByID(1);
-		board.addPropertyToPlayer(jus.getName(), t.getID());
+		Tile t = board.getTileById(1);
+		board.addPropertyToPlayer(jus.getName(), t.getId());
 		assertTrue(((Property) t).getOwner() == jus);
-		board.transferProperty(jus.getName(), giu.getName(), t.getID());
+		board.transferProperty(jus.getName(), giu.getName(), t.getId());
 		assertTrue(((Property) t).getOwner() == giu);
 	}
 	
@@ -67,7 +67,7 @@ public class GameClientTransactionTests {
 	public void transferPropertyPlayerDoesNotOwn() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-		Tile t = board.getTileByID(1);
+		Tile t = board.getTileById(1);
 		try {
 			board.transferProperty(jus.getName(), giu.getName(), 3);
 			fail("FAIL: player can sell a property he does not own");

@@ -10,15 +10,15 @@ public class BoardController {
 	}
 	
 	public int getXCoordForTileAtIndex(int index){
-		return board.getTileByID(index).getCoordX();
+		return board.getTileById(index).getCoordX();
 	}
 	
 	public int getYCoordForTileAtIndex(int index){
-		return board.getTileByID(index).getCoordY();
+		return board.getTileById(index).getCoordY();
 	}
 	
-	public TileInfo getTileInfoByID(int id){
-		return board.getTileInfoByID(id);
+	public TileInfo getTileInfoById(int id){
+		return board.getTileInfoById(id);
 	}
 	
 	public Subject getTileSubjectAtIndex(int i){
