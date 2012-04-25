@@ -93,9 +93,9 @@ public class TileCreator {
 			rgb = rgb.trim();
 			
 			if (group.equals("railroad"))
-				t = new Railroad(name, price, rent, group, mortgageValue, coordX,coordY,i,em);
+				t = new Railroad(name, price, rent, group, mortgageValue, coordX,coordY,i,em,gameClient.getBankPlayer());
 			else if (group.equals("utility"))
-				t = new Utility(name, price, group, mortgageValue, coordX, coordY, i,em);
+				t = new Utility(name, price, group, mortgageValue, coordX, coordY, i,em,gameClient.getBankPlayer());
 			else if (group.equals("Chance"))
 				t = new Chance(name,coordX, coordY, i, gameClient,em);
 			else if (group.equals("Community Chest"))
@@ -104,7 +104,7 @@ public class TileCreator {
 				t = new NonProperty(name, coordX, coordY,i,em);
 			else 
 				t = new Terrain(name,  price, houseCost,  hotelCost,   rent,
-						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i, rgb,em);
+						 rent1house,  rent2house, rent3house,  rent4house,  renthotel, group,  mortgageValue, coordX,  coordY,  i, rgb,em,gameClient.getBankPlayer());
 			tiles[i] = t;
 		}
 	}

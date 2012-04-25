@@ -10,12 +10,13 @@ public class GameClient {
 	
 	Player localPlayer;
 	Player currentPlayer;
+	private Player bank;
 	Network communicate;
 	Locale loc;
 	Board board;
 	
 	public GameClient (Locale loc) {
-		
+		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
 		this.loc = loc;
 		
@@ -113,7 +114,31 @@ public class GameClient {
 	 */
 	public boolean playerIsOwnerOfTile(String playerName, int tileId){
 		return board.playerIsOwnerOfTile(playerName, tileId);
-		
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean hasSufficientFunds(int fee){
+		return (currentPlayer.getAccount()>fee);
+	}
+	
+	/**
+	 * checks if the current player has sufficient funds to pay a fee
+	 * @param playerName the player to check the account of
+	 * @param fee  the amount of the fee to be paid
+	 */
+	public boolean playerHasSufficientFunds(String playerName, int fee){
+		return board.getPlayerByName(playerName).getAccount() > fee;
+	}
+	
+	/**
+	 * get the bank player
+	 * @return bank player
+	 */
+	public Player getBankPlayer(){
+		return bank;
 	}
 	
 }

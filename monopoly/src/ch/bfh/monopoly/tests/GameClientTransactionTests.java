@@ -109,7 +109,6 @@ public class GameClientTransactionTests {
 	public void cannotTransferMoreThanYouHave() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-
 		try {
 			board.transferMoney(jus.getName(), giu.getName(), 2000);
 			fail("FAIL: program allows a transfer for an amount larger than that of the player's account balance");

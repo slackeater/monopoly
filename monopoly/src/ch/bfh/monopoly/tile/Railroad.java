@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
 
 public class Railroad extends Property {
@@ -7,8 +8,8 @@ public class Railroad extends Property {
 	private int[] rrMultiplier = {1,2,4,8};
 	
 
-	public Railroad (String name, int price, int rent, String group, int mortgageValue, int coordX, int coordY, int id,EventManager em){ 
-		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id,em);
+	public Railroad (String name, int price, int rent, String group, int mortgageValue, int coordX, int coordY, int id,EventManager em,Player bank){ 
+		super(name,  price,  group,  mortgageValue,  coordX,  coordY, id,em,bank);
 		this.rent = rent;
 	} 
 	

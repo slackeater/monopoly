@@ -12,8 +12,8 @@ public class GameController {
 	 * buy/build a house on the given tile 
 	 * @param tileID the id corresponding to the tile
 	 */
-	public void buyHouse(int tileID){
-		gameClient.buyHouse(tileID);
+	public void buyHouse(int tileId){
+		gameClient.buyHouse(tileId);
 	}
 	
 	/**
