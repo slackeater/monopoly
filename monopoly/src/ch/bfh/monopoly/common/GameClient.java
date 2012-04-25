@@ -89,4 +89,21 @@ public class GameClient {
 	}
 
 	
+	/**
+	 * get the description of the event for the tile on which the current player resides
+	 */
+	public String getEventDescription(){
+		int currentPos = currentPlayer.getPosition();
+		String eventDescription =board.getTileByID(currentPos).getEventDescription();
+		return eventDescription;
+	}
+	
+	/**
+	 * perform the event for the tile that the current player occupies
+	 */
+	public void performEvent(){
+		int currentPos = currentPlayer.getPosition();
+		board.getTileByID(currentPos).performEvent();
+	}
+	
 }

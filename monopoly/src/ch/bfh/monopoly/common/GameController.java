@@ -4,14 +4,38 @@ public class GameController {
 
 	GameClient gameClient;
 	
-	public GameController(GameClient gc){
-		this.gameClient = gc;
+	public GameController(GameClient gameClient){
+		this.gameClient = gameClient;
 	}
+	
+	/**
+	 * buy/build a house on the given tile 
+	 * @param tileID the id corresponding to the tile
+	 */
 	public void buyHouse(int tileID){
 		gameClient.buyHouse(tileID);
 	}
 	
+	/**
+	 * advance the current player the number of spaces n
+	 * @param n
+	 */
 	public void advancePlayerNSpaces(int n){
 		gameClient.advanceCurrentPlayerNSpaces(n);
+	}
+	
+	
+	/**
+	 * get the description of the event for the tile on which the current player resides
+	 */
+	public String getEventDescription(){
+		return gameClient.getEventDescription();
+	}
+	
+	/**
+	 * perform the event for the tile that the current player occupies
+	 */
+	public void performEvent(){
+		gameClient.performEvent();
 	}
 }
