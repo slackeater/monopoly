@@ -2,7 +2,6 @@ package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 
-import ch.bfh.monopoly.network.Network;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
 

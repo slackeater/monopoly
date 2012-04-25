@@ -110,7 +110,25 @@ public class GameClientBasicMethodTests {
 	@Test
 	public void playerHasBothUtilities(){
 		Player p = board.getPlayerByName("Justin");
-
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(12);
+		gameClient.buyPropertyFromBank(28);
+		assertTrue(gameClient.hasBothUtilities());
+	}
+	
+	/**
+	 * test when utilities not owned by same player that method gameClient.hasBothUtilites returns false
+	 * @return true if utilites owned by different players
+	 */
+	@Test
+	public void playerDoesNotHaveBothUtilities(){
+		Player p = board.getPlayerByName("Justin");
+		Player p2 = board.getPlayerByName("Giuseppe");
+		gameClient.setCurrentPlayer(p);
+		gameClient.buyPropertyFromBank(12);
+		gameClient.setCurrentPlayer(p2);
+		gameClient.buyPropertyFromBank(28);
+		assertTrue(!gameClient.hasBothUtilities());
 	}
 
 }
