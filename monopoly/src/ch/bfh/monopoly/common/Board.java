@@ -108,8 +108,6 @@ public class Board {
 	 *            name of the player to take property from
 	 * @param toName
 	 *            name of the player to give the property to
-	 * @param price
-	 *            the price the property has been sold for
 	 * @param propertyId
 	 *            the tile number of the property that was sold
 	 */

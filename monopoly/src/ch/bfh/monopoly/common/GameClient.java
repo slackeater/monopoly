@@ -155,4 +155,15 @@ public class GameClient {
 		board.buyPropertyFromBank(currentPlayer.getName(), tileId);
 	}
 	
+	/**
+	 * the current player is charged a fee and the amount of the fee is 
+	 * withdrawn from his bank account
+	 * @param fee the amount of money to withdraw from the current player's account
+	 */
+	public void payFee(int fee){
+		currentPlayer.withdawMoney(fee);
+	}
+	
+	
+	
 }

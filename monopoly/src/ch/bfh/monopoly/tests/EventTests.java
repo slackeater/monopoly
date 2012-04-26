@@ -106,7 +106,7 @@ public class EventTests {
 	}
 	
 	/**
-	 * same as above, but for Virginia Avenue
+	 * same as above, but for Virginia Avenue, and player doesn't have enough money to pay the fee
 	 */
 	@Test
 	public void performSimpleFeeEventInsufficientFunds(){
@@ -123,8 +123,23 @@ public class EventTests {
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-
-
 	}
+	
+	
+	/**
+	 * utility event check
+	 */
+	@Test
+	public void utilityEventDeductsCorrectFee(){
+		Player p =board.getPlayerByName("Justin");
+		int tileId = 12; //Virginia Avenue
+		gameClient.setCurrentPlayer(p);
+		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		int rent = gameClient.getFeeForTileAtId(tileId);
+		int previousBalance = p.getAccount();
+		gc.performEvent();
+		assertTrue(p.getAccount()==previousBalance-rent);
+	}
+	
 	
 }
