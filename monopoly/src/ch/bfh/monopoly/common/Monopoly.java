@@ -7,7 +7,6 @@ import javax.swing.JFrame;
 
 import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.gui.WelcomePanel;
-import ch.bfh.monopoly.network.Network;
 
 
 public class Monopoly {
@@ -16,14 +15,7 @@ public class Monopoly {
 
 	public static void main(String[] args) throws IOException {
 		
-		GameClient gameClient = new GameClient(new Locale("EN"));
-		GameController gc = new GameController(gameClient);
-		BoardController bc = new BoardController(gameClient.getBoard());
-		
-		JFrame mainFrame = new MonopolyGUI(bc,gc);
-//		mainFrame.setVisible(true);
-//		mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		JFrame welcome = new WelcomePanel(mainFrame);
+		JFrame welcome = new WelcomePanel();
 		welcome.setTitle("Welcome to Monopoly");
 		welcome.setBounds(500, 50, 300, 650);
 		welcome.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

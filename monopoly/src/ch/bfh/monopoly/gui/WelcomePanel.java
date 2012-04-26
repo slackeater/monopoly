@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,6 +27,9 @@ import javax.swing.SpinnerNumberModel;
 
 import org.apache.mina.core.session.IoSession;
 
+import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Monopoly;
 import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.ServerHandler;
@@ -42,9 +46,8 @@ public class WelcomePanel extends JFrame{
 	/**
 	 * Construct a WelcomePanel
 	 */
-	public WelcomePanel(JFrame board){
+	public WelcomePanel(){
 
-		this.board = board;
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
@@ -55,6 +58,18 @@ public class WelcomePanel extends JFrame{
 
 		add(main);
 	}
+
+	/**
+	 * Used to create the needed controllers and frames
+	 */
+	private void initializeGameClasses(){
+		GameClient gameClient = new GameClient(new Locale("EN"));
+		GameController gc = new GameController(gameClient);
+		BoardController bc = new BoardController(gameClient.getBoard());
+
+		board = new MonopolyGUI(bc,gc);
+	}
+
 
 	/**
 	 * Draw the panel with the image
@@ -94,12 +109,12 @@ public class WelcomePanel extends JFrame{
 		serverPort.setMaximumSize(new Dimension(125,20));
 
 		final JButton connect = new JButton("Connect");
-		
+
 		connect.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
@@ -109,14 +124,17 @@ public class WelcomePanel extends JFrame{
 				try{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
-					
+
 					info.append("Connecting to " + ip + "and port " + port + "\n");
-					
+
 					try {
 						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
 
+						//init the controllers and the monopoly frame
+						initializeGameClasses();
+
 						while(true){
-							Thread.sleep(1500);
+							Thread.sleep(1250);
 							if(Monopoly.communicate.gameCanBegin()){
 								dispose();
 								board.setVisible(true);
@@ -137,16 +155,16 @@ public class WelcomePanel extends JFrame{
 					connect.setEnabled(true);
 				}
 			}
-			
+
 			@Override
 			public void mouseExited(MouseEvent e) {}
-			
+
 			@Override
 			public void mouseEntered(MouseEvent e) {}
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {}
-			
+
 		});
 
 		client.add(labelIP);
@@ -213,15 +231,20 @@ public class WelcomePanel extends JFrame{
 					maxPlayers = (Integer) numPlayers.getNumber();
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
-					
+
 					try {
 						Monopoly.communicate.startServer(ip, port);
 
+						//the client must have a client too
+						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
+
+						//init the controllers and the monopoly frame
+						initializeGameClasses();
+
 						while(true){
-							Thread.sleep(1500);
-							
-							//maxPlayers-1 because the server is itself a client
-							if(Monopoly.communicate.getServerOpenedSession() == maxPlayers-1){
+							Thread.sleep(1250);
+
+							if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
 								NetMessage gameStart = new NetMessage(Messages.GAME_START);
 								Monopoly.communicate.sendBroadcast(gameStart);
 								dispose();
