@@ -4,15 +4,17 @@ import ch.bfh.monopoly.common.GameClient;
 
 public class GetFixedSumEvent extends AbstractTileEvent {
 
-	public GetFixedSumEvent(String name, String eventDescription,
+	int fixedSum;
+	public GetFixedSumEvent(String name, String eventDescription, int fixedSum,
 			GameClient gameClient) {
 		super(name, eventDescription, gameClient);
-		// TODO Auto-generated constructor stub
+		this.fixedSum=fixedSum;
+		
 	}
 
 	@Override
 	public void performEvent() {
-		// TODO Auto-generated method stub
+		gameClient.getCurrentPlayer().depositMoney(fixedSum);
 		
 	}
 

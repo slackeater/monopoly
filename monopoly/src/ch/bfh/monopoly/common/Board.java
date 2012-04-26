@@ -18,7 +18,7 @@ public class Board {
 	private int availableHotels;
 	private Subject[] tileSubjects;
 	private Color[] tokenColor;
-
+	private int freeParking;
 	/**
 	 * inner class responsible for registering listeners from the GUI and
 	 * notifying these listeners when changes to the instance variables of the
@@ -344,6 +344,14 @@ public class Board {
 			tileInfo.setCoordY(t.getCoordY());
 		}
 		return tileInfo;
+	}
+
+	public int getFreeParking() {
+		return freeParking;
+	}
+
+	public void setFreeParking(int amount) {
+		this.freeParking = amount;
 	}
 	
 }

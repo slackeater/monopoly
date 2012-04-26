@@ -55,6 +55,8 @@ public class Player {
 	}
 	
 	public void withdawMoney(int value){
+		if (account<value)
+			throw new RuntimeException("The sum cannot be withdrawn from the player's account, because the player has insufficient funds");
 		this.account-=value;
 	}
 	

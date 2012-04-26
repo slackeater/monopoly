@@ -13,7 +13,7 @@ public class GameClient {
 	private Player bank;
 	private Locale loc;
 	private Board board;
-	
+
 	public GameClient (Locale loc) {
 		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
@@ -157,13 +157,33 @@ public class GameClient {
 	
 	/**
 	 * the current player is charged a fee and the amount of the fee is 
-	 * withdrawn from his bank account
+	 * withdrawn from his bank account.  This amount is added to the FREE PARKING
 	 * @param fee the amount of money to withdraw from the current player's account
 	 */
 	public void payFee(int fee){
 		currentPlayer.withdawMoney(fee);
+		int freeParking = board.getFreeParking();
+		board.setFreeParking(freeParking+fee);
 	}
 	
+	/**
+	 * The current player is charged a given fee, which is withdrawn from his account
+	 * the amount of the fee is then credited to the toPlayer's account
+	 * @param toPlayer the name of hte player to give the money to
+	 * @param fee the amount of the fee to charge the current player
+	 */
+	public void payFeeToPlayer(String toPlayer, int fee){
+		currentPlayer.withdawMoney(fee);
+		board.getPlayerByName(toPlayer).depositMoney(fee);
+	}
+	
+	public int getFreeParking() {
+		return board.getFreeParking();
+	}
+
+	public void setFreeParking(int amount) {
+		board.setFreeParking(amount);
+	}
 	
 	
 }
