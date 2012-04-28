@@ -38,11 +38,11 @@ public class ServerHandler implements IoHandler{
 	 * Send a broadcast message to the session of this server
 	 * @param n the NetMessage to broadcast
 	 */
-	public void sendBroadcast(NetMessage n){
+	public void sendBroadcast(NetMessage n, IoSession notBroadcast){
 		System.out.println("sending broadcast");
 		
 		for(int j = 0 ; j < sessions.size() ; j++){
-			System.out.println(sessions.get(j));
+			if(notBroadcast != sessions.get(j))
 			sessions.get(j).write(n);
 		}
 	}
@@ -56,7 +56,7 @@ public class ServerHandler implements IoHandler{
 		System.out.println("BROADCASTING...");
 
 		//when we receive a message, we must broadcast it
-		sendBroadcast(n);
+		sendBroadcast(n, arg0);
 		
 	}
 

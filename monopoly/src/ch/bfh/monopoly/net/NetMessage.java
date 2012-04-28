@@ -11,13 +11,13 @@ public class NetMessage implements Serializable{
 	private static final long serialVersionUID = -6004188281012651357L;
 	
 	private Player player;
-	private Property property;
 	private Locale loc;
 	private String string;
 	private int intgerValue;
 	private Player playerToKick;
 	private boolean kickAnswer;
 	private Messages m;
+	private int propertyID;
 
 
 	public NetMessage(Messages m){
@@ -26,7 +26,7 @@ public class NetMessage implements Serializable{
 
 	/** Construct a NetMessage
 	 * @param player a player
-	 * @param integerValue the roll results / the new price of an auction / the base
+	 * @param integerValue the roll results / the new price of an auction / the base / the id of the property
 	 * price if we sell the jail card
 	 * @param m the message type
 	 */
@@ -41,8 +41,8 @@ public class NetMessage implements Serializable{
 	 * @param basePrice the base price of the property
 	 * @param m the message type
 	 */
-	public NetMessage(Property property, int basePrice, Messages m) {
-		this.property = property;
+	public NetMessage(int propertyID, int basePrice, Messages m) {
+		this.propertyID = propertyID;
 		this.intgerValue = basePrice;
 		this.m = m;
 	}
@@ -75,17 +75,6 @@ public class NetMessage implements Serializable{
 	}
 
 	/** Construct a NetMessage
-	 * @param player a player who sell/buy/mortgage/unmortgage
-	 * @param property a property to sell/buy/mortgage/unmortgage
-	 * @param m the message type
-	 */
-	public NetMessage(Player player, Property property, Messages m) {
-		this.player = player;
-		this.property = property;
-		this.m = m;
-	}
-
-	/** Construct a NetMessage
 	 * @param player a player who wants to sell / buy a row of building / send a chat message
 	 * @param s the name of the group / the chat message
 	 * @param m the message type
@@ -102,10 +91,10 @@ public class NetMessage implements Serializable{
 	 * @param basePrice the base price for the auction
 	 * @param m the message type
 	 */
-	public NetMessage(Player player, Property property, int basePrice,
+	public NetMessage(Player player, int propertyID, int basePrice,
 			Messages m) {
 		this.player = player;
-		this.property = property;
+		this.propertyID = propertyID;
 		this.intgerValue = basePrice;
 		this.m = m;
 	}

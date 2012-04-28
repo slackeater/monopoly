@@ -62,8 +62,8 @@ public class WelcomePanel extends JFrame{
 	/**
 	 * Used to create the needed controllers and frames
 	 */
-	private void initializeGameClasses(){
-		GameClient gameClient = new GameClient(new Locale("EN"));
+	private void initializeGameClasses(IoSession session){
+		GameClient gameClient = new GameClient(new Locale("EN"), session);
 		GameController gc = new GameController(gameClient);
 		BoardController bc = new BoardController(gameClient.getBoard());
 
@@ -131,7 +131,7 @@ public class WelcomePanel extends JFrame{
 						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
 
 						//init the controllers and the monopoly frame
-						initializeGameClasses();
+						initializeGameClasses(cliSession);
 
 						while(true){
 							Thread.sleep(1250);
@@ -239,7 +239,7 @@ public class WelcomePanel extends JFrame{
 						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
 
 						//init the controllers and the monopoly frame
-						initializeGameClasses();
+						initializeGameClasses(cliSession);
 
 						while(true){
 							Thread.sleep(1250);

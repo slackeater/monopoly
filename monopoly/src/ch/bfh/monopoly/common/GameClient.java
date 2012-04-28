@@ -2,6 +2,10 @@ package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 
+import org.apache.mina.core.session.IoSession;
+
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
 
@@ -13,11 +17,15 @@ public class GameClient {
 	private Player bank;
 	private Locale loc;
 	private Board board;
+	private IoSession session;
 
-	public GameClient (Locale loc) {
+	public GameClient (Locale loc, IoSession session) {
 		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
 		this.loc = loc;
+		
+		//the session object used to send messages through the network
+		this.session = session;
 		
 		//TODO this list must be received from a netMessage when the game starts
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
@@ -69,6 +77,8 @@ public class GameClient {
 	 */
 	public void buyHouse(int tileID){
 		board.buyHouse(tileID);
+		NetMessage nm = new NetMessage(this.localPlayer, tileID, Messages.BUY_HOUSE);
+		session.write(nm);
 	}
 	
 	/**

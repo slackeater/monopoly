@@ -69,7 +69,7 @@ public class NetworkController {
 	 * Send a broadcast to the connected client
 	 */
 	public void sendBroadcast(NetMessage n){
-		srvHandler.sendBroadcast(n);
+		srvHandler.sendBroadcast(n,null);
 	}
 	
 }
