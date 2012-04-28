@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Railroad;
+import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 
 public class Player {
@@ -18,6 +19,32 @@ public class Player {
 	private boolean turnToken;
 	private int jailCard;
 	private Token t;
+	private PlayerSubject playerSubject;
+	
+	
+	
+	private class ConcreteSubject implements PlayerSubject {
+
+		public ConcreteSubject() {}
+
+		ArrayList<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
+		public void addListener(PlayerListener tl) {
+			listeners.add(tl);
+		}
+		@Override
+		public void removeListener(PlayerListener tl) {
+			listeners.remove(tl);
+		}
+
+		public void notifyListeners() {
+			
+			PlayerStateEvent pse = new PlayerStateEvent(position, name, isInJail, account, turnToken, jailCard);
+			for (PlayerListener pl : listeners) {
+				pl.updatePlayer(pse);
+			}
+		}
+	}
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
 	public Player (String name, int account){
@@ -28,7 +55,9 @@ public class Player {
 		turnToken = false;
 		jailCard = 0;
 		properties = new ArrayList<Tile>();
+		playerSubject = new ConcreteSubject();
 	}
+	
 	
 	public int numberRailRoadsOwned(){
 		int rrOwned=0;
@@ -40,10 +69,12 @@ public class Player {
 	
 	public void addProperty(Tile t){
 		properties.add(t);
+		playerSubject.notifyListeners();
 	}
 
-	public boolean removeProperty(Tile t){
-		return properties.remove(t);
+	public void removeProperty(Tile t){
+		properties.remove(t);
+		playerSubject.notifyListeners();
 	}
 	
 	public boolean ownsProperty(Tile t){
@@ -52,20 +83,18 @@ public class Player {
 	
 	public void depositMoney(int value){
 		this.account+=value;
+		playerSubject.notifyListeners();
 	}
 	
 	public void withdawMoney(int value){
 		if (account<value)
 			throw new RuntimeException("The sum cannot be withdrawn from the player's account, because the player has insufficient funds");
 		this.account-=value;
+		playerSubject.notifyListeners();
 	}
 	
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getAccount() {
@@ -81,16 +110,13 @@ public class Player {
 		return properties;
 	}
 
-	public void setProperties(ArrayList<Tile> properties) {
-		this.properties = properties;
-	}
-
 	public int getPosition() {
 		return position;
 	}
 
 	public void setPosition(int position) {
 		this.position = position;
+		playerSubject.notifyListeners();
 	}
 
 	public boolean isInJail() {
@@ -99,6 +125,7 @@ public class Player {
 
 	public void setInJail(boolean isInJail) {
 		this.isInJail = isInJail;
+		playerSubject.notifyListeners();
 	}
 
 	public boolean isTurnToken() {
@@ -107,6 +134,7 @@ public class Player {
 
 	public void setTurnToken(boolean turnToken) {
 		this.turnToken = turnToken;
+		playerSubject.notifyListeners();
 	}
 
 	public int getJailCard() {
@@ -115,6 +143,7 @@ public class Player {
 
 	public void setJailCard(int jailCard) {
 		this.jailCard = jailCard;
+		playerSubject.notifyListeners();
 	}
 	
 	public void setToken(Token t){
@@ -123,6 +152,16 @@ public class Player {
 	
 	public Token getToken(){
 		return this.t;
+	}
+	
+	/**
+	 * Method used by PlayerListeners in the GUI in an observer pattern
+	 * if something changes in the Player data, it is through the PlayerSubject that the 
+	 * GUI is notified of the changes
+	 * @return  the playerSubject for this player
+	 */
+	public PlayerSubject getPlayerSubject(){
+		return playerSubject;
 	}
 	
 }

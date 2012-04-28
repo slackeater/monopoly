@@ -202,9 +202,20 @@ public class EventTests {
 		int previousBalance = p.getAccount();
 		int fee =previousBalance/10;
 		gc.performEvent();
-		System.out.println(p.getAccount());
-		System.out.println(previousBalance);
-		System.out.println(fee);
 		assertTrue(p.getAccount() == previousBalance - fee);
+	}
+	
+	/**
+	 * Check that chance events trigger when landing on any chance tile
+	 */
+	@Test
+	public void chanceEventsTrigger() {
+		Player p = board.getPlayerByName("Justin");
+		int tileId = 7; // Park Place
+		gameClient.setCurrentPlayer(p);
+		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gc.performEvent();
+		assertTrue(p.getPosition() != 7);
+
 	}
 }

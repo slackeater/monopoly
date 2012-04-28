@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.event;
 
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import ch.bfh.monopoly.common.GameClient;
@@ -28,6 +29,17 @@ public class EventManager {
 
 	public void performEventForTileAtId(int tileId) {
 		tileEvents[tileId].performEvent();
+	}
+	
+	public void performChanceEvent(){
+		Random r = new Random();
+		int rand = r.nextInt(7);
+		System.out.println(chanceEvents[rand].getEventDescription()); 
+		chanceEvents[rand].performEvent();
+	}
+	
+	public void performCommChestEvent(){
+		//TODO CHOOSE COMM CHEST CARD AT RANDOM
 	}
 
 	public void createChanceMovementEvents() {

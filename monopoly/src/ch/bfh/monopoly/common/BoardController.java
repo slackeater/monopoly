@@ -24,4 +24,8 @@ public class BoardController {
 	public Subject getTileSubjectAtIndex(int i){
 		return board.getTileSubjectAtIndex(i);
 	}
+	
+	public PlayerSubject getSubjectForPlayer(String playerName){
+		return board.getSubjectForPlayer(playerName);
+	}
 }

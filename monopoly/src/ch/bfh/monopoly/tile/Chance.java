@@ -19,7 +19,7 @@ public class Chance extends AbstractTile {
 
 	@Override
 	public void performEvent() {
-		em.performEventForTileAtId(id);
+		em.performChanceEvent();
 	}
 
 }

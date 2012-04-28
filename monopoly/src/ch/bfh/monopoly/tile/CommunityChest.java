@@ -16,7 +16,7 @@ public class CommunityChest extends AbstractTile {
 
 	@Override
 	public void performEvent() {
-		em.performEventForTileAtId(id);
+		em.performCommChestEvent();
 	}
 
 }

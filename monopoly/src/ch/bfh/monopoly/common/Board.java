@@ -53,13 +53,6 @@ public class Board {
 		}
 	}
 
-	/**
-	 * returns a Subject / Concreted Subject which corresponds to a tile at the
-	 * given index
-	 */
-	public Subject getTileSubjectAtIndex(int index) {
-		return tileSubjects[index];
-	}
 
 	public Board(GameClient gameClient) {
 		// create tiles, cards, and events
@@ -71,6 +64,35 @@ public class Board {
 		createTileSubjects();
 	}
 
+	
+	public PlayerSubject getSubjectForPlayer(String playerName){
+		Player plr =  getPlayerByName(playerName);
+		return plr.getPlayerSubject();
+	}
+	
+	/**
+	 * returns a Subject / Concreted Subject which corresponds to a tile at the
+	 * given index
+	 */
+	public Subject getTileSubjectAtIndex(int index) {
+		return tileSubjects[index];
+	}
+	
+	
+	/**
+	 * creates 40 ConreceteSubject instances, 1 for every tile on the board each
+	 * is associated with a given tile through the index number
+	 * and creates a Subject for each player participating in the game
+	 */
+	public void createTileSubjects() {
+		// create list of "Tile" Subjects
+		for (int i = 0; i < 40; i++) {
+			tileSubjects[i] = new ConcreteSubject(i);
+		}
+	}
+	
+	
+	
 	/**
 	 * buy a house for a given property checks that the tileId provIded refers
 	 * to a terrain
@@ -89,16 +111,6 @@ public class Board {
 		tileSubjects[id].notifyListeners();
 	}
 
-	/**
-	 * creates 40 ConreceteSubject instances, 1 for every tile on the board each
-	 * is associated with a given tile through the index number
-	 */
-	public void createTileSubjects() {
-		// create list of "Tile" Subjects
-		for (int i = 0; i < 40; i++) {
-			tileSubjects[i] = new ConcreteSubject(i);
-		}
-	}
 
 	/**
 	 * transfers a given property from one player to another checks if property
