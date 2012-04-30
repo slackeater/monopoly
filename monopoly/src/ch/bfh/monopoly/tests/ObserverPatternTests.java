@@ -16,6 +16,8 @@ import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.PlayerListener;
 import ch.bfh.monopoly.common.PlayerStateEvent;
 import ch.bfh.monopoly.common.PlayerSubject;
+import ch.bfh.monopoly.common.WindowListener;
+import ch.bfh.monopoly.common.WindowSubject;
 	import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Tile;
 
@@ -29,7 +31,7 @@ import ch.bfh.monopoly.tile.Tile;
 
 		@Before
 		public void setup() {
-			gameClient = new GameClient(new Locale("EN"), null);
+			gameClient = new GameClient(new Locale("EN"));
 			board = gameClient.getBoard();
 			gc = new GameController(gameClient);
 			bc = new BoardController(board);
@@ -43,5 +45,13 @@ import ch.bfh.monopoly.tile.Tile;
 			Player plr = board.getPlayerByName("Justin");
 			plr.setPosition(3);
 			
+		}
+		
+		@Test
+		public void guiGetsWindowSubject() {
+			WindowSubject ws = gc.getWindowSubject();
+			WindowListener wl = new MockWindowListener();
+			ws.addListener(wl);
+			gameClient.displayChat("THIS is a chat message for testing purposes only. do not try this at home");
 		}
 }
