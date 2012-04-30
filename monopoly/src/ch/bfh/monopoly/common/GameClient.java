@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.common;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.apache.mina.core.session.IoSession;
@@ -18,8 +19,37 @@ public class GameClient {
 	private Locale loc;
 	private Board board;
 	private IoSession session;
+	private WindowSubject ws;
+	
+	
+	private class ConcreteSubject implements WindowSubject {
 
+		public ConcreteSubject() {}
+
+		ArrayList<WindowListener> listeners = new ArrayList<WindowListener>();
+
+		public void addListener(WindowListener wl) {
+			listeners.add(wl);
+		}
+		@Override
+		public void removeListener(WindowListener wl) {
+			listeners.remove(wl);
+		}
+
+		public void notifyListeners(String text) {
+			
+			
+			for (WindowListener pl : listeners) {
+				pl.updateWindow(text);
+			}
+		}
+	}
+	
+
+
+	
 	public GameClient (Locale loc, IoSession session) {
+		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
 		this.loc = loc;
@@ -203,5 +233,14 @@ public class GameClient {
 		NetMessage nm = new NetMessage(this.localPlayer, s, Messages.CHAT_MSG);
 		session.write(nm);
 	}
+	
+	public void displayChat(String text){
+		ws.notifyListeners(text);
+	}
+	
+	public WindowSubject getWindowSubject(){
+		return ws;
+	}
+	
 	
 }

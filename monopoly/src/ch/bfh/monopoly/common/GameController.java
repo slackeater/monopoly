@@ -43,4 +43,7 @@ public class GameController {
 	public void sendChatMessage(String s){
 		gameClient.sendChatMessage(s);
 	}
+	public WindowSubject getWindowSubject(){
+		return gameClient.getWindowSubject();
+	}
 }
