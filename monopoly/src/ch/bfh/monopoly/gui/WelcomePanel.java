@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Locale;
 
 import javax.swing.BorderFactory;
@@ -44,6 +45,11 @@ public class WelcomePanel extends JFrame{
 	private static final long serialVersionUID = -1865410778558897233L;
 	private JTextArea info;
 	private JFrame board;
+	private JTextField nameField;
+	
+	private int port;
+	private String ip;
+	private String name;
 
 	/**
 	 * Construct a WelcomePanel
@@ -62,6 +68,35 @@ public class WelcomePanel extends JFrame{
 		add(main);
 	}
 
+	/**
+	 * Initialize the client by creating the necessary 
+	 * controllers and network 
+	 */
+	public void initClient(){
+		GameClient gameClient = new GameClient(new Locale("EN"));
+		GameController gc = new GameController(gameClient);
+		BoardController bc = new BoardController(gameClient.getBoard());
+
+		board = new MonopolyGUI(bc,gc);
+		
+		IoSession cliSession;
+		
+		try {
+			cliSession = Monopoly.communicate.startClient(this.ip, this.port, gameClient);
+			
+			//set the IoSession in the GameClient
+			gameClient.setIoSession(cliSession);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 	/**
 	 * Draw the panel with the image
 	 * @return a JPanel with the logo of monopoly
@@ -86,10 +121,10 @@ public class WelcomePanel extends JFrame{
 		nameContainer.setLayout(new BoxLayout(nameContainer, BoxLayout.PAGE_AXIS));
 		nameContainer.setBorder(BorderFactory.createTitledBorder("Insert your name"));
 		nameContainer.setMaximumSize(new Dimension(300,0));
-		JTextField nameFiled = new JTextField();
-		nameFiled.setAlignmentX(Component.LEFT_ALIGNMENT);
-		nameFiled.setMaximumSize(new Dimension(125,20));
-		nameContainer.add(nameFiled);
+		nameField = new JTextField();
+		nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
+		nameField.setMaximumSize(new Dimension(125,20));
+		nameContainer.add(nameField);
 		return nameContainer;
 	}
 	
@@ -126,24 +161,16 @@ public class WelcomePanel extends JFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
-				int port;
-				String ip;
 
 				try{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
+					name = nameField.getText();
 
 					info.append("Connecting to " + ip + "and port " + port + "\n");
 
 					try {
-						GameClient gameClient = new GameClient(new Locale("EN"));
-						GameController gc = new GameController(gameClient);
-						BoardController bc = new BoardController(gameClient.getBoard());
-
-						board = new MonopolyGUI(bc,gc);
-						
-						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
-						gameClient.setIoSession(cliSession);
+						initClient();
 						
 						while(true){
 							Thread.sleep(1250);
@@ -154,12 +181,7 @@ public class WelcomePanel extends JFrame{
 								break;
 							}
 						}
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						info.append(e1.getMessage()+"\n");
-						connect.setEnabled(true);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} 
 				}catch(NumberFormatException e1){
@@ -241,24 +263,16 @@ public class WelcomePanel extends JFrame{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
 					maxPlayers = (Integer) numPlayers.getNumber();
+					name = nameField.getText();
+					
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
 
 					try {
-						GameClient gameClient = new GameClient(new Locale("EN"));
-						GameController gc = new GameController(gameClient);
-						BoardController bc = new BoardController(gameClient.getBoard());
-
-						board = new MonopolyGUI(bc,gc);
 						
-						// TODO pass the gameserver to the ServerHandler
-						GameServer gs = new GameServer();
 						Monopoly.communicate.startServer(ip, port);
 
-						//the client must have a client too
-						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
-						gameClient.setIoSession(cliSession);
-						
+						initClient();
 						
 						while(true){
 							Thread.sleep(1250);
@@ -273,11 +287,9 @@ public class WelcomePanel extends JFrame{
 							}
 						}
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						info.append(e1.getMessage()+"\n");
 						connect.setEnabled(true);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} 
 				}catch(NumberFormatException e1){
