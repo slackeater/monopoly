@@ -352,9 +352,9 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				//if we press the enter key
-				if(e.getKeyCode() == 10){
+				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-					chat.append(text);
+					chat.append(text+"\n");
 					gc.sendChatMessage(text);
 					input.setText("");
 				}
