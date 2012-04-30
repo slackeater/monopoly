@@ -216,7 +216,7 @@ public class MonopolyGUI extends JFrame {
 			name.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
 			JPanel mainCtr = new JPanel();
-			mainCtr.setLayout(new BoxLayout(mainCtr, BoxLayout.PAGE_AXIS));
+			mainCtr.setLayout(new BoxLayout(mainCtr, BoxLayout.PAGE_AXIS));;
 
 			terrainUp.setLayout(new BoxLayout(terrainUp, BoxLayout.LINE_AXIS));
 			terrainUp.setVisible(false);
