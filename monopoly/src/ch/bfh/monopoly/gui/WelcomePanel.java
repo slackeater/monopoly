@@ -124,7 +124,8 @@ public class WelcomePanel extends JFrame{
 						board = new MonopolyGUI(bc,gc);
 						
 						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
-
+						gameClient.setIoSession(cliSession);
+						
 						while(true){
 							Thread.sleep(1250);
 							if(Monopoly.communicate.gameCanBegin()){
@@ -237,7 +238,9 @@ public class WelcomePanel extends JFrame{
 
 						//the client must have a client too
 						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
-
+						gameClient.setIoSession(cliSession);
+						
+						
 						while(true){
 							Thread.sleep(1250);
 
