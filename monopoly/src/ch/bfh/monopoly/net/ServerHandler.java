@@ -39,8 +39,6 @@ public class ServerHandler implements IoHandler{
 	 * @param n the NetMessage to broadcast
 	 */
 	public void sendBroadcast(NetMessage n, IoSession notBroadcast){
-		System.out.println("sending broadcast");
-		
 		for(int j = 0 ; j < sessions.size() ; j++){
 			if(notBroadcast != sessions.get(j))
 			sessions.get(j).write(n);

@@ -11,9 +11,12 @@ public class NetMessage implements Serializable{
 	private static final long serialVersionUID = -6004188281012651357L;
 	
 	private Player player;
+	
+	private String from_player;
+	private String to_player;
 	private Locale loc;
 	private String string;
-	private int intgerValue;
+	private int integerValue;
 	private Player playerToKick;
 	private boolean kickAnswer;
 	private Messages m;
@@ -32,7 +35,7 @@ public class NetMessage implements Serializable{
 	 */
 	public NetMessage(Player player, int integerValue, Messages m) {
 		this.player = player;
-		this.intgerValue = integerValue;
+		this.integerValue = integerValue;
 		this.m = m;
 	}
 
@@ -43,7 +46,7 @@ public class NetMessage implements Serializable{
 	 */
 	public NetMessage(int propertyID, int basePrice, Messages m) {
 		this.propertyID = propertyID;
-		this.intgerValue = basePrice;
+		this.integerValue = basePrice;
 		this.m = m;
 	}
 
@@ -95,7 +98,7 @@ public class NetMessage implements Serializable{
 			Messages m) {
 		this.player = player;
 		this.propertyID = propertyID;
-		this.intgerValue = basePrice;
+		this.integerValue = basePrice;
 		this.m = m;
 	}
 	

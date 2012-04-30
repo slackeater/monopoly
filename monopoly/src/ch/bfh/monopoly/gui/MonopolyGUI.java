@@ -28,6 +28,8 @@ import javax.swing.Timer;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.common.PlayerListener;
+import ch.bfh.monopoly.common.PlayerStateEvent;
 import ch.bfh.monopoly.common.Subject;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.tile.TileInfo;
@@ -140,6 +142,9 @@ public class MonopolyGUI extends JFrame {
 
 		pack();
 	}
+
+	
+	
 
 	/**
 	 * Initialize the list of tiles, tokens
@@ -332,7 +337,9 @@ public class MonopolyGUI extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				//if we press the enter key
 				if(e.getKeyCode() == 10){
-					chat.append(input.getText());
+					String text = input.getText();
+					chat.append(text);
+					gc.sendChatMessage(text);
 					input.setText("");
 				}
 			}

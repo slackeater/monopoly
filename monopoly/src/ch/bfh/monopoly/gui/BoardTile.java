@@ -25,6 +25,8 @@ import javax.swing.JPopupMenu;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.common.PlayerListener;
+import ch.bfh.monopoly.common.PlayerStateEvent;
 import ch.bfh.monopoly.common.TileListener;
 import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
@@ -295,6 +297,8 @@ public class BoardTile extends JPanel{
 		}
 	}
 	
+	
+	
 	/**
 	 * Draw a building
 	 * @param type boolean true == hotel ; false == house
@@ -407,4 +411,6 @@ public class BoardTile extends JPanel{
 	public TileListener getTileListener(){
 		return this.iu;
 	}
+	
+
 }

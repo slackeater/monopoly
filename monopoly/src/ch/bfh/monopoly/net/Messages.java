@@ -33,7 +33,8 @@ public enum Messages {
 	MORTGAGE(400),
 	UNMORTGAGE(410),
 	
-	
+	PAY_RENT(500),
+
 	
 	//probably only for test
 	ACKNOWLEDGE(999)
