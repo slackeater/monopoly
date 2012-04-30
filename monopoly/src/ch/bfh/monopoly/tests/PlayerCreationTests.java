@@ -21,7 +21,7 @@ public class PlayerCreationTests {
 	
 	@Before
 	public void setup(){
-		gc = new GameClient(new Locale("EN"));
+		gc = new GameClient(new Locale("EN"), null);
 	}
 	
 	

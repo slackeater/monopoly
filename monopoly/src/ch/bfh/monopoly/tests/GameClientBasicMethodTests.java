@@ -22,7 +22,7 @@ public class GameClientBasicMethodTests {
 
 	@Before
 	public void setup() {
-		gameClient = new GameClient(new Locale("EN"));
+		gameClient = new GameClient(new Locale("EN"), null);
 		board = gameClient.getBoard();
 	}
 

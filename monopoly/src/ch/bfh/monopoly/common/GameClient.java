@@ -195,5 +195,13 @@ public class GameClient {
 		board.setFreeParking(amount);
 	}
 	
+	/**
+	 * Send a chat message
+	 * @param s the message
+	 */
+	public void sendChatMessage(String s){
+		NetMessage nm = new NetMessage(this.localPlayer, s, Messages.CHAT_MSG);
+		session.write(nm);
+	}
 	
 }

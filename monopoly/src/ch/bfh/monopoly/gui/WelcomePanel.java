@@ -30,6 +30,7 @@ import org.apache.mina.core.session.IoSession;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.common.GameServer;
 import ch.bfh.monopoly.common.Monopoly;
 import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.ServerHandler;
@@ -233,6 +234,8 @@ public class WelcomePanel extends JFrame{
 							" and port " + port + " with " + maxPlayers + " players...\n");
 
 					try {
+						// TODO pass the gameserver to the ServerHandler
+						GameServer gs = new GameServer();
 						Monopoly.communicate.startServer(ip, port);
 
 						//the client must have a client too

@@ -38,4 +38,9 @@ public class GameController {
 	public void performEvent(){
 		gameClient.performEvent();
 	}
+	
+	
+	public void sendChatMessage(String s){
+		gameClient.sendChatMessage(s);
+	}
 }
