@@ -20,7 +20,7 @@ public class EventTests {
 
 	@Before
 	public void setup() {
-		gameClient = new GameClient(new Locale("EN"), null);
+		gameClient = new GameClient(new Locale("EN"));
 		gc = new GameController(gameClient);
 		board = new Board(gameClient);
 		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",

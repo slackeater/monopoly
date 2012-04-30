@@ -9,7 +9,7 @@ public class MockPlayerListener implements PlayerListener{
 
 	@Override
 	public void updatePlayer(PlayerStateEvent pse) {
-		System.out.println(pse.getName() + " has MONEY : -->  " + pse.getAccount());
+		System.out.println("Player updated: player information for player: "+pse.getName() + "has changed");
 		
 	}
 
