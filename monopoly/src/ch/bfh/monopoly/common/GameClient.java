@@ -232,7 +232,7 @@ public class GameClient {
 	 */
 	public void sendChatMessage(String s){
 		//String text = this.localPlayer.getName().concat(" " + s);
-		NetMessage nm = new NetMessage("ciao", Messages.CHAT_MSG);
+		NetMessage nm = new NetMessage(s, Messages.CHAT_MSG);
 		session.write(nm);
 	}
 	

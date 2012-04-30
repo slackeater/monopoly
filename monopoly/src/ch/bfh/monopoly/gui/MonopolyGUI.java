@@ -323,7 +323,7 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updateWindow(String text) {
-				chat.append(text);
+				chat.append(text+"\n");
 			}
 		}
 		
