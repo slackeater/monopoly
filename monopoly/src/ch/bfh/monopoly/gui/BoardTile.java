@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
@@ -341,11 +342,12 @@ public class BoardTile extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			//left click
-			if(e.getButton() == MouseEvent.BUTTON1){ 
+			System.out.println(e.getButton() + "CONTROL DOWN: " + e.isControlDown());
+			if(e.getButton() == MouseEvent.BUTTON1 && !e.isControlDown()){ 
 				addInformationOnTab();
 			}
 			//right click
-			else if(e.getButton() == MouseEvent.BUTTON3){
+			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
 				showPopup(e);
 			}
 		}
