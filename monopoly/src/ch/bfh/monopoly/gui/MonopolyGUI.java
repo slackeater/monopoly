@@ -159,7 +159,7 @@ public class MonopolyGUI extends JFrame {
 			TileInfo t = bc.getTileInfoById(j);
 
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
-//
+
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
@@ -321,7 +321,8 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updateWindow(String text) {
-				chat.append(text+"\n");
+				chat.append(text);
+				chat.setCaretPosition(chat.getDocument().getLength());
 			}
 		}
 		
@@ -333,7 +334,7 @@ public class MonopolyGUI extends JFrame {
 		JScrollPane scrollChat = new JScrollPane(chat);
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
+	
 		//text area for sending the message
 		final JTextArea input = new JTextArea(2,20);
 		input.setWrapStyleWord(true);
@@ -352,7 +353,8 @@ public class MonopolyGUI extends JFrame {
 				//if we press the enter key
 				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-					chat.append(text+"\n");
+					chat.append(text);
+					chat.setCaretPosition(chat.getDocument().getLength());
 					gc.sendChatMessage(text);
 					input.setText("");
 				}
@@ -369,7 +371,7 @@ public class MonopolyGUI extends JFrame {
 		JPanel chatArea = new JPanel();
 		chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.PAGE_AXIS));
 		chatArea.add(scrollChat);
-
+	
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new BoxLayout(inputContainer, BoxLayout.PAGE_AXIS));
 		inputContainer.add(scrollInput);
