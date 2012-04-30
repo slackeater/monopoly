@@ -28,12 +28,12 @@ import javax.swing.Timer;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
-import ch.bfh.monopoly.common.PlayerListener;
-import ch.bfh.monopoly.common.PlayerStateEvent;
-import ch.bfh.monopoly.common.Subject;
 import ch.bfh.monopoly.common.Token;
-import ch.bfh.monopoly.common.WindowListener;
-import ch.bfh.monopoly.common.WindowSubject;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
+import ch.bfh.monopoly.observer.TileSubject;
+import ch.bfh.monopoly.observer.WindowListener;
+import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.TileInfo;
 
 
@@ -158,7 +158,7 @@ public class MonopolyGUI extends JFrame {
 
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
 //
-			Subject s = this.bc.getTileSubjectAtIndex(j);
+			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
 		}

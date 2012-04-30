@@ -1,6 +1,6 @@
 package ch.bfh.monopoly.tests;
 
-import ch.bfh.monopoly.common.WindowListener;
+import ch.bfh.monopoly.observer.WindowListener;
 
 public class MockWindowListener implements WindowListener{
 

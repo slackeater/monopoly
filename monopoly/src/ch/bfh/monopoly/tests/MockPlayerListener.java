@@ -2,8 +2,8 @@ package ch.bfh.monopoly.tests;
 
 import javax.swing.text.PlainView;
 
-import ch.bfh.monopoly.common.PlayerListener;
-import ch.bfh.monopoly.common.PlayerStateEvent;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
 
 public class MockPlayerListener implements PlayerListener{
 

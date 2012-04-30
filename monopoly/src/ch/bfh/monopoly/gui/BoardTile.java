@@ -26,11 +26,11 @@ import javax.swing.SwingUtilities;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
-import ch.bfh.monopoly.common.PlayerListener;
-import ch.bfh.monopoly.common.PlayerStateEvent;
-import ch.bfh.monopoly.common.TileListener;
-import ch.bfh.monopoly.common.TileStateEvent;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
+import ch.bfh.monopoly.observer.TileListener;
+import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.TileInfo;
 
 /**

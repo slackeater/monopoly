@@ -9,6 +9,10 @@ import java.util.ResourceBundle;
 import javax.management.RuntimeErrorException;
 import javax.swing.JMenu;
 
+import ch.bfh.monopoly.observer.PlayerSubject;
+import ch.bfh.monopoly.observer.TileSubject;
+import ch.bfh.monopoly.observer.TileListener;
+import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.*;
 
 public class Board {
@@ -16,7 +20,7 @@ public class Board {
 	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
-	private Subject[] tileSubjects;
+	private TileSubject[] tileSubjects;
 	private Color[] tokenColor;
 	private int freeParking;
 	/**
@@ -24,7 +28,7 @@ public class Board {
 	 * notifying these listeners when changes to the instance variables of the
 	 * outer class are changed
 	 */
-	private class ConcreteSubject implements Subject {
+	private class ConcreteSubject implements TileSubject {
 		private int tileListenerId;
 
 		public ConcreteSubject(int tileId) {
@@ -60,7 +64,7 @@ public class Board {
 		tiles = tc.getTilesArray();
 		availableHouses = 32;
 		availableHotels = 12;
-		tileSubjects = new Subject[40];
+		tileSubjects = new TileSubject[40];
 		createTileSubjects();
 	}
 
@@ -74,7 +78,7 @@ public class Board {
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
 	 */
-	public Subject getTileSubjectAtIndex(int index) {
+	public TileSubject getTileSubjectAtIndex(int index) {
 		return tileSubjects[index];
 	}
 	

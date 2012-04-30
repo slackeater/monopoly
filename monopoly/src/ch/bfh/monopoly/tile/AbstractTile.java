@@ -80,14 +80,14 @@ public abstract class AbstractTile implements Tile {
 		this.name = name;
 	}
 
-	/**
-	 * Set the X coordinate for this tile
-	 * it will be used for draw the board
-	 * @param coordX the X coordinate
-	 */
-	public void setCoordX(int coordX) {
-		this.coordX = coordX;
-	}
+//	/**
+//	 * Set the X coordinate for this tile
+//	 * it will be used for draw the board
+//	 * @param coordX the X coordinate
+//	 */
+//	public void setCoordX(int coordX) {
+//		this.coordX = coordX;
+//	}
 
 	/**
 	 * Get the X coordinate of this tile

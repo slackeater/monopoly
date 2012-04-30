@@ -29,11 +29,6 @@ public class Terrain extends Property {
 		this.hotelCost = hotelCost;
 		this.mortgageValue = mortgageValue;
 		this.rgb = rgb;
-		
-		this.setCoordX(coordX);
-		this.setCoordY(coordY);
-		
-		
 		mortgageActive = false;
 		hotelCount=0;
 		houseCount=0;

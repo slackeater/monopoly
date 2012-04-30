@@ -1,5 +1,7 @@
 package ch.bfh.monopoly.common;
 
+import ch.bfh.monopoly.observer.WindowSubject;
+
 public class GameController {
 
 	GameClient gameClient;

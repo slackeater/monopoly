@@ -13,11 +13,11 @@ import ch.bfh.monopoly.common.BoardController;
 	import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 	import ch.bfh.monopoly.common.Player;
-import ch.bfh.monopoly.common.PlayerListener;
-import ch.bfh.monopoly.common.PlayerStateEvent;
-import ch.bfh.monopoly.common.PlayerSubject;
-import ch.bfh.monopoly.common.WindowListener;
-import ch.bfh.monopoly.common.WindowSubject;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
+import ch.bfh.monopoly.observer.PlayerSubject;
+import ch.bfh.monopoly.observer.WindowListener;
+import ch.bfh.monopoly.observer.WindowSubject;
 	import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Tile;
 
