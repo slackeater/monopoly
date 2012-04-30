@@ -29,11 +29,8 @@ import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.common.Token;
-import ch.bfh.monopoly.observer.PlayerListener;
-import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileSubject;
 import ch.bfh.monopoly.observer.WindowListener;
-import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.TileInfo;
 
 
@@ -67,6 +64,8 @@ public class MonopolyGUI extends JFrame {
 	
 	private final String THROW_DICE = "Throw dice";
 	private final String JAIL_CARD = "Jail card";
+	private final String BUY = "Buy";
+	private final String AUCTION = "Auction";
 	
 	/**
 	 * Graphical elements
@@ -78,6 +77,8 @@ public class MonopolyGUI extends JFrame {
 	private JPanel[][] myTerrain;
 	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
+	private JButton buy, auction, throwDice, useCard;
+
 	
 	/**
 	 * Counters for dice throw
@@ -115,6 +116,9 @@ public class MonopolyGUI extends JFrame {
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 		
+		//initialize the buttons with the action listener
+		initializeButtons();
+		
 		//TEMP TEMP TEMP
 		for (int x = 0 ; x < 8 ; x++){
 			pl.add(new Player("Player" + x, 15000));
@@ -146,8 +150,6 @@ public class MonopolyGUI extends JFrame {
 	}
 
 	
-	
-
 	/**
 	 * Initialize the list of tiles, tokens
 	 */
@@ -183,8 +185,6 @@ public class MonopolyGUI extends JFrame {
 		left.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 2, Color.decode("0xEEEEEE")));
 		
 		left.add(cardPanel());
-		left.add(Box.createRigidArea(spacer));
-		left.add(buttonsPanel());
 		left.add(Box.createRigidArea(spacer));
 		left.add(infoPanel());
 		left.add(Box.createRigidArea(spacer));
@@ -383,19 +383,36 @@ public class MonopolyGUI extends JFrame {
 	}
 
 	/**
-	 * It draws the buttons for the bottom panel
-	 * @return the JPanel with the buttons
+	 * Draw the board
+	 * @return a JPanel containing the board's elements
 	 */
-	private JPanel buttonsPanel(){
-		JPanel buttons = new JPanel();
-		buttons.setLayout(new BoxLayout(buttons, BoxLayout.LINE_AXIS));
-
-		final JButton throwDice = new JButton(THROW_DICE);
+	private JPanel drawBoard(){
+		//set the parameters for the event window
+		this.eventTextArea = new JTextArea(15,23);
+		eventTextArea.setWrapStyleWord(true);
+		eventTextArea.setLineWrap(true);
+		eventTextArea.setEditable(false);
 		
-		//we cannot use a jail card unless it's available
-		JButton useJailCard = new JButton(JAIL_CARD);
-		useJailCard.setEnabled(false);
+		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
+		guiButtons.add(buy);
+		guiButtons.add(auction);
+		guiButtons.add(throwDice);
+		guiButtons.add(useCard);
 
+		JPanel board = new BoardBuilder(this.eventTextArea, this.tiles, guiButtons);
+		return board;
+	}
+	
+	private void initializeButtons(){
+		this.buy = new JButton(BUY);
+		buy.setEnabled(false);
+		this.auction = new JButton(AUCTION);
+		auction.setEnabled(false);
+		this.useCard = new JButton(JAIL_CARD);
+		useCard.setEnabled(false);
+		this.throwDice = new JButton(THROW_DICE);
+		
+		//action listeners
 		throwDice.addActionListener(new ActionListener() {
 
 			@Override
@@ -451,25 +468,6 @@ public class MonopolyGUI extends JFrame {
 				}
 			}
 		});
-
-		buttons.add(throwDice);
-		buttons.add(useJailCard);
-
-		return buttons;
-	}
-
-	/**
-	 * Draw the board
-	 * @return a JPanel containing the board's elements
-	 */
-	private JPanel drawBoard(){
-		//set the parameters for the event window
-		this.eventTextArea = new JTextArea(15,23);
-		eventTextArea.setWrapStyleWord(true);
-		eventTextArea.setLineWrap(true);
-		eventTextArea.setEditable(false);
-
-		JPanel board = new BoardBuilder(this.eventTextArea, this.tiles);
-		return board;
+		
 	}
 }

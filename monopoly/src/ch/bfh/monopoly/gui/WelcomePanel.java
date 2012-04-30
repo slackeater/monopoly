@@ -40,8 +40,9 @@ import ch.bfh.monopoly.net.NetMessage;
 
 public class WelcomePanel extends JFrame{
 
+	
+	private static final long serialVersionUID = -1865410778558897233L;
 	private JTextArea info;
-	private static final long serialVersionUID = 1L;
 	private JFrame board;
 
 	/**
@@ -53,6 +54,7 @@ public class WelcomePanel extends JFrame{
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
 		main.add(imageLogo());
+		main.add(nameLabel());
 		main.add(clientConfig());
 		main.add(serverConfig());
 		main.add(infoArea());
@@ -75,6 +77,23 @@ public class WelcomePanel extends JFrame{
 		return img;
 	}
 
+	/**
+	 * Draw the panel with the label for the name
+	 * @return a JPanel with the name field
+	 */
+	private JPanel nameLabel(){
+		JPanel nameContainer = new JPanel();
+		nameContainer.setLayout(new BoxLayout(nameContainer, BoxLayout.PAGE_AXIS));
+		nameContainer.setBorder(BorderFactory.createTitledBorder("Insert your name"));
+		nameContainer.setMaximumSize(new Dimension(300,0));
+		JTextField nameFiled = new JTextField();
+		nameFiled.setAlignmentX(Component.LEFT_ALIGNMENT);
+		nameFiled.setMaximumSize(new Dimension(125,20));
+		nameContainer.add(nameFiled);
+		return nameContainer;
+	}
+	
+	
 	/**
 	 * Draw the panel with the configuration for join a game
 	 * @return a JPanel with the fields and button for join a game

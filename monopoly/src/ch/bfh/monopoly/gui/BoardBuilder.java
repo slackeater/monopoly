@@ -35,13 +35,16 @@ public class BoardBuilder extends JPanel {
 	private JTextArea eventPane;
 
 	private List<BoardTile> tilesList;
+	
+	private List<JButton> btns;
 
 	/**
 	 * Construct a new board
 	 * @param eventPane the JTextArea used to draw event
 	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea eventPane, List<BoardTile> tiles){
+	public BoardBuilder(JTextArea eventPane, List<BoardTile> tiles, List<JButton> btns){
+		this.btns = btns;
 		this.eventPane = eventPane;
 		this.tilesList = tiles;
 		setLayout(new GridBagLayout());
@@ -64,17 +67,13 @@ public class BoardBuilder extends JPanel {
 		notify.setLayout(new BoxLayout(notify, BoxLayout.PAGE_AXIS));
 		notify.setBorder(BorderFactory.createEtchedBorder());
 
-		JButton buy = new JButton("Buy");
-		JButton auction = new JButton("Auction");
-		JButton throwDice = new JButton("Throw Dice");
-		JButton useCard = new JButton("Jail card");
-
 		JPanel btnPanel = new JPanel();
-		btnPanel.add(buy);
-		btnPanel.add(auction);
-		btnPanel.add(throwDice);
-		btnPanel.add(useCard);
-
+		
+		//add the buttons to the central panel
+		for(JButton btn : btns){
+			btnPanel.add(btn);
+		}
+	
 		JScrollPane eventPane = new JScrollPane(this.eventPane);
 		eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		eventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
