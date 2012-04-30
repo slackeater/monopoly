@@ -316,9 +316,7 @@ public class MonopolyGUI extends JFrame {
 		chat.setWrapStyleWord(true);
 		chat.setLineWrap(true);
 		chat.setEditable(false);
-	
-		
-		
+
 		class TextUpdate implements WindowListener{
 
 			@Override
