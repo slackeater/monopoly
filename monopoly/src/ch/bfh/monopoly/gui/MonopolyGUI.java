@@ -32,6 +32,8 @@ import ch.bfh.monopoly.common.PlayerListener;
 import ch.bfh.monopoly.common.PlayerStateEvent;
 import ch.bfh.monopoly.common.Subject;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.common.WindowListener;
+import ch.bfh.monopoly.common.WindowSubject;
 import ch.bfh.monopoly.tile.TileInfo;
 
 
@@ -314,7 +316,21 @@ public class MonopolyGUI extends JFrame {
 		chat.setWrapStyleWord(true);
 		chat.setLineWrap(true);
 		chat.setEditable(false);
+	
+		
+		
+		class TextUpdate implements WindowListener{
 
+			@Override
+			public void updateWindow(String text) {
+				chat.append(text);
+			}
+		}
+		
+		TextUpdate tu = new TextUpdate();
+		
+		gc.getWindowSubject().addListener(tu);
+		
 		//add to the chat text area a scroll pane
 		JScrollPane scrollChat = new JScrollPane(chat);
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

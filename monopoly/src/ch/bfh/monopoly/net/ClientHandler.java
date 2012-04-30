@@ -4,6 +4,9 @@ import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
+import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.GameController;
+
 /**
  * This class is used to handle the operations of the client
  * over the network
@@ -13,6 +16,11 @@ import org.apache.mina.core.session.IoSession;
 public class ClientHandler implements IoHandler {
 
 	private boolean gameCanBegin = false;
+	private GameClient gc;
+	
+	public ClientHandler(GameClient gc){
+		this.gc = gc;
+	}
 	
 	@Override
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
@@ -40,6 +48,16 @@ public class ClientHandler implements IoHandler {
 		if(n.getMessageType() == Messages.GAME_START){
 			gameCanBegin = true;
 		}
+		else if(n.getMessageType() == Messages.CHAT_MSG){
+			gc.displayChat(n.getText());
+		}
+	}
+
+	/**
+	 * @param gameCanBegin
+	 */
+	public ClientHandler(boolean gameCanBegin) {
+		this.gameCanBegin = gameCanBegin;
 	}
 
 	@Override

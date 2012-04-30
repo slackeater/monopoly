@@ -48,15 +48,12 @@ public class GameClient {
 
 
 	
-	public GameClient (Locale loc, IoSession session) {
+	public GameClient (Locale loc) {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000);
 		//loc should be received from a netmessage sent when the server calls startGame();
 		this.loc = loc;
-		
-		//the session object used to send messages through the network
-		this.session = session;
-		
+			
 		//TODO this list must be received from a netMessage when the game starts
 		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
 		board = new Board(this);
@@ -77,6 +74,10 @@ public class GameClient {
 		return p.feeToCharge();
 	}
 
+	public void setIoSession(IoSession session){
+		this.session = session;
+	}
+	
 	/**
 	 * TODO  ONLY FOR TESTING, REMOVE OR COMMENT OUT FOR FINAL PRODUCT
 	 */
@@ -230,7 +231,8 @@ public class GameClient {
 	 * @param s the message
 	 */
 	public void sendChatMessage(String s){
-		NetMessage nm = new NetMessage(this.localPlayer, s, Messages.CHAT_MSG);
+		String text = this.localPlayer.getName().concat(" " + s);
+		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
 	

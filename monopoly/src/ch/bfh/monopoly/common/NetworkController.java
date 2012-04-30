@@ -16,7 +16,7 @@ public class NetworkController {
 	private Network n;
 	private ServerHandler srvHandler = new ServerHandler();
 	
-	private ClientHandler cliHandler = new ClientHandler();
+	private ClientHandler cliHandler;
 	
 	/**
 	 * Construct a network controller
@@ -44,8 +44,8 @@ public class NetworkController {
 	 * @throws UnknownHostException 
 	 * @return an IoSession used to communicate with the server
 	 */
-	public IoSession startClient(String ip, int port) throws UnknownHostException, IOException{
-		
+	public IoSession startClient(String ip, int port, GameClient gameCli) throws UnknownHostException, IOException{
+		this.cliHandler = new ClientHandler(gameCli);
 		return n.startClient(ip, port, this.cliHandler);
 	}
 	

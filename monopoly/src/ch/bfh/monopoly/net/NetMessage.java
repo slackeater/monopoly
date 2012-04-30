@@ -115,6 +115,11 @@ public class NetMessage implements Serializable{
 
 	
 	
+	public NetMessage(String s, Messages m){
+		this.string = s;
+		this.m = m;
+	}
+	
 	//only for test
 	public int getMessageCode(){
 		return m.getInt();
@@ -122,6 +127,11 @@ public class NetMessage implements Serializable{
 
 	public Messages getMessageType(){
 		return m;
+	}
+
+	public String getText() {
+		// TODO Auto-generated method stub
+		return string;
 	}
 
 }

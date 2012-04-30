@@ -61,18 +61,6 @@ public class WelcomePanel extends JFrame{
 	}
 
 	/**
-	 * Used to create the needed controllers and frames
-	 */
-	private void initializeGameClasses(IoSession session){
-		GameClient gameClient = new GameClient(new Locale("EN"), session);
-		GameController gc = new GameController(gameClient);
-		BoardController bc = new BoardController(gameClient.getBoard());
-
-		board = new MonopolyGUI(bc,gc);
-	}
-
-
-	/**
 	 * Draw the panel with the image
 	 * @return a JPanel with the logo of monopoly
 	 */
@@ -129,10 +117,13 @@ public class WelcomePanel extends JFrame{
 					info.append("Connecting to " + ip + "and port " + port + "\n");
 
 					try {
-						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
+						GameClient gameClient = new GameClient(new Locale("EN"));
+						GameController gc = new GameController(gameClient);
+						BoardController bc = new BoardController(gameClient.getBoard());
 
-						//init the controllers and the monopoly frame
-						initializeGameClasses(cliSession);
+						board = new MonopolyGUI(bc,gc);
+						
+						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
 
 						while(true){
 							Thread.sleep(1250);
@@ -234,15 +225,18 @@ public class WelcomePanel extends JFrame{
 							" and port " + port + " with " + maxPlayers + " players...\n");
 
 					try {
+						GameClient gameClient = new GameClient(new Locale("EN"));
+						GameController gc = new GameController(gameClient);
+						BoardController bc = new BoardController(gameClient.getBoard());
+
+						board = new MonopolyGUI(bc,gc);
+						
 						// TODO pass the gameserver to the ServerHandler
 						GameServer gs = new GameServer();
 						Monopoly.communicate.startServer(ip, port);
 
 						//the client must have a client too
-						IoSession cliSession = Monopoly.communicate.startClient(ip, port);
-
-						//init the controllers and the monopoly frame
-						initializeGameClasses(cliSession);
+						IoSession cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
 
 						while(true){
 							Thread.sleep(1250);

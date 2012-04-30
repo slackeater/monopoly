@@ -346,7 +346,7 @@ public class BoardTile extends JPanel{
 			if(e.getButton() == MouseEvent.BUTTON1 && !e.isControlDown()){ 
 				addInformationOnTab();
 			}
-			//right click
+			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
 				showPopup(e);
 			}
