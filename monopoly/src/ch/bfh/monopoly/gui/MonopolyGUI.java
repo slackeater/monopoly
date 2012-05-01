@@ -41,7 +41,7 @@ public class MonopolyGUI extends JFrame {
 	/**
 	 * Space and counters constants
 	 */
-	private final int TILE_NUMBER = 40;
+	public static final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
 	private final int MYTERRAIN_NUM_OF_PANELS = 36;
 	private final int MYTERRAIN_PANEL_SIZE = 20;
@@ -201,78 +201,11 @@ public class MonopolyGUI extends JFrame {
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
 		
-		//instance a bi-dimensional array of JPanel
-		myTerrain = new JPanel[playerNumber][MYTERRAIN_NUM_OF_PANELS];
-
-		//for each player
+		//for each player create the panel 
+		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-
-			//these are the two panel that will show which tiles belong to a user
-			final JPanel terrainUp = new JPanel();
-			final JPanel terrainDown = new JPanel();
-			
-			JLabel name = new JLabel(pl.get(j).getName() + " -- " +  pl.get(j).getAccount() + "$");
-
-			name.setAlignmentX(Component.RIGHT_ALIGNMENT);
-
-			JPanel mainCtr = new JPanel();
-			mainCtr.setLayout(new BoxLayout(mainCtr, BoxLayout.PAGE_AXIS));;
-
-			terrainUp.setLayout(new BoxLayout(terrainUp, BoxLayout.LINE_AXIS));
-			terrainUp.setVisible(false);
-
-			terrainDown.setLayout(new BoxLayout(terrainDown, BoxLayout.LINE_AXIS));
-			terrainDown.setVisible(false);
-
-			//for all the possible ownable tiles
-			for(int i = 0 ; i < MYTERRAIN_NUM_OF_PANELS ; i++){
-				myTerrain[j][i] = new JPanel();
-				myTerrain[j][i].setMaximumSize(new Dimension(MYTERRAIN_PANEL_SIZE,MYTERRAIN_PANEL_SIZE));
-				myTerrain[j][i].setBorder(BorderFactory.createEtchedBorder());
-
-				//spaces between the terrain in the viewer
-				if(i == 2 || i == 6 || i == 10 || i == 14 || i == 21 || i == 25 || i == 28 || i == 33)
-					myTerrain[j][i].setBackground(Color.GRAY);
-				else	
-					myTerrain[j][i].setBackground(Color.WHITE);	
-
-				if(i < 18) //first row
-					terrainUp.add(myTerrain[j][i]);
-				else		//second row
-					terrainDown.add(myTerrain[j][i]);
-			}
-
-			//when we click on a JLabel we see the terrains
-			//which belongs to a player
-			name.addMouseListener(new MouseListener() {
-				@Override
-				public void mouseReleased(MouseEvent e) {}
-
-				@Override
-				public void mousePressed(MouseEvent e) {
-					//toggle visibility
-					boolean visibility = terrainDown.isVisible();
-					
-					terrainDown.setVisible(!visibility);
-					terrainUp.setVisible(!visibility);
-				}
-
-				@Override
-				public void mouseExited(MouseEvent e) {}
-
-				@Override
-				public void mouseEntered(MouseEvent e) {}
-
-				@Override
-				public void mouseClicked(MouseEvent e) {}
-			});
-
-			mainCtr.add(name);
-			mainCtr.add(terrainUp);
-			mainCtr.add(terrainDown);
-			mainCtr.add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
-			
-			info.add(mainCtr);
+			PlayerInfo plInfo = new PlayerInfo(pl.get(j));
+			info.add(plInfo);
 		}
 
 		return info;

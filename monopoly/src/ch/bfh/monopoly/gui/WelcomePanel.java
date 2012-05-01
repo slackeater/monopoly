@@ -47,9 +47,9 @@ public class WelcomePanel extends JFrame{
 	private JFrame board;
 	private JTextField nameField;
 	
+	private String name;
 	private int port;
 	private String ip;
-	private String name;
 
 	/**
 	 * Construct a WelcomePanel
@@ -82,7 +82,7 @@ public class WelcomePanel extends JFrame{
 		IoSession cliSession;
 		
 		try {
-			cliSession = Monopoly.communicate.startClient(this.ip, this.port, gameClient);
+			cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
 			
 			//set the IoSession in the GameClient
 			gameClient.setIoSession(cliSession);
@@ -256,9 +256,8 @@ public class WelcomePanel extends JFrame{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
-				int port, maxPlayers;
-				String ip;
-
+				int maxPlayers;
+				
 				try{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
