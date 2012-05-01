@@ -22,13 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
-import ch.bfh.monopoly.observer.PlayerListener;
-import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileListener;
 import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.TileInfo;

@@ -1,9 +1,6 @@
 package ch.bfh.monopoly.gui;
 import java.awt.Component;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -16,7 +13,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,14 +27,15 @@ import org.apache.mina.core.session.IoSession;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
-import ch.bfh.monopoly.common.GameServer;
 import ch.bfh.monopoly.common.Monopoly;
-import ch.bfh.monopoly.net.ClientHandler;
-import ch.bfh.monopoly.net.ServerHandler;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
 
-
+/**
+ * This class is used to represent the welcome window of our game
+ * @author snake
+ *
+ */
 public class WelcomePanel extends JFrame{
 
 	
@@ -87,10 +84,8 @@ public class WelcomePanel extends JFrame{
 			//set the IoSession in the GameClient
 			gameClient.setIoSession(cliSession);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

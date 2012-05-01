@@ -2,15 +2,12 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -18,7 +15,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -33,7 +29,13 @@ import ch.bfh.monopoly.observer.TileSubject;
 import ch.bfh.monopoly.observer.WindowListener;
 import ch.bfh.monopoly.tile.TileInfo;
 
-
+/**
+ * This class is used to show the 
+ * window with the all the graphical components 
+ * of the game after the welcome panel
+ * @author snake
+ *
+ */
 public class MonopolyGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -43,9 +45,6 @@ public class MonopolyGUI extends JFrame {
 	 */
 	public static final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
-	private final int MYTERRAIN_NUM_OF_PANELS = 36;
-	private final int MYTERRAIN_PANEL_SIZE = 20;
-	private final int PLAYER_LABEL_SPACE = 4;
 	private final int DICE_MOVEMENT_DELAY = 750;
 	
 	/** 
@@ -74,7 +73,6 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	//used to show the terrain that belong to each player
-	private JPanel[][] myTerrain;
 	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
 	private JButton buy, auction, throwDice, useCard;

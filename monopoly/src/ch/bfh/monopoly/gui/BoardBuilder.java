@@ -1,12 +1,10 @@
 package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -17,12 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.tile.Chance;
-import ch.bfh.monopoly.tile.NonProperty;
-import ch.bfh.monopoly.tile.Terrain;
-import ch.bfh.monopoly.tile.Tile;
-
+/**
+ * This class is used to build the board
+ * of the GUI
+ * @author snake
+ *
+ */
 public class BoardBuilder extends JPanel {
 
 	private static final long serialVersionUID = 4140219449792816066L;
