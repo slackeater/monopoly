@@ -40,10 +40,11 @@ public class PlayerInfo extends JPanel{
 	 * Construct a PlayerInfo
 	 * @param c the color of this player
 	 */
-	public PlayerInfo(Player p){
+	public PlayerInfo(Player p, Color c){
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		playerInfo.setText(p.getName() + "    " + p.getAccount());
 		playerInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		playerInfo.setForeground(c);
 		
 		//create a new mouse listener
 		LabelClick lblClick = new LabelClick();
@@ -60,6 +61,7 @@ public class PlayerInfo extends JPanel{
 		add(terrainUp);
 		add(terrainDown);
 		add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
+		
 	}
 
 	/**

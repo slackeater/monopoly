@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -203,7 +204,7 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-			PlayerInfo plInfo = new PlayerInfo(pl.get(j));
+			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
 			
 			//the local player is always shown
 			if(pl.get(j).getName().equals("Player1"))
@@ -362,13 +363,15 @@ public class MonopolyGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+		
 				Timer t = new Timer(DICE_MOVEMENT_DELAY,this);
 
 				//if we start a new turn
 				if(throwValue == 0){
 					step = 0;
 					eventTextArea.setText(THROWING_DICE + "\n");
+								
+					tabPane.addTab("Trade", tradeCard());
 					
 					//generates number between 1 and 12
 					int val = (int)(12*Math.random())+1;
@@ -425,4 +428,36 @@ public class MonopolyGUI extends JFrame {
 		this.endTurn.setEnabled(false);
 		
 	}
+	
+	/**
+	 * This method is used to draw the JPanel used 
+	 * to trade properties / card / money with another player
+	 * @return
+	 */
+	private JPanel tradeCard(){
+		JPanel trade = new JPanel();
+		
+		String[] usernames = new String[8];
+		
+		System.out.println(playerNumber);
+		
+		//build the array with the user name
+		for(int i = 0 ; i < playerNumber ; i++){
+			usernames[i] = pl.get(i).getName();
+//			System.out.println(pl.get(i).getName());
+		}
+		
+		JComboBox userList = new JComboBox(usernames);
+		
+//		JScrollPane scrollEventPane = new JScrollPane(userList);
+//		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		scrollEventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		trade.add(userList);
+		
+		
+		return trade;
+			
+	}
+	
 }

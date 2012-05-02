@@ -66,8 +66,6 @@ public class BoardBuilder extends JPanel {
 	private void centralElements(){
 
 		/******* Event window **************/
-
-	
 		
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
@@ -135,6 +133,5 @@ public class BoardBuilder extends JPanel {
 				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 		}
-
 	}
 }
