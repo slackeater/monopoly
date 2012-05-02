@@ -72,10 +72,11 @@ public class MonopolyGUI extends JFrame {
 	private JTextArea eventTextArea, chat, history;
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
+	private JTabbedPane tabPane = new JTabbedPane();
 	//used to show the terrain that belong to each player
 	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
-	private JButton buy, auction, throwDice, useCard;
+	private JButton buy, auction, throwDice, useCard, community, chance, endTurn;
 
 	
 	/**
@@ -203,6 +204,11 @@ public class MonopolyGUI extends JFrame {
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
 			PlayerInfo plInfo = new PlayerInfo(pl.get(j));
+			
+			//the local player is always shown
+			if(pl.get(j).getName().equals("Player1"))
+				plInfo.showTerrains();
+			
 			info.add(plInfo);
 		}
 
@@ -320,36 +326,43 @@ public class MonopolyGUI extends JFrame {
 	 * @return a JPanel containing the board's elements
 	 */
 	private JPanel drawBoard(){
+		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
+		guiButtons.add(throwDice);
+		guiButtons.add(buy);
+		guiButtons.add(auction);
+		guiButtons.add(useCard);
+		guiButtons.add(endTurn);
+		
 		//set the parameters for the event window
-		this.eventTextArea = new JTextArea(15,23);
+		this.eventTextArea = new JTextArea(13,23);
 		eventTextArea.setWrapStyleWord(true);
 		eventTextArea.setLineWrap(true);
 		eventTextArea.setEditable(false);
-		
-		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
-		guiButtons.add(buy);
-		guiButtons.add(auction);
-		guiButtons.add(throwDice);
-		guiButtons.add(useCard);
-
-		JPanel board = new BoardBuilder(this.eventTextArea, this.tiles, guiButtons);
+				
+		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons, community, chance);
+	
 		return board;
 	}
 	
 	private void initializeButtons(){
 		this.buy = new JButton(BUY);
 		buy.setEnabled(false);
+		
 		this.auction = new JButton(AUCTION);
 		auction.setEnabled(false);
+		
 		this.useCard = new JButton(JAIL_CARD);
 		useCard.setEnabled(false);
-		this.throwDice = new JButton(THROW_DICE);
 		
+		this.throwDice = new JButton(THROW_DICE);
+			
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
 
+			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			
 				Timer t = new Timer(DICE_MOVEMENT_DELAY,this);
 
 				//if we start a new turn
@@ -401,6 +414,15 @@ public class MonopolyGUI extends JFrame {
 				}
 			}
 		});
+		
+		this.community = new JButton("Community");
+		this.community.setEnabled(false);
+		
+		this.chance = new JButton("Chance");
+		this.chance.setEnabled(false);
+		
+		this.endTurn = new JButton("End turn");
+		this.endTurn.setEnabled(false);
 		
 	}
 }

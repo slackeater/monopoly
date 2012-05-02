@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 /**
@@ -30,21 +31,29 @@ public class BoardBuilder extends JPanel {
 	private final double WEIGHT_CORNER_X = 0.12;
 	private final double WEIGHT_CORNER_Y = 0.12;
 	
-	private JTextArea eventPane;
+	private JTabbedPane eventPane;
 
 	private List<BoardTile> tilesList;
 	
 	private List<JButton> btns;
+	
+	private JButton community, chance;
 
+	private JTextArea txt;
+	
 	/**
 	 * Construct a new board
 	 * @param eventPane the JTextArea used to draw event
 	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea eventPane, List<BoardTile> tiles, List<JButton> btns){
+	public BoardBuilder(JTextArea txt, JTabbedPane tabPane, List<BoardTile> tiles, List<JButton> btns, JButton communityBtn, JButton chanceBtn){
+		this.txt = txt;
 		this.btns = btns;
-		this.eventPane = eventPane;
+		this.eventPane = tabPane;
 		this.tilesList = tiles;
+		this.community = communityBtn;
+		this.chance = chanceBtn;
+		
 		setLayout(new GridBagLayout());
 		centralElements();
 		drawBoard();
@@ -58,12 +67,11 @@ public class BoardBuilder extends JPanel {
 
 		/******* Event window **************/
 
+	
+		
 		JPanel p = new JPanel();
 		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-
-		JPanel notify = new JPanel();
-		notify.setLayout(new BoxLayout(notify, BoxLayout.PAGE_AXIS));
-		notify.setBorder(BorderFactory.createEtchedBorder());
+		p.setBorder(BorderFactory.createEtchedBorder());
 
 		JPanel btnPanel = new JPanel();
 		
@@ -72,19 +80,16 @@ public class BoardBuilder extends JPanel {
 			btnPanel.add(btn);
 		}
 	
-		JScrollPane eventPane = new JScrollPane(this.eventPane);
-		eventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		eventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollEventPane = new JScrollPane(this.txt);
+		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollEventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		JLabel title = new JLabel("Events");
-
-		notify.add(title);
-		notify.add(eventPane);
-		notify.add(btnPanel);
-
-		p.add(notify, BorderLayout.NORTH);
-		p.setOpaque(false);
-		add(p, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
+		p.add(scrollEventPane);
+		p.add(btnPanel);
+		
+		this.eventPane.addTab("Events", p);
+		
+		add(this.eventPane, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/
@@ -92,7 +97,6 @@ public class BoardBuilder extends JPanel {
 
 		/******* Community chest card button **************/
 
-		JButton community = new JButton("Community");
 		JPanel commP = new JPanel();
 		commP.add(community);
 		commP.setLayout(new GridLayout(1,1));
@@ -104,7 +108,6 @@ public class BoardBuilder extends JPanel {
 
 		/******* Chance card button **************/
 
-		JButton chance = new JButton("Chance");
 		JPanel chancePan = new JPanel();
 		chancePan.add(chance);
 		chancePan.setLayout(new GridLayout(1,1));
@@ -124,15 +127,13 @@ public class BoardBuilder extends JPanel {
 			BoardTile tile = this.tilesList.get(j);
 			
 			//corner
-			if(j % 10 == 0){
+			if(j % 10 == 0)
 				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_CORNER_X, WEIGHT_CORNER_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-			}
 			//other tiles
-			else{
+			else
 				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 						GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-			}
 		}
 
 	}
