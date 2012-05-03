@@ -18,8 +18,11 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 
 import ch.bfh.monopoly.common.BoardController;
@@ -436,6 +439,7 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JPanel tradeCard(){
 		JPanel trade = new JPanel();
+		trade.setLayout(new BoxLayout(trade, BoxLayout.PAGE_AXIS));
 		
 		String[] usernames = new String[8];
 		
@@ -444,17 +448,37 @@ public class MonopolyGUI extends JFrame {
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
 			usernames[i] = pl.get(i).getName();
-//			System.out.println(pl.get(i).getName());
 		}
 		
 		JComboBox userList = new JComboBox(usernames);
 		
-//		JScrollPane scrollEventPane = new JScrollPane(userList);
-//		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//		scrollEventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-
-		trade.add(userList);
+		JPanel terrainExchange = new JPanel();
+		JPanel cardExchange = new JPanel();
+		JPanel moneyExchange = new JPanel();
 		
+		//elements for terrain exchange
+		String[] terrain = new String[2];
+		terrain[0] = "Terr1";
+		terrain[1] = "Terr2";
+		JComboBox comboTerrain = new JComboBox(terrain);
+		terrainExchange.add(comboTerrain);
+		
+		//elements for the card exchange
+		
+		
+		
+		
+		//elements for the money exchange
+		int startMoney = 0;
+		SpinnerModel moneyModel = new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1);
+		JSpinner moneySpinner = new JSpinner(moneyModel);
+		moneyExchange.add(moneySpinner);
+			
+		
+		//add the element to the container JPanel
+		trade.add(userList);
+		trade.add(terrainExchange);
+		trade.add(moneyExchange);
 		
 		return trade;
 			
