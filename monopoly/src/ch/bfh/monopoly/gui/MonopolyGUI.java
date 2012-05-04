@@ -16,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -65,10 +66,9 @@ public class MonopolyGUI extends JFrame {
 	private final String THROWING_DICE = "I'm throwing the dice...";
 	private final String DICE_RESULTS = "The results is: ";
 	
-	private final String THROW_DICE = "Throw dice";
+	private final String THROW_DICE = "Throw";
 	private final String JAIL_CARD = "Jail card";
 	private final String BUY = "Buy";
-	private final String AUCTION = "Auction";
 	
 	/**
 	 * Graphical elements
@@ -80,7 +80,7 @@ public class MonopolyGUI extends JFrame {
 	//used to show the terrain that belong to each player
 	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
-	private JButton buy, auction, throwDice, useCard, community, chance, endTurn;
+	private JButton buy, throwDice, useCard, community, chance, endTurn, trade;
 
 	
 	/**
@@ -333,9 +333,10 @@ public class MonopolyGUI extends JFrame {
 		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
 		guiButtons.add(throwDice);
 		guiButtons.add(buy);
-		guiButtons.add(auction);
 		guiButtons.add(useCard);
+		guiButtons.add(trade);
 		guiButtons.add(endTurn);
+		
 		
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);
@@ -351,9 +352,6 @@ public class MonopolyGUI extends JFrame {
 	private void initializeButtons(){
 		this.buy = new JButton(BUY);
 		buy.setEnabled(false);
-		
-		this.auction = new JButton(AUCTION);
-		auction.setEnabled(false);
 		
 		this.useCard = new JButton(JAIL_CARD);
 		useCard.setEnabled(false);
@@ -430,6 +428,9 @@ public class MonopolyGUI extends JFrame {
 		this.endTurn = new JButton("End turn");
 		this.endTurn.setEnabled(false);
 		
+		this.trade = new JButton("Trade");
+		this.trade.setEnabled(false);
+		
 	}
 	
 	/**
@@ -441,7 +442,17 @@ public class MonopolyGUI extends JFrame {
 		JPanel trade = new JPanel();
 		trade.setLayout(new BoxLayout(trade, BoxLayout.PAGE_AXIS));
 		
+		JPanel terrainExchange = new JPanel();
+		JPanel cardExchange = new JPanel();
+		JPanel moneyExchange = new JPanel();
+		JPanel sendButton = new JPanel();
+	
+		JButton sendRequest = new JButton("Send");
+		sendButton.add(sendRequest);
+				
+		//elements for the users list
 		String[] usernames = new String[8];
+		String[] origin = {"From", "To"};
 		
 		System.out.println(playerNumber);
 		
@@ -450,11 +461,12 @@ public class MonopolyGUI extends JFrame {
 			usernames[i] = pl.get(i).getName();
 		}
 		
+		JPanel userListPanel = new JPanel();
 		JComboBox userList = new JComboBox(usernames);
+		JComboBox originList = new JComboBox(origin);
 		
-		JPanel terrainExchange = new JPanel();
-		JPanel cardExchange = new JPanel();
-		JPanel moneyExchange = new JPanel();
+		userListPanel.add(originList);
+		userListPanel.add(userList);
 		
 		//elements for terrain exchange
 		String[] terrain = new String[2];
@@ -464,10 +476,9 @@ public class MonopolyGUI extends JFrame {
 		terrainExchange.add(comboTerrain);
 		
 		//elements for the card exchange
-		
-		
-		
-		
+		JLabel jailCardLbl = new JLabel("Jail Card");
+		cardExchange.add(jailCardLbl);
+				
 		//elements for the money exchange
 		int startMoney = 0;
 		SpinnerModel moneyModel = new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1);
@@ -476,9 +487,11 @@ public class MonopolyGUI extends JFrame {
 			
 		
 		//add the element to the container JPanel
-		trade.add(userList);
+		trade.add(userListPanel);
 		trade.add(terrainExchange);
+		trade.add(cardExchange);
 		trade.add(moneyExchange);
+		trade.add(sendButton);
 		
 		return trade;
 			
