@@ -3,6 +3,7 @@ package ch.bfh.monopoly.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -44,14 +46,14 @@ import ch.bfh.monopoly.tile.TileInfo;
 public class MonopolyGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Space and counters constants
 	 */
 	public static final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
 	private final int DICE_MOVEMENT_DELAY = 750;
-	
+
 	/** 
 	 * Strings constants
 	 * !!!!!!!!!!!!!!!!!!! TEMP
@@ -65,11 +67,11 @@ public class MonopolyGUI extends JFrame {
 	private final String REAR = "Rear";
 	private final String THROWING_DICE = "I'm throwing the dice...";
 	private final String DICE_RESULTS = "The results is: ";
-	
+
 	private final String THROW_DICE = "Throw";
 	private final String JAIL_CARD = "Jail card";
 	private final String BUY = "Buy";
-	
+
 	/**
 	 * Graphical elements
 	 */
@@ -80,23 +82,27 @@ public class MonopolyGUI extends JFrame {
 	//used to show the terrain that belong to each player
 	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
-	private JButton buy, throwDice, useCard, community, chance, endTurn, trade;
+	private JButton buy, throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
+	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
+	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
+	private JSpinner moneySpinner, rcvrMoneySpinner;
+	private JLabel jailCardLbl, rcvrJailCardLbl;
 
-	
+
 	/**
 	 * Counters for dice throw
 	 */
 	private int throwValue = 0;
 	private int currentPos = 0;
 	private int step = 0;
-	
+
 	/**
 	 * Other instance variable
 	 */
 	private int playerNumber;
 	private BoardController bc;
 	private GameController gc;
-	
+
 	//TEMP TEMP TEMP
 	private List<Player> pl = new ArrayList<Player>();
 
@@ -105,7 +111,7 @@ public class MonopolyGUI extends JFrame {
 	 * @param bc the board controller used to query the board
 	 */
 	public MonopolyGUI(BoardController bc, GameController gc){
-	
+
 		/**
 		 * ONLY FOR TEST
 		 */
@@ -118,30 +124,30 @@ public class MonopolyGUI extends JFrame {
 		initTokens[5] = new Token(Color.CYAN, 0.3, 0.700);
 		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
 		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
-		
+
 		//initialize the buttons with the action listener
 		initializeButtons();
-		
+
 		//TEMP TEMP TEMP
 		for (int x = 0 ; x < 8 ; x++){
 			pl.add(new Player("Player" + x, 15000));
 			pl.get(x).setToken(initTokens[x]);
 		}
-		
+
 		//this assignment is also TEMP
 		this.playerNumber = pl.size();
-		
+
 		/**
 		 * END ONLY FOR TEST
 		 */
-		
+
 		this.bc = bc;
 		this.gc = gc;
-			
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
 		setLayout(new BorderLayout());
-				
+
 		add(leftPanel(), BorderLayout.WEST);
 
 		//init must be called before drawBoard()
@@ -152,7 +158,7 @@ public class MonopolyGUI extends JFrame {
 		pack();
 	}
 
-	
+
 	/**
 	 * Initialize the list of tiles, tokens
 	 */
@@ -167,8 +173,8 @@ public class MonopolyGUI extends JFrame {
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
 		}
-		
-		
+
+
 		//add the tokens to the first tile
 		for(int i = 0 ; i < playerNumber ; i++){
 			tiles.get(0).addToken(pl.get(i).getToken());
@@ -181,18 +187,18 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JPanel leftPanel(){
 		JPanel left = new JPanel();
-		
+
 		Dimension spacer = new Dimension(0,LEFT_SPACER_HEIGHT);
-		
+
 		left.setLayout(new BoxLayout(left, BoxLayout.PAGE_AXIS));
 		left.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 2, Color.decode("0xEEEEEE")));
-		
+
 		left.add(cardPanel());
 		left.add(Box.createRigidArea(spacer));
 		left.add(infoPanel());
 		left.add(Box.createRigidArea(spacer));
 		left.add(historyChatPanel());
-		
+
 		return left;
 	}
 
@@ -203,16 +209,16 @@ public class MonopolyGUI extends JFrame {
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
-		
+
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
 			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
-			
+
 			//the local player is always shown
 			if(pl.get(j).getName().equals("Player1"))
 				plInfo.showTerrains();
-			
+
 			info.add(plInfo);
 		}
 
@@ -266,21 +272,21 @@ public class MonopolyGUI extends JFrame {
 				chat.setCaretPosition(chat.getDocument().getLength());
 			}
 		}
-		
+
 		TextUpdate tu = new TextUpdate();
-		
+
 		gc.getWindowSubject().addListener(tu);
-		
+
 		//add to the chat text area a scroll pane
 		JScrollPane scrollChat = new JScrollPane(chat);
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	
+
 		//text area for sending the message
 		final JTextArea input = new JTextArea(2,20);
 		input.setWrapStyleWord(true);
 		input.setLineWrap(true);
-		
+
 		//when we press enter, we send a message
 		input.addKeyListener(new KeyListener() {
 			@Override
@@ -312,7 +318,7 @@ public class MonopolyGUI extends JFrame {
 		JPanel chatArea = new JPanel();
 		chatArea.setLayout(new BoxLayout(chatArea, BoxLayout.PAGE_AXIS));
 		chatArea.add(scrollChat);
-	
+
 		JPanel inputContainer = new JPanel();
 		inputContainer.setLayout(new BoxLayout(inputContainer, BoxLayout.PAGE_AXIS));
 		inputContainer.add(scrollInput);
@@ -336,57 +342,57 @@ public class MonopolyGUI extends JFrame {
 		guiButtons.add(useCard);
 		guiButtons.add(trade);
 		guiButtons.add(endTurn);
-		
-		
+
+
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);
 		eventTextArea.setWrapStyleWord(true);
 		eventTextArea.setLineWrap(true);
 		eventTextArea.setEditable(false);
-				
+
 		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons, community, chance);
-	
+
 		return board;
 	}
-	
+
 	private void initializeButtons(){
 		this.buy = new JButton(BUY);
 		buy.setEnabled(false);
-		
+
 		this.useCard = new JButton(JAIL_CARD);
 		useCard.setEnabled(false);
-		
+
 		this.throwDice = new JButton(THROW_DICE);
-			
+
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
 
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-		
+
 				Timer t = new Timer(DICE_MOVEMENT_DELAY,this);
 
 				//if we start a new turn
 				if(throwValue == 0){
 					step = 0;
 					eventTextArea.setText(THROWING_DICE + "\n");
-								
-					tabPane.addTab("Trade", tradeCard());
-					
+
+					tabPane.addTab("Trade", tradeTab());
+
 					//generates number between 1 and 12
 					int val = (int)(12*Math.random())+1;
-						
+
 					//if the value is one, take 2 else take val
 					throwValue = val == 1 ? 2 : val;
-					
+
 					eventTextArea.append(DICE_RESULTS + throwValue + "\n");
-					
+
 					throwDice.setEnabled(false);
 
 					//we get the token relative to the player with ID 1
 					newPlace = initTokens[0];
-					
+
 					//start the timer
 					t.start();
 				}
@@ -413,88 +419,109 @@ public class MonopolyGUI extends JFrame {
 					currentPos = (currentPos+throwValue)%TILE_NUMBER;
 					throwValue = 0;
 					step = 0;
-					
+
 					throwDice.setEnabled(true);
 				}
 			}
 		});
-		
+
 		this.community = new JButton("Community");
 		this.community.setEnabled(false);
-		
+
 		this.chance = new JButton("Chance");
 		this.chance.setEnabled(false);
-		
+
 		this.endTurn = new JButton("End turn");
 		this.endTurn.setEnabled(false);
-		
+
 		this.trade = new JButton("Trade");
 		this.trade.setEnabled(false);
-		
 	}
-	
+
 	/**
 	 * This method is used to draw the JPanel used 
 	 * to trade properties / card / money with another player
 	 * @return
 	 */
-	private JPanel tradeCard(){
-		JPanel trade = new JPanel();
-		trade.setLayout(new BoxLayout(trade, BoxLayout.PAGE_AXIS));
+	private JScrollPane tradeTab(){
+		JPanel yourOffer = new JPanel();
+		yourOffer.setLayout(new GridLayout(9, 2));
 		
-		JPanel terrainExchange = new JPanel();
-		JPanel cardExchange = new JPanel();
-		JPanel moneyExchange = new JPanel();
-		JPanel sendButton = new JPanel();
-	
-		JButton sendRequest = new JButton("Send");
-		sendButton.add(sendRequest);
-				
-		//elements for the users list
-		String[] usernames = new String[8];
-		String[] origin = {"From", "To"};
+		this.terrainCheck = new JCheckBox();
+		this.cardCheck = new JCheckBox();
+		this.moneyCheck = new JCheckBox();
+		this.rcvrTerrainCheck = new JCheckBox();
+		this.rcvrCardCheck = new JCheckBox();
+		this.rcvrMoneyCheck = new JCheckBox();
 		
-		System.out.println(playerNumber);
+		this.sendTradeRequest = new JButton("Send");
+		
+		this.myTerrainBox = new JComboBox();
+		this.moneySpinner = new JSpinner();
+		this.rcvrMoneySpinner = new JSpinner();
+		this.jailCardLbl = new JLabel("Jail Card");
+		this.rcvrJailCardLbl = new JLabel("Jail Card");
+		
+		this.usersBox = new JComboBox();
 		
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
-			usernames[i] = pl.get(i).getName();
+			this.usersBox.addItem(pl.get(i).getName());
 		}
 		
-		JPanel userListPanel = new JPanel();
-		JComboBox userList = new JComboBox(usernames);
-		JComboBox originList = new JComboBox(origin);
-		
-		userListPanel.add(originList);
-		userListPanel.add(userList);
-		
-		//elements for terrain exchange
-		String[] terrain = new String[2];
-		terrain[0] = "Terr1";
-		terrain[1] = "Terr2";
-		JComboBox comboTerrain = new JComboBox(terrain);
-		terrainExchange.add(comboTerrain);
-		
-		//elements for the card exchange
-		JLabel jailCardLbl = new JLabel("Jail Card");
-		cardExchange.add(jailCardLbl);
+		this.hisTerrainBox = new JComboBox();
 				
-		//elements for the money exchange
+		//change 10 to selectedPlayer.getTerrain.size
+		for(int i = 0 ; i < 10 ; i++){
+			this.hisTerrainBox.addItem(i);
+		}
+		
+		myTerrainBox.setEnabled(false);
+		moneySpinner.setEnabled(false);
+		jailCardLbl.setEnabled(false);
+		
+		hisTerrainBox.setEnabled(false);
+		rcvrMoneySpinner.setEnabled(false);
+		rcvrJailCardLbl.setEnabled(false);
+		
+		JLabel offerLbl = new JLabel("Your offer is ");
+		JLabel wantedRes = new JLabel("What do you want from player ");
+				
+		//change 10 to localPlayer.getTerrains
+		for(int i = 0 ; i < 10 ; i++){
+			myTerrainBox.addItem(i);
+		}
+			
+		//money spinner
 		int startMoney = 0;
-		SpinnerModel moneyModel = new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1);
-		JSpinner moneySpinner = new JSpinner(moneyModel);
-		moneyExchange.add(moneySpinner);
-			
+		moneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
+		rcvrMoneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
+				
+		//add the panels to the container
+		yourOffer.add(offerLbl,0);
+		yourOffer.add(new JLabel(" "), 1);
+		yourOffer.add(terrainCheck, 2);
+		yourOffer.add(myTerrainBox, 3);
+		yourOffer.add(cardCheck, 4);
+		yourOffer.add(jailCardLbl, 5);
+		yourOffer.add(moneyCheck, 6);
+		yourOffer.add(moneySpinner, 7);
+		yourOffer.add(wantedRes, 8);
+		yourOffer.add(usersBox, 9);
+		yourOffer.add(rcvrTerrainCheck, 10);
+		yourOffer.add(hisTerrainBox, 11);
+		yourOffer.add(rcvrCardCheck, 12);
+		yourOffer.add(rcvrJailCardLbl, 13);
+		yourOffer.add(rcvrMoneyCheck, 14);
+		yourOffer.add(rcvrMoneySpinner, 15);
+		yourOffer.add(new JLabel(" "), 16);
+		yourOffer.add(sendTradeRequest, 17);
+				
+		JScrollPane scrollInput = new JScrollPane(yourOffer);
+		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
-		//add the element to the container JPanel
-		trade.add(userListPanel);
-		trade.add(terrainExchange);
-		trade.add(cardExchange);
-		trade.add(moneyExchange);
-		trade.add(sendButton);
+		return scrollInput;
 		
-		return trade;
-			
 	}
-	
 }
