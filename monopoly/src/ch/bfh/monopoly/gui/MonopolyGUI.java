@@ -103,19 +103,18 @@ public class MonopolyGUI extends JFrame {
 	private BoardController bc;
 	private GameController gc;
 
-	//TEMP TEMP TEMP
-	private List<Player> pl = new ArrayList<Player>();
+
+	private List<Player> pl;
 
 	/**
 	 * Construct a MonopolyGUI
 	 * @param bc the board controller used to query the board
 	 */
 	public MonopolyGUI(BoardController bc, GameController gc){
+		this.bc = bc;
+		this.gc = gc;
 
-		/**
-		 * ONLY FOR TEST
-		 */
-		//it must be moved in another class
+		//token initialization
 		initTokens[0] = new Token(Color.RED,0.1,0.375);
 		initTokens[1] = new Token(Color.GREEN, 0.3, 0.375);
 		initTokens[2] = new Token(Color.BLUE, 0.5, 0.375);
@@ -128,21 +127,13 @@ public class MonopolyGUI extends JFrame {
 		//initialize the buttons with the action listener
 		initializeButtons();
 
-		//TEMP TEMP TEMP
-		for (int x = 0 ; x < 8 ; x++){
-			pl.add(new Player("Player" + x, 15000));
+		this.playerNumber = gc.getPlayers().size();
+		this.pl = gc.getPlayers();
+				
+		for (int x = 0 ; x < playerNumber ; x++){
+			System.out.println(x);
 			pl.get(x).setToken(initTokens[x]);
 		}
-
-		//this assignment is also TEMP
-		this.playerNumber = pl.size();
-
-		/**
-		 * END ONLY FOR TEST
-		 */
-
-		this.bc = bc;
-		this.gc = gc;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
@@ -173,7 +164,6 @@ public class MonopolyGUI extends JFrame {
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
 		}
-
 
 		//add the tokens to the first tile
 		for(int i = 0 ; i < playerNumber ; i++){
@@ -216,7 +206,7 @@ public class MonopolyGUI extends JFrame {
 			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
 
 			//the local player is always shown
-			if(pl.get(j).getName().equals("Player1"))
+			if(pl.get(j).getName().equals(gc.getLocalPlayerName()))
 				plInfo.showTerrains();
 
 			info.add(plInfo);
@@ -300,7 +290,7 @@ public class MonopolyGUI extends JFrame {
 				//if we press the enter key
 				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-					chat.append(text);
+					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
 					chat.setCaretPosition(chat.getDocument().getLength());
 					gc.sendChatMessage(text);
 					input.setText("");
@@ -342,7 +332,6 @@ public class MonopolyGUI extends JFrame {
 		guiButtons.add(useCard);
 		guiButtons.add(trade);
 		guiButtons.add(endTurn);
-
 
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);

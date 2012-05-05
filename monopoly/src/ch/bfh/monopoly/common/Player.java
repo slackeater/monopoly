@@ -61,6 +61,21 @@ public class Player {
 		playerSubject = new ConcreteSubject();
 	}
 	
+	/**
+	 * Create a Player
+	 * @param name
+	 * 			the name of the player
+	 */
+	public Player(String name){
+		this.name = name;
+		position = 0;
+		isInJail = false;
+		turnToken = false;
+		jailCard = 0;
+		properties = new ArrayList<Tile>();
+		playerSubject = new ConcreteSubject();
+	}
+	
 	
 	public int numberRailRoadsOwned(){
 		int rrOwned=0;
@@ -104,10 +119,9 @@ public class Player {
 		return account;
 	}
 
-	//PROBABLY NOT NEEDED
-//	public void setAccount(int account) {
-//		this.account = account;
-//	}
+	public void setAccount(int account) {
+		this.account = account;
+	}
 
 	public ArrayList<Tile> getProperties() {
 		return properties;

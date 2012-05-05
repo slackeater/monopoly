@@ -47,12 +47,19 @@ public class WelcomePanel extends JFrame{
 	private String name;
 	private int port;
 	private String ip;
+	
+	private GameClient gameClient;
+	private GameController gc;
+	private BoardController bc;
 
 	/**
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(){
-
+		this.gameClient = new GameClient(new Locale("EN"));
+		this.gc = new GameController(this.gameClient);
+		this.bc = new BoardController(gameClient.getBoard());
+		
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
@@ -66,16 +73,9 @@ public class WelcomePanel extends JFrame{
 	}
 
 	/**
-	 * Initialize the client by creating the necessary 
-	 * controllers and network 
+	 * Initialize the client by starting the network
 	 */
 	public void initClient(){
-		GameClient gameClient = new GameClient(new Locale("EN"));
-		GameController gc = new GameController(gameClient);
-		BoardController bc = new BoardController(gameClient.getBoard());
-
-		board = new MonopolyGUI(bc,gc);
-		
 		IoSession cliSession;
 		
 		try {
@@ -83,6 +83,9 @@ public class WelcomePanel extends JFrame{
 			
 			//set the IoSession in the GameClient
 			gameClient.setIoSession(cliSession);
+			
+			//create the username and send it to the server
+			gameClient.createLocalUser(name);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -171,6 +174,9 @@ public class WelcomePanel extends JFrame{
 							Thread.sleep(1250);
 							if(Monopoly.communicate.gameCanBegin()){
 								dispose();
+								
+								//create the frame
+								board = new MonopolyGUI(bc,gc);
 								board.setVisible(true);
 								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
 								break;
@@ -272,9 +278,13 @@ public class WelcomePanel extends JFrame{
 							Thread.sleep(1250);
 
 							if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
-								NetMessage gameStart = new NetMessage(Messages.GAME_START);
+								NetMessage gameStart = 
+								new NetMessage(Monopoly.communicate.getServerUsernames(),Messages.GAME_START);
 								Monopoly.communicate.sendBroadcast(gameStart);
 								dispose();
+								
+								//create the frame
+								board = new MonopolyGUI(bc,gc);
 								board.setVisible(true);
 								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
 								break;

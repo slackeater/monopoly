@@ -1,6 +1,8 @@
 package ch.bfh.monopoly.net;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.mina.core.service.IoHandler;
@@ -18,6 +20,7 @@ import ch.bfh.monopoly.common.Monopoly;
 public class ServerHandler implements IoHandler{
 
 	private List<IoSession> sessions = new ArrayList<IoSession>(); 
+	private List<String> usernames = new ArrayList<String>();
 
 	/**
 	 * Get the number of opened sessions on this server
@@ -25,6 +28,14 @@ public class ServerHandler implements IoHandler{
 	 */
 	public int getOpenedSessions(){
 		return this.sessions.size();
+	}
+
+	/**
+	 * Get the usernames of the players 
+	 * @return a List that contains the player's names
+	 */
+	public List<String> getUsernames(){
+		return Collections.unmodifiableList(usernames);
 	}
 
 	@Override
@@ -41,10 +52,10 @@ public class ServerHandler implements IoHandler{
 	public void sendBroadcast(NetMessage n, IoSession notBroadcast){
 		for(int j = 0 ; j < sessions.size() ; j++){
 			if(notBroadcast != sessions.get(j))
-			sessions.get(j).write(n);
+				sessions.get(j).write(n);
 		}
 	}
-	
+
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
@@ -53,9 +64,14 @@ public class ServerHandler implements IoHandler{
 
 		System.out.println("BROADCASTING...");
 
-		//when we receive a message, we must broadcast it
-		sendBroadcast(n, arg0);
-		
+		//if a user send its username, add it to the list
+		if(n.getMessageType() == Messages.SEND_USERNAME){
+			this.usernames.add(n.getText());
+		}
+		else
+			//when we receive a message, we must broadcast it
+			sendBroadcast(n, arg0);
+
 	}
 
 	@Override
@@ -87,7 +103,7 @@ public class ServerHandler implements IoHandler{
 
 	@Override
 	public void sessionOpened(IoSession arg0) throws Exception {
-		
+
 	}
 
 }

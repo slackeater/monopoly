@@ -3,6 +3,7 @@ package ch.bfh.monopoly.common;
 import java.awt.Color;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -16,7 +17,7 @@ import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.*;
 
 public class Board {
-	private Player[] players;
+	private List<Player> players;
 	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
@@ -68,12 +69,12 @@ public class Board {
 		createTileSubjects();
 	}
 
-	
+
 	public PlayerSubject getSubjectForPlayer(String playerName){
 		Player plr =  getPlayerByName(playerName);
 		return plr.getPlayerSubject();
 	}
-	
+
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
@@ -81,8 +82,8 @@ public class Board {
 	public TileSubject getTileSubjectAtIndex(int index) {
 		return tileSubjects[index];
 	}
-	
-	
+
+
 	/**
 	 * creates 40 ConreceteSubject instances, 1 for every tile on the board each
 	 * is associated with a given tile through the index number
@@ -94,9 +95,9 @@ public class Board {
 			tileSubjects[i] = new ConcreteSubject(i);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * buy a house for a given property checks that the tileId provIded refers
 	 * to a terrain
@@ -108,7 +109,7 @@ public class Board {
 		Tile t = tiles[tileId];
 		if (!(t instanceof Terrain))
 			throw new RuntimeException(
-					"Tile must be a terrain in order to build houses on it");
+			"Tile must be a terrain in order to build houses on it");
 		Terrain terrain = (Terrain) t;
 		terrain.buildHouse();
 		int id = terrain.getId();
@@ -138,7 +139,7 @@ public class Board {
 			tileSubjects[tileId].notifyListeners();
 		} else
 			throw new RuntimeException(
-					"cannot complete transfer: object to transfer is not a property");
+			"cannot complete transfer: object to transfer is not a property");
 	}
 
 	public Tile getTileById(int tileId) {
@@ -165,7 +166,7 @@ public class Board {
 		Property p = castTileToProperty(t);
 		if (p.getOwner() != null) {
 			throw new RuntimeException(
-					"Property is already owned: cannot add properyt to player -> use transferProperty");
+			"Property is already owned: cannot add properyt to player -> use transferProperty");
 		} else {
 			Player toPlayer = getPlayerByName(toName);
 			toPlayer.addProperty(p);
@@ -206,18 +207,27 @@ public class Board {
 	 *            game
 	 * @param the
 	 *            locale that was chosen: needed to give the players the correct
-	 *            starting balance in there account TODO resolve open question:
-	 *            why createPlayers???? Every client must receive a list of
-	 *            players from the server and then copy it to the board
+	 *            starting balance in there account
+	 * 
 	 */
-	public void createPlayers(String[] playerNames, Locale loc) {
-		players = new Player[playerNames.length];
+	public void createPlayers(List<String> playerNames, Locale loc, Player localPlayer) {
+		players = new ArrayList<Player>();
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
-				"startMoney");
+		"startMoney");
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
-		for (int i = 0; i < playerNames.length; i++) {
-			players[i] = new Player(playerNames[i], startMoney);
+		for (int i = 0; i < playerNames.size(); i++) {
+
+			//the game client create the local player
+			//so if the name in the list is equal to the name of 
+			//the local player don't create a new player
+			if(localPlayer.getName().equals(playerNames.get(i))){
+				localPlayer.setAccount(startMoney);
+				players.add(localPlayer);
+			}
+			else{
+				players.add(new Player(playerNames.get(i), startMoney));
+			}
 		}
 	}
 
@@ -229,10 +239,10 @@ public class Board {
 	 */
 	public Player getPlayerByName(String name) {
 		Player p = null;
-		for (int i = 0; i < players.length; i++) {
-			String playerName = players[i].getName();
+		for (int i = 0; i < players.size(); i++) {
+			String playerName = players.get(i).getName();
 			if (playerName.equals(name))
-				p = players[i];
+				p = players.get(i);
 		}
 		if (p == null)
 			throw new RuntimeException("Player not found with the given name");
@@ -256,7 +266,7 @@ public class Board {
 	public Property castTileToProperty(Tile t) {
 		if (!(t instanceof Property))
 			throw new RuntimeException(
-					"cannot complete transfer: object to transfer is not a property");
+			"cannot complete transfer: object to transfer is not a property");
 		return ((Property) t);
 	}
 
@@ -277,7 +287,7 @@ public class Board {
 		p.setOwner(player);
 		player.withdawMoney(p.getPrice());
 	}
-	
+
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
 	 * @param playerName the player to check the account of
@@ -370,4 +380,8 @@ public class Board {
 		this.freeParking = amount;
 	}
 	
+	public List<Player> getPlayers(){
+		return this.players;
+	}
+
 }

@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.net;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 
 import ch.bfh.monopoly.common.Player;
@@ -14,6 +15,7 @@ public class NetMessage implements Serializable{
 	
 	private String from_player;
 	private String to_player;
+	private List<String> playerNames;
 	private Locale loc;
 	private String string;
 	private int integerValue;
@@ -114,9 +116,23 @@ public class NetMessage implements Serializable{
 	}
 
 	
-	
+	/**
+	 * Construct a NetMessage
+	 * @param s the message of the chat
+	 * @param m the message type
+	 */
 	public NetMessage(String s, Messages m){
 		this.string = s;
+		this.m = m;
+	}
+	
+	/**
+	 * Construct a NetMessage
+	 * @param l the list of the players
+	 * @param m the message type
+	 */
+	public NetMessage(List<String> l, Messages m){
+		this.playerNames = l;
 		this.m = m;
 	}
 	
@@ -134,4 +150,12 @@ public class NetMessage implements Serializable{
 		return string;
 	}
 
+	/**
+	 * Get the list of the user
+	 * @return List<String>
+	 * 			a list containing the user names
+	 */
+	public List<String> getUserNameList(){
+		return this.playerNames;
+	}
 }

@@ -1,5 +1,7 @@
 package ch.bfh.monopoly.common;
 
+import java.util.List;
+
 import ch.bfh.monopoly.observer.WindowSubject;
 
 public class GameController {
@@ -41,10 +43,28 @@ public class GameController {
 		gameClient.performEvent();
 	}
 	
-	
+	/**
+	 * Send a chat message
+	 * @param s 
+	 * 			the message to be sent
+	 */
 	public void sendChatMessage(String s){
 		gameClient.sendChatMessage(s);
 	}
+	
+	/**
+	 * Get the name of the local player
+	 * @return String
+	 * 			the name of the local player
+	 */
+	public String getLocalPlayerName(){
+		return gameClient.getLocalPlayer().getName();
+	}
+	
+	public List<Player> getPlayers(){
+		return gameClient.getPlayers();
+	}
+	
 	public WindowSubject getWindowSubject(){
 		return gameClient.getWindowSubject();
 	}

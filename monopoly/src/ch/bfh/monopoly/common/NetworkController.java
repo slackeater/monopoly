@@ -2,6 +2,7 @@ package ch.bfh.monopoly.common;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -66,10 +67,18 @@ public class NetworkController {
 	}
 	
 	/**
+	 * Get the list of the usernames
+	 * @return a List with the usernames
+	 */
+	public List<String> getServerUsernames(){
+		return srvHandler.getUsernames();
+	}
+	
+	/**
 	 * Send a broadcast to the connected client
 	 */
-	public void sendBroadcast(NetMessage n){
-		srvHandler.sendBroadcast(n,null);
+	public void sendBroadcast(NetMessage m){
+		srvHandler.sendBroadcast(m,null);
 	}
 	
 }

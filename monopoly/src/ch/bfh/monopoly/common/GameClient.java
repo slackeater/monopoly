@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.common;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.mina.core.session.IoSession;
@@ -49,16 +50,8 @@ public class GameClient {
 	public GameClient(Locale loc) {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000);
-		// loc should be received from a netmessage sent when the server calls
-		// startGame();
 		this.loc = loc;
-
-		// TODO this list must be received from a netMessage when the game
-		// starts
-		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
-				"Elie" };
-		board = new Board(this);
-		board.createPlayers(playerNames, loc);
+		this.board = new Board(this);
 	}
 
 	public Locale getLoc() {
@@ -268,8 +261,8 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		// String text = this.localPlayer.getName().concat(" " + s);
-		NetMessage nm = new NetMessage(s, Messages.CHAT_MSG);
+		String text = this.localPlayer.getName().concat(": " + s + "\n");
+		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
 
@@ -281,4 +274,38 @@ public class GameClient {
 		return ws;
 	}
 
+	/**
+	 * Create the local player 
+	 * @param name the name of the local player
+	 */
+	public void createLocalUser(String name){
+		this.localPlayer = new Player(name);
+		
+		//send the username to the sever
+		NetMessage uname = new NetMessage(name, Messages.SEND_USERNAME);
+		this.session.write(uname);
+	}
+	
+	/**
+	 * Set the list of player in the game and create
+	 * the relative player instance
+	 * @param names the list of names of the player
+	 */
+	public void setUsersList(List<String> names){
+		board.createPlayers(names, loc, localPlayer);
+	}
+	
+	/**
+	 * Get the local player
+	 * @return Player
+	 * 			the local player
+	 */
+	public Player getLocalPlayer(){
+		return this.localPlayer;
+	}
+	
+	public List<Player> getPlayers(){
+		return this.board.getPlayers();
+	}
+	
 }

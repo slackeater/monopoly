@@ -44,8 +44,14 @@ public class ClientHandler implements IoHandler {
 		System.out.println("message received");
 		
 		System.out.println(n.getMessageType());
+		
 		//if the message is GAME_START 
 		if(n.getMessageType() == Messages.GAME_START){
+			gc.setUsersList(n.getUserNameList());
+			
+			//TODO only for test
+			System.out.println(n.getUserNameList());
+			
 			gameCanBegin = true;
 		}
 		else if(n.getMessageType() == Messages.CHAT_MSG){
