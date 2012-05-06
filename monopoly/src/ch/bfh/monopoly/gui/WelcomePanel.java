@@ -63,6 +63,11 @@ public class WelcomePanel extends JFrame{
 	private static final int PANEL_HEIGHT = 0;
 
 	private static final String USER_NAME_PATTERN =  "^[a-z0-9_-]{3,15}$";
+	private static final String IPv4_PATTERN = 
+		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
 	/**
 	 * Construct a WelcomePanel
@@ -88,6 +93,7 @@ public class WelcomePanel extends JFrame{
 		main.add(infoArea());
 
 		add(main);
+		setResizable(false);
 	}
 
 	/**
@@ -105,13 +111,20 @@ public class WelcomePanel extends JFrame{
 		//if the user name doesn't match
 		if(!m.matches())
 			throw new Exception("Please insert a correct user name");
+		
+		p = Pattern.compile(IPv4_PATTERN);
+		m = p.matcher(ip);
+		
+		//if the ip doesn't match
+		if(!m.matches())
+			throw new Exception("Please insert a valid IPv4 address");
 
 		cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
 
 		//set the IoSession in the GameClient
 		gameClient.setIoSession(cliSession);
 
-		//create the username and send it to the server
+		//create the user name and send it to the server
 		gameClient.createLocalUser(name);
 	}
 
@@ -287,9 +300,7 @@ public class WelcomePanel extends JFrame{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
 					maxPlayers = (Integer) numPlayers.getNumber();
-
 					name = nameField.getText();
-
 
 					Monopoly.communicate.startServer(ip, port);
 
