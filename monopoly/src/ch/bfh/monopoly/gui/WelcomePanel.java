@@ -6,6 +6,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,19 +40,29 @@ import ch.bfh.monopoly.net.NetMessage;
  */
 public class WelcomePanel extends JFrame{
 
-	
+
 	private static final long serialVersionUID = -1865410778558897233L;
 	private JTextArea info;
 	private JFrame board;
 	private JTextField nameField;
-	
+
 	private String name;
 	private int port;
-	private String ip;
-	
+	private String ip, strIP, strPort;
+
 	private GameClient gameClient;
 	private GameController gc;
 	private BoardController bc;
+
+	private Dimension fieldSize, panelSize;
+
+	private static final int FIELD_WIDTH = 125;
+	private static final int FIELD_HEIGHT = 20;
+
+	private static final int PANEL_WIDTH = 300;
+	private static final int PANEL_HEIGHT = 0;
+
+	private static final String USER_NAME_PATTERN =  "^[a-z0-9_-]{3,15}$";
 
 	/**
 	 * Construct a WelcomePanel
@@ -59,7 +71,13 @@ public class WelcomePanel extends JFrame{
 		this.gameClient = new GameClient(new Locale("EN"));
 		this.gc = new GameController(this.gameClient);
 		this.bc = new BoardController(gameClient.getBoard());
-		
+
+		this.strIP = "IP";
+		this.strPort = "Port";
+
+		this.fieldSize = new Dimension(FIELD_WIDTH,FIELD_HEIGHT);
+		this.panelSize = new Dimension(PANEL_WIDTH,PANEL_HEIGHT);
+
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
 
@@ -74,27 +92,30 @@ public class WelcomePanel extends JFrame{
 
 	/**
 	 * Initialize the client by starting the network
+	 * and checking the user name
 	 */
-	public void initClient(){
+	public void initClient() throws IOException, UnknownHostException, Exception{
+		Pattern p;
+		Matcher m;		
 		IoSession cliSession;
-		
-		try {
-			cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
-			
-			//set the IoSession in the GameClient
-			gameClient.setIoSession(cliSession);
-			
-			//create the username and send it to the server
-			gameClient.createLocalUser(name);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+
+		p = Pattern.compile(USER_NAME_PATTERN);
+		m = p.matcher(name);
+
+		//if the user name doesn't match
+		if(!m.matches())
+			throw new Exception("Please insert a correct user name");
+
+		cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
+
+		//set the IoSession in the GameClient
+		gameClient.setIoSession(cliSession);
+
+		//create the username and send it to the server
+		gameClient.createLocalUser(name);
 	}
-	
-	
+
+
 	/**
 	 * Draw the panel with the image
 	 * @return a JPanel with the logo of monopoly
@@ -118,15 +139,15 @@ public class WelcomePanel extends JFrame{
 		JPanel nameContainer = new JPanel();
 		nameContainer.setLayout(new BoxLayout(nameContainer, BoxLayout.PAGE_AXIS));
 		nameContainer.setBorder(BorderFactory.createTitledBorder("Insert your name"));
-		nameContainer.setMaximumSize(new Dimension(300,0));
+		nameContainer.setMaximumSize(panelSize);
 		nameField = new JTextField();
 		nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
-		nameField.setMaximumSize(new Dimension(125,20));
+		nameField.setMaximumSize(fieldSize);
 		nameContainer.add(nameField);
 		return nameContainer;
 	}
-	
-	
+
+
 	/**
 	 * Draw the panel with the configuration for join a game
 	 * @return a JPanel with the fields and button for join a game
@@ -135,19 +156,15 @@ public class WelcomePanel extends JFrame{
 		JPanel client = new JPanel();
 		client.setLayout(new BoxLayout(client, BoxLayout.PAGE_AXIS));
 		client.setBorder(BorderFactory.createTitledBorder("Join a game"));
-		client.setMaximumSize(new Dimension(300,0));
+		client.setMaximumSize(panelSize);
 
-		JLabel labelIP = new JLabel("IP");
-		final JTextField serverIP = new JTextField();
+		final JTextField clientIP = new JTextField();
+		clientIP.setAlignmentX(Component.LEFT_ALIGNMENT);
+		clientIP.setMaximumSize(fieldSize);
 
-		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
-		serverIP.setMaximumSize(new Dimension(125,20));
-
-		JLabel labelPort = new JLabel("Port");
-		final JTextField serverPort = new JTextField();
-
-		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
-		serverPort.setMaximumSize(new Dimension(125,20));
+		final JTextField clientPort = new JTextField();
+		clientPort.setAlignmentX(Component.LEFT_ALIGNMENT);
+		clientPort.setMaximumSize(fieldSize);
 
 		final JButton connect = new JButton("Connect");
 
@@ -161,32 +178,43 @@ public class WelcomePanel extends JFrame{
 				connect.setEnabled(false);
 
 				try{
-					ip = serverIP.getText();
-					port = Integer.parseInt(serverPort.getText());
+					ip = clientIP.getText();
+					port = Integer.parseInt(clientPort.getText());
 					name = nameField.getText();
 
-					info.append("Connecting to " + ip + "and port " + port + "\n");
 
-					try {
-						initClient();
-						
-						while(true){
-							Thread.sleep(1250);
-							if(Monopoly.communicate.gameCanBegin()){
-								dispose();
-								
-								//create the frame
-								board = new MonopolyGUI(bc,gc);
-								board.setVisible(true);
-								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
-								break;
-							}
+					initClient();
+
+					info.append("Connecting to " + ip + " and port " + port + "\n");
+
+					while(true){
+						Thread.sleep(1250);
+						if(Monopoly.communicate.gameCanBegin()){
+							dispose();
+
+							//create the frame
+							board = new MonopolyGUI(bc,gc);
+							board.setVisible(true);
+							board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							break;
 						}
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					} 
+					}
+
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
+					connect.setEnabled(true);
+				}
+				catch(NullPointerException e1){
+					info.append("Please insert the user name\n");
+					connect.setEnabled(true);
+				} catch (UnknownHostException e1) {
+					info.append(e1.getMessage()+"\n");
+					connect.setEnabled(true);
+				} catch (IOException e1) {
+					info.append(e1.getMessage()+"\n");
+					connect.setEnabled(true);
+				} catch (Exception e1) {
+					info.append(e1.getMessage()+"\n");
 					connect.setEnabled(true);
 				}
 			}
@@ -202,10 +230,10 @@ public class WelcomePanel extends JFrame{
 
 		});
 
-		client.add(labelIP);
-		client.add(serverIP);
-		client.add(labelPort);
-		client.add(serverPort);
+		client.add(new JLabel(this.strIP));
+		client.add(clientIP);
+		client.add(new JLabel(this.strPort));
+		client.add(clientPort);
 		client.add(Box.createRigidArea(new Dimension(0,10)));
 		client.add(connect);
 
@@ -217,21 +245,17 @@ public class WelcomePanel extends JFrame{
 	 * @return a JPanel with the fields and button used to start monopoly a server 
 	 */
 	private JPanel serverConfig(){
-		JPanel client = new JPanel();
-		client.setLayout(new BoxLayout(client, BoxLayout.PAGE_AXIS));
-		client.setBorder(BorderFactory.createTitledBorder("Start a server"));
-		client.setMaximumSize(new Dimension(300,0));
-
-		JLabel labelIP = new JLabel("IP");
+		JPanel server = new JPanel();
+		server.setLayout(new BoxLayout(server, BoxLayout.PAGE_AXIS));
+		server.setBorder(BorderFactory.createTitledBorder("Start a server"));
+		server.setMaximumSize(panelSize);
 
 		final JTextField serverIP = new JTextField();
-		serverIP.setMaximumSize(new Dimension(125,20));
+		serverIP.setMaximumSize(fieldSize);
 		serverIP.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		JLabel labelPort = new JLabel("Port");
-
 		final JTextField serverPort = new JTextField();
-		serverPort.setMaximumSize(new Dimension(125,20));
+		serverPort.setMaximumSize(fieldSize);
 		serverPort.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		JLabel player = new JLabel("Players");
@@ -244,7 +268,7 @@ public class WelcomePanel extends JFrame{
 		JLabel labelLang = new JLabel("Locale");
 		String menuLang[] = {"French", "English"};
 		JComboBox langs = new JComboBox(menuLang);
-		langs.setMaximumSize(new Dimension(125,20));
+		langs.setMaximumSize(fieldSize);
 		langs.setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		final JButton connect = new JButton("Start server");
@@ -258,46 +282,54 @@ public class WelcomePanel extends JFrame{
 			public void mousePressed(MouseEvent e) {
 				connect.setEnabled(false);
 				int maxPlayers;
-				
+
 				try{
 					ip = serverIP.getText();
 					port = Integer.parseInt(serverPort.getText());
 					maxPlayers = (Integer) numPlayers.getNumber();
+
 					name = nameField.getText();
-					
+
+
+					Monopoly.communicate.startServer(ip, port);
+
+					initClient();
+
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
 
-					try {
-						
-						Monopoly.communicate.startServer(ip, port);
+					while(true){
+						Thread.sleep(1250);
 
-						initClient();
-						
-						while(true){
-							Thread.sleep(1250);
-
-							if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
-								NetMessage gameStart = 
+						//when all the server are connected
+						if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
+							NetMessage gameStart = 
 								new NetMessage(Monopoly.communicate.getServerUsernames(),Messages.GAME_START);
-								Monopoly.communicate.sendBroadcast(gameStart);
-								dispose();
-								
-								//create the frame
-								board = new MonopolyGUI(bc,gc);
-								board.setVisible(true);
-								board.setExtendedState(JFrame.MAXIMIZED_BOTH);
-								break;
-							}
+							Monopoly.communicate.sendBroadcast(gameStart);
+							dispose();
+
+							//create the frame
+							board = new MonopolyGUI(bc,gc);
+							board.setVisible(true);
+							board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							break;
 						}
-					} catch (IOException e1) {
-						info.append(e1.getMessage()+"\n");
-						connect.setEnabled(true);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					} 
+					}
+
 				}catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
+					connect.setEnabled(true);
+				}catch(NullPointerException e1){
+					info.append("Please insert the user name\n");
+					connect.setEnabled(true);
+				} catch (UnknownHostException e1) {
+					info.append(e1.getMessage()+"\n");
+					connect.setEnabled(true);
+				} catch (IOException e1) {
+					info.append(e1.getMessage()+"\n");
+					connect.setEnabled(true);
+				} catch (Exception e1) {
+					info.append(e1.getMessage()+"\n");
 					connect.setEnabled(true);
 				}
 			}
@@ -312,20 +344,20 @@ public class WelcomePanel extends JFrame{
 			public void mouseClicked(MouseEvent e) {}	
 		});
 
-		client.add(labelIP);
-		client.add(serverIP);
-		client.add(labelPort);
-		client.add(serverPort);
-		client.add(player);
-		client.add(spinPanel);
-		client.add(labelLang);
-		client.add(langs);
+		server.add(new JLabel(this.strIP));
+		server.add(serverIP);
+		server.add(new JLabel(this.strPort));
+		server.add(serverPort);
+		server.add(player);
+		server.add(spinPanel);
+		server.add(labelLang);
+		server.add(langs);
 
-		client.add(Box.createRigidArea(new Dimension(0,10)));
-		client.add(connect);
+		server.add(Box.createRigidArea(new Dimension(0,10)));
+		server.add(connect);
 
-		client.setAlignmentX(Component.LEFT_ALIGNMENT);
-		return client;
+		server.setAlignmentX(Component.LEFT_ALIGNMENT);
+		return server;
 	}
 
 	/**
