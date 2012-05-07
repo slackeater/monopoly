@@ -13,8 +13,10 @@ public class GetVariableSumEvent extends AbstractTileEvent{
 
 	@Override
 	public void performEvent() {
+		//gets position of current player to figure out which course of action to take in the switch statement
+		eventId=gameClient.getCurrentPlayer().getPosition();
 		switch (eventId) {
-		case 0: //FREE PARKING
+		case 20: //FREE PARKING
 			int amount = gameClient.getFreeParking();
 			gameClient.getCurrentPlayer().depositMoney(amount);
 			break;

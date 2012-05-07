@@ -2,7 +2,11 @@ package ch.bfh.monopoly.tests;
 
 import static org.junit.Assert.*;
 
+import java.awt.List;
+import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,20 +17,18 @@ import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 
 public class EventTests {
-	Locale loc;
 	GameClient gameClient;
 	Board board;
 	GameController gc;
 
 	@Before
 	public void setup() {
-		gameClient = new GameClient(new Locale("EN"));
-		gc = new GameController(gameClient);
-		board = new Board(gameClient);
-		String[] playerNames = { "Justin", "Giuseppe", "Damien", "Cyril",
-				"Elie" };
-		board.createPlayers(playerNames, gameClient.getLoc());
+		TestInstanceGenerator tig = new TestInstanceGenerator();
+		gameClient= tig.getGameClient();
+		board=tig.getBoard();
+		gc=tig.getGc();
 	}
+
 
 	/**
 	 * test that landing on GO TO JAIL send the player to jail and changes
@@ -218,4 +220,7 @@ public class EventTests {
 		assertTrue(p.getPosition() != 7);
 
 	}
+	
+	
+	
 }

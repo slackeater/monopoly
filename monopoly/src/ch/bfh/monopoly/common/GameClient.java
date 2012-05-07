@@ -15,7 +15,6 @@ import ch.bfh.monopoly.tile.Property;
 
 public class GameClient {
 
-	private Player localPlayer;
 	private Player currentPlayer;
 	private Player bank;
 	private Locale loc;
@@ -104,7 +103,7 @@ public class GameClient {
 	 */
 	public void buyHouse(int tileID) {
 		board.buyHouse(tileID);
-		NetMessage nm = new NetMessage(this.localPlayer, tileID,
+		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.BUY_HOUSE);
 		session.write(nm);
 	}
@@ -261,7 +260,7 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		String text = this.localPlayer.getName().concat(": " + s + "\n");
+		String text = board.getLocalPlayer().getName().concat(": " + s + "\n");
 		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
@@ -274,25 +273,14 @@ public class GameClient {
 		return ws;
 	}
 
-	/**
-	 * Create the local player 
-	 * @param name the name of the local player
-	 */
-	public void createLocalUser(String name){
-		this.localPlayer = new Player(name);
-		
-		//send the username to the sever
-		NetMessage uname = new NetMessage(name, Messages.SEND_USERNAME);
-		this.session.write(uname);
-	}
 	
 	/**
 	 * Set the list of player in the game and create
 	 * the relative player instance
 	 * @param names the list of names of the player
 	 */
-	public void setUsersList(List<String> names){
-		board.createPlayers(names, loc, localPlayer);
+	public void setUsersList(List<String> names, String localPlayerName){
+		board.createPlayers(names, loc, localPlayerName);
 	}
 	
 	/**
@@ -301,11 +289,9 @@ public class GameClient {
 	 * 			the local player
 	 */
 	public Player getLocalPlayer(){
-		return this.localPlayer;
+		return board.getLocalPlayer();
 	}
 	
-	public List<Player> getPlayers(){
-		return this.board.getPlayers();
-	}
+
 	
 }

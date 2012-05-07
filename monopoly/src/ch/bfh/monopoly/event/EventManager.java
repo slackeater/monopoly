@@ -77,7 +77,7 @@ public class EventManager {
 		String name = res.getString("go-name");
 		name = name.trim();
 		String cardText = res.getString("go-cardText");
-		name = name.trim();
+		cardText = cardText.trim();
 		String toParse = res.getString("go-amount");
 		int amount = Integer.parseInt(toParse);
 		BoardEvent te = new GetFixedSumEvent(name, cardText, amount, gameClient);
@@ -87,8 +87,8 @@ public class EventManager {
 		name = res.getString("freeParking-name");
 		name = name.trim();
 		cardText = res.getString("freeParking-cardText");
-		name = name.trim();
-		//0 is the variable sum code, used to tell the program to perform the FREE PARKING EVENT
+		cardText = cardText.trim();
+		//20 is the variable sum code, used to tell the program to perform the FREE PARKING EVENT
 		te = new GetVariableSumEvent(name, cardText, 0,gameClient);
 		tileEvents[20] = te;
 		
@@ -96,10 +96,21 @@ public class EventManager {
 		name = res.getString("incomeTax-name");
 		name = name.trim();
 		cardText = res.getString("incomeTax-cardText");
-		name = name.trim();
-		//0 is the variable sum code, used to tell the program to perform the FREE PARKING EVENT
+		cardText = cardText.trim();
+		//4 is the variable sum code, used to tell the program to perform the FREE PARKING EVENT
 		te = new GetVariableSumEvent(name, cardText, 4,gameClient);
 		tileEvents[4] = te;
+		
+		//CREATE LUXURY TAX
+		name = res.getString("luxuryTax-name");
+		name = name.trim();
+		cardText = res.getString("luxuryTax-cardText");
+		cardText = cardText.trim();
+		toParse = res.getString("luxuryTax-amount");
+		toParse = toParse.trim();
+		amount = Integer.parseInt(toParse);
+		te = new GetFixedSumEvent(name, cardText, amount, gameClient);
+		tileEvents[38] = te;
 		
 	}
 

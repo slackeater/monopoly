@@ -18,6 +18,7 @@ import ch.bfh.monopoly.tile.*;
 
 public class Board {
 	private List<Player> players;
+	private Player localPlayer;
 	private Tile[] tiles;
 	private int availableHouses;
 	private int availableHotels;
@@ -210,24 +211,16 @@ public class Board {
 	 *            starting balance in there account
 	 * 
 	 */
-	public void createPlayers(List<String> playerNames, Locale loc, Player localPlayer) {
+	public void createPlayers(List<String> playerNames, Locale loc, String localPlayerName) {
 		players = new ArrayList<Player>();
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
 		"startMoney");
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
+			Player plyr = new Player(playerNames.get(i), startMoney);
+			players.add(plyr);
 
-			//the game client create the local player
-			//so if the name in the list is equal to the name of 
-			//the local player don't create a new player
-			if(localPlayer.getName().equals(playerNames.get(i))){
-				localPlayer.setAccount(startMoney);
-				players.add(localPlayer);
-			}
-			else{
-				players.add(new Player(playerNames.get(i), startMoney));
-			}
 		}
 	}
 
@@ -375,13 +368,13 @@ public class Board {
 	public int getFreeParking() {
 		return freeParking;
 	}
+	
+	public Player getLocalPlayer() {
+		return localPlayer;
+	}
 
 	public void setFreeParking(int amount) {
 		this.freeParking = amount;
-	}
-	
-	public List<Player> getPlayers(){
-		return this.players;
 	}
 
 }

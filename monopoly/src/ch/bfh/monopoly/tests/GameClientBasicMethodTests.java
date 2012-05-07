@@ -22,9 +22,11 @@ public class GameClientBasicMethodTests {
 
 	@Before
 	public void setup() {
-		gameClient = new GameClient(new Locale("EN"));
-		board = gameClient.getBoard();
+		TestInstanceGenerator tig = new TestInstanceGenerator();
+		gameClient= tig.getGameClient();
+		board=tig.getBoard();
 	}
+
 
 	@Test
 	public void returnsCorrectFeeForHouses() {

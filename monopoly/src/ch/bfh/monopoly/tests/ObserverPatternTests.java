@@ -29,13 +29,17 @@ import ch.bfh.monopoly.tile.Tile;
 		GameController gc;
 		BoardController bc;
 
+		
 		@Before
 		public void setup() {
-			gameClient = new GameClient(new Locale("EN"));
-			board = gameClient.getBoard();
-			gc = new GameController(gameClient);
-			bc = new BoardController(board);
+			TestInstanceGenerator tig = new TestInstanceGenerator();
+			gameClient= tig.getGameClient();
+			board=tig.getBoard();
+			gc=tig.getGc();
+			bc=tig.getBc();
 		}
+
+		
 		
 		@Test
 		public void guiGetsPlayerSubject() {

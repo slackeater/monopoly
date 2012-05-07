@@ -8,7 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ch.bfh.monopoly.common.Board;
+import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.tile.Tile;
 
@@ -17,28 +19,30 @@ public class PlayerCreationTests {
 	
 	
 	Locale loc;
-	GameClient gc ;
+	GameClient gameClient;
+	Board board;
+	GameController gc;
+	BoardController bc;
+
 	
 	@Before
-	public void setup(){
-		gc = new GameClient(new Locale("EN"));
+	public void setup() {
+		TestInstanceGenerator tig = new TestInstanceGenerator();
+		gameClient= tig.getGameClient();
+		board=tig.getBoard();
+		gc=tig.getGc();
+		bc=tig.getBc();
 	}
 	
 	
 	@Test
 	public void playerObjectsHaveCorrentNames(){
-		Board board= new Board(gc);
-		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		board.createPlayers(playerNames,gc.getLoc());
 		Player p = board.getPlayerByName("Justin");
 		assertTrue(p.getName().equals("Justin"));
 	}
 	
 	@Test
 	public void playerJailStatusChanges(){
-		Board board= new Board(gc);
-		String[] playerNames = {"Justin","Giuseppe","Damien","Cyril","Elie"};
-		board.createPlayers(playerNames, gc.getLoc());
 		Player p = board.getPlayerByName("Justin");
 		p.setInJail(true);
 		assertTrue(p.isInJail());

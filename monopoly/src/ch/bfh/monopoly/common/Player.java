@@ -61,20 +61,21 @@ public class Player {
 		playerSubject = new ConcreteSubject();
 	}
 	
-	/**
-	 * Create a Player
-	 * @param name
-	 * 			the name of the player
-	 */
-	public Player(String name){
-		this.name = name;
-		position = 0;
-		isInJail = false;
-		turnToken = false;
-		jailCard = 0;
-		properties = new ArrayList<Tile>();
-		playerSubject = new ConcreteSubject();
-	}
+	//TODO we don't need this constructor, oder?  Delete it?
+//	/**
+//	 * Create a Player
+//	 * @param name
+//	 * 			the name of the player
+//	 */
+//	public Player(String name){
+//		this.name = name;
+//		position = 0;
+//		isInJail = false;
+//		turnToken = false;
+//		jailCard = 0;
+//		properties = new ArrayList<Tile>();
+//		playerSubject = new ConcreteSubject();
+//	}
 	
 	
 	public int numberRailRoadsOwned(){

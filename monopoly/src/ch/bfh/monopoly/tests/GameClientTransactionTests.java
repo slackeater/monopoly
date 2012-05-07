@@ -22,9 +22,11 @@ public class GameClientTransactionTests {
 
 	@Before
 	public void setup() {
-		gameClient = new GameClient(new Locale("EN"));
-		board = gameClient.getBoard();
+		TestInstanceGenerator tig = new TestInstanceGenerator();
+		gameClient= tig.getGameClient();
+		board=tig.getBoard();
 	}
+
 
 	/**
 	 * check that the method addPropertyToPlayer gives a property to a give player
