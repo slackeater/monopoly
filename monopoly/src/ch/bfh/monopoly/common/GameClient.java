@@ -317,6 +317,6 @@ public class GameClient {
 	public List<Player> getPlayers(){
 		return board.getPlayers();
 	}
-
+	
 	
 }
