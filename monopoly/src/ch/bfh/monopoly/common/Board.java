@@ -66,7 +66,7 @@ public class Board {
 				playerStates.add(pse);
 			}
 			for (PlayerListener pl : listeners) {
-				pl.updatePlayer(pl);
+				pl.updatePlayer(playerStates);
 			}
 		}
 	}
