@@ -136,6 +136,27 @@ public class Board {
 
 
 	/**
+	 * deposit money to player's account
+	 * @param the player to deposit money to
+	 * @param amount the amount to deposit
+	 */
+	public void depositToPlayer(String player, int amount){
+		getPlayerByName(player).depositMoney(amount);
+		playerSubject.notifyListeners();
+	}
+	
+	/**
+	 * withdraw money from a player's account
+	 * @param the player to withdraw money from
+	 * @param amount the amount to withdraw
+	 */
+	public void withdrawPlayer(String player, int amount){
+		getPlayerByName(player).withdawMoney(amount);
+		playerSubject.notifyListeners();
+	}
+	
+	
+	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
 	 */

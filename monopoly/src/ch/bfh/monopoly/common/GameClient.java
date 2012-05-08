@@ -226,7 +226,7 @@ public class GameClient {
 	 *            account
 	 */
 	public void payFee(int fee) {
-		currentPlayer.withdawMoney(fee);
+		board.withdrawPlayer(currentPlayer.getName(), fee);
 		int freeParking = board.getFreeParking();
 		board.setFreeParking(freeParking + fee);
 	}
