@@ -450,5 +450,9 @@ public class Board {
 	public int getAvailableHotels() {
 		return availableHotels;
 	}
+	
+	public void initGUI(){
+		playerSubject.notifyListeners();
+	}
 
 }

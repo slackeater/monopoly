@@ -39,4 +39,11 @@ public class BoardController {
 	public int getPlayerCount(){
 		return board.getPlayers().size();
 	}
+	
+	/**
+	 * used to get the player information to the GUI .  method calls notifyListeners in board
+	 */
+	public void initGUI(){
+		board.initGUI();
+	}
 }

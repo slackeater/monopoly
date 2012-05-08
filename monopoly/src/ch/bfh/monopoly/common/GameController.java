@@ -68,4 +68,6 @@ public class GameController {
 	public WindowSubject getWindowSubject(){
 		return gameClient.getWindowSubject();
 	}
+	
+	
 }
