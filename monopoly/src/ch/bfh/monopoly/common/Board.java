@@ -136,6 +136,27 @@ public class Board {
 
 
 	/**
+	 * deposit money to player's account
+	 * @param the player to deposit money to
+	 * @param amount the amount to deposit
+	 */
+	public void depositToPlayer(String player, int amount){
+		getPlayerByName(player).depositMoney(amount);
+		playerSubject.notifyListeners();
+	}
+	
+	/**
+	 * withdraw money from a player's account
+	 * @param the player to withdraw money from
+	 * @param amount the amount to withdraw
+	 */
+	public void withdrawPlayer(String player, int amount){
+		getPlayerByName(player).withdawMoney(amount);
+		playerSubject.notifyListeners();
+	}
+	
+	
+	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
 	 */
@@ -197,6 +218,7 @@ public class Board {
 			fromPlayer.removeProperty(t);
 			toPlayer.addProperty(t);
 			tileSubjects[tileId].notifyListeners();
+			playerSubject.notifyListeners();
 		} else
 			throw new RuntimeException(
 					"cannot complete transfer: object to transfer is not a property");
@@ -231,6 +253,7 @@ public class Board {
 			Player toPlayer = getPlayerByName(toName);
 			toPlayer.addProperty(p);
 			p.setOwner(toPlayer);
+			playerSubject.notifyListeners();
 			tileSubjects[tileId].notifyListeners();
 		}
 
@@ -256,6 +279,7 @@ public class Board {
 		Player toPlayer = getPlayerByName(toName);
 		fromPlayer.withdawMoney(price);
 		toPlayer.depositMoney(price);
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -344,6 +368,7 @@ public class Board {
 		player.addProperty(p);
 		p.setOwner(player);
 		player.withdawMoney(p.getPrice());
+		playerSubject.notifyListeners();
 	}
 
 	/**

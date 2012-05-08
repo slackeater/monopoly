@@ -43,12 +43,11 @@ import ch.bfh.monopoly.tile.Tile;
 		
 		@Test
 		public void guiGetsPlayerSubject() {
-			PlayerSubject ps = bc.getSubjectForPlayer("Justin");
+			PlayerSubject ps = bc.getSubjectForPlayer();
 			PlayerListener pl = new MockPlayerListener();
 			ps.addListener(pl);
 			Player plr = board.getPlayerByName("Justin");
-			plr.setPosition(3);
-			
+			gameClient.buyHouse(1);
 		}
 		
 		@Test
