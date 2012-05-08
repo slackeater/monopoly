@@ -1,5 +1,7 @@
 package ch.bfh.monopoly.observer;
 
+import java.util.ArrayList;
+
 public interface PlayerListener {
-	public void updatePlayer(PlayerListener pl);
+	public void updatePlayer(ArrayList<PlayerStateEvent> playerStates);
 }
