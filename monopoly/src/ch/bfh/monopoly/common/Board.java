@@ -21,7 +21,7 @@ public class Board {
 	private int availableHouses = 32;
 	private int availableHotels = 12;
 	private TileSubject[] tileSubjects;
-	private Token[] tokens;
+	private Token[] tokens = new Token[8];
 	private int freeParking;
 	private PlayerSubject playerSubject;
 
@@ -58,7 +58,7 @@ public class Board {
 					terrains[t.getId()]=true;
 				}
 				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(), plyr.getName(),
-						plyr.isInJail(), plyr.getAccount(), plyr.isTurnToken(), plyr.getJailCard(), terrains);
+						plyr.isInJail(), plyr.getAccount(), plyr.isTurnToken(), plyr.getJailCard(), terrains, plyr.getToken());
 				playerStates.add(pse);
 			}
 			for (PlayerListener pl : listeners) {

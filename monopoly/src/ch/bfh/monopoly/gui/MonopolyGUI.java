@@ -119,8 +119,9 @@ public class MonopolyGUI extends JFrame {
 		this.playerNumber = bc.getPlayerCount();
 		
 		//
-		this.pl = gc.getPlayers();
-				
+		//this.pl = gc.getPlayers();
+		this.bc.
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
 		setLayout(new BorderLayout());
@@ -191,11 +192,12 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
+			PlayerInfo plInfo = new PlayerInfo(j);
+			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
 			//the local player is always shown
-			if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
-				plInfo.showTerrains();
+			//if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
+				//plInfo.showTerrains();
 
 			info.add(plInfo);
 		}

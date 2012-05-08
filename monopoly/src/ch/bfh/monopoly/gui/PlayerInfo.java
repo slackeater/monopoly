@@ -36,7 +36,9 @@ public class PlayerInfo extends JPanel{
 	JPanel terrainUp = new JPanel();
 	JPanel terrainDown = new JPanel();
 	private List<SmallTerrain> smlTer = new ArrayList<SmallTerrain>();
+	
 	private boolean toggleVisibility = false;
+	private int playerIndex;
 	
 	private PlayerUpdate plU = new PlayerUpdate();
 
@@ -44,11 +46,13 @@ public class PlayerInfo extends JPanel{
 	 * Construct a PlayerInfo
 	 * @param c the color of this player
 	 */
-	public PlayerInfo(Player p, Color c){
+	public PlayerInfo(int playerIndex){
+		this.playerIndex = playerIndex;
+		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		playerInfo.setText(p.getName() + "    " + p.getAccount());
+		//playerInfo.setText(p.getName() + "    " + p.getAccount());
 		playerInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
-		playerInfo.setForeground(c);
+		//playerInfo.setForeground(c);
 		
 		//create a new mouse listener
 		LabelClick lblClick = new LabelClick();
@@ -226,10 +230,22 @@ public class PlayerInfo extends JPanel{
 	class PlayerUpdate implements PlayerListener{
 
 		@Override
-		public void updatePlayer(PlayerListener pl) {
-			playerInfo.setText(pl.)
-			System.out.println("ciao");
+		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+				String name = playerStates.get(playerIndex).getName();
+				int account = playerStates.get(playerIndex).getAccount();
+				Color c = playerStates.get(playerIndex).getT().getColor();
+			
+				playerInfo.setText(name + "  " + account);
+				playerInfo.setForeground(c);
 		}
+	}
+	
+	/**Get the playerlistener 
+	 * 
+	 * @return
+	 */
+	public PlayerListener getPlayerListener(){
+		return this.plU;
 	}
 	
 }

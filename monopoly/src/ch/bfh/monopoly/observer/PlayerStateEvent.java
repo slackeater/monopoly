@@ -1,5 +1,7 @@
 package ch.bfh.monopoly.observer;
 
+import ch.bfh.monopoly.common.Token;
+
 public class PlayerStateEvent {
 
 	int position;
@@ -9,10 +11,13 @@ public class PlayerStateEvent {
 	boolean turnToken;
 	int jailCard;
 	boolean[] terrains;
+	private Token t;
 	
+
+
 	//TODO this class must also carry information Property List... but we don't want to copy the entire list, oder?
 	public PlayerStateEvent(int position, String name, boolean isInJail,
-			int account, boolean turnToken, int jailCard, boolean[] terrains) {
+			int account, boolean turnToken, int jailCard, boolean[] terrains, Token t) {
 		super();
 		this.position = position;
 		this.name = name;
@@ -21,6 +26,7 @@ public class PlayerStateEvent {
 		this.turnToken = turnToken;
 		this.jailCard=jailCard;
 		this.terrains=terrains;
+		this.t = t;
 	}
 
 	public int getPosition() {
@@ -51,5 +57,8 @@ public class PlayerStateEvent {
 		return terrains;
 	}
 	
+	public Token getT() {
+		return t;
+	}
 	
 }
