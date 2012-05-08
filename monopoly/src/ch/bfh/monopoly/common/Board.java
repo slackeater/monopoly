@@ -20,8 +20,8 @@ public class Board {
 	private List<Player> players;
 	private Player localPlayer;
 	private Tile[] tiles;
-	private int availableHouses;
-	private int availableHotels;
+	private int availableHouses = 32;
+	private int availableHotels = 12;
 	private TileSubject[] tileSubjects;
 	private Color[] tokenColor;
 	private int freeParking;
@@ -107,6 +107,9 @@ public class Board {
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHouse(int tileId) {
+		if (availableHouses<1)
+			throw new RuntimeException(
+			"No houses available to complete the transaction");	
 		Tile t = tiles[tileId];
 		if (!(t instanceof Terrain))
 			throw new RuntimeException(
@@ -114,6 +117,7 @@ public class Board {
 		Terrain terrain = (Terrain) t;
 		terrain.buildHouse();
 		int id = terrain.getId();
+		availableHouses--;
 		tileSubjects[id].notifyListeners();
 	}
 
@@ -375,6 +379,20 @@ public class Board {
 
 	public void setFreeParking(int amount) {
 		this.freeParking = amount;
+	}
+
+	public int getAvailableHouses() {
+		return availableHouses;
+	}
+
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+
+	public int getAvailableHotels() {
+		return availableHotels;
 	}
 
 }

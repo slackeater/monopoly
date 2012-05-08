@@ -14,12 +14,12 @@ public class Chance extends AbstractTile {
 
 	@Override
 	public final String getEventDescription() {
-		return em.getEventDescriptionById(id);
+		return em.getEventDescriptionChance();
 	}
 
 	@Override
 	public void performEvent() {
-		em.performChanceEvent();
+		em.performEventChance();
 	}
 
 }

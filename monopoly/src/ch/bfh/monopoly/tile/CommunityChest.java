@@ -11,12 +11,12 @@ public class CommunityChest extends AbstractTile {
 
 	@Override
 	public final String getEventDescription() {
-		return em.getEventDescriptionById(id);
+		return em.getEventDescriptionCommChest();
 	}
 
 	@Override
 	public void performEvent() {
-		em.performCommChestEvent();
+		em.performEventCommChest();
 	}
 
 }
