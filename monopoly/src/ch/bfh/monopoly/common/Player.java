@@ -23,10 +23,34 @@ public class Player {
 	private int jailCard;
 	private Token t;
 	
+	private class ConcreteSubject implements PlayerSubject {
+
+		public ConcreteSubject() {}
+
+		ArrayList<PlayerListener> listeners = new ArrayList<PlayerListener>();
+
+		public void addListener(PlayerListener tl) {
+			listeners.add(tl);
+		}
+		@Override
+		public void removeListener(PlayerListener tl) {
+			listeners.remove(tl);
+		}
+
+		public void notifyListeners() {
+			
+			PlayerStateEvent pse = new PlayerStateEvent(position, name, isInJail, account, turnToken, jailCard);
+			for (PlayerListener pl : listeners) {
+				pl.updatePlayer(pse);
+			}
+		}
+	}
 	
-	public Player(String name, int account) {
+	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
+	public Player (String name, int account, Token t){
 		this.name = name;
 		this.account = account;
+		this.t = t;
 		position = 0;
 		isInJail = false;
 		turnToken = false;

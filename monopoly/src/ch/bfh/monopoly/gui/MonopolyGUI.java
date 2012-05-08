@@ -24,7 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.SpinnerModel;
+import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 
@@ -32,6 +32,8 @@ import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileSubject;
 import ch.bfh.monopoly.observer.WindowListener;
 import ch.bfh.monopoly.tile.TileInfo;
@@ -88,7 +90,6 @@ public class MonopolyGUI extends JFrame {
 	private JSpinner moneySpinner, rcvrMoneySpinner;
 	private JLabel jailCardLbl, rcvrJailCardLbl;
 
-
 	/**
 	 * Counters for dice throw
 	 */
@@ -102,8 +103,6 @@ public class MonopolyGUI extends JFrame {
 	private int playerNumber;
 	private BoardController bc;
 	private GameController gc;
-
-
 	private List<Player> pl;
 
 	/**
@@ -114,27 +113,15 @@ public class MonopolyGUI extends JFrame {
 		this.bc = bc;
 		this.gc = gc;
 
-		//token initialization
-		initTokens[0] = new Token(Color.RED,0.1,0.375);
-		initTokens[1] = new Token(Color.GREEN, 0.3, 0.375);
-		initTokens[2] = new Token(Color.BLUE, 0.5, 0.375);
-		initTokens[3] = new Token(Color.YELLOW, 0.7, 0.375);
-		initTokens[4] = new Token(Color.BLACK, 0.1, 0.700);
-		initTokens[5] = new Token(Color.CYAN, 0.3, 0.700);
-		initTokens[6] = new Token(Color.GRAY, 0.5, 0.700);
-		initTokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
-
 		//initialize the buttons with the action listener
 		initializeButtons();
 
-		this.playerNumber = gc.getPlayers().size();
-		this.pl = gc.getPlayers();
-				
-		for (int x = 0 ; x < playerNumber ; x++){
-			System.out.println(x);
-			pl.get(x).setToken(initTokens[x]);
-		}
-
+		this.playerNumber = bc.getPlayerCount();
+		
+		//
+		//this.pl = gc.getPlayers();
+		this.bc.
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
 		setLayout(new BorderLayout());
@@ -149,11 +136,12 @@ public class MonopolyGUI extends JFrame {
 		pack();
 	}
 
-
 	/**
-	 * Initialize the list of tiles, tokens
+	 * Initialize the list of tiles, tokens and player listener
 	 */
 	private void init(){
+		
+		
 		//Initialize all the tiles with the information 
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoById(j);
@@ -166,6 +154,7 @@ public class MonopolyGUI extends JFrame {
 		}
 
 		//add the tokens to the first tile
+		//TODO getter method for the token of every player
 		for(int i = 0 ; i < playerNumber ; i++){
 			tiles.get(0).addToken(pl.get(i).getToken());
 		}
@@ -203,11 +192,12 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
+			PlayerInfo plInfo = new PlayerInfo(j);
+			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
 			//the local player is always shown
-			if(pl.get(j).getName().equals(gc.getLocalPlayerName()))
-				plInfo.showTerrains();
+			//if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
+				//plInfo.showTerrains();
 
 			info.add(plInfo);
 		}
@@ -253,7 +243,7 @@ public class MonopolyGUI extends JFrame {
 		chat.setWrapStyleWord(true);
 		chat.setLineWrap(true);
 		chat.setEditable(false);
-
+		
 		class TextUpdate implements WindowListener{
 
 			@Override
@@ -272,10 +262,13 @@ public class MonopolyGUI extends JFrame {
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		//text area for sending the message
-		final JTextArea input = new JTextArea(2,20);
-		input.setWrapStyleWord(true);
-		input.setLineWrap(true);
+		//TODO choose JTextArea or JTextFieldInput
+//		//text area for sending the message
+//		final JTextArea input = new JTextArea(2,20);
+//		input.setWrapStyleWord(true);
+//		input.setLineWrap(true);
+		
+		final JTextField input = new JTextField(20);
 
 		//when we press enter, we send a message
 		input.addKeyListener(new KeyListener() {

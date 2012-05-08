@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.net;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +16,7 @@ public class NetMessage implements Serializable{
 	
 	private String from_player;
 	private String to_player;
+	private Color c;
 	private List<String> playerNames;
 	private Locale loc;
 	private String string;
@@ -157,5 +159,14 @@ public class NetMessage implements Serializable{
 	 */
 	public List<String> getUserNameList(){
 		return this.playerNames;
+	}
+	
+	/**
+	 * Get the integer value of this message
+	 * @return an int
+	 * 			the integer value of this NetMessage
+	 */
+	public int getInt(){
+		return this.integerValue;
 	}
 }

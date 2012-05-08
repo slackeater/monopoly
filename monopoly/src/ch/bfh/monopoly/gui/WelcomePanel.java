@@ -119,13 +119,10 @@ public class WelcomePanel extends JFrame{
 		if(!m.matches())
 			throw new Exception("Please insert a valid IPv4 address");
 
-		cliSession = Monopoly.communicate.startClient(ip, port, gameClient);
+		cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
 
 		//set the IoSession in the GameClient
 		gameClient.setIoSession(cliSession);
-
-		//create the user name and send it to the server
-		gameClient.createLocalUser(name);
 	}
 
 
