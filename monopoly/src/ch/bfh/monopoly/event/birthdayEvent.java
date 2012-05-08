@@ -13,10 +13,12 @@ public class birthdayEvent extends AbstractTileEvent {
 	@Override
 	public void performEvent() {
 		int fee = 20;
+
 		for (Player p : gameClient.getPlayers()) {
 			if (p != gameClient.getCurrentPlayer()) {
 				p.withdawMoney(fee);
 				gameClient.getCurrentPlayer().depositMoney(fee);
+			
 			}
 		}
 

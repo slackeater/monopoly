@@ -197,6 +197,7 @@ public class Board {
 			fromPlayer.removeProperty(t);
 			toPlayer.addProperty(t);
 			tileSubjects[tileId].notifyListeners();
+			playerSubject.notifyListeners();
 		} else
 			throw new RuntimeException(
 					"cannot complete transfer: object to transfer is not a property");
@@ -231,6 +232,7 @@ public class Board {
 			Player toPlayer = getPlayerByName(toName);
 			toPlayer.addProperty(p);
 			p.setOwner(toPlayer);
+			playerSubject.notifyListeners();
 			tileSubjects[tileId].notifyListeners();
 		}
 
@@ -256,6 +258,7 @@ public class Board {
 		Player toPlayer = getPlayerByName(toName);
 		fromPlayer.withdawMoney(price);
 		toPlayer.depositMoney(price);
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -344,6 +347,7 @@ public class Board {
 		player.addProperty(p);
 		p.setOwner(player);
 		player.withdawMoney(p.getPrice());
+		playerSubject.notifyListeners();
 	}
 
 	/**
