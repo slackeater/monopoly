@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
 
 
 /**
@@ -35,6 +37,8 @@ public class PlayerInfo extends JPanel{
 	JPanel terrainDown = new JPanel();
 	private List<SmallTerrain> smlTer = new ArrayList<SmallTerrain>();
 	private boolean toggleVisibility = false;
+	
+	private PlayerUpdate plU = new PlayerUpdate();
 
 	/**
 	 * Construct a PlayerInfo
@@ -61,6 +65,7 @@ public class PlayerInfo extends JPanel{
 		add(terrainUp);
 		add(terrainDown);
 		add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
+		
 		
 	}
 
@@ -217,4 +222,15 @@ public class PlayerInfo extends JPanel{
 		@Override
 		public void mouseExited(MouseEvent e) {}
 	}
+		
+	class PlayerUpdate implements PlayerListener{
+
+		@Override
+		public void updatePlayer(PlayerStateEvent pse) {
+				System.out.println(pse.getName());
+		}
+	}
+
+	
+	
 }

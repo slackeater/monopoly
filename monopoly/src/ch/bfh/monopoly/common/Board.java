@@ -1,14 +1,10 @@
 package ch.bfh.monopoly.common;
 
 import java.awt.Color;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.management.RuntimeErrorException;
-import javax.swing.JMenu;
 
 import ch.bfh.monopoly.observer.PlayerSubject;
 import ch.bfh.monopoly.observer.TileSubject;
@@ -23,7 +19,7 @@ public class Board {
 	private int availableHouses;
 	private int availableHotels;
 	private TileSubject[] tileSubjects;
-	private Color[] tokenColor;
+	private Token[] tokens;
 	private int freeParking;
 	/**
 	 * inner class responsible for registering listeners from the GUI and
@@ -61,13 +57,23 @@ public class Board {
 
 
 	public Board(GameClient gameClient) {
-		// create tiles, cards, and events
+		// create tiles, cards, and events and tokens
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
 		availableHouses = 32;
 		availableHotels = 12;
 		tileSubjects = new TileSubject[40];
 		createTileSubjects();
+		
+		//token initialization
+		tokens[0] = new Token(Color.RED,0.1,0.375);
+		tokens[1] = new Token(Color.GREEN, 0.3, 0.375);
+		tokens[2] = new Token(Color.BLUE, 0.5, 0.375);
+		tokens[3] = new Token(Color.YELLOW, 0.7, 0.375);
+		tokens[4] = new Token(Color.BLACK, 0.1, 0.700);
+		tokens[5] = new Token(Color.CYAN, 0.3, 0.700);
+		tokens[6] = new Token(Color.GRAY, 0.5, 0.700);
+		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
 
@@ -209,7 +215,7 @@ public class Board {
 	 * @param the
 	 *            locale that was chosen: needed to give the players the correct
 	 *            starting balance in there account
-	 * 
+	 * TODO localPlayerName
 	 */
 	public void createPlayers(List<String> playerNames, Locale loc, String localPlayerName) {
 		players = new ArrayList<Player>();
@@ -218,7 +224,7 @@ public class Board {
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
-			Player plyr = new Player(playerNames.get(i), startMoney);
+			Player plyr = new Player(playerNames.get(i), startMoney, tokens[i]);
 			players.add(plyr);
 
 		}

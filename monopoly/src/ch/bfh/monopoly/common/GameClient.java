@@ -48,7 +48,7 @@ public class GameClient {
 
 	public GameClient(Locale loc) {
 		ws = new ConcreteSubject();
-		bank = new Player("bank", 100000000);
+		bank = new Player("bank", 100000000, null);
 		this.loc = loc;
 		this.board = new Board(this);
 	}

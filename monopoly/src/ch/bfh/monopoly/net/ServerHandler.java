@@ -21,6 +21,7 @@ public class ServerHandler implements IoHandler{
 
 	private List<IoSession> sessions = new ArrayList<IoSession>(); 
 	private List<String> usernames = new ArrayList<String>();
+	private int userindex = 1;
 
 	/**
 	 * Get the number of opened sessions on this server
@@ -65,8 +66,22 @@ public class ServerHandler implements IoHandler{
 		System.out.println("BROADCASTING...");
 
 		//if a user send its username, add it to the list
+		//if two user have the same name, add a number to it
 		if(n.getMessageType() == Messages.SEND_USERNAME){
-			this.usernames.add(n.getText());
+			
+			String newName = n.getText();
+			
+			//if there are two equal username add a number to his username
+			for(int j = 0 ; j < usernames.size() ; j++){
+				if(n.getText().equals(usernames.get(j))){
+					newName = n.getText().concat(Integer.toString(userindex));
+					this.userindex++;
+				}
+			}
+			
+			this.usernames.add(newName);
+			
+			
 		}
 		else
 			//when we receive a message, we must broadcast it

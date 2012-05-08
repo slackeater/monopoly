@@ -24,8 +24,6 @@ public class Player {
 	private Token t;
 	private PlayerSubject playerSubject;
 	
-	
-	
 	private class ConcreteSubject implements PlayerSubject {
 
 		public ConcreteSubject() {}
@@ -50,9 +48,10 @@ public class Player {
 	}
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
-	public Player (String name, int account){
+	public Player (String name, int account, Token t){
 		this.name = name;
 		this.account = account;
+		this.t = t;
 		position = 0;
 		isInJail = false;
 		turnToken = false;

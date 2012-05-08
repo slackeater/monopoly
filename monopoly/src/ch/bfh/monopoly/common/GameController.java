@@ -52,7 +52,7 @@ public class GameController {
 		gameClient.sendChatMessage(s);
 	}
 	
-	/**
+	/** TODO => Maybe is useless
 	 * Get the name of the local player
 	 * @return String
 	 * 			the name of the local player
@@ -60,9 +60,9 @@ public class GameController {
 	public String getLocalPlayerName(){
 		return gameClient.getLocalPlayer().getName();
 	}
-	
-	public List<Player> getPlayers(){
-		return gameClient.getPlayers();
+
+	public Player getLocalPlayer(){
+		return gameClient.getLocalPlayer();
 	}
 	
 	public WindowSubject getWindowSubject(){
