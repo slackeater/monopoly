@@ -270,8 +270,8 @@ public class Board {
 	 *            starting balance in there account
 	 * TODO localPlayerName
 	 */
-	public void createPlayers(List<String> playerNames, Locale loc,
-			String localPlayerName) {
+	public void createPlayers(List<String> playerNames, Locale loc	) {
+		
 		players = new ArrayList<Player>();
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
 				"startMoney");

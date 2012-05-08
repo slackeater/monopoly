@@ -202,6 +202,7 @@ public class WelcomePanel extends JFrame{
 						if(Monopoly.communicate.gameCanBegin()){
 							dispose();
 
+							System.out.println("BEFORE FRAME");
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
 							board.setVisible(true);

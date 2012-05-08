@@ -280,7 +280,11 @@ public class GameClient {
 	 * @param names the list of names of the player
 	 */
 	public void setUsersList(List<String> names, String localPlayerName){
-		board.createPlayers(names, loc, localPlayerName);
+		board.createPlayers(names, loc);
+		
+		//send a message to the server wit our user name
+//		NetMessage n = new NetMessage(localPlayerName, Messages.SEND_USERNAME);
+//		this.session.write(n);
 	}
 	
 	/**
