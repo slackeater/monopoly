@@ -120,7 +120,7 @@ public class MonopolyGUI extends JFrame {
 		
 		//
 		//this.pl = gc.getPlayers();
-		this.bc.
+		this.bc.initGUI();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);

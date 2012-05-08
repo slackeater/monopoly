@@ -51,7 +51,7 @@ public class ClientHandler implements IoHandler {
 				gc.setUsersList(n.getUserNameList(), this.localPlayerName);
 	
 				//TODO only for test
-				System.out.println(n.getUserNameList());
+				System.out.println("Client list:" + n.getUserNameList());
 	
 				gameCanBegin = true;
 				break;
@@ -97,6 +97,10 @@ public class ClientHandler implements IoHandler {
 	public void sessionOpened(IoSession arg0) throws Exception {
 		// TODO Auto-generated method stub	
 		System.out.println("session opened");
+
+		//as first, send the username
+		NetMessage n = new NetMessage(this.localPlayerName, Messages.SEND_USERNAME);
+		arg0.write(n);
 	}
 
 }
