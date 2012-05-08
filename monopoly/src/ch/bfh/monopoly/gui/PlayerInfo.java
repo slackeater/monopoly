@@ -231,12 +231,16 @@ public class PlayerInfo extends JPanel{
 
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+			
 				String name = playerStates.get(playerIndex).getName();
 				int account = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
-			
+				
 				playerInfo.setText(name + "  " + account);
 				playerInfo.setForeground(c);
+				repaint();
+				revalidate();
+				System.out.println("called");
 		}
 	}
 	

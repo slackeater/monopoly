@@ -55,6 +55,8 @@ public class BoardBuilder extends JPanel {
 		this.chance = chanceBtn;
 		
 		setLayout(new GridBagLayout());
+		
+		System.out.println("INSIDE BOARD BUILDER");
 		centralElements();
 		drawBoard();
 	}

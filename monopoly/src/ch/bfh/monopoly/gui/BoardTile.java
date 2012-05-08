@@ -53,7 +53,7 @@ public class BoardTile extends JPanel{
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
-	
+
 	//used to update the tile
 	private InformationUpdate iu = new InformationUpdate();
 
@@ -61,7 +61,7 @@ public class BoardTile extends JPanel{
 	sellHotelRow, mortgage, unmortgage;
 
 	private JPanel color;
-	
+
 	//to check if we have clicked over a button
 	private boolean buyHouseClicked = false, buyHotelClicked = false;
 
@@ -101,9 +101,12 @@ public class BoardTile extends JPanel{
 		add(color);
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
+		
+		
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
 
+		setMaximumSize(new Dimension(75, 75));
 		add(name);
 	}
 
@@ -146,64 +149,75 @@ public class BoardTile extends JPanel{
 	 */
 	private void addInformationOnTab(){
 		if(displayInfo){
+			//clean the panel
+			tab.removeAll();
+			
 			Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());
 			Font f2 = new Font(getFont().getName(), Font.BOLD, getFont().getSize());
 
 			JLabel name = new JLabel(ti.getName());
 			name.setAlignmentX(Component.CENTER_ALIGNMENT);
 			name.setFont(f2);
-				
+
 			JPanel color = new JPanel();
-			
+
 			color.setBorder(BorderFactory.createEtchedBorder());
 			color.setMaximumSize(new Dimension(tab.getWidth(), getHeight()/3));
-			
+
 			if(ti.getRGB() != null)
 				color.setBackground(Color.decode(ti.getRGB()));
 			else
 				color.setBackground(Color.WHITE);
-			
+
 			color.add(name);
 
 			JLabel price = new JLabel("Price: " + Integer.toString(ti.getPrice()));
 			price.setAlignmentX(Component.CENTER_ALIGNMENT);
 			price.setFont(f);
 
-			JLabel rent = new JLabel("Rent: " + Integer.toString(ti.getRent()));
-			rent.setAlignmentX(Component.CENTER_ALIGNMENT);
-			rent.setFont(f);
-
-			JLabel rent1 = new JLabel("With 1 house: " + Integer.toString(ti.getRent1house()));
-			rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
-			rent1.setFont(f);
-
-			JLabel rent2 = new JLabel("With 2 houses: " + Integer.toString(ti.getRent2house()));
-			rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
-			rent2.setFont(f);
-
-			JLabel rent3 = new JLabel("With 3 houses: " + Integer.toString(ti.getRent3house()));
-			rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
-			rent3.setFont(f);
-
-			JLabel rent4 = new JLabel("With 4 houses: " + Integer.toString(ti.getRent4house()));
-			rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
-			rent4.setFont(f);
-
-			JLabel hotel = new JLabel("With hotel: " + Integer.toString(ti.getRenthotel()));
-			hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
-			hotel.setFont(f);
-
-			tab.removeAll();
-
 			tab.add(color);
-			tab.add(price);
-			tab.add(rent);
-			tab.add(rent1);
-			tab.add(rent2);
-			tab.add(rent3);
-			tab.add(rent4);
-			tab.add(hotel);
+			tab.add(price);	
 
+			if(ti.getRent() != -1){
+				JLabel rent = new JLabel("Rent: " + Integer.toString(ti.getRent()));
+				rent.setAlignmentX(Component.CENTER_ALIGNMENT);
+				rent.setFont(f);
+				
+				tab.add(rent);
+				
+				JLabel rent1 = new JLabel("With 1 house: " + Integer.toString(ti.getRent1house()));
+				rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
+				rent1.setFont(f);
+
+				JLabel rent2 = new JLabel("With 2 houses: " + Integer.toString(ti.getRent2house()));
+				rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
+				rent2.setFont(f);
+
+				JLabel rent3 = new JLabel("With 3 houses: " + Integer.toString(ti.getRent3house()));
+				rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
+				rent3.setFont(f);
+
+				JLabel rent4 = new JLabel("With 4 houses: " + Integer.toString(ti.getRent4house()));
+				rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
+				rent4.setFont(f);
+
+				JLabel hotel = new JLabel("With hotel: " + Integer.toString(ti.getRenthotel()));
+				hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
+				hotel.setFont(f);
+								
+				tab.add(rent1);
+				tab.add(rent2);
+				tab.add(rent3);
+				tab.add(rent4);
+				tab.add(hotel);
+			}
+
+			JLabel mortgage = new JLabel("Mortgage value: " + Integer.toString(ti.getMortgageValue()));
+			mortgage.setAlignmentX(Component.CENTER_ALIGNMENT);
+			mortgage.setFont(f);
+			
+			tab.add(mortgage);
+			
 			tab.revalidate();
 			tab.repaint();
 		}
@@ -294,9 +308,9 @@ public class BoardTile extends JPanel{
 			}
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Draw a building
 	 * @param type boolean true == hotel ; false == house
@@ -310,7 +324,7 @@ public class BoardTile extends JPanel{
 			color.removeAll();
 			building.setBackground(Color.GREEN);
 			building.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
-			
+
 			//we have drawn an hotel
 			isHotel = true;
 			color.add(building);
@@ -321,7 +335,7 @@ public class BoardTile extends JPanel{
 			houseCount++;
 			color.add(building);
 		}
-		
+
 		repaint();
 		revalidate();
 	}
@@ -365,23 +379,23 @@ public class BoardTile extends JPanel{
 	private class PerformActionMenu implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			buyHouseClicked = false;
 			buyHotelClicked = false;
-			
+
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
 				gc.buyHouse(ti.getId());
 			}
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
-		
+
 				// TODO change to buyHotel !!!!!!!!!!!
 				gc.buyHouse(ti.getId());
 			}
 		}	
 	}
-	
+
 	/**
 	 * Inner class used to update the information on this tile
 	 * @author snake, shrevek
@@ -397,7 +411,7 @@ public class BoardTile extends JPanel{
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is called by an external
 	 * class to update the information on this tile
@@ -406,10 +420,10 @@ public class BoardTile extends JPanel{
 	public void updateTile(TileStateEvent tse){
 		iu.updateTile(tse);
 	}
-	
+
 	public TileListener getTileListener(){
 		return this.iu;
 	}
-	
+
 
 }

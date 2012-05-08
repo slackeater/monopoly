@@ -119,6 +119,7 @@ public class WelcomePanel extends JFrame{
 		if(!m.matches())
 			throw new Exception("Please insert a valid IPv4 address");
 
+		//if everything works connect to the server
 		cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
 
 		//set the IoSession in the GameClient
@@ -191,7 +192,6 @@ public class WelcomePanel extends JFrame{
 					ip = clientIP.getText();
 					port = Integer.parseInt(clientPort.getText());
 					name = nameField.getText();
-
 
 					initClient();
 

@@ -69,17 +69,17 @@ public class ServerHandler implements IoHandler{
 		//if two user have the same name, add a number to it
 		if(n.getMessageType() == Messages.SEND_USERNAME){
 			
-			//String newName = ;
+			String newName = n.getText();
 			
-//			//if there are two equal username add a number to his username
-//			for(int j = 0 ; j < usernames.size() ; j++){
-//				if(n.getText().equals(usernames.get(j))){
-//					newName = n.getText().concat(Integer.toString(userindex));
-//					this.userindex++;
-//				}
-//			}
+			//if there are two equal username add a number to his username
+			for(int j = 0 ; j < usernames.size() ; j++){
+				if(n.getText().equals(usernames.get(j))){
+					newName = n.getText().concat(Integer.toString(userindex));
+					this.userindex++;
+				}
+			}
 //			
-			this.usernames.add(n.getText());
+			this.usernames.add(newName);
 			System.out.println(usernames);
 			
 		}

@@ -268,7 +268,7 @@ public class Board {
 	 * @param the
 	 *            locale that was chosen: needed to give the players the correct
 	 *            starting balance in there account
-	 * TODO localPlayerName
+	 * 
 	 */
 	public void createPlayers(List<String> playerNames, Locale loc	) {
 		

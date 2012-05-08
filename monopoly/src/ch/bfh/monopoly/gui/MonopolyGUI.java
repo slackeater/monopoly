@@ -112,26 +112,18 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(BoardController bc, GameController gc){
 		this.bc = bc;
 		this.gc = gc;
-
+		
 		//initialize the buttons with the action listener
 		initializeButtons();
 
 		this.playerNumber = bc.getPlayerCount();
 		
-		//
-		//this.pl = gc.getPlayers();
-		this.bc.initGUI();
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
 		setLayout(new BorderLayout());
-
-		add(leftPanel(), BorderLayout.WEST);
-
-		//init must be called before drawBoard()
-		init();
-
-		add(drawBoard(), BorderLayout.CENTER);
+		
+		//initialize the element of the GUI
+		wrapperInit();
 
 		pack();
 	}
@@ -139,8 +131,8 @@ public class MonopolyGUI extends JFrame {
 	/**
 	 * Initialize the list of tiles, tokens and player listener
 	 */
-	private void init(){
-		
+	private void wrapperInit(){
+		add(leftPanel(), BorderLayout.WEST);
 		
 		//Initialize all the tiles with the information 
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
@@ -155,9 +147,13 @@ public class MonopolyGUI extends JFrame {
 
 		//add the tokens to the first tile
 		//TODO getter method for the token of every player
-		for(int i = 0 ; i < playerNumber ; i++){
-			tiles.get(0).addToken(pl.get(i).getToken());
-		}
+		//TODODODODODODODODODOD
+//		for(int i = 0 ; i < playerNumber ; i++){
+//			tiles.get(0).addToken(pl.get(i).getToken());
+//		}
+		
+		add(drawBoard(), BorderLayout.CENTER);
+		this.bc.initGUI();
 	}
 
 	/**
@@ -332,6 +328,7 @@ public class MonopolyGUI extends JFrame {
 		eventTextArea.setLineWrap(true);
 		eventTextArea.setEditable(false);
 
+		System.out.println("DRAWBOARD METHOD");
 		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons, community, chance);
 
 		return board;
