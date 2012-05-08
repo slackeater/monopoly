@@ -28,7 +28,15 @@ public class BoardController {
 		return board.getTileSubjectAtIndex(i);
 	}
 	
-	public PlayerSubject getSubjectForPlayer(String playerName){
-		return board.getSubjectForPlayer(playerName);
+	public PlayerSubject getSubjectForPlayer(){
+		return board.getSubjectForPlayer();
+	}
+	
+	/**
+	 * gets the number of players that are participating in this game
+	 * @return int number of players in game
+	 */
+	public int getPlayerCount(){
+		return board.getPlayers().size();
 	}
 }

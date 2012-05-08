@@ -15,20 +15,75 @@ import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.event.AbstractTileEvent;
+import ch.bfh.monopoly.event.BoardEvent;
+import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.tile.AbstractTile;
+import ch.bfh.monopoly.tile.Tile;
 
 public class EventTests {
 	GameClient gameClient;
 	Board board;
 	GameController gc;
+	EventManager em;
 
 	@Before
 	public void setup() {
 		TestInstanceGenerator tig = new TestInstanceGenerator();
-		gameClient= tig.getGameClient();
-		board=tig.getBoard();
-		gc=tig.getGc();
+		gameClient = tig.getGameClient();
+		board = tig.getBoard();
+		gc = tig.getGc();
+		em = tig.em;
 	}
 
+	/**
+	 * Tests that birthday event transfers money from all players correctly
+	 */
+	@Test
+	public void birthdayEventTransfersRight() {
+		int playerCount = board.getPlayers().size();
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		int balanceJustinBefore = board.getPlayerByName("Justin").getAccount();
+		int balance1before = board.getPlayerByName("Giuseppe").getAccount();
+		int balance2before = board.getPlayerByName("Damien").getAccount();
+		int balance3before = board.getPlayerByName("Cyril").getAccount();
+		int balance4before = board.getPlayerByName("Elie").getAccount();
+		BoardEvent[] commChestEvents = em.getCommChestEvents();
+		em.setCurrentEvent(commChestEvents[3]);
+		em.performEventCommChest();
+		int balanceJustinAfter = board.getPlayerByName("Justin").getAccount();
+		int balance1after = board.getPlayerByName("Giuseppe").getAccount();
+		int balance2after = board.getPlayerByName("Damien").getAccount();
+		int balance3after = board.getPlayerByName("Cyril").getAccount();
+		int balance4after = board.getPlayerByName("Elie").getAccount();
+		assertTrue(balanceJustinBefore ==( balanceJustinAfter - (20*(playerCount-1))) &&
+				balance1before == (balance1after+20) &&
+				balance2before == (balance2after+20) &&
+				balance3before == (balance3after+20) &&
+				balance4before == (balance4after+20));
+	}
+
+	/**
+	 * Test that the Repairs event deducts the appropriate sum from the player's
+	 * account
+	 */
+	@Test
+	public void eventManagerRandomizesChanceEvents() {
+		Player p = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(p);
+		p.setPosition(26);
+		// advance player to GO TO JAIL
+		gameClient.advanceCurrentPlayerNSpaces(4);
+		int pos = p.getPosition();
+		Tile t = board.getTileById(pos);
+		AbstractTile tt = (AbstractTile) t;
+		BoardEvent[] chanceEvents = em.getChanceEvents();
+		em.setCurrentEvent(chanceEvents[7]);
+		System.out
+				.println("IF you see this, then eventManagerRandomizesChanceEvents works : "
+						+ em.getEventDescriptionChance());
+	}
 
 	/**
 	 * test that landing on GO TO JAIL send the player to jail and changes
@@ -191,7 +246,7 @@ public class EventTests {
 	public void freeParkingIncrementedWithFees() {
 		// TODO FRee parking is incremented when a player pays a FEE to the bank
 	}
-	
+
 	/**
 	 * Check that income tax withdraws 10% of player's income
 	 */
@@ -202,11 +257,11 @@ public class EventTests {
 		gameClient.setCurrentPlayer(p);
 		gameClient.advanceCurrentPlayerNSpaces(tileId);
 		int previousBalance = p.getAccount();
-		int fee =previousBalance/10;
+		int fee = previousBalance / 10;
 		gc.performEvent();
 		assertTrue(p.getAccount() == previousBalance - fee);
 	}
-	
+
 	/**
 	 * Check that chance events trigger when landing on any chance tile
 	 */
@@ -216,11 +271,10 @@ public class EventTests {
 		int tileId = 7; // Park Place
 		gameClient.setCurrentPlayer(p);
 		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		System.out.println("chanceEventsTrigger: " + gc.getEventDescription());
 		gc.performEvent();
 		assertTrue(p.getPosition() != 7);
 
 	}
-	
-	
-	
+
 }

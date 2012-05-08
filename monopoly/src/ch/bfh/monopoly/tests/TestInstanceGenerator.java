@@ -22,6 +22,8 @@ import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.tile.AbstractTile;
 
 public class TestInstanceGenerator {
 
@@ -29,12 +31,13 @@ public class TestInstanceGenerator {
 	GameController gc;
 	Board board;
 	BoardController bc;
-
+	EventManager em;
 	public TestInstanceGenerator() {
 		gameClient = new GameClient(new Locale("EN"));
 		gc = new GameController(gameClient);
 		board = gameClient.getBoard();
 		bc = new BoardController(board);
+		em = ((AbstractTile)board.getTileById(1)).getEventManager();
 		
 		String myName = "Justin";
 		ArrayList<String> playerNames = new ArrayList<String>();
@@ -467,6 +470,10 @@ public class TestInstanceGenerator {
 	
 	public BoardController getBc(){
 		return bc;
+	}
+	
+	public EventManager getEm(){
+		return em;
 	}
 
 }

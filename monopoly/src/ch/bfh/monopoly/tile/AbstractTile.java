@@ -112,6 +112,11 @@ public abstract class AbstractTile implements Tile {
 	public int getCoordY() {
 		return coordY;
 	}
+	
+	//TODO Needed to test events, delete or comment out for final product
+	public EventManager getEventManager(){
+		return this.em;
+	}
 
 
 }

@@ -292,6 +292,31 @@ public class GameClient {
 		return board.getLocalPlayer();
 	}
 	
+	/**
+	 * Get the number of available houses 
+	 * used by events to calculate the price a player must pay for REPAIRS EVENT
+	 * @return number of available houses
+	 */
+	public int getAvailableHouses(){
+		return board.getAvailableHouses();
+	}
+	
+	/**
+	 * Get the number of available hotels 
+	 * used by events to calculate the price a player must pay for REPAIRS EVENT
+	 * @return number of available hotels
+	 */
+	public int getAvailableHotels(){
+		return board.getAvailableHotels();
+	}
+	
+	/**
+	 * get the list of players in the game, used to by the BIRTHDAY EVENT to transfer $10 to the player with the BIRTHDAY!
+	 * @return list of players
+	 */
+	public List<Player> getPlayers(){
+		return board.getPlayers();
+	}
 
 	
 }

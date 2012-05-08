@@ -116,7 +116,7 @@ public class MonopolyGUI extends JFrame {
 		//initialize the buttons with the action listener
 		initializeButtons();
 
-		this.playerNumber = bc.getPlayerCount();i
+		this.playerNumber = bc.getPlayerCount();
 		
 		//
 		this.pl = gc.getPlayers();
@@ -194,8 +194,6 @@ public class MonopolyGUI extends JFrame {
 			PlayerInfo plInfo = new PlayerInfo(pl.get(j), this.initTokens[j].getColor());
 
 			//the local player is always shown
-			//TODO problem: if two player have the same name they have also the same token =>>>> CHECK WHY
-			System.out.println(pl.get(j).getToken().getColor());
 			if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
 				plInfo.showTerrains();
 

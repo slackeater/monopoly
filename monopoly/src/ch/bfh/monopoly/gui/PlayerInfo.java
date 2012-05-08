@@ -226,11 +226,10 @@ public class PlayerInfo extends JPanel{
 	class PlayerUpdate implements PlayerListener{
 
 		@Override
-		public void updatePlayer(PlayerStateEvent pse) {
-				System.out.println(pse.getName());
+		public void updatePlayer(PlayerListener pl) {
+			playerInfo.setText(pl.)
+			System.out.println("ciao");
 		}
 	}
-
-	
 	
 }
