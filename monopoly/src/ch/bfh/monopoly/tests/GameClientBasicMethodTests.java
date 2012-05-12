@@ -89,6 +89,7 @@ public class GameClientBasicMethodTests {
 	public void currentPlayerHasSufficientFunds(){
 		Player p = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(p);
+		System.out.println(gameClient.getCurrentPlayer().getAccount());
 		assertTrue(!gameClient.hasSufficientFunds(2000));
 	}
 	
@@ -113,8 +114,8 @@ public class GameClientBasicMethodTests {
 	public void playerHasBothUtilities(){
 		Player p = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(p);
-		gameClient.buyPropertyFromBank(12);
-		gameClient.buyPropertyFromBank(28);
+		p.addProperty(board.getTileById(12));
+		p.addProperty(board.getTileById(28));
 		assertTrue(gameClient.hasBothUtilities());
 	}
 	
@@ -126,10 +127,8 @@ public class GameClientBasicMethodTests {
 	public void playerDoesNotHaveBothUtilities(){
 		Player p = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(p);
-		gameClient.buyPropertyFromBank(12);
-		gameClient.setCurrentPlayer(p2);
-		gameClient.buyPropertyFromBank(28);
+		p.addProperty(board.getTileById(12));
+		p2.addProperty(board.getTileById(28));
 		assertTrue(!gameClient.hasBothUtilities());
 	}
 

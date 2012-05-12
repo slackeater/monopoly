@@ -16,13 +16,13 @@ import ch.bfh.monopoly.tile.*;
 
 public class Board {
 	private List<Player> players;
-	private Player localPlayer;
 	private Tile[] tiles;
 	private int availableHouses = 32;
 	private int availableHotels = 12;
 	private TileSubject[] tileSubjects;
 	private Token[] tokens = new Token[8];
 	private int freeParking;
+	private Player localPlayer;
 	private PlayerSubject playerSubject;
 
 	/**
@@ -299,6 +299,7 @@ public class Board {
 		players = new ArrayList<Player>();
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
 				"startMoney");
+		System.out.println(bundleData);
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
@@ -354,17 +355,17 @@ public class Board {
 	 * @param tileId
 	 *            the id of the property to be bought
 	 */
-	public void buyPropertyFromBank(String currentPlayer, int tileId) {
+	public void buyCurrentPropertyForPlayer(String playerName, int tileId) {
 		Tile t = tiles[tileId];
 		Property p = castTileToProperty(t);
 		if (!(p.getOwner().getName().equals("bank")))
 			throw new RuntimeException(
 					"The property to be bought is not owned by the bank, use transfer property instead");
 		int priceOfProperty = p.getPrice();
-		if (!playerHasSufficientFunds(currentPlayer, priceOfProperty))
+		if (!playerHasSufficientFunds(playerName, priceOfProperty))
 			throw new RuntimeException(
 					"Player Does not have enough money to by the property from the bank");
-		Player player = getPlayerByName(currentPlayer);
+		Player player = getPlayerByName(playerName);
 		player.addProperty(p);
 		p.setOwner(player);
 		player.withdawMoney(p.getPrice());
@@ -462,9 +463,6 @@ public class Board {
 		return freeParking;
 	}
 
-	public Player getLocalPlayer() {
-		return localPlayer;
-	}
 
 	public void setFreeParking(int amount) {
 		this.freeParking = amount;
@@ -480,6 +478,15 @@ public class Board {
 
 	public int getAvailableHotels() {
 		return availableHotels;
+		
+	}
+	/**
+	 * Get the local player
+	 * @return Player
+	 * 			the local player
+	 */
+	public Player getLocalPlayer(){
+		return localPlayer;
 	}
 	
 	public void initGUI(){

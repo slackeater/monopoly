@@ -87,6 +87,11 @@ public class GameClient {
 		currentPlayer = p;
 	}
 
+	
+	public void buyCurrentPropertyForPlayer(String playerName){
+		board.buyCurrentPropertyForPlayer(currentPlayer.getName(), currentPlayer.getPosition());
+	}
+	
 	/**
 	 * advance the current player a given number n spaces forward
 	 */
@@ -102,6 +107,7 @@ public class GameClient {
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHouse(int tileID) {
+		//TODO Add check here if tile is really a property?  Create a method to do that?  Because it is neeeded often
 		board.buyHouse(tileID);
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.BUY_HOUSE);
@@ -206,16 +212,6 @@ public class GameClient {
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
 
-	/**
-	 * the current player buys a given property this method is called when the
-	 * property is owned by the bank
-	 * 
-	 * @param tileId
-	 *            the id of the tile to be bought
-	 */
-	public void buyPropertyFromBank(int tileId) {
-		board.buyPropertyFromBank(currentPlayer.getName(), tileId);
-	}
 
 	/**
 	 * the current player is charged a fee and the amount of the fee is

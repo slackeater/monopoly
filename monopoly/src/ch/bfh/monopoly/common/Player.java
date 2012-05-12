@@ -128,15 +128,6 @@ public class Player {
 		return account;
 	}
 
-	/**
-	 * set the balance of this player's account
-	 * 
-	 * @param account
-	 *            the new balance that the account should be
-	 */
-	public void setAccount(int account) {
-		this.account = account;
-	}
 
 	/**
 	 * get the list of properties that belong to this player
