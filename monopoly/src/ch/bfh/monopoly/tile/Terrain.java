@@ -40,6 +40,10 @@ public class Terrain extends Property {
 		houseCount++;
 	}
 	
+	public void buildHotel(){
+		hotelCount++;
+	}
+	
 	public int getRentByHouseCount(int houseCount){
 		return rentRates[houseCount];
 	}

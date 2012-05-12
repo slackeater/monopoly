@@ -26,18 +26,29 @@ public class BoardInitTests {
 	Locale loc;
 	GameClient gameClient ;
 	int[] terrainPositions = { 1, 3, 6, 8, 9, 11, 13, 14, 16, 18, 19, 21, 23, 24, 26, 27, 29, 31, 32, 34, 37, 39 };
+	Board board;
 
-	/** 
-	 * Setup this test class to test the creation of the board with 
-	 * the local set to English
-	 * */
+	
 	@Before
 	public void setup() {
 		TestInstanceGenerator tig = new TestInstanceGenerator();
 		gameClient= tig.getGameClient();
+		board=tig.getBoard();
 	}
+	
 
 	
+	/**
+	 * check that the player's were created with the proper balance based upon the a given local
+	 * in this case the local is EN for all tests
+	 */
+	@Test
+	public void playersStartWithCorrectBalance() {
+		Player jus = board.getPlayerByName("Justin");
+		Player giu = board.getPlayerByName("Giuseppe");
+		assertTrue(jus.getAccount() == 15000);
+		assertTrue(giu.getAccount() == 15000);
+	}
 	
 	/**
 	 * check that the tiles have been initialized with a value from the resource bundle

@@ -24,7 +24,7 @@ public class GameController {
 	 * buy the current property for the currentPlayer where the current player is located. 
 	 */
 	public void buyCurrentPropertyForPlayer(String playerName){
-		gameClient.buyCurrentPropertyForPlayer(String playerName);
+		gameClient.buyCurrentPropertyForPlayer(playerName);
 	}
 	
 	/**

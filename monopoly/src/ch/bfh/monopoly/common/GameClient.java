@@ -16,6 +16,7 @@ import ch.bfh.monopoly.tile.Property;
 public class GameClient {
 
 	private Player currentPlayer;
+	private Player localPlayer;
 	private Player bank;
 	private Locale loc;
 	private Board board;
@@ -107,7 +108,6 @@ public class GameClient {
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHouse(int tileID) {
-		//TODO Add check here if tile is really a property?  Create a method to do that?  Because it is neeeded often
 		board.buyHouse(tileID);
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.BUY_HOUSE);
@@ -129,8 +129,8 @@ public class GameClient {
 	public void buyPropertyFromPlayer(String fromName, String toName,
 			int propertyID, int price) {
 		if (board.playerHasSufficientFunds(fromName, price)) {
-			board.transferProperty(fromName, toName, propertyID);
-			board.transferMoney(fromName, toName, price);
+			board.transferPropertyFromTo(fromName, toName, propertyID);
+			board.transferMoneyFromTo(fromName, toName, price);
 		}
 		else throw new RuntimeException("Player doesn't have enough money");
 
@@ -256,7 +256,7 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		String text = board.getLocalPlayer().getName().concat(": " + s + "\n");
+		String text = localPlayer.getName().concat(": " + s + "\n");
 		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
@@ -289,7 +289,7 @@ public class GameClient {
 	 * 			the local player
 	 */
 	public Player getLocalPlayer(){
-		return board.getLocalPlayer();
+		return localPlayer;
 	}
 	
 	/**

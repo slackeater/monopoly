@@ -22,7 +22,6 @@ public class Board {
 	private TileSubject[] tileSubjects;
 	private Token[] tokens = new Token[8];
 	private int freeParking;
-	private Player localPlayer;
 	private PlayerSubject playerSubject;
 
 	/**
@@ -52,13 +51,16 @@ public class Board {
 		public void notifyListeners() {
 			ArrayList<PlayerStateEvent> playerStates = new ArrayList<PlayerStateEvent>();
 			for (Player plyr : players) {
-				//generate a list of booleans that represent the terrains that the player owns
+				// generate a list of booleans that represent the terrains that
+				// the player owns
 				boolean[] terrains = new boolean[40];
-				for(Tile t:plyr.getProperties()) {
-					terrains[t.getId()]=true;
+				for (Tile t : plyr.getProperties()) {
+					terrains[t.getId()] = true;
 				}
-				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(), plyr.getName(),
-						plyr.isInJail(), plyr.getAccount(), plyr.isTurnToken(), plyr.getJailCard(), terrains, plyr.getToken());
+				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),
+						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
+						plyr.isTurnToken(), plyr.getJailCard(), terrains,
+						plyr.getToken());
 				playerStates.add(pse);
 			}
 			for (PlayerListener pl : listeners) {
@@ -66,7 +68,7 @@ public class Board {
 			}
 		}
 	}
-	
+
 	/**
 	 * Method used by PlayerListeners in the GUI in an observer pattern if
 	 * something changes in the Player data, it is through the PlayerSubject
@@ -77,7 +79,6 @@ public class Board {
 	public PlayerSubject getSubjectForPlayer() {
 		return playerSubject;
 	}
-	
 
 	/**
 	 * inner class responsible for registering listeners from the GUI and
@@ -101,14 +102,21 @@ public class Board {
 			listeners.remove(tl);
 		}
 
+		/**
+		 * notify listeners in the GUI of any changes to a TERRAIN TILE ONLY
+		 * other types of tiles are ignore because they don't have a change of appearance on the game board
+		 */
 		public void notifyListeners() {
 			Tile t = getTileById(tileListenerId);
-			Terrain terrain = ((Terrain) t);
-			TileStateEvent tsi = new TileStateEvent(terrain.getHouseCount(),
-					terrain.getHotelCount(), "bob",// terrain.getOwner().getName(),
-					terrain.isMortgageActive());
-			for (TileListener tl : listeners) {
-				tl.updateTile(tsi);
+			if (t instanceof Terrain) {
+				Terrain terrain = ((Terrain) t);
+				TileStateEvent tsi = new TileStateEvent(
+						terrain.getHouseCount(), terrain.getHotelCount(),
+						"bob",// terrain.getOwner().getName(),
+						terrain.isMortgageActive());
+				for (TileListener tl : listeners) {
+					tl.updateTile(tsi);
+				}
 			}
 		}
 	}
@@ -122,9 +130,9 @@ public class Board {
 		tileSubjects = new TileSubject[40];
 		playerSubject = new ConcretePlayerSubject();
 		createTileSubjects();
-		
-		//token initialization
-		tokens[0] = new Token(Color.RED,0.1,0.375);
+
+		// token initialization
+		tokens[0] = new Token(Color.RED, 0.1, 0.375);
 		tokens[1] = new Token(Color.GREEN, 0.3, 0.375);
 		tokens[2] = new Token(Color.BLUE, 0.5, 0.375);
 		tokens[3] = new Token(Color.YELLOW, 0.7, 0.375);
@@ -134,28 +142,32 @@ public class Board {
 		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
-
 	/**
 	 * deposit money to player's account
-	 * @param the player to deposit money to
-	 * @param amount the amount to deposit
+	 * 
+	 * @param the
+	 *            player to deposit money to
+	 * @param amount
+	 *            the amount to deposit
 	 */
-	public void depositToPlayer(String player, int amount){
+	public void depositToPlayer(String player, int amount) {
 		getPlayerByName(player).depositMoney(amount);
 		playerSubject.notifyListeners();
 	}
-	
+
 	/**
 	 * withdraw money from a player's account
-	 * @param the player to withdraw money from
-	 * @param amount the amount to withdraw
+	 * 
+	 * @param the
+	 *            player to withdraw money from
+	 * @param amount
+	 *            the amount to withdraw
 	 */
-	public void withdrawPlayer(String player, int amount){
+	public void withdrawPlayer(String player, int amount) {
 		getPlayerByName(player).withdawMoney(amount);
 		playerSubject.notifyListeners();
 	}
-	
-	
+
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
@@ -177,27 +189,48 @@ public class Board {
 	}
 
 	/**
-	 * buy a house for a given property checks that the tileId provIded refers
+	 * buy a house for a given property checks that the tileId provided refers
 	 * to a terrain
 	 * 
 	 * @param tileId
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHouse(int tileId) {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
 		if (availableHouses < 1)
 			throw new RuntimeException(
 					"No houses available to complete the transaction");
-		Tile t = tiles[tileId];
-		if (!(t instanceof Terrain))
-			throw new RuntimeException(
-					"Tile must be a terrain in order to build houses on it");
-		Terrain terrain = (Terrain) t;
+		if (terrain.getHouseCount() >= 4)
+			throw new RuntimeException("The maximum number of houses that may be built on a property is 4");
 		terrain.buildHouse();
 		int id = terrain.getId();
 		availableHouses--;
 		tileSubjects[id].notifyListeners();
 	}
 
+	/**
+	 * buy a hotel for a given property checks that the tileId provided refers
+	 * to a terrain
+	 * 
+	 * @param tileId
+	 *            the tile number of the property to build a house on
+	 */
+	public void buyHotel(int tileId) {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		if (availableHotels < 1)
+			throw new RuntimeException(
+					"No hotels available to complete the transaction");
+		if (terrain.getHouseCost() != 4)
+			throw new RuntimeException("There must be 4 houses present on this property in order to build a hotel");
+		terrain.buildHotel();
+		int id = terrain.getId();
+		availableHotels--;
+		tileSubjects[id].notifyListeners();
+	}
+
+	
 	/**
 	 * transfers a given property from one player to another checks if property
 	 * to transfer is a Property
@@ -209,12 +242,15 @@ public class Board {
 	 * @param propertyId
 	 *            the tile number of the property that was sold
 	 */
-	public void transferProperty(String fromName, String toName, int tileId) {
+	public void transferPropertyFromTo(String fromName, String toName, int tileId) {
 		Tile t = tiles[tileId];
 		if (t instanceof Property) {
+			Property prop = castTileToProperty(t);
+			if (!prop.getOwner().getName().equals(fromName))
+				throw new RuntimeException("Cannot transfer a property from a player who doesn't own the property");
 			Player fromPlayer = getPlayerByName(fromName);
 			Player toPlayer = getPlayerByName(toName);
-			((Property) t).setOwner(toPlayer);
+			prop.setOwner(toPlayer);
 			fromPlayer.removeProperty(t);
 			toPlayer.addProperty(t);
 			tileSubjects[tileId].notifyListeners();
@@ -228,36 +264,6 @@ public class Board {
 		return tiles[tileId];
 	}
 
-	/**
-	 * adds a given property to a player's list of properties tileId must refer
-	 * to a property the property must have no OWNER, meaning this property
-	 * comes from the bank TODO the precondition that the property be owned by
-	 * the bank make this method a bit limited, reevaluate the condition
-	 * 
-	 * @param fromName
-	 *            name of the player to take property from
-	 * @param toName
-	 *            name of the player to give the property to
-	 * @param price
-	 *            the price the property has been sold for
-	 * @param propertyId
-	 *            the tile number of the property that was sold
-	 */
-	public void addPropertyToPlayer(String toName, int tileId) {
-		Tile t = tiles[tileId];
-		Property p = castTileToProperty(t);
-		if (p.getOwner() != null) {
-			throw new RuntimeException(
-					"Property is already owned: cannot add properyt to player -> use transferProperty");
-		} else {
-			Player toPlayer = getPlayerByName(toName);
-			toPlayer.addProperty(p);
-			p.setOwner(toPlayer);
-			playerSubject.notifyListeners();
-			tileSubjects[tileId].notifyListeners();
-		}
-
-	}
 
 	/**
 	 * transfers a given amount of money from one player to another
@@ -269,7 +275,7 @@ public class Board {
 	 * @param price
 	 *            the amount of money to transfer
 	 */
-	public void transferMoney(String fromName, String toName, int price) {
+	public void transferMoneyFromTo(String fromName, String toName, int price) {
 		Player fromPlayer = getPlayerByName(fromName);
 		if (price > fromPlayer.getAccount())
 			throw new RuntimeException("Cannot complete transfer: \n\t"
@@ -294,18 +300,15 @@ public class Board {
 	 *            starting balance in there account
 	 * 
 	 */
-	public void createPlayers(List<String> playerNames, Locale loc	) {
-		
+	public void createPlayers(List<String> playerNames, Locale loc) {
 		players = new ArrayList<Player>();
 		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
 				"startMoney");
-		System.out.println(bundleData);
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
 			Player plyr = new Player(playerNames.get(i), startMoney, tokens[i]);
 			players.add(plyr);
-
 		}
 	}
 
@@ -336,7 +339,7 @@ public class Board {
 	/**
 	 * casts a tile to a property if it is a property, otherwise throw an
 	 * exception
-	 * 
+	 *
 	 * @param t
 	 *            the tile to cast
 	 * @return the tile casted to a property
@@ -344,8 +347,23 @@ public class Board {
 	public Property castTileToProperty(Tile t) {
 		if (!(t instanceof Property))
 			throw new RuntimeException(
-					"cannot complete transfer: object to transfer is not a property");
+					"the tile in question is not a property: this transaction cannot be completed");
 		return ((Property) t);
+	}
+	
+	/**
+	 * casts a tile to a terrain if it is a terrain, otherwise throw an
+	 * exception
+	 *
+	 * @param t
+	 *            the tile to cast
+	 * @return the tile casted to a terrain
+	 */
+	public Terrain castTileToTerrain(Tile t) {
+		if (!(t instanceof Terrain))
+			throw new RuntimeException(
+					"the tile in question is not a property: this transaction cannot be completed");
+		return ((Terrain) t);
 	}
 
 	/**
@@ -463,7 +481,6 @@ public class Board {
 		return freeParking;
 	}
 
-
 	public void setFreeParking(int amount) {
 		this.freeParking = amount;
 	}
@@ -478,18 +495,10 @@ public class Board {
 
 	public int getAvailableHotels() {
 		return availableHotels;
-		
+
 	}
-	/**
-	 * Get the local player
-	 * @return Player
-	 * 			the local player
-	 */
-	public Player getLocalPlayer(){
-		return localPlayer;
-	}
-	
-	public void initGUI(){
+
+	public void initGUI() {
 		playerSubject.notifyListeners();
 	}
 

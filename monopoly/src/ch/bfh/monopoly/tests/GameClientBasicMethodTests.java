@@ -61,7 +61,6 @@ public class GameClientBasicMethodTests {
 		gameClient.advanceCurrentPlayerNSpaces(4);
 		int newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 4);
-		
 		gameClient.advanceCurrentPlayerNSpaces(10);
 		newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 14);
@@ -89,7 +88,7 @@ public class GameClientBasicMethodTests {
 	public void currentPlayerHasSufficientFunds(){
 		Player p = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(p);
-		System.out.println(gameClient.getCurrentPlayer().getAccount());
+		p.withdawMoney(14000);
 		assertTrue(!gameClient.hasSufficientFunds(2000));
 	}
 	
@@ -102,6 +101,7 @@ public class GameClientBasicMethodTests {
 		Player p = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
 		gameClient.setCurrentPlayer(p);
+		p2.withdawMoney(14000);
 		assertTrue(!gameClient.playerHasSufficientFunds("Giuseppe",2000));
 	}
 	
@@ -114,8 +114,11 @@ public class GameClientBasicMethodTests {
 	public void playerHasBothUtilities(){
 		Player p = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(p);
-		p.addProperty(board.getTileById(12));
-		p.addProperty(board.getTileById(28));
+		gameClient.advanceCurrentPlayerNSpaces(12);
+		gameClient.buyCurrentPropertyForPlayer(p.getName());
+		//Advance current player to tile number 28
+		gameClient.advanceCurrentPlayerNSpaces(16);
+		gameClient.buyCurrentPropertyForPlayer(p.getName());
 		assertTrue(gameClient.hasBothUtilities());
 	}
 	
@@ -125,10 +128,15 @@ public class GameClientBasicMethodTests {
 	 */
 	@Test
 	public void playerDoesNotHaveBothUtilities(){
-		Player p = board.getPlayerByName("Justin");
+		Player p1= board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
-		p.addProperty(board.getTileById(12));
-		p2.addProperty(board.getTileById(28));
+		gameClient.setCurrentPlayer(p1);
+		gameClient.advanceCurrentPlayerNSpaces(12);
+		gameClient.buyCurrentPropertyForPlayer(p1.getName());
+	
+		gameClient.setCurrentPlayer(p2);
+		gameClient.advanceCurrentPlayerNSpaces(28);
+		gameClient.buyCurrentPropertyForPlayer(p2.getName());
 		assertTrue(!gameClient.hasBothUtilities());
 	}
 

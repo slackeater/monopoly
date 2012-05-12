@@ -11,15 +11,6 @@ public class BoardController {
 		this.board = board;
 	}
 	
-//TODO SHOULD WE DELETE THESE METHODS?
-//	public int getXCoordForTileAtIndex(int index){
-//		return board.getTileById(index).getCoordX();
-//	}
-//	
-//	public int getYCoordForTileAtIndex(int index){
-//		return board.getTileById(index).getCoordY();
-//	}
-	
 	public TileInfo getTileInfoById(int id){
 		return board.getTileInfoById(id);
 	}
