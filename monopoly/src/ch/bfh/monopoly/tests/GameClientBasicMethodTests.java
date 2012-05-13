@@ -139,5 +139,30 @@ public class GameClientBasicMethodTests {
 		gameClient.buyCurrentPropertyForPlayer(p2.getName());
 		assertTrue(!gameClient.hasBothUtilities());
 	}
-
+	
+	/**
+	 * test that gameClient.addJailCardToPlayer works
+	 */
+	@Test
+	public void addJailCardsWorks(){
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.addJailCardToPlayer(plyr1.getName());
+		assertTrue(plyr1.getJailCard()==1);
+	}
+	
+	/**
+	 * test that gameClient.removeJailCardFromPlayer works
+	 */
+	@Test
+	public void removeJailCardsWorks(){
+		Player plyr1 = board.getPlayerByName("Justin");
+		plyr1.setJailCard(2);
+		gameClient.removeJailCardFromPlayer(plyr1.getName());
+		assertTrue(plyr1.getJailCard()==1);
+	}
+	
+	
+	
+	
+	
 }

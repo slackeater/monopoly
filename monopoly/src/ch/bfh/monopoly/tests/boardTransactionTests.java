@@ -55,7 +55,7 @@ public class boardTransactionTests {
 		int p1account = p1.getAccount(); 
 		Player p2 = board.getPlayerByName("Giuseppe");
 		int p2account = p2.getAccount();
-		board.transferMoneyFromTo(p1.getName(), p2.getName(), transferAmount);
+		board.transferMoney(p1.getName(), p2.getName(), transferAmount);
 		assertTrue(p1.getAccount() == p1account-transferAmount);
 		assertTrue(p2.getAccount() == p2account+transferAmount);
 	}
@@ -70,7 +70,7 @@ public class boardTransactionTests {
 		Player p1 = board.getPlayerByName("Justin"); 
 		Player p2 = board.getPlayerByName("Giuseppe");
 		try {
-			board.transferMoneyFromTo(p1.getName(), p2.getName(), transferAmount);
+			board.transferMoney(p1.getName(), p2.getName(), transferAmount);
 			fail("FAIL: program allows a transfer for an amount larger than that of the player's account balance");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

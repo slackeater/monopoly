@@ -63,32 +63,77 @@ public class GameController {
 	
 	/**
 	 * transfer property from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
-	 * this method just calls the local method  transferPropertyForPrice with the added property of price = 0
-	 * @param fromPlayer the name of the player to transfer the property from
-	 * @param toPlayer the name of the player to transfer the property to
+	 * this method just calls the local method  transferPropertyForPrice with the added parameter of price = 0
+	 * @param fromName the name of the player to transfer the property from
+	 * @param toName the name of the player to transfer the property to
 	 * @param tileId the integer number which represent the tile to be transfered
 	 */
-	public void transferProperty(String fromPlayer, String toPlayer, int tileId){
-		transferPropertyForPrice(fromPlayer, toPlayer, tileId,0);
+	public void transferProperty(String fromName, String toName, int tileId){
+		transferPropertyForPrice(fromName, toName, tileId,0);
 	}
 	
 	/**
 	 * transfer property from one player to another for a given price.  the string "CurrentPlayer" should be used to represent the currentPlayer.
-	 * @param fromPlayer the name of the player to transfer the property from
-	 * @param toPlayer the name of the player to transfer the property to
+	 * @param fromName the name of the player to transfer the property from
+	 * @param toName the name of the player to transfer the property to
 	 * @param tileId the integer number which represent the tile to be transfered
 	 */
-	public void transferPropertyForPrice(String fromPlayer, String toPlayer, int tileId, int price){
-		gameClient.transferProperty(fromPlayer, toPlayer, tileId, price);
+	public void transferPropertyForPrice(String fromName, String toName, int tileId, int price){
+		gameClient.transferProperty(fromName, toName, tileId, price);
+	}
+	
+	/**
+	 * transfer "get out of jail card" from one player to another for a given price.  the string "CurrentPlayer" should be used to represent the currentPlayer.
+	 * this method just calls the local method transferJailCardsForPrice with the added parameter of price = 0
+	 * @param fromName the name of the player to transfer the card from
+	 * @param toName the name of the player to transfer the card to
+	 * @param quantity the number of cards that should be transfered.  In a rare case it is possible that this is greater than 1.
+	 */
+	public void transferJailCards(String fromName, String toName, int quantity){
+		transferJailCardsForPrice(fromName, toName, quantity, 0);
+	}
+	
+	/**
+	 * transfer "get out of jail card" from one player to another for a given price.  the string "CurrentPlayer" should be used to represent the currentPlayer.
+	 * @param fromName the name of the player to transfer the card from
+	 * @param toName the name of the player to transfer the card to
+	 * @param quantity the number of cards that should be transfered.  In a rare case it is possible that this is greater than 1.
+	 */
+	public void transferJailCardsForPrice(String fromName, String toName, int quantity, int price){
+		gameClient.transferJailCards(fromName, toName, quantity, price);
+	}
+	
+	/**
+	 * transfer money from one player to another
+	 * @param fromName the name of the player to withdraw money from
+	 * @param toName the name of the player to deposit money to
+	 * @param amount the amount of money to be transfered
+	 */
+	public void transferMoney(String fromName, String toName, int amount){
+		gameClient.transferMoney(fromName,toName,amount);
 	}
 
+	
 	/**
 	 * advance the current player the number of spaces n
-	 * @param n
+	 * @param n is the number of spaces to advance the currentPlayer on the game board
 	 */
 	public void advancePlayerNSpaces(int n){
 		gameClient.advanceCurrentPlayerNSpaces(n);
 	}
+	
+	
+	/**
+	 * check if a player has more than a given amount of money in his account
+	 * for example if he has enough money to buy a property
+	 * @param playerName the name of the player whose balance is to be checked.  Use "currentPlayer" as playerName to check the currentPlayer
+	 * @param amount the amount of money to compare the player's account to
+	 * @return true if the player has more than the amount
+	 */
+	public boolean playerHasSufficientFunds(String playerName, int amount){
+		return gameClient.playerHasSufficientFunds(playerName, amount);
+	}
+	
 	
 	
 	/**

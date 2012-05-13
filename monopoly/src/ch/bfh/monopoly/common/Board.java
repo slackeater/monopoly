@@ -151,7 +151,7 @@ public class Board {
 	 * @param amount
 	 *            the amount to deposit
 	 */
-	public void depositToPlayer(String player, int amount) {
+	public void deposittoName(String player, int amount) {
 		getPlayerByName(player).depositMoney(amount);
 		playerSubject.notifyListeners();
 	}
@@ -316,7 +316,7 @@ public class Board {
 					"Cannot transfer a property from a player who doesn't own the property");
 		// toName and fromName reversed, because money goes in opposite
 		// direction than does the property.
-		transferMoneyFromTo(toName, fromName, price);
+		transferMoney(toName, fromName, price);
 		Player fromPlayer = getPlayerByName(fromName);
 		Player toPlayer = getPlayerByName(toName);
 		prop.setOwner(toPlayer);
@@ -341,7 +341,7 @@ public class Board {
 	 * @param price
 	 *            the amount of money to transfer
 	 */
-	public void transferMoneyFromTo(String fromName, String toName, int price) {
+	public void transferMoney(String fromName, String toName, int price) {
 		Player fromPlayer = getPlayerByName(fromName);
 		if (!fromPlayer.hasSufficientFunds(price))
 			throw new RuntimeException("Cannot complete transaction: \n\t"
@@ -456,6 +456,28 @@ public class Board {
 		playerSubject.notifyListeners();
 	}
 
+	
+	/**
+	 * transfer jail cards from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
+	 * @param fromName the name of the player to transfer the card from
+	 * @param toName the name of the player to transfer the card to
+	 * @param tileId the integer number which represent the tile to be transfered
+	 */
+	public void transferJailCards(String fromName, String toName, int quantity, int price){
+		Player fromPlayer = getPlayerByName(fromName);
+		if (fromPlayer.getJailCard() < quantity)
+			throw new RuntimeException("Cannot complete transaction: \n\t"
+					+ fromPlayer.getName()
+					+ " has insufficient jail cards. \n\tReqeusted to transfer: "
+					+ quantity + " quantity available: " + fromPlayer.getJailCard());
+		//Switch order of fromName and toName because money goes in opposite direction than do jailCards
+		transferMoney(toName, fromName, price);
+		removeJailCardFromPlayer(fromName);
+		addJailCardToPlayer(toName);
+		playerSubject.notifyListeners();
+	}
+	
+	
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
 	 * 
@@ -464,10 +486,32 @@ public class Board {
 	 * @param fee
 	 *            the amount of the fee to be paid
 	 */
-	public boolean playerHasSufficientFunds(String playerName, int fee) {
+	public boolean playerHasSufficientFunds(String playerName, int amount) {
 		Player plyr = getPlayerByName(playerName);
-		return (plyr.hasSufficientFunds(fee));
+		return (plyr.hasSufficientFunds(amount));
 	}
+	
+	
+	/**
+	 * gives the given player a jail card
+	 * @param String the name of the player to change
+	 */
+	public void addJailCardToPlayer(String playerName){
+		Player plyr = getPlayerByName(playerName);
+		int jailCards = plyr.getJailCard(); 
+		plyr.setJailCard(jailCards+1);
+	}
+	
+	/**
+	 * removes a jail card from the given player
+	 * @param String the name of the player to change
+	 */
+	public void removeJailCardFromPlayer(String playerName){
+		Player plyr = getPlayerByName(playerName);
+		int jailCards = plyr.getJailCard(); 
+		plyr.setJailCard(jailCards-1);
+	}
+	
 
 	/**
 	 * creates an object with all the static tile information to be sent to the

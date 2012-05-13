@@ -90,7 +90,8 @@ public class GameClient {
 
 	
 	public void buyCurrentPropertyForPlayer(String playerName){
-		board.buyCurrentPropertyForPlayer(currentPlayer.getName(), currentPlayer.getPosition());
+		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
+		board.buyCurrentPropertyForPlayer(playerNameAdjusted, currentPlayer.getPosition());
 	}
 	
 	/**
@@ -165,23 +166,46 @@ public class GameClient {
 	
 	/**
 	 * transfer property from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
-	 * @param fromPlayer the name of the player to transfer the property from
-	 * @param toPlayer the name of the player to transfer the property to
+	 * @param fromName the name of the player to transfer the property from
+	 * @param toName the name of the player to transfer the property to
 	 * @param tileId the integer number which represent the tile to be transfered
 	 */
-	public void transferProperty(String fromPlayer, String toPlayer, int tileId, int price){
-		String fromPlayerAdjusted = fromPlayer;
-		String toPlayerAdjusted = toPlayer;
-		String currentPlayersName = currentPlayer.getName();
-		//replace the string "currentPlayer" with the name of the currentPlayer
-		if (fromPlayer.equalsIgnoreCase("currentPlayer"))
-			fromPlayer = currentPlayersName;
-		if (toPlayer.equalsIgnoreCase("currentPlayer"))
-			toPlayer = currentPlayersName;
-		board.transferProperty(fromPlayerAdjusted, toPlayerAdjusted, tileId, price);
+	public void transferProperty(String fromName, String toName, int tileId, int price){
+		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
+		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
+		board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId, price);
 	}
 	
+	/**
+	 * transfer jail cards from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
+	 * @param fromName the name of the player to transfer the card from
+	 * @param toName the name of the player to transfer the card to
+	 * @param tileId the integer number which represent the tile to be transfered
+	 */
+	public void transferJailCards(String fromName, String toName, int quantity, int price){
+		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
+		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
+		board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity, price);
+	}
 	
+	/**
+	 * transfer money from one player to another
+	 * @param fromName the name of the player to withdraw money from
+	 * @param toName the name of the player to deposit money to
+	 * @param amount the amount of money to be transfered
+	 */
+	public void transferMoney(String fromName, String toName, int amount){
+		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
+		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
+		board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
+	}
+	
+	public String adjustNameIfCurrentPlayer(String playerName){
+		String adjustedName = playerName;
+		if (playerName.equalsIgnoreCase("currentPlayer"))
+			adjustedName =currentPlayer.getName();
+		return adjustedName;
+	}
 
 
 	/**
@@ -233,8 +257,9 @@ public class GameClient {
 	 * @param fee
 	 *            the amount of the fee to be paid
 	 */
-	public boolean playerHasSufficientFunds(String playerName, int fee) {
-		return board.playerHasSufficientFunds(playerName, fee);
+	public boolean playerHasSufficientFunds(String playerName, int amount) {
+		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName); 
+		return board.playerHasSufficientFunds(playerNameAdjusted, amount);
 	}
 
 	/**
@@ -277,16 +302,16 @@ public class GameClient {
 
 	/**
 	 * The current player is charged a given fee, which is withdrawn from his
-	 * account the amount of the fee is then credited to the toPlayer's account
+	 * account the amount of the fee is then credited to the toName's account
 	 * 
-	 * @param toPlayer
+	 * @param toName
 	 *            the name of hte player to give the money to
 	 * @param fee
 	 *            the amount of the fee to charge the current player
 	 */
-	public void payFeeToPlayer(String toPlayer, int fee) {
+	public void payFeetoName(String toName, int fee) {
 		currentPlayer.withdawMoney(fee);
-		board.getPlayerByName(toPlayer).depositMoney(fee);
+		board.getPlayerByName(toName).depositMoney(fee);
 	}
 
 	public int getFreeParking() {
@@ -329,6 +354,24 @@ public class GameClient {
 		//send a message to the server wit our user name
 //		NetMessage n = new NetMessage(localPlayerName, Messages.SEND_USERNAME);
 //		this.session.write(n);
+	}
+	
+	/**
+	 * gives the given player a jail card
+	 * @param String the name of the player to change
+	 */
+	public void addJailCardToPlayer(String playerName){
+		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
+		board.addJailCardToPlayer(playerNameAdjusted);
+	}
+	
+	/**
+	 * removes a jail card from the given player
+	 * @param String the name of the player to change
+	 */
+	public void removeJailCardFromPlayer(String playerName){
+		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
+		board.removeJailCardFromPlayer(playerNameAdjusted);
 	}
 	
 	/**
