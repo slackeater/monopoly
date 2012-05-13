@@ -17,8 +17,17 @@ public abstract class Property extends AbstractTile implements IProperty{
 		this.group=group;
 		this.owner = bank;
 		this.mortgageValue=mortgageValue;
+		this.mortgageActive=false;
 	}
 	
+	public boolean isMortgageActive() {
+		return mortgageActive;
+	}
+
+	public void setMortgageActive(boolean mortgageActive) {
+		this.mortgageActive = mortgageActive;
+	}
+
 	public int getPrice() {
 		return price;
 	}

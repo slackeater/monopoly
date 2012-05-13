@@ -104,7 +104,8 @@ public class Board {
 
 		/**
 		 * notify listeners in the GUI of any changes to a TERRAIN TILE ONLY
-		 * other types of tiles are ignore because they don't have a change of appearance on the game board
+		 * other types of tiles are ignore because they don't have a change of
+		 * appearance on the game board
 		 */
 		public void notifyListeners() {
 			Tile t = getTileById(tileListenerId);
@@ -202,10 +203,13 @@ public class Board {
 			throw new RuntimeException(
 					"No houses available to complete the transaction");
 		if (terrain.getHouseCount() >= 4)
-			throw new RuntimeException("The maximum number of houses that may be built on a property is 4");
+			throw new RuntimeException(
+					"The maximum number of houses that may be built on a property is 4");
 		terrain.buildHouse();
 		int id = terrain.getId();
 		availableHouses--;
+		int price = terrain.getHouseCost();
+		terrain.getOwner().withdawMoney(price);
 		tileSubjects[id].notifyListeners();
 	}
 
@@ -222,15 +226,76 @@ public class Board {
 		if (availableHotels < 1)
 			throw new RuntimeException(
 					"No hotels available to complete the transaction");
-		if (terrain.getHouseCost() != 4)
-			throw new RuntimeException("There must be 4 houses present on this property in order to build a hotel");
+		if (terrain.getHouseCount() != 4)
+			throw new RuntimeException(
+					"There must be 4 houses present on this property in order to build a hotel");
+		if (terrain.getHotelCount() >= 1)
+			throw new RuntimeException(
+					"It's monopoly, but hey there are still rules!  You can't build more than one hotel on a tile.");
 		terrain.buildHotel();
 		int id = terrain.getId();
 		availableHotels--;
+		int price = terrain.getHotelCost();
+		terrain.getOwner().withdawMoney(price);
 		tileSubjects[id].notifyListeners();
 	}
 
-	
+	/**
+	 * sell a house for a given property
+	 * 
+	 * @param tileID
+	 *            the tile number of the property to sell a house from
+	 */
+	public void sellHouses(int tileId) {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		if (terrain.getHouseCount() <= 0)
+			throw new RuntimeException(
+					"No houses present on tile with tile Id=" + tileId);
+		terrain.buildHotel();
+		int id = terrain.getId();
+		availableHotels++;
+		int price = terrain.getHouseCost();
+		terrain.getOwner().depositMoney(price);
+		tileSubjects[id].notifyListeners();
+	}
+
+	/**
+	 * sell a hotel for a given property
+	 * 
+	 * @param tileID
+	 *            the tile number of the property to sell a hotel from
+	 */
+	public void sellHotel(int tileId) {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		if (terrain.getHotelCount() <= 0)
+			throw new RuntimeException(
+					"No hotels present on tile with tile Id=" + tileId);
+		terrain.buildHotel();
+		int id = terrain.getId();
+		availableHotels++;
+		int price = terrain.getHotelCost();
+		terrain.getOwner().depositMoney(price);
+		tileSubjects[id].notifyListeners();
+	}
+
+	/**
+	 * Toggles the mortgage status of a given property
+	 * 
+	 * @param tileId
+	 *            the id that corresponds to a tile for which we want to toggle
+	 *            the mortgage status.
+	 */
+	public void toggleMortgageStatus(int tileId) {
+		Tile t = tiles[tileId];
+		Property prop = castTileToProperty(t);
+		if (prop.isMortgageActive())
+			prop.setMortgageActive(false);
+		else
+			prop.setMortgageActive(true);
+	}
+
 	/**
 	 * transfers a given property from one player to another checks if property
 	 * to transfer is a Property
@@ -242,28 +307,29 @@ public class Board {
 	 * @param propertyId
 	 *            the tile number of the property that was sold
 	 */
-	public void transferPropertyFromTo(String fromName, String toName, int tileId) {
+	public void transferProperty(String fromName, String toName, int tileId,
+			int price) {
 		Tile t = tiles[tileId];
-		if (t instanceof Property) {
-			Property prop = castTileToProperty(t);
-			if (!prop.getOwner().getName().equals(fromName))
-				throw new RuntimeException("Cannot transfer a property from a player who doesn't own the property");
-			Player fromPlayer = getPlayerByName(fromName);
-			Player toPlayer = getPlayerByName(toName);
-			prop.setOwner(toPlayer);
-			fromPlayer.removeProperty(t);
-			toPlayer.addProperty(t);
-			tileSubjects[tileId].notifyListeners();
-			playerSubject.notifyListeners();
-		} else
+		Property prop = castTileToProperty(t);
+		if (!prop.getOwner().getName().equals(fromName))
 			throw new RuntimeException(
-					"cannot complete transfer: object to transfer is not a property");
+					"Cannot transfer a property from a player who doesn't own the property");
+		// toName and fromName reversed, because money goes in opposite
+		// direction than does the property.
+		transferMoneyFromTo(toName, fromName, price);
+		Player fromPlayer = getPlayerByName(fromName);
+		Player toPlayer = getPlayerByName(toName);
+		prop.setOwner(toPlayer);
+		fromPlayer.removeProperty(t);
+		toPlayer.addProperty(t);
+		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
+
 	}
 
 	public Tile getTileById(int tileId) {
 		return tiles[tileId];
 	}
-
 
 	/**
 	 * transfers a given amount of money from one player to another
@@ -277,8 +343,8 @@ public class Board {
 	 */
 	public void transferMoneyFromTo(String fromName, String toName, int price) {
 		Player fromPlayer = getPlayerByName(fromName);
-		if (price > fromPlayer.getAccount())
-			throw new RuntimeException("Cannot complete transfer: \n\t"
+		if (!fromPlayer.hasSufficientFunds(price))
+			throw new RuntimeException("Cannot complete transaction: \n\t"
 					+ fromPlayer.getName()
 					+ " has insufficient funds. \n\tReqeusted to transfer: "
 					+ price + " account balance: " + fromPlayer.getAccount());
@@ -339,7 +405,7 @@ public class Board {
 	/**
 	 * casts a tile to a property if it is a property, otherwise throw an
 	 * exception
-	 *
+	 * 
 	 * @param t
 	 *            the tile to cast
 	 * @return the tile casted to a property
@@ -350,11 +416,11 @@ public class Board {
 					"the tile in question is not a property: this transaction cannot be completed");
 		return ((Property) t);
 	}
-	
+
 	/**
 	 * casts a tile to a terrain if it is a terrain, otherwise throw an
 	 * exception
-	 *
+	 * 
 	 * @param t
 	 *            the tile to cast
 	 * @return the tile casted to a terrain
@@ -399,7 +465,8 @@ public class Board {
 	 *            the amount of the fee to be paid
 	 */
 	public boolean playerHasSufficientFunds(String playerName, int fee) {
-		return (getPlayerByName(playerName).getAccount() > fee);
+		Player plyr = getPlayerByName(playerName);
+		return (plyr.hasSufficientFunds(fee));
 	}
 
 	/**

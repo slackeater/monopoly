@@ -113,28 +113,76 @@ public class GameClient {
 				Messages.BUY_HOUSE);
 		session.write(nm);
 	}
-
+	
 	/**
-	 * transfers a given property from one player to another
+	 * buy a house for a given property
 	 * 
-	 * @param fromName
-	 *            name of the player to take property from
-	 * @param toName
-	 *            name of the player to give the property to
-	 * @param price
-	 *            the price the property has been sold for
-	 * @param propertyID
-	 *            the tile number of the property that was sold
+	 * @param tileID
+	 *            the tile number of the property to build a house on
 	 */
-	public void buyPropertyFromPlayer(String fromName, String toName,
-			int propertyID, int price) {
-		if (board.playerHasSufficientFunds(fromName, price)) {
-			board.transferPropertyFromTo(fromName, toName, propertyID);
-			board.transferMoneyFromTo(fromName, toName, price);
-		}
-		else throw new RuntimeException("Player doesn't have enough money");
-
+	public void buyHotel(int tileID) {
+		board.buyHotel(tileID);
+		NetMessage nm = new NetMessage(currentPlayer, tileID,
+				Messages.BUY_HOTEL);
+		session.write(nm);
 	}
+	
+	/**
+	 * sell a house for a given property
+	 * 
+	 * @param tileID
+	 *            the tile number of the property to sell a house from
+	 */
+	public void sellHouse(int tileID) {
+		board.sellHouses(tileID);
+		NetMessage nm = new NetMessage(currentPlayer, tileID,
+				Messages.SELL_HOUSE);
+		session.write(nm);
+	}
+	
+	/**
+	 * sell a hotel for a given property
+	 * 
+	 * @param tileID
+	 *            the tile number of the property to sell a hotel from
+	 */
+	public void sellHotel(int tileID) {
+		board.sellHotel(tileID);
+		NetMessage nm = new NetMessage(currentPlayer, tileID,
+				Messages.SELL_HOTEL);
+		session.write(nm);
+	}
+
+	
+	/**
+	 * Toggles the mortgage status of a given property
+	 * @param tileId the id that corresponds to a tile for which we want to toggle the mortgage status.
+	 */
+	public void toggleMortgageStatus(int tileId){
+		board.toggleMortgageStatus(tileId);
+	}
+	
+	
+	/**
+	 * transfer property from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
+	 * @param fromPlayer the name of the player to transfer the property from
+	 * @param toPlayer the name of the player to transfer the property to
+	 * @param tileId the integer number which represent the tile to be transfered
+	 */
+	public void transferProperty(String fromPlayer, String toPlayer, int tileId, int price){
+		String fromPlayerAdjusted = fromPlayer;
+		String toPlayerAdjusted = toPlayer;
+		String currentPlayersName = currentPlayer.getName();
+		//replace the string "currentPlayer" with the name of the currentPlayer
+		if (fromPlayer.equalsIgnoreCase("currentPlayer"))
+			fromPlayer = currentPlayersName;
+		if (toPlayer.equalsIgnoreCase("currentPlayer"))
+			toPlayer = currentPlayersName;
+		board.transferProperty(fromPlayerAdjusted, toPlayerAdjusted, tileId, price);
+	}
+	
+	
+
 
 	/**
 	 * get the description of the event for the tile on which the current player

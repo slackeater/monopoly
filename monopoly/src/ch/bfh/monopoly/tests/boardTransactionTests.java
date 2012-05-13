@@ -86,6 +86,7 @@ public class boardTransactionTests {
 	 */
 	@Test
 	public void transferPropertiesChangesOwners() {
+		int price = 0;
 		Player p1 = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
 		gameClient.setCurrentPlayer(p1);
@@ -94,7 +95,7 @@ public class boardTransactionTests {
 		gameClient.buyCurrentPropertyForPlayer(p1.getName());
 		
 		assertTrue(((Property) t).getOwner() == p1);
-		board.transferPropertyFromTo(p1.getName(), p2.getName(), t.getId());
+		board.transferProperty(p1.getName(), p2.getName(), t.getId(),price);
 		assertTrue(((Property) t).getOwner() == p2);
 	}
 	
@@ -104,11 +105,12 @@ public class boardTransactionTests {
 	 */
 	@Test
 	public void cannotTransferPropertyPlayerDoesNotOwn() {
+		int price = 0;
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
 		Tile t = board.getTileById(1);
 		try {
-			board.transferPropertyFromTo(jus.getName(), giu.getName(), 3);
+			board.transferProperty(jus.getName(), giu.getName(), 3, price);
 			fail("FAIL: player can sell a property he does not own");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -111,6 +111,15 @@ public class Player {
 	}
 
 	/**
+	 * check if the player's account balance is greater than a certain amount
+	 * @param amount the value to test against the account balace
+	 * @return true if the player's account is greater than the amount
+	 */
+	public boolean hasSufficientFunds(int amount){
+		return account >= amount;
+	}
+	
+	/**
 	 * get the name of this player
 	 * 
 	 * @return the name of the player as a string
