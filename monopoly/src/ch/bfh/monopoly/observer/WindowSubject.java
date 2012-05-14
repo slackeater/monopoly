@@ -6,5 +6,5 @@ public interface WindowSubject {
 
 	public void removeListener(WindowListener wl);
 
-	public void notifyListeners(String text);
+	public void notifyListeners(WindowStateEvent wse);
 }

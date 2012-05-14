@@ -36,6 +36,8 @@ import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileSubject;
 import ch.bfh.monopoly.observer.WindowListener;
+import ch.bfh.monopoly.observer.WindowMessage;
+import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.tile.TileInfo;
 
 /**
@@ -136,7 +138,7 @@ public class MonopolyGUI extends JFrame {
 	private void wrapperInit(){
 		/**
 		 * This inner class is used to 
-		 * implements the PlayerListener used
+		 * implement the PlayerListener used
 		 * to draw the token on the board
 		 */
 		class TokenDraw implements PlayerListener{
@@ -264,9 +266,11 @@ public class MonopolyGUI extends JFrame {
 		class TextUpdate implements WindowListener{
 
 			@Override
-			public void updateWindow(String text) {
-				chat.append(text);
-				chat.setCaretPosition(chat.getDocument().getLength());
+			public void updateWindow(WindowStateEvent wse) {
+				if (wse.getType()==WindowMessage.MSG_FOR_CHAT){
+					chat.append(wse.getEventDescription());
+					chat.setCaretPosition(chat.getDocument().getLength());
+				}
 			}
 		}
 

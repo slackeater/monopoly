@@ -227,15 +227,17 @@ public class EventTests {
 	 */
 	@Test
 	public void freeParkingDepositsMoneytoPlayer() {
-		int increasedAmount = 250;
-		Player p = board.getPlayerByName("Justin");
+		int fee = 250;
+		Player plyr1 = board.getPlayerByName("Justin");
+		Player plyr2 = board.getPlayerByName("Giuseppe");
 		int tileId = 20; // Park Place
-		gameClient.setCurrentPlayer(p);
+		gameClient.setCurrentPlayer(plyr1);
+		gameClient.payFee(fee);
+		gameClient.setCurrentPlayer(plyr2);
 		gameClient.advanceCurrentPlayerNSpaces(tileId);
-		gameClient.setFreeParking(increasedAmount);
-		int previousBalance = p.getAccount();
+		int previousBalance = plyr2.getAccount();
 		gc.performEvent();
-		assertTrue(p.getAccount() == previousBalance + increasedAmount);
+		assertTrue(plyr2.getAccount() == previousBalance + fee);
 	}
 
 	/**
