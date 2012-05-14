@@ -14,7 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 
@@ -23,7 +23,7 @@ import ch.bfh.monopoly.observer.PlayerStateEvent;
  * This class represent the JPanel with the information of the user
  * like balance, color and terrains, and jail card
  * @author snake
- *
+ * TODO constants for magic number
  */
 public class PlayerInfo extends JPanel{
 
@@ -41,13 +41,15 @@ public class PlayerInfo extends JPanel{
 	private int playerIndex;
 	
 	private PlayerUpdate plU = new PlayerUpdate();
+	private BoardController bc;
 
 	/**
 	 * Construct a PlayerInfo
 	 * @param c the color of this player
 	 */
-	public PlayerInfo(int playerIndex){
+	public PlayerInfo(int playerIndex, BoardController bc){
 		this.playerIndex = playerIndex;
+		this.bc = bc;
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		//playerInfo.setText(p.getName() + "    " + p.getAccount());
@@ -69,8 +71,6 @@ public class PlayerInfo extends JPanel{
 		add(terrainUp);
 		add(terrainDown);
 		add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
-		
-		
 	}
 
 	/**
@@ -101,23 +101,23 @@ public class PlayerInfo extends JPanel{
 		for(int  j = 0 ; j < MonopolyGUI.TILE_NUMBER ; j++){
 			//from 5 to 35 rail road
 			if(j == 5)
-				rr1 = new SmallTerrain(j);
+				rr1 = new SmallTerrain(j, Color.BLACK);
 			else if(j == 15)
-				rr2 = new SmallTerrain(j);
+				rr2 = new SmallTerrain(j, Color.BLACK);
 			else if(j == 25)
-				rr3 = new SmallTerrain(j);
+				rr3 = new SmallTerrain(j, Color.BLACK);
 			else if(j == 35)
-				rr4 = new SmallTerrain(j);
+				rr4 = new SmallTerrain(j, Color.BLACK);
 			//from 12 to 28 utilities
 			else if(j == 12)
-				utility1 = new SmallTerrain(j);
+				utility1 = new SmallTerrain(j, Color.DARK_GRAY);
 			else if(j == 28)
-				utility2 = new SmallTerrain(j);
+				utility2 = new SmallTerrain(j, Color.DARK_GRAY);
 			//else normal terrain
 			else if(j != 0 && j != 2 &&  j != 4 && j != 7 && j != 10 && j != 17 && j != 20
 				&& j != 22 && j != 30 && j != 33 && j != 36 && j != 38){
-	
-				this.smlTer.add(new SmallTerrain(j));	
+					
+				this.smlTer.add(new SmallTerrain(j, Color.decode(this.bc.getTileInfoById(j).getRGB())));	
 			}
 		}
 		
@@ -176,22 +176,32 @@ public class PlayerInfo extends JPanel{
 	/**
 	 * This inner class represent the small terrain in the viewer
 	 * @author snake
-	 *
+	 * TODO check if the field ID is useful
 	 */
 	private class SmallTerrain extends JPanel{
 		private static final long serialVersionUID = 7182696401752617070L;
 		private int id;
+		private Color backgroundColor;
 		
-		public SmallTerrain(int id){
+		public SmallTerrain(int id, Color backgroundColor){
 			setMaximumSize(new Dimension(MYTERRAIN_PANEL_SIZE,MYTERRAIN_PANEL_SIZE));
 			setBorder(BorderFactory.createEtchedBorder());
 			setBackground(Color.WHITE);
 			this.id = id;
+			this.backgroundColor = backgroundColor;
 		}
-
-		public int getId() {
-			return id;
-		}	
+	
+		/**
+		 * Set the background color accrodingly to the color 
+		 * assigned in the constructor
+		 */
+		public void setBackgroundColor(){
+			setBackground(this.backgroundColor);
+		}
+		
+		public void resetBackgroundColor(){
+			setBackground(Color.WHITE);
+		}
 	}
 	
 	/**
@@ -226,7 +236,12 @@ public class PlayerInfo extends JPanel{
 		@Override
 		public void mouseExited(MouseEvent e) {}
 	}
-		
+	
+	/**
+	 * This inner class represent the listener of this component
+	 * @author snake
+	 *
+	 */
 	class PlayerUpdate implements PlayerListener{
 
 		@Override
@@ -236,17 +251,32 @@ public class PlayerInfo extends JPanel{
 				int account = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
 				
+				boolean[] smallTerrainState = playerStates.get(playerIndex).getTerrains();
+				
+				System.out.println("Length " + smallTerrainState.length);
+				
+				//TODO we have 40 tiles
+//				//color the panel with the correct color
+				for(int j = 0 ; j < smallTerrainState.length ; j++){
+//					//if the terrain is not owned, the panel is white
+//					if(!smallTerrainState[j])
+//						smlTer.get(j).resetBackgroundColor();
+//					//otherwise, draw the correct color
+//					else
+//						smlTer.get(j).setBackgroundColor();
+				}
+				
 				playerInfo.setText(name + "  " + account);
 				playerInfo.setForeground(c);
 				repaint();
 				revalidate();
-				System.out.println("called");
 		}
 	}
 	
-	/**Get the playerlistener 
-	 * 
-	 * @return
+	/**
+	 * Get the PlayerListener 
+	 * @return PlayerListener
+	 * 				the PlayerListener of this component
 	 */
 	public PlayerListener getPlayerListener(){
 		return this.plU;

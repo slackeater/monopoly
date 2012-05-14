@@ -133,9 +133,10 @@ public class NetMessage implements Serializable{
 	 * @param l the list of the players
 	 * @param m the message type
 	 */
-	public NetMessage(List<String> l, Messages m){
+	public NetMessage(List<String> l, Locale loc, Messages m){
 		this.playerNames = l;
 		this.m = m;
+		this.loc = loc;
 	}
 	
 	//only for test

@@ -50,7 +50,8 @@ public class ClientHandler implements IoHandler {
 			case GAME_START:
 				
 				gc.setUsersList(n.getUserNameList(), this.localPlayerName);
-	
+				//TODO set locale
+				
 				//TODO only for test
 				System.out.println("Client list:" + n.getUserNameList().size());
 				System.out.println("User size: " + n.getUserNameList());
