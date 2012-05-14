@@ -125,7 +125,6 @@ public class WelcomePanel extends JFrame{
 
 		//set the IoSession in the GameClient
 		gameClient.setIoSession(cliSession);
-		gameClient.setLocalPlayer(name);
 	}
 
 

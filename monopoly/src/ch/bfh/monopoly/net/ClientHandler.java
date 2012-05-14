@@ -48,10 +48,10 @@ public class ClientHandler implements IoHandler {
 
 		switch(n.getMessageType()){
 			case GAME_START:
-				
-				gc.setUsersList(n.getUserNameList(), this.localPlayerName);
-				//TODO set locale
-				
+				//create the board for this client by passing the locale the users and the name
+				//of the locaplayer
+				gc.createBoard(n.getLocale(), n.getUserNameList(), this.localPlayerName);
+							
 				//TODO only for test
 				System.out.println("Client list:" + n.getUserNameList().size());
 				System.out.println("User size: " + n.getUserNameList());

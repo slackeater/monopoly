@@ -170,4 +170,13 @@ public class NetMessage implements Serializable{
 	public int getInt(){
 		return this.integerValue;
 	}
+	
+	/**
+	 * Get the locale included in this message
+	 * @return Locale
+	 * 				the locale
+	 */
+	public Locale getLocale(){
+		return this.loc;
+	}
 }

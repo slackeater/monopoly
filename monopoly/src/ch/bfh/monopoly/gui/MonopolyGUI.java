@@ -290,8 +290,8 @@ public class MonopolyGUI extends JFrame {
 				System.out.println("Key pressed" + e.getKeyCode());
 				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-//					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
-					chat.append(text + "\n");
+					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
+					//chat.append(text + "\n");
 					chat.setCaretPosition(chat.getDocument().getLength());
 					gc.sendChatMessage(text);
 					input.setText("");
