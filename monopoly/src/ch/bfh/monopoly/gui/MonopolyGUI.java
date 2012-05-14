@@ -66,7 +66,6 @@ public class MonopolyGUI extends JFrame {
 	private final String CHAT_TAB = "Chat";
 	private final String HISTORY_TAB = "History";
 	private final String FRONT = "Front";
-	private final String REAR = "Rear";
 	private final String THROWING_DICE = "I'm throwing the dice...";
 	private final String DICE_RESULTS = "The results is: ";
 
@@ -145,12 +144,25 @@ public class MonopolyGUI extends JFrame {
 			s.addListener(bt.getTileListener());
 		}
 
-		//add the tokens to the first tile
-		//TODO getter method for the token of every player
-		//TODODODODODODODODODOD
-//		for(int i = 0 ; i < playerNumber ; i++){
-//			tiles.get(0).addToken(pl.get(i).getToken());
-//		}
+		/**
+		 * This inner class is used to 
+		 * implements the PlayerListener used
+		 * to draw the token on the board
+		 */
+		class TokenDraw implements PlayerListener{
+			@Override
+			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+				for(int j = 0 ; j < playerStates.size() ; j++){
+						Token t = playerStates.get(j).getT();
+						int position = playerStates.get(j).getPosition();
+						tiles.get(position).addToken(t);
+				}
+			}
+		}
+		
+		//add the listener to the subject
+		TokenDraw td = new TokenDraw();
+		bc.getSubjectForPlayer().addListener(td);
 		
 		add(drawBoard(), BorderLayout.CENTER);
 		this.bc.initGUI();
@@ -188,13 +200,13 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-			PlayerInfo plInfo = new PlayerInfo(j);
+			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
-
-			//the local player is always shown
-			//if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
-				//plInfo.showTerrains();
-
+// TODO show the panel of the localPlayer
+//			//the local player is always shown
+//			//if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
+//				//plInfo.showTerrains();
+//
 			info.add(plInfo);
 		}
 
@@ -210,9 +222,7 @@ public class MonopolyGUI extends JFrame {
 		tab1 = new JPanel();
 		tab1.setLayout(new BoxLayout(tab1, BoxLayout.PAGE_AXIS));
 
-		JPanel tab2 = new JPanel();
 		card.addTab(FRONT, tab1);
-		card.addTab(REAR, tab2);
 		return card;
 	}
 
@@ -277,9 +287,11 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				//if we press the enter key
+				System.out.println("Key pressed" + e.getKeyCode());
 				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
+//					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
+					chat.append(text + "\n");
 					chat.setCaretPosition(chat.getDocument().getLength());
 					gc.sendChatMessage(text);
 					input.setText("");
@@ -346,7 +358,6 @@ public class MonopolyGUI extends JFrame {
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
 
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
@@ -360,16 +371,20 @@ public class MonopolyGUI extends JFrame {
 					tabPane.addTab("Trade", tradeTab());
 
 					//generates number between 1 and 12
-					int val = (int)(12*Math.random())+1;
-
+					int valOne = (int)(6*Math.random())+1;
+					int valTwo = (int)(6*Math.random())+1;
+										
 					//if the value is one, take 2 else take val
-					throwValue = val == 1 ? 2 : val;
+					throwValue = valOne+valTwo;
 
-					eventTextArea.append(DICE_RESULTS + throwValue + "\n");
+					eventTextArea.append(DICE_RESULTS + valOne + ", " + valTwo + " = " + throwDice + "\n");
 
 					throwDice.setEnabled(false);
 
 					//we get the token relative to the player with ID 1
+					//TODO get the token of the current player
+					//then set the position of this current player to the
+					//one after the dice throw
 					newPlace = initTokens[0];
 
 					//start the timer

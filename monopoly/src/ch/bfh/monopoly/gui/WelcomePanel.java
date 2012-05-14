@@ -49,6 +49,7 @@ public class WelcomePanel extends JFrame{
 	private String name;
 	private int port;
 	private String ip, strIP, strPort;
+	private Locale loc;
 
 	private GameClient gameClient;
 	private GameController gc;
@@ -124,6 +125,7 @@ public class WelcomePanel extends JFrame{
 
 		//set the IoSession in the GameClient
 		gameClient.setIoSession(cliSession);
+		gameClient.setLocalPlayer(name);
 	}
 
 
@@ -278,7 +280,7 @@ public class WelcomePanel extends JFrame{
 
 		JLabel labelLang = new JLabel("Locale");
 		String menuLang[] = {"French", "English"};
-		JComboBox langs = new JComboBox(menuLang);
+		final JComboBox langs = new JComboBox(menuLang);
 		langs.setMaximumSize(fieldSize);
 		langs.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -299,7 +301,9 @@ public class WelcomePanel extends JFrame{
 					port = Integer.parseInt(serverPort.getText());
 					maxPlayers = (Integer) numPlayers.getNumber();
 					name = nameField.getText();
-
+					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
+					loc = new Locale(localeCode);
+					
 					Monopoly.communicate.startServer(ip, port);
 
 					initClient();
@@ -310,10 +314,12 @@ public class WelcomePanel extends JFrame{
 					while(true){
 						Thread.sleep(1250);
 
-						//when all the server are connected
+						//when all the client are connected
 						if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
 							NetMessage gameStart = 
-								new NetMessage(Monopoly.communicate.getServerUsernames(),Messages.GAME_START);
+								new NetMessage(Monopoly.communicate.getServerUsernames(),loc, Messages.GAME_START);
+							
+							//send a NetMessage GAME_START with the chosen locale
 							Monopoly.communicate.sendBroadcast(gameStart);
 							dispose();
 
@@ -325,17 +331,11 @@ public class WelcomePanel extends JFrame{
 						}
 					}
 
-				}catch(NumberFormatException e1){
+				} catch(NumberFormatException e1){
 					info.append("Please fill in all the fields\n");
 					connect.setEnabled(true);
-				}catch(NullPointerException e1){
+				} catch(NullPointerException e1){
 					info.append("Please insert the user name\n");
-					connect.setEnabled(true);
-				} catch (UnknownHostException e1) {
-					info.append(e1.getMessage()+"\n");
-					connect.setEnabled(true);
-				} catch (IOException e1) {
-					info.append(e1.getMessage()+"\n");
 					connect.setEnabled(true);
 				} catch (Exception e1) {
 					info.append(e1.getMessage()+"\n");

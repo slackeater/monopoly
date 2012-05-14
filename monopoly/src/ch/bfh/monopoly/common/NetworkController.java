@@ -3,6 +3,7 @@ package ch.bfh.monopoly.common;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.mina.core.session.IoSession;
 
