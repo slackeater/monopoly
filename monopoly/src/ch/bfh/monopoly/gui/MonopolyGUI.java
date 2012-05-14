@@ -103,6 +103,8 @@ public class MonopolyGUI extends JFrame {
 	private BoardController bc;
 	private GameController gc;
 	private List<Player> pl;
+	
+	private List<PlayerStateEvent> pse;
 
 	/**
 	 * Construct a MonopolyGUI
@@ -112,15 +114,16 @@ public class MonopolyGUI extends JFrame {
 		this.bc = bc;
 		this.gc = gc;
 		
+		System.out.println("INSIDE MONOPOLY FRAME");
+		
 		//initialize the buttons with the action listener
 		initializeButtons();
-
-		this.playerNumber = bc.getPlayerCount();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(TITLE);
 		setLayout(new BorderLayout());
 		
+		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
 
@@ -131,6 +134,28 @@ public class MonopolyGUI extends JFrame {
 	 * Initialize the list of tiles, tokens and player listener
 	 */
 	private void wrapperInit(){
+		/**
+		 * This inner class is used to 
+		 * implements the PlayerListener used
+		 * to draw the token on the board
+		 */
+		class TokenDraw implements PlayerListener{
+			@Override
+			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+				pse = playerStates;
+				
+				for(int j = 0 ; j < playerStates.size() ; j++){
+						Token t = playerStates.get(j).getT();
+						int position = playerStates.get(j).getPosition();
+						tiles.get(position).addToken(t);
+				}
+			}
+		}
+		
+		//get the playerNumber
+		this.playerNumber = pse.size();
+		
+		System.out.println("BEFORE ADDING THE LEFT PANEL");
 		add(leftPanel(), BorderLayout.WEST);
 		
 		//Initialize all the tiles with the information 
@@ -144,26 +169,12 @@ public class MonopolyGUI extends JFrame {
 			s.addListener(bt.getTileListener());
 		}
 
-		/**
-		 * This inner class is used to 
-		 * implements the PlayerListener used
-		 * to draw the token on the board
-		 */
-		class TokenDraw implements PlayerListener{
-			@Override
-			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-				for(int j = 0 ; j < playerStates.size() ; j++){
-						Token t = playerStates.get(j).getT();
-						int position = playerStates.get(j).getPosition();
-						tiles.get(position).addToken(t);
-				}
-			}
-		}
-		
+	
 		//add the listener to the subject
 		TokenDraw td = new TokenDraw();
 		bc.getSubjectForPlayer().addListener(td);
 		
+		System.out.println("BEFORE ADDING THE BOARD");
 		add(drawBoard(), BorderLayout.CENTER);
 		this.bc.initGUI();
 	}
