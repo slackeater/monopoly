@@ -51,6 +51,8 @@ public class PlayerInfo extends JPanel{
 		this.playerIndex = playerIndex;
 		this.bc = bc;
 		
+		System.out.println("INSIDE PLAYER INFO");
+		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		//playerInfo.setText(p.getName() + "    " + p.getAccount());
 		playerInfo.setAlignmentX(Component.CENTER_ALIGNMENT);

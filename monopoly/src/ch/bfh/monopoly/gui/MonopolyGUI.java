@@ -134,6 +134,19 @@ public class MonopolyGUI extends JFrame {
 	 * Initialize the list of tiles, tokens and player listener
 	 */
 	private void wrapperInit(){
+		//Initialize all the tiles with the information 
+		for(int j = 0 ; j < TILE_NUMBER ; j++){
+			TileInfo t = bc.getTileInfoById(j);
+		
+			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
+			
+			TileSubject s = this.bc.getTileSubjectAtIndex(j);
+			this.tiles.add(bt);
+			s.addListener(bt.getTileListener());
+		}
+		
+		System.out.println("AFTER LOOP INIT TILE");
+		
 		/**
 		 * This inner class is used to 
 		 * implements the PlayerListener used
@@ -145,6 +158,7 @@ public class MonopolyGUI extends JFrame {
 				pse = playerStates;
 				
 				for(int j = 0 ; j < playerStates.size() ; j++){
+					System.out.println(playerStates.get(j).getT());
 						Token t = playerStates.get(j).getT();
 						int position = playerStates.get(j).getPosition();
 						tiles.get(position).addToken(t);
@@ -152,31 +166,19 @@ public class MonopolyGUI extends JFrame {
 			}
 		}
 		
-		//get the playerNumber
-		this.playerNumber = pse.size();
+		System.out.println("AFTER INNER CLASS");
 		
-		System.out.println("BEFORE ADDING THE LEFT PANEL");
-		add(leftPanel(), BorderLayout.WEST);
-		
-		//Initialize all the tiles with the information 
-		for(int j = 0 ; j < TILE_NUMBER ; j++){
-			TileInfo t = bc.getTileInfoById(j);
-
-			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
-
-			TileSubject s = this.bc.getTileSubjectAtIndex(j);
-			this.tiles.add(bt);
-			s.addListener(bt.getTileListener());
-		}
-
-	
 		//add the listener to the subject
 		TokenDraw td = new TokenDraw();
 		bc.getSubjectForPlayer().addListener(td);
 		
-		System.out.println("BEFORE ADDING THE BOARD");
+		//get the playerNumber
+		this.playerNumber = bc.getPlayerCount();
+		
+		add(leftPanel(), BorderLayout.WEST);
 		add(drawBoard(), BorderLayout.CENTER);
 		this.bc.initGUI();
+		
 	}
 
 	/**
@@ -211,7 +213,12 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
+			
+			if(this.bc == null) System.out.println("BC is null");
+			
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
+			
+
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 // TODO show the panel of the localPlayer
 //			//the local player is always shown

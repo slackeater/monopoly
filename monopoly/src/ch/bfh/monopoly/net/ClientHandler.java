@@ -29,7 +29,7 @@ public class ClientHandler implements IoHandler {
 	@Override
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
 	throws Exception {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method st
 	}
 
 	/**

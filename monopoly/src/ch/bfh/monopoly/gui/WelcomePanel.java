@@ -76,6 +76,8 @@ public class WelcomePanel extends JFrame{
 	public WelcomePanel(){
 		this.gameClient = new GameClient();
 		this.gc = new GameController(this.gameClient);
+		
+		//TODO AT THIS POINT THE BC IS NULL
 		this.bc = new BoardController(gameClient.getBoard());
 
 		this.strIP = "IP";
@@ -122,7 +124,7 @@ public class WelcomePanel extends JFrame{
 
 		//if everything works connect to the server
 		cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
-
+		
 		//set the IoSession in the GameClient
 		gameClient.setIoSession(cliSession);
 	}
@@ -203,6 +205,9 @@ public class WelcomePanel extends JFrame{
 						if(Monopoly.communicate.gameCanBegin()){
 							dispose();
 
+							//create the board
+							bc = new BoardController(gameClient.getBoard());
+							
 							System.out.println("BEFORE FRAME");
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
@@ -272,7 +277,8 @@ public class WelcomePanel extends JFrame{
 
 		JLabel player = new JLabel("Players");
 
-		final SpinnerNumberModel numPlayers = new SpinnerNumberModel(2, 2, 8, 1);
+		final SpinnerNumberModel numPlayers = new SpinnerNumberModel(2,
+				2, 8, 1);
 		JSpinner spinPanel = new JSpinner(numPlayers);
 		spinPanel.setMaximumSize(new Dimension(50,50));
 		spinPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -322,6 +328,10 @@ public class WelcomePanel extends JFrame{
 							Monopoly.communicate.sendBroadcast(gameStart);
 							dispose();
 
+							//create the board
+							gameClient.createBoard(loc, Monopoly.communicate.getServerUsernames(), name);
+							bc = new BoardController(gameClient.getBoard());
+							
 							System.out.println("BEFORE FRAME");
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
