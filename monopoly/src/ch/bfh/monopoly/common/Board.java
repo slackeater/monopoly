@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
@@ -143,31 +144,6 @@ public class Board {
 		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
-	/**
-	 * deposit money to player's account
-	 * 
-	 * @param the
-	 *            player to deposit money to
-	 * @param amount
-	 *            the amount to deposit
-	 */
-	public void deposittoName(String player, int amount) {
-		getPlayerByName(player).depositMoney(amount);
-		playerSubject.notifyListeners();
-	}
-
-	/**
-	 * withdraw money from a player's account
-	 * 
-	 * @param the
-	 *            player to withdraw money from
-	 * @param amount
-	 *            the amount to withdraw
-	 */
-	public void withdrawPlayer(String player, int amount) {
-		getPlayerByName(player).withdawMoney(amount);
-		playerSubject.notifyListeners();
-	}
 
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
@@ -195,15 +171,16 @@ public class Board {
 	 * 
 	 * @param tileId
 	 *            the tile number of the property to build a house on
+	 * @throws TransactionException 
 	 */
-	public void buyHouse(int tileId) {
+	public void buyHouse(int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHouses < 1)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"No houses available to complete the transaction");
 		if (terrain.getHouseCount() >= 4)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"The maximum number of houses that may be built on a property is 4");
 		terrain.buildHouse();
 		int id = terrain.getId();
@@ -219,18 +196,19 @@ public class Board {
 	 * 
 	 * @param tileId
 	 *            the tile number of the property to build a house on
+	 * @throws TransactionException 
 	 */
-	public void buyHotel(int tileId) {
+	public void buyHotel(int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHotels < 1)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"No hotels available to complete the transaction");
 		if (terrain.getHouseCount() != 4)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"There must be 4 houses present on this property in order to build a hotel");
 		if (terrain.getHotelCount() >= 1)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"It's monopoly, but hey there are still rules!  You can't build more than one hotel on a tile.");
 		terrain.buildHotel();
 		int id = terrain.getId();
@@ -245,13 +223,14 @@ public class Board {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to sell a house from
+	 * @throws TransactionException 
 	 */
-	public void sellHouses(int tileId) {
+	public void sellHouses(int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (terrain.getHouseCount() <= 0)
-			throw new RuntimeException(
-					"No houses present on tile with tile Id=" + tileId);
+			throw new TransactionException(
+					"There are no houses present on tile with tile Id=" + tileId);
 		terrain.buildHotel();
 		int id = terrain.getId();
 		availableHotels++;
@@ -265,12 +244,13 @@ public class Board {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to sell a hotel from
+	 * @throws TransactionException 
 	 */
-	public void sellHotel(int tileId) {
+	public void sellHotel(int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (terrain.getHotelCount() <= 0)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"No hotels present on tile with tile Id=" + tileId);
 		terrain.buildHotel();
 		int id = terrain.getId();
@@ -286,8 +266,9 @@ public class Board {
 	 * @param tileId
 	 *            the id that corresponds to a tile for which we want to toggle
 	 *            the mortgage status.
+	 * @throws RuntimeException 
 	 */
-	public void toggleMortgageStatus(int tileId) {
+	public void toggleMortgageStatus(int tileId) throws RuntimeException {
 		Tile t = tiles[tileId];
 		Property prop = castTileToProperty(t);
 		if (prop.isMortgageActive())
@@ -306,13 +287,14 @@ public class Board {
 	 *            name of the player to give the property to
 	 * @param propertyId
 	 *            the tile number of the property that was sold
+	 * @throws TransactionException 
 	 */
 	public void transferProperty(String fromName, String toName, int tileId,
-			int price) {
+			int price) throws TransactionException {
 		Tile t = tiles[tileId];
 		Property prop = castTileToProperty(t);
 		if (!prop.getOwner().getName().equals(fromName))
-			throw new RuntimeException(
+			throw new TransactionException(
 					"Cannot transfer a property from a player who doesn't own the property");
 		// toName and fromName reversed, because money goes in opposite
 		// direction than does the property.
@@ -340,11 +322,12 @@ public class Board {
 	 *            name of the player to give the money to
 	 * @param price
 	 *            the amount of money to transfer
+	 * @throws TransactionException 
 	 */
-	public void transferMoney(String fromName, String toName, int price) {
+	public void transferMoney(String fromName, String toName, int price) throws TransactionException {
 		Player fromPlayer = getPlayerByName(fromName);
 		if (!fromPlayer.hasSufficientFunds(price))
-			throw new RuntimeException("Cannot complete transaction: \n\t"
+			throw new TransactionException("Cannot complete transaction: \n\t"
 					+ fromPlayer.getName()
 					+ " has insufficient funds. \n\tReqeusted to transfer: "
 					+ price + " account balance: " + fromPlayer.getAccount());
@@ -383,8 +366,9 @@ public class Board {
 	 * 
 	 * @param name
 	 *            the string of the name of the player
+	 * @throws TransactionException 
 	 */
-	public Player getPlayerByName(String name) {
+	public Player getPlayerByName(String name) throws RuntimeException {
 		Player p = null;
 		for (int i = 0; i < players.size(); i++) {
 			String playerName = players.get(i).getName();
@@ -392,11 +376,11 @@ public class Board {
 				p = players.get(i);
 		}
 		if (p == null)
-			throw new RuntimeException("Player not found with the given name");
+			throw new RuntimeException("No player with the name Ç"+name+"È could be found");
 		return p;
 	}
 
-	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
+	public boolean playerIsOwnerOfTile(String playerName, int tileId) throws TransactionException {
 		Property p = castTileToProperty(tiles[tileId]);
 		String ownerName = p.getOwner().getName();
 		return (playerName.equals(ownerName));
@@ -409,11 +393,11 @@ public class Board {
 	 * @param t
 	 *            the tile to cast
 	 * @return the tile casted to a property
+	 * @throws RuntimeException 
 	 */
-	public Property castTileToProperty(Tile t) {
+	public Property castTileToProperty(Tile t) throws RuntimeException {
 		if (!(t instanceof Property))
-			throw new RuntimeException(
-					"the tile in question is not a property: this transaction cannot be completed");
+			throw new RuntimeException("the tile in question is not a property: this transaction cannot be completed");
 		return ((Property) t);
 	}
 
@@ -424,8 +408,9 @@ public class Board {
 	 * @param t
 	 *            the tile to cast
 	 * @return the tile casted to a terrain
+	 * @throws RuntimeException 
 	 */
-	public Terrain castTileToTerrain(Tile t) {
+	public Terrain castTileToTerrain(Tile t) throws RuntimeException {
 		if (!(t instanceof Terrain))
 			throw new RuntimeException(
 					"the tile in question is not a property: this transaction cannot be completed");
@@ -438,8 +423,9 @@ public class Board {
 	 * 
 	 * @param tileId
 	 *            the id of the property to be bought
+	 * @throws TransactionException 
 	 */
-	public void buyCurrentPropertyForPlayer(String playerName, int tileId) {
+	public void buyCurrentPropertyForPlayer(String playerName, int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
 		Property p = castTileToProperty(t);
 		if (!(p.getOwner().getName().equals("bank")))
@@ -447,7 +433,7 @@ public class Board {
 					"The property to be bought is not owned by the bank, use transfer property instead");
 		int priceOfProperty = p.getPrice();
 		if (!playerHasSufficientFunds(playerName, priceOfProperty))
-			throw new RuntimeException(
+			throw new TransactionException(
 					"Player Does not have enough money to by the property from the bank");
 		Player player = getPlayerByName(playerName);
 		player.addProperty(p);
@@ -462,11 +448,12 @@ public class Board {
 	 * @param fromName the name of the player to transfer the card from
 	 * @param toName the name of the player to transfer the card to
 	 * @param tileId the integer number which represent the tile to be transfered
+	 * @throws TransactionException 
 	 */
-	public void transferJailCards(String fromName, String toName, int quantity, int price){
+	public void transferJailCards(String fromName, String toName, int quantity, int price) throws TransactionException{
 		Player fromPlayer = getPlayerByName(fromName);
 		if (fromPlayer.getJailCard() < quantity)
-			throw new RuntimeException("Cannot complete transaction: \n\t"
+			throw new TransactionException("Cannot complete transaction: \n\t"
 					+ fromPlayer.getName()
 					+ " has insufficient jail cards. \n\tReqeusted to transfer: "
 					+ quantity + " quantity available: " + fromPlayer.getJailCard());
@@ -485,8 +472,9 @@ public class Board {
 	 *            the player to check the account of
 	 * @param fee
 	 *            the amount of the fee to be paid
+	 * @throws RuntimeException 
 	 */
-	public boolean playerHasSufficientFunds(String playerName, int amount) {
+	public boolean playerHasSufficientFunds(String playerName, int amount) throws RuntimeException {
 		Player plyr = getPlayerByName(playerName);
 		return (plyr.hasSufficientFunds(amount));
 	}
@@ -512,6 +500,19 @@ public class Board {
 		plyr.setJailCard(jailCards-1);
 	}
 	
+	/**
+	 * the  player is charged a fee and the amount of the fee is
+	 * withdrawn from his bank account. This amount is added to the FREE PARKING
+	 * @param playerName the name of the player to charge the fee to
+	 * @param fee
+	 *            the amount of money to withdraw from the current player's
+	 *            account
+	 */
+	public void payFee(String playerName, int fee) {
+		Player plyr = getPlayerByName(playerName);
+		plyr.withdawMoney(fee);
+		setFreeParking(freeParking + fee);
+	}
 
 	/**
 	 * creates an object with all the static tile information to be sent to the

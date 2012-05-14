@@ -66,4 +66,28 @@ public class GameClientTransactionTests {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	@Test 
+	public void payFeeDeductsMoneyFromCurrentPlayer(){
+		String playerName = "Justin";
+		Player plyr = board.getPlayerByName(playerName);
+		int playerAccountBefore = plyr.getAccount();
+		gameClient.setCurrentPlayer(plyr);
+		int fee = 100;
+		gameClient.payFee(fee);
+		assertTrue(plyr.getAccount()==playerAccountBefore-fee);
+	}
+	
+	@Test 
+	public void payFeeCreditsFeeToFreeParking(){
+		String playerName = "Justin";
+		Player plyr = board.getPlayerByName(playerName);
+		gameClient.setCurrentPlayer(plyr);
+		int fee = 100;
+		int freeParkingAmount = gameClient.getFreeParking();
+		gameClient.payFee(fee);
+		assertTrue(gameClient.getFreeParking()==freeParkingAmount+fee);
+		
+	}
+	
 }

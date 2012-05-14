@@ -2,5 +2,5 @@ package ch.bfh.monopoly.observer;
 
 
 public interface WindowListener {
-	public void updateWindow(String text);
+	public void updateWindow(WindowStateEvent wse);
 }

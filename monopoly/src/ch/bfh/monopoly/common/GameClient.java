@@ -6,9 +6,12 @@ import java.util.Locale;
 
 import org.apache.mina.core.session.IoSession;
 
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.WindowListener;
+import ch.bfh.monopoly.observer.WindowMessage;
+import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
@@ -39,10 +42,10 @@ public class GameClient {
 			listeners.remove(wl);
 		}
 
-		public void notifyListeners(String text) {
-
+		public void notifyListeners(WindowStateEvent wse) {
+			
 			for (WindowListener pl : listeners) {
-				pl.updateWindow(text);
+				pl.updateWindow(wse);
 			}
 		}
 	}
@@ -118,7 +121,13 @@ public class GameClient {
 	
 	public void buyCurrentPropertyForPlayer(String playerName){
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
-		board.buyCurrentPropertyForPlayer(playerNameAdjusted, currentPlayer.getPosition());
+		
+		try {
+			board.buyCurrentPropertyForPlayer(playerNameAdjusted, currentPlayer.getPosition());
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 	}
 	
 	/**
@@ -136,7 +145,12 @@ public class GameClient {
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHouse(int tileID) {
-		board.buyHouse(tileID);
+		try {
+			board.buyHouse(tileID);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.BUY_HOUSE);
 		session.write(nm);
@@ -149,7 +163,12 @@ public class GameClient {
 	 *            the tile number of the property to build a house on
 	 */
 	public void buyHotel(int tileID) {
-		board.buyHotel(tileID);
+		try {
+			board.buyHotel(tileID);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.BUY_HOTEL);
 		session.write(nm);
@@ -162,7 +181,12 @@ public class GameClient {
 	 *            the tile number of the property to sell a house from
 	 */
 	public void sellHouse(int tileID) {
-		board.sellHouses(tileID);
+		try {
+			board.sellHouses(tileID);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.SELL_HOUSE);
 		session.write(nm);
@@ -175,7 +199,12 @@ public class GameClient {
 	 *            the tile number of the property to sell a hotel from
 	 */
 	public void sellHotel(int tileID) {
-		board.sellHotel(tileID);
+		try {
+			board.sellHotel(tileID);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 		NetMessage nm = new NetMessage(currentPlayer, tileID,
 				Messages.SELL_HOTEL);
 		session.write(nm);
@@ -200,7 +229,14 @@ public class GameClient {
 	public void transferProperty(String fromName, String toName, int tileId, int price){
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId, price);
+		
+		try {
+			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId, price);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
+		
 	}
 	
 	/**
@@ -212,7 +248,14 @@ public class GameClient {
 	public void transferJailCards(String fromName, String toName, int quantity, int price){
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity, price);
+		
+		try {
+			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity, price);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
+		
 	}
 	
 	/**
@@ -224,7 +267,13 @@ public class GameClient {
 	public void transferMoney(String fromName, String toName, int amount){
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
+		
+		try {
+			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 	}
 	
 	public String adjustNameIfCurrentPlayer(String playerName){
@@ -263,7 +312,14 @@ public class GameClient {
 	 *            tile to check ownership of
 	 */
 	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
-		return board.playerIsOwnerOfTile(playerName, tileId);
+		boolean isOwner=false;
+		try {
+			isOwner= board.playerIsOwnerOfTile(playerName, tileId);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
+		return isOwner;
 	}
 
 	/**
@@ -322,9 +378,8 @@ public class GameClient {
 	 *            account
 	 */
 	public void payFee(int fee) {
-		board.withdrawPlayer(currentPlayer.getName(), fee);
-		int freeParking = board.getFreeParking();
-		board.setFreeParking(freeParking + fee);
+		String currentPlayerName = currentPlayer.getName();
+		board.payFee(currentPlayerName, fee);
 	}
 
 	/**
@@ -345,9 +400,6 @@ public class GameClient {
 		return board.getFreeParking();
 	}
 
-	public void setFreeParking(int amount) {
-		board.setFreeParking(amount);
-	}
 
 	/**
 	 * Send a chat message
@@ -362,7 +414,13 @@ public class GameClient {
 	}
 
 	public void displayChat(String text) {
-		ws.notifyListeners(text);
+		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_CHAT, text, 0);
+		ws.notifyListeners(wse);
+	}
+	
+	public void displayTransactionError(String text) {
+		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, text, 0);
+		ws.notifyListeners(wse);
 	}
 
 	public WindowSubject getWindowSubject() {
