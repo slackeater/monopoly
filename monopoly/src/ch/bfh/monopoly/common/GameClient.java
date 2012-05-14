@@ -16,7 +16,7 @@ import ch.bfh.monopoly.tile.Property;
 public class GameClient {
 
 	private Player currentPlayer;
-	private Player localPlayer;
+	private String localPlayer;
 	private Player bank;
 	private Locale loc;
 	private Board board;
@@ -47,17 +47,43 @@ public class GameClient {
 		}
 	}
 
-	public GameClient(Locale loc) {
+	
+	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
-		this.loc = loc;
+	}
+
+
+	/**
+	 * create the board which in turn creates the tiles, events, and chance-type cards
+	 * @param loc the locals chosen by the server
+	 */
+	public void createBoard(Locale loc, List<String> names, String localPlayerName){
+		this.loc=loc;
 		this.board = new Board(this);
+		board.createPlayers(names, loc);
+		this.localPlayer = localPlayerName;
 	}
 
-	public Locale getLoc() {
-		return loc;
+	
+	
+	
+	/**
+	 * Set the list of player in the game and create
+	 * the relative player instance
+	 * @param names the list of names of the player
+	 */
+	public void setUsersList(List<String> names, String localPlayerName){
+		
+		
+		//send a message to the server wit our user name
+//		NetMessage n = new NetMessage(localPlayerName, Messages.SEND_USERNAME);
+//		this.session.write(n);
 	}
-
+	
+	
+	
+	
 	/**
 	 * calculate the rent of a property, if a player lands on it
 	 * 
@@ -329,7 +355,7 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		String text = localPlayer.getName().concat(": " + s + "\n");
+		String text = localPlayer.concat(": " + s + "\n");
 		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
@@ -342,19 +368,6 @@ public class GameClient {
 		return ws;
 	}
 
-	
-	/**
-	 * Set the list of player in the game and create
-	 * the relative player instance
-	 * @param names the list of names of the player
-	 */
-	public void setUsersList(List<String> names, String localPlayerName){
-		board.createPlayers(names, loc);
-		
-		//send a message to the server wit our user name
-//		NetMessage n = new NetMessage(localPlayerName, Messages.SEND_USERNAME);
-//		this.session.write(n);
-	}
 	
 	/**
 	 * gives the given player a jail card
@@ -379,7 +392,7 @@ public class GameClient {
 	 * @return Player
 	 * 			the local player
 	 */
-	public Player getLocalPlayer(){
+	public String getLocalPlayer(){
 		return localPlayer;
 	}
 	
@@ -407,6 +420,14 @@ public class GameClient {
 	 */
 	public List<Player> getPlayers(){
 		return board.getPlayers();
+	}
+	
+	/**
+	 * get the locale for the game
+	 * @return the locale for this game
+	 */
+	public Locale getLoc() {
+		return loc;
 	}
 	
 	

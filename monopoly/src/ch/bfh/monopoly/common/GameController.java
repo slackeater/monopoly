@@ -159,19 +159,20 @@ public class GameController {
 		gameClient.sendChatMessage(s);
 	}
 	
-	/** TODO => Maybe is useless
+	/** 
 	 * Get the name of the local player
 	 * @return String
 	 * 			the name of the local player
 	 */
 	public String getLocalPlayerName(){
-		return gameClient.getLocalPlayer().getName();
-	}
-
-	public Player getLocalPlayer(){
 		return gameClient.getLocalPlayer();
 	}
-	
+
+
+	/**
+	 * get the subject to register window listeners
+	 * @return the WindowSubject to register listeners in
+	 */
 	public WindowSubject getWindowSubject(){
 		return gameClient.getWindowSubject();
 	}
