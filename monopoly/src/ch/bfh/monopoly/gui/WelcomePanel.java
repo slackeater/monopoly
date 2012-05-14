@@ -74,7 +74,7 @@ public class WelcomePanel extends JFrame{
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(){
-		this.gameClient = new GameClient(new Locale("EN"));
+		this.gameClient = new GameClient();
 		this.gc = new GameController(this.gameClient);
 		this.bc = new BoardController(gameClient.getBoard());
 
