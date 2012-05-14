@@ -63,7 +63,7 @@ public class WelcomePanel extends JFrame{
 	private static final int PANEL_WIDTH = 300;
 	private static final int PANEL_HEIGHT = 0;
 
-	private static final String USER_NAME_PATTERN =  "^[a-z0-9_-]{3,15}$";
+	private static final String USER_NAME_PATTERN =  "^[a-zA-Z0-9_-]{3,15}$";
 	private static final String IPv4_PATTERN = 
 		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
