@@ -33,12 +33,6 @@ public class TestInstanceGenerator {
 	BoardController bc;
 	EventManager em;
 	public TestInstanceGenerator() {
-		gameClient = new GameClient(new Locale("EN"));
-		gc = new GameController(gameClient);
-		board = gameClient.getBoard();
-		bc = new BoardController(board);
-		em = ((AbstractTile)board.getTileById(1)).getEventManager();
-		
 		String myName = "Justin";
 		ArrayList<String> playerNames = new ArrayList<String>();
 		playerNames.add(myName);
@@ -47,7 +41,14 @@ public class TestInstanceGenerator {
 		playerNames.add("Cyril");
 		playerNames.add("Elie");
 
-		gameClient.setUsersList(playerNames, myName);
+		gameClient = new GameClient();
+		gameClient.createBoard(new Locale("EN"), playerNames, myName);
+		gc = new GameController(gameClient);
+		board = gameClient.getBoard();
+		bc = new BoardController(board);
+		em = ((AbstractTile)board.getTileById(1)).getEventManager();
+		
+
 		IoSession s = new IoSession() {
 
 			@Override
