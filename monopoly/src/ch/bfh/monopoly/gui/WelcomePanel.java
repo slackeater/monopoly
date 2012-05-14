@@ -76,7 +76,7 @@ public class WelcomePanel extends JFrame{
 	public WelcomePanel(){
 		this.gameClient = new GameClient();
 		this.gc = new GameController(this.gameClient);
-		
+
 		//TODO AT THIS POINT THE BC IS NULL
 		this.bc = new BoardController(gameClient.getBoard());
 
@@ -112,21 +112,23 @@ public class WelcomePanel extends JFrame{
 		m = p.matcher(name);
 
 		//if the user name doesn't match
-		if(!m.matches())
-			throw new Exception("Please insert a correct user name");
-		
-		p = Pattern.compile(IPv4_PATTERN);
-		m = p.matcher(ip);
-		
-		//if the ip doesn't match
-		if(!m.matches())
-			throw new Exception("Please insert a valid IPv4 address");
+		if(m.matches()){
+			p = Pattern.compile(IPv4_PATTERN);
+			m = p.matcher(ip);
 
-		//if everything works connect to the server
-		cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
-		
-		//set the IoSession in the GameClient
-		gameClient.setIoSession(cliSession);
+			//if the ip doesn't match
+			if(m.matches()){
+				//if everything works connect to the server
+				cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
+
+				//set the IoSession in the GameClient
+				gameClient.setIoSession(cliSession);
+			}
+			else
+				throw new Exception("Please insert a valid IPv4 address");
+		}
+		else
+			throw new Exception("Please insert a correct user name");
 	}
 
 
@@ -207,7 +209,7 @@ public class WelcomePanel extends JFrame{
 
 							//create the board
 							bc = new BoardController(gameClient.getBoard());
-							
+
 							System.out.println("BEFORE FRAME");
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
@@ -308,7 +310,7 @@ public class WelcomePanel extends JFrame{
 					name = nameField.getText();
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
-					
+
 					Monopoly.communicate.startServer(ip, port);
 
 					initClient();
@@ -323,7 +325,7 @@ public class WelcomePanel extends JFrame{
 						if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
 							NetMessage gameStart = 
 								new NetMessage(Monopoly.communicate.getServerUsernames(),loc, Messages.GAME_START);
-							
+
 							//send a NetMessage GAME_START with the chosen locale
 							Monopoly.communicate.sendBroadcast(gameStart);
 							dispose();
@@ -331,7 +333,7 @@ public class WelcomePanel extends JFrame{
 							//create the board
 							gameClient.createBoard(loc, Monopoly.communicate.getServerUsernames(), name);
 							bc = new BoardController(gameClient.getBoard());
-							
+
 							System.out.println("BEFORE FRAME");
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
