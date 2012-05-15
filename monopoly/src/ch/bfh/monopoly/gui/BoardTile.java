@@ -300,6 +300,7 @@ public class BoardTile extends JPanel{
 			for(int i = 0 ; i < this.numberOfTokens ; i++){
 				Iterator<Token> itr = this.tokens.iterator();
 
+				//draw all the token that belongs to this tile
 				while(itr.hasNext()){
 					Token t = itr.next();
 					g2.setColor(t.getColor());
@@ -389,9 +390,7 @@ public class BoardTile extends JPanel{
 			}
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
-
-				// TODO change to buyHotel !!!!!!!!!!!
-				gc.buyHouse(ti.getId());
+				gc.buyHotel(ti.getId());
 			}
 		}	
 	}

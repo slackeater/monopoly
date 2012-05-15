@@ -194,6 +194,14 @@ public class PlayerInfo extends JPanel{
 		}
 	
 		/**
+		 * Get the id of this tile
+		 * @return
+		 */
+		public int getID(){
+			return this.id;
+		}
+		
+		/**
 		 * Set the background color accrodingly to the color 
 		 * assigned in the constructor
 		 */
@@ -254,18 +262,17 @@ public class PlayerInfo extends JPanel{
 				Color c = playerStates.get(playerIndex).getT().getColor();
 				
 				boolean[] smallTerrainState = playerStates.get(playerIndex).getTerrains();
-				
-				System.out.println("Length " + smallTerrainState.length);
-				
-				//TODO we have 40 tiles
-//				//color the panel with the correct color
-				for(int j = 0 ; j < smallTerrainState.length ; j++){
-//					//if the terrain is not owned, the panel is white
-//					if(!smallTerrainState[j])
-//						smlTer.get(j).resetBackgroundColor();
-//					//otherwise, draw the correct color
-//					else
-//						smlTer.get(j).setBackgroundColor();
+									
+				//if a terrain is owned (smallTerrainState => true) set the background
+				//color to the corresponding one, else set the background to white
+				for(int j = 0 ; j < smlTer.size() ; j++){
+						boolean terrainOwned = smallTerrainState[smlTer.get(j).getID()];
+					
+						if(terrainOwned)
+							smlTer.get(j).setBackgroundColor();
+						else
+							smlTer.get(j).resetBackgroundColor();
+					
 				}
 				
 				playerInfo.setText(name + "  " + account);

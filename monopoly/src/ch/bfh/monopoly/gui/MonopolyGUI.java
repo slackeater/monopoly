@@ -134,19 +134,10 @@ public class MonopolyGUI extends JFrame {
 
 	/**
 	 * Initialize the list of tiles, tokens and player listener
+	 * !!! RESPECT THE ORDER OF METHOD'S CALL IN ORDER TO 
+	 * AVOID PROBLEMS !!!
 	 */
 	private void wrapperInit(){
-		//Initialize all the tiles with the information 
-		for(int j = 0 ; j < TILE_NUMBER ; j++){
-			TileInfo t = bc.getTileInfoById(j);
-		
-			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
-			
-			TileSubject s = this.bc.getTileSubjectAtIndex(j);
-			this.tiles.add(bt);
-			s.addListener(bt.getTileListener());
-		}
-		
 		System.out.println("AFTER LOOP INIT TILE");
 		
 		/**
@@ -178,7 +169,21 @@ public class MonopolyGUI extends JFrame {
 		this.playerNumber = bc.getPlayerCount();
 		
 		add(leftPanel(), BorderLayout.WEST);
+		
+		//Initialize all the tiles with the information 
+		for(int j = 0 ; j < TILE_NUMBER ; j++){
+			TileInfo t = bc.getTileInfoById(j);
+		
+			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
+			
+			TileSubject s = this.bc.getTileSubjectAtIndex(j);
+			this.tiles.add(bt);
+			s.addListener(bt.getTileListener());
+		}
+		
 		add(drawBoard(), BorderLayout.CENTER);
+		
+		//!!! leave this here !!!
 		this.bc.initGUI();
 		
 	}
@@ -220,13 +225,15 @@ public class MonopolyGUI extends JFrame {
 			
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
 			
-
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
-// TODO show the panel of the localPlayer
-//			//the local player is always shown
-//			//if(pl.get(j).getToken().equals(gc.getLocalPlayer().getToken()))
-//				//plInfo.showTerrains();
-//
+
+			//TODO hard to do because, we have the pse arraylist after 
+			//the call to this method, so at this point, pse is empty.
+			
+			//if is the local player, show the terrain panel by default
+//			if(gc.getLocalPlayerName().equals(this.pse.get(j).getName()))
+//					plInfo.showTerrains();
+
 			info.add(plInfo);
 		}
 
@@ -290,12 +297,6 @@ public class MonopolyGUI extends JFrame {
 		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		//TODO choose JTextArea or JTextFieldInput
-//		//text area for sending the message
-//		final JTextArea input = new JTextArea(2,20);
-//		input.setWrapStyleWord(true);
-//		input.setLineWrap(true);
-		
 		final JTextField input = new JTextField(20);
 
 		//when we press enter, we send a message
@@ -312,8 +313,7 @@ public class MonopolyGUI extends JFrame {
 				System.out.println("Key pressed" + e.getKeyCode());
 				if(e.getKeyCode() == 10 && input.getText().length() != 0){
 					String text = input.getText();
-					//chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
-					chat.append(text + "\n");
+					chat.append(gc.getLocalPlayerName() + ": " + text + "\n");
 					chat.setCaretPosition(chat.getDocument().getLength());
 					gc.sendChatMessage(text);
 					input.setText("");
