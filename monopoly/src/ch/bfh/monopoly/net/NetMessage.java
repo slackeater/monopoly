@@ -37,8 +37,8 @@ public class NetMessage implements Serializable{
 	 * price if we sell the jail card
 	 * @param m the message type
 	 */
-	public NetMessage(Player player, int integerValue, Messages m) {
-		this.player = player;
+	public NetMessage(String player, int integerValue, Messages m) {
+		this.string = player;
 		this.integerValue = integerValue;
 		this.m = m;
 	}

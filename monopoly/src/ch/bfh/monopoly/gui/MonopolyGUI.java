@@ -82,8 +82,6 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
-	//used to show the terrain that belong to each player
-	private Token[] initTokens = new Token[8];
 	private Token newPlace = null;
 	private JButton buy, throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
@@ -104,7 +102,6 @@ public class MonopolyGUI extends JFrame {
 	private int playerNumber;
 	private BoardController bc;
 	private GameController gc;
-	private List<Player> pl;
 	
 	private List<PlayerStateEvent> pse;
 
@@ -396,10 +393,9 @@ public class MonopolyGUI extends JFrame {
 					int valOne = (int)(6*Math.random())+1;
 					int valTwo = (int)(6*Math.random())+1;
 										
-					//if the value is one, take 2 else take val
 					throwValue = valOne+valTwo;
 
-					eventTextArea.append(DICE_RESULTS + valOne + ", " + valTwo + " = " + throwDice + "\n");
+					eventTextArea.append(DICE_RESULTS + valOne + ", " + valTwo + " = " + throwValue + "\n");
 
 					throwDice.setEnabled(false);
 
@@ -407,7 +403,7 @@ public class MonopolyGUI extends JFrame {
 					//TODO get the token of the current player
 					//then set the position of this current player to the
 					//one after the dice throw
-					newPlace = initTokens[0];
+					newPlace = pse.get(0).getT();
 
 					//start the timer
 					t.start();
@@ -482,7 +478,7 @@ public class MonopolyGUI extends JFrame {
 		
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
-			this.usersBox.addItem(pl.get(i).getName());
+			this.usersBox.addItem(pse.get(i).getName());
 		}
 		
 		this.hisTerrainBox = new JComboBox();

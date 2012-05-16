@@ -46,8 +46,8 @@ public class NetworkController {
 	 * @throws UnknownHostException 
 	 * @return an IoSession used to communicate with the server
 	 */
-	public IoSession startClient(String ip, int port, GameClient gameCli, String localPlayerName) throws UnknownHostException, IOException{
-		this.cliHandler = new ClientHandler(gameCli, localPlayerName);
+	public IoSession startClient(String ip, int port, GameClient gameCli, String localPlayerName, int rollOrderValue) throws UnknownHostException, IOException{
+		this.cliHandler = new ClientHandler(gameCli, localPlayerName, rollOrderValue);
 		return n.startClient(ip, port, this.cliHandler);
 	}
 	

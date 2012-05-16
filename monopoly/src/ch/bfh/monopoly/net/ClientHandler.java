@@ -20,10 +20,12 @@ public class ClientHandler implements IoHandler {
 	private boolean gameCanBegin = false;
 	private GameClient gc;
 	private String localPlayerName;
+	private int rollOrderValue;
 	
-	public ClientHandler(GameClient gc, String localPlayerName){
+	public ClientHandler(GameClient gc, String localPlayerName, int rollOrderValue){
 		this.gc = gc;
 		this.localPlayerName = localPlayerName;
+		this.rollOrderValue = rollOrderValue;
 	}
 
 	@Override
@@ -99,8 +101,8 @@ public class ClientHandler implements IoHandler {
 		// TODO Auto-generated method stub	
 		System.out.println("session opened");
 
-		//as first, send the username
-		NetMessage n = new NetMessage(this.localPlayerName, Messages.SEND_USERNAME);
+		//as first, send the username and the roll value
+		NetMessage n = new NetMessage(this.localPlayerName, this.rollOrderValue, Messages.SEND_USERNAME);
 		arg0.write(n);
 	}
 

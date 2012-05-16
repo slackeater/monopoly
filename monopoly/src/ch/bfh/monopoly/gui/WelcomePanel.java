@@ -1,6 +1,8 @@
 package ch.bfh.monopoly.gui;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -27,6 +29,7 @@ import javax.swing.SpinnerNumberModel;
 import org.apache.mina.core.session.IoSession;
 
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Monopoly;
@@ -47,7 +50,7 @@ public class WelcomePanel extends JFrame{
 	private JTextField nameField;
 
 	private String name;
-	private int port;
+	private int port, throwValue = 0;
 	private String ip, strIP, strPort;
 	private Locale loc;
 
@@ -70,6 +73,9 @@ public class WelcomePanel extends JFrame{
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
+	private Dice dices;
+
+
 	/**
 	 * Construct a WelcomePanel
 	 */
@@ -85,6 +91,8 @@ public class WelcomePanel extends JFrame{
 
 		this.fieldSize = new Dimension(FIELD_WIDTH,FIELD_HEIGHT);
 		this.panelSize = new Dimension(PANEL_WIDTH,PANEL_HEIGHT);
+
+		this.dices = new Dice(6, 6);
 
 		JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.PAGE_AXIS));
@@ -112,20 +120,25 @@ public class WelcomePanel extends JFrame{
 		m = p.matcher(name);
 
 		//if the user name doesn't match
+
 		if(m.matches()){
 			p = Pattern.compile(IPv4_PATTERN);
 			m = p.matcher(ip);
 
-			//if the ip doesn't match
-			if(m.matches()){
-				//if everything works connect to the server
-				cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name);
+			if(throwValue > 1){
+				//if the ip doesn't match
+				if(m.matches()){
+					//if everything works connect to the server
+					cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name, throwValue);
 
-				//set the IoSession in the GameClient
-				gameClient.setIoSession(cliSession);
+					//set the IoSession in the GameClient
+					gameClient.setIoSession(cliSession);
+				}
+				else
+					throw new Exception("Please insert a valid IPv4 address");
 			}
 			else
-				throw new Exception("Please insert a valid IPv4 address");
+				throw new Exception("Please roll for order.");
 		}
 		else
 			throw new Exception("Please insert a correct user name");
@@ -154,12 +167,27 @@ public class WelcomePanel extends JFrame{
 	private JPanel nameLabel(){
 		JPanel nameContainer = new JPanel();
 		nameContainer.setLayout(new BoxLayout(nameContainer, BoxLayout.PAGE_AXIS));
-		nameContainer.setBorder(BorderFactory.createTitledBorder("Insert your name"));
+		nameContainer.setBorder(BorderFactory.createTitledBorder("Insert your name and roll for order"));
 		nameContainer.setMaximumSize(panelSize);
 		nameField = new JTextField();
 		nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
 		nameField.setMaximumSize(fieldSize);
 		nameContainer.add(nameField);
+
+		final JButton generateNum = new JButton("Roll for order");
+		generateNum.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				throwValue = dices.throwDice();
+				info.append("The value of your throw is: " + dices.getDiceValues() + " => " + throwValue);	
+				generateNum.setEnabled(false);
+			}
+		});
+
+		nameContainer.add(Box.createRigidArea(new Dimension(0, 10)));
+		nameContainer.add(generateNum);
+
 		return nameContainer;
 	}
 
