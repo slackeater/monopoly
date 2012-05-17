@@ -17,7 +17,6 @@ public class NetworkController {
 
 	private Network n;
 	private ServerHandler srvHandler = new ServerHandler();
-	
 	private ClientHandler cliHandler;
 	
 	/**
@@ -81,5 +80,13 @@ public class NetworkController {
 	public void sendBroadcast(NetMessage m){
 		srvHandler.sendBroadcast(m,null);
 	}
+
+	/**
+	 * Stop the server
+	 */
+	public void closeServer(){
+		n.stopServer();
+	}
+	
 	
 }

@@ -16,6 +16,7 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 public class Network {
 
+	private IoAcceptor acc;
 	
 	/**
 	 * Start a server
@@ -24,7 +25,7 @@ public class Network {
 	 * @throws IOException
 	 */
 	public void startServer(String ip, int port, ServerHandler srvHandler) throws IOException{
-		IoAcceptor acc = new NioSocketAcceptor();
+		acc = new NioSocketAcceptor();
 		acc.setHandler(srvHandler);
 		acc.getFilterChain().addLast("logger", new LoggingFilter());
 		acc.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
@@ -50,6 +51,13 @@ public class Network {
 		
 		IoSession io = cf.getSession();
 		return io;
+	}
+	
+	/**
+	 * Close the connection on the server side
+	 */
+	public void stopServer(){
+		acc.dispose();
 	}
 	
 }
