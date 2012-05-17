@@ -16,6 +16,10 @@ import org.apache.mina.core.session.IoSession;
  */
 public class ServerHandler implements IoHandler{
 
+	private List<String> usernames = new ArrayList<String>();
+	private List<PlayerWrapper> plWrap = new ArrayList<PlayerWrapper>();
+	private int userindex = 1;
+	
 	/**
 	 * This inner class is used to wrap the username 
 	 * and the roll value for order into one single 
@@ -27,15 +31,17 @@ public class ServerHandler implements IoHandler{
 
 		private String username;
 		private int rollValue;
+		private IoSession session;
 
-		public PlayerWrapper(String username, int rollValue){
+		public PlayerWrapper(String username, int rollValue, IoSession session){
 			this.username = username;
 			this.rollValue = rollValue;
+			this.session = session;
 		}
 
-		
-		public void setUsername(String s){
-			this.username = s;
+
+		public IoSession getSession(){
+			return this.session;
 		}
 		
 		public String getUsername() {
@@ -48,19 +54,25 @@ public class ServerHandler implements IoHandler{
 
 	}
 
-	private List<IoSession> sessions = new ArrayList<IoSession>(); 
-	private List<String> usernames = new ArrayList<String>();
-	private List<PlayerWrapper> plWrap = new ArrayList<PlayerWrapper>();
-	private int userindex = 1;
-
 	/**
 	 * Get the number of opened sessions on this server
 	 * @return an int representing the number of sessions opened
 	 */
 	public int getOpenedSessions(){
-		return this.sessions.size();
+		return this.plWrap.size();
 	}
 
+	/**
+	 * Send the turn token to the first in the list
+	 */
+	public void sendFirstTurnToken(){
+		NetMessage tokenMsg = new NetMessage(plWrap.get(0).getUsername(), Messages.TURN_TOKEN);
+		//TODO sysout
+		System.out.println("TOKEN TO " + plWrap.get(0).getUsername());
+		
+		plWrap.get(0).getSession().write(tokenMsg);
+	}
+	
 	/**
 	 * Get the usernames of the players 
 	 * @return a List that contains the player's names
@@ -73,8 +85,6 @@ public class ServerHandler implements IoHandler{
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
 	throws Exception {
 		System.out.println(arg1.getMessage());
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -82,9 +92,9 @@ public class ServerHandler implements IoHandler{
 	 * @param n the NetMessage to broadcast
 	 */
 	public void sendBroadcast(NetMessage n, IoSession notBroadcast){
-		for(int j = 0 ; j < sessions.size() ; j++){
-			if(notBroadcast != sessions.get(j))
-				sessions.get(j).write(n);
+		for(int j = 0 ; j < plWrap.size() ; j++){
+			if(notBroadcast != plWrap.get(j).getSession())
+				plWrap.get(j).getSession().write(n);
 		}
 	}
 
@@ -93,7 +103,7 @@ public class ServerHandler implements IoHandler{
 	 * roll order value and check if there are equals username
 	 * @param n
 	 */
-	private void buildUserList(NetMessage n){
+	private void buildUserList(NetMessage n, IoSession session){
 		String checkedName = n.getText();
 		
 		//if the username sended is equal to one in the wrap list, add a number to it
@@ -104,9 +114,8 @@ public class ServerHandler implements IoHandler{
 			}
 		}
 		
-		this.plWrap.add(new PlayerWrapper(checkedName, n.getInt()));
+		this.plWrap.add(new PlayerWrapper(checkedName, n.getInt(), session));
 		
-
 		//bubble sort for sorting players
 		int x = plWrap.size()-1;
 		PlayerWrapper tmp;
@@ -142,10 +151,10 @@ public class ServerHandler implements IoHandler{
 
 		System.out.println("Received a message: " + n.getMessageCode());
 
-		
-		if(n.getMessageType() == Messages.SEND_USERNAME){
-			buildUserList(n);
-			
+		if(n.getMessageType() == Messages.SEND_USERNAME)
+			buildUserList(n, arg0);
+		else if(n.getMessageType() == Messages.END_TURN){
+			//TODO function to send next turn 
 		}
 		else
 			//when we receive a message, we must broadcast it
@@ -155,28 +164,23 @@ public class ServerHandler implements IoHandler{
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
-		// TODO Auto-generated method stub
 		System.out.println("message sent");
 
 	}
 
 	@Override
 	public void sessionClosed(IoSession arg0) throws Exception {
-		// TODO Auto-generated method stub
 		System.out.println("A player went down. Taking his properties and money.");
 
 	}
 
 	@Override
 	public void sessionCreated(IoSession arg0) throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("session created");
-		sessions.add(arg0);
+
 	}
 
 	@Override
 	public void sessionIdle(IoSession arg0, IdleStatus arg1) throws Exception {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -184,7 +188,4 @@ public class ServerHandler implements IoHandler{
 	public void sessionOpened(IoSession arg0) throws Exception {
 
 	}
-
-
-
 }

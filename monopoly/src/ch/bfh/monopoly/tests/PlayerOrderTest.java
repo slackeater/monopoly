@@ -360,7 +360,6 @@ public class PlayerOrderTest {
 			c3 = nc.startClient(srvIp, srvPort, gc, "billiejoe", 12);
 			Thread.sleep(1000);
 			
-
 			while(true){
 				if(nc.getServerOpenedSession() == playerNum){
 					serverUsername = nc.getServerUsernames();

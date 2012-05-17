@@ -35,7 +35,8 @@ public enum Messages {
 	UNMORTGAGE(410),
 	
 	PAY_RENT(500),
-
+	TURN_TOKEN(510),
+	END_TURN(520),
 	
 	//probably only for test
 	ACKNOWLEDGE(999)

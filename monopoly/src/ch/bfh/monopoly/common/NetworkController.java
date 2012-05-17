@@ -88,5 +88,12 @@ public class NetworkController {
 		n.stopServer();
 	}
 	
+	/**
+	 * Send the first turn token to the first player in the list
+	 */
+	public void sendFirstTurnToken(){
+		srvHandler.sendFirstTurnToken();
+	}
+	
 	
 }

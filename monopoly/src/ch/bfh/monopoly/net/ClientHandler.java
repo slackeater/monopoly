@@ -1,13 +1,11 @@
 package ch.bfh.monopoly.net;
 
-import java.awt.Color;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.GameController;
 
 /**
  * This class is used to handle the operations of the client
@@ -65,6 +63,11 @@ public class ClientHandler implements IoHandler {
 			case DICE_ROLL:
 				int rollValue = n.getInt();
 				//gc.roll(rollValue, c);
+				break;
+			case TURN_TOKEN:
+				//TODO remove sysout
+				//check if the name in n.getText is equal to localPlayerName
+				System.out.println("Received a token (my name is " + n.getText() + "),  roll value (" + rollOrderValue + ")");
 				break;
 		}
 

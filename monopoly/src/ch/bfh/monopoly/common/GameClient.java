@@ -69,25 +69,6 @@ public class GameClient {
 		this.localPlayer = localPlayerName;
 	}
 
-	
-	
-	
-	/**
-	 * Set the list of player in the game and create
-	 * the relative player instance
-	 * @param names the list of names of the player
-	 */
-	public void setUsersList(List<String> names, String localPlayerName){
-		
-		
-		//send a message to the server wit our user name
-//		NetMessage n = new NetMessage(localPlayerName, Messages.SEND_USERNAME);
-//		this.session.write(n);
-	}
-	
-	
-	
-	
 	/**
 	 * calculate the rent of a property, if a player lands on it
 	 * 
@@ -99,6 +80,11 @@ public class GameClient {
 		return p.feeToCharge();
 	}
 
+	/**
+	 * Set the IoSession for this game client
+	 * @param session IoSession
+	 * 					the IoSession used to communicate with the server
+	 */
 	public void setIoSession(IoSession session) {
 		this.session = session;
 	}
@@ -151,7 +137,7 @@ public class GameClient {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer, tileID,
+		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 				Messages.BUY_HOUSE);
 		session.write(nm);
 	}
@@ -169,7 +155,7 @@ public class GameClient {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer, tileID,
+		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 				Messages.BUY_HOTEL);
 		session.write(nm);
 	}
@@ -187,7 +173,7 @@ public class GameClient {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer, tileID,
+		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 				Messages.SELL_HOUSE);
 		session.write(nm);
 	}
@@ -205,7 +191,7 @@ public class GameClient {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer, tileID,
+		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 				Messages.SELL_HOTEL);
 		session.write(nm);
 	}
