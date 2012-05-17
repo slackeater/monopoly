@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -29,7 +31,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.common.Monopoly;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.observer.PlayerListener;
@@ -58,23 +62,6 @@ public class MonopolyGUI extends JFrame {
 	private final int LEFT_SPACER_HEIGHT = 10;
 	private final int DICE_MOVEMENT_DELAY = 750;
 
-	/** 
-	 * Strings constants
-	 * !!!!!!!!!!!!!!!!!!! TEMP
-	 * !!!!!!!!!!!!!!!!!!! We will initialize these
-	 * with the i18n values
-	 */
-	private final String TITLE = "Monopoly";
-	private final String CHAT_TAB = "Chat";
-	private final String HISTORY_TAB = "History";
-	private final String FRONT = "Front";
-	private final String THROWING_DICE = "I'm throwing the dice...";
-	private final String DICE_RESULTS = "The results is: ";
-
-	private final String THROW_DICE = "Throw";
-	private final String JAIL_CARD = "Jail card";
-	private final String BUY = "Buy";
-
 	/**
 	 * Graphical elements
 	 */
@@ -83,7 +70,7 @@ public class MonopolyGUI extends JFrame {
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
 	private Token newPlace = null;
-	private JButton buy, throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
+	private JButton throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
 	private JSpinner moneySpinner, rcvrMoneySpinner;
@@ -102,6 +89,8 @@ public class MonopolyGUI extends JFrame {
 	private int playerNumber;
 	private BoardController bc;
 	private GameController gc;
+	private ResourceBundle res;
+	private Dice dice = new Dice(6,6);
 	
 	private List<PlayerStateEvent> pse;
 
@@ -112,6 +101,7 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(BoardController bc, GameController gc){
 		this.bc = bc;
 		this.gc = gc;
+		this.res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.gui", gc.getLocale());
 		
 		System.out.println("INSIDE MONOPOLY FRAME");
 		
@@ -119,7 +109,7 @@ public class MonopolyGUI extends JFrame {
 		initializeButtons();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle(TITLE);
+		setTitle(res.getString("title"));
 		setLayout(new BorderLayout());
 		
 		System.out.println("BEFORE WRAPPER INIT");
@@ -171,7 +161,7 @@ public class MonopolyGUI extends JFrame {
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoById(j);
 		
-			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc);
+			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc, this.res);
 			
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
@@ -218,8 +208,6 @@ public class MonopolyGUI extends JFrame {
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
 			
-			if(this.bc == null) System.out.println("BC is null");
-			
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
 			
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
@@ -246,7 +234,7 @@ public class MonopolyGUI extends JFrame {
 		tab1 = new JPanel();
 		tab1.setLayout(new BoxLayout(tab1, BoxLayout.PAGE_AXIS));
 
-		card.addTab(FRONT, tab1);
+		card.addTab(res.getString("tab-card"), tab1);
 		return card;
 	}
 
@@ -336,8 +324,8 @@ public class MonopolyGUI extends JFrame {
 		chatArea.add(inputContainer);
 
 		//create the two tab
-		pane.addTab(CHAT_TAB, chatArea);
-		pane.addTab(HISTORY_TAB, historyScroll);
+		pane.addTab(res.getString("tab-chat"), chatArea);
+		pane.addTab(res.getString("tab-history"), historyScroll);
 		return pane;
 	}
 
@@ -348,7 +336,6 @@ public class MonopolyGUI extends JFrame {
 	private JPanel drawBoard(){
 		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
 		guiButtons.add(throwDice);
-		guiButtons.add(buy);
 		guiButtons.add(useCard);
 		guiButtons.add(trade);
 		guiButtons.add(endTurn);
@@ -366,13 +353,10 @@ public class MonopolyGUI extends JFrame {
 	}
 
 	private void initializeButtons(){
-		this.buy = new JButton(BUY);
-		buy.setEnabled(false);
-
-		this.useCard = new JButton(JAIL_CARD);
+		this.useCard = new JButton(res.getString("button-jailcard"));
 		useCard.setEnabled(false);
 
-		this.throwDice = new JButton(THROW_DICE);
+		this.throwDice = new JButton(res.getString("button-throwdice"));
 
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
@@ -385,17 +369,14 @@ public class MonopolyGUI extends JFrame {
 				//if we start a new turn
 				if(throwValue == 0){
 					step = 0;
-					eventTextArea.setText(THROWING_DICE + "\n");
+					eventTextArea.setText(res.getString("text-throwindice") + "\n");
 
-					tabPane.addTab("Trade", tradeTab());
+					//TODO only for test
+					tabPane.addTab(res.getString("tab-trade"), tradeTab());
+											
+					throwValue = dice.throwDice();
 
-					//generates number between 1 and 12
-					int valOne = (int)(6*Math.random())+1;
-					int valTwo = (int)(6*Math.random())+1;
-										
-					throwValue = valOne+valTwo;
-
-					eventTextArea.append(DICE_RESULTS + valOne + ", " + valTwo + " = " + throwValue + "\n");
+					eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
 
 					throwDice.setEnabled(false);
 
@@ -437,16 +418,16 @@ public class MonopolyGUI extends JFrame {
 			}
 		});
 
-		this.community = new JButton("Community");
+		this.community = new JButton(res.getString("button-communitychest"));
 		this.community.setEnabled(false);
 
-		this.chance = new JButton("Chance");
+		this.chance = new JButton(res.getString("button-chance"));
 		this.chance.setEnabled(false);
 
-		this.endTurn = new JButton("End turn");
+		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
 
-		this.trade = new JButton("Trade");
+		this.trade = new JButton(res.getString("button-trade"));
 		this.trade.setEnabled(false);
 	}
 
@@ -466,13 +447,13 @@ public class MonopolyGUI extends JFrame {
 		this.rcvrCardCheck = new JCheckBox();
 		this.rcvrMoneyCheck = new JCheckBox();
 		
-		this.sendTradeRequest = new JButton("Send");
+		this.sendTradeRequest = new JButton(res.getString("button-sendoffer"));
 		
 		this.myTerrainBox = new JComboBox();
 		this.moneySpinner = new JSpinner();
 		this.rcvrMoneySpinner = new JSpinner();
-		this.jailCardLbl = new JLabel("Jail Card");
-		this.rcvrJailCardLbl = new JLabel("Jail Card");
+		this.jailCardLbl = new JLabel(res.getString("label-jailcard"));
+		this.rcvrJailCardLbl = new JLabel(res.getString("label-jailcard"));
 		
 		this.usersBox = new JComboBox();
 		
@@ -496,8 +477,8 @@ public class MonopolyGUI extends JFrame {
 		rcvrMoneySpinner.setEnabled(false);
 		rcvrJailCardLbl.setEnabled(false);
 		
-		JLabel offerLbl = new JLabel("Your offer is ");
-		JLabel wantedRes = new JLabel("What do you want from player ");
+		JLabel offerLbl = new JLabel(res.getString("label-youroffer"));
+		JLabel wantedRes = new JLabel(res.getString("label-requestfrompl"));
 				
 		//change 10 to localPlayer.getTerrains
 		for(int i = 0 ; i < 10 ; i++){
@@ -506,6 +487,7 @@ public class MonopolyGUI extends JFrame {
 			
 		//money spinner
 		int startMoney = 0;
+		//TODO adjust JSpinner money range
 		moneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
 		rcvrMoneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
 				

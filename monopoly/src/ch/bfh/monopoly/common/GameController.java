@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.common;
 
 import java.util.List;
+import java.util.Locale;
 
 import ch.bfh.monopoly.observer.WindowSubject;
 
@@ -175,6 +176,15 @@ public class GameController {
 	 */
 	public WindowSubject getWindowSubject(){
 		return gameClient.getWindowSubject();
+	}
+	
+	/**
+	 * Get the locale of the game
+	 * @return Locale
+	 * 				the locale used in this game
+	 */
+	public Locale getLocale(){
+		return gameClient.getLoc();
 	}
 	
 	
