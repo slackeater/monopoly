@@ -133,13 +133,13 @@ public class GameClient {
 	public void buyHouse(int tileID) {
 		try {
 			board.buyHouse(tileID);
+			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.BUY_HOUSE);
+			session.write(nm);
 		} catch (TransactionException e) {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-				Messages.BUY_HOUSE);
-		session.write(nm);
 	}
 	
 	/**
@@ -151,13 +151,13 @@ public class GameClient {
 	public void buyHotel(int tileID) {
 		try {
 			board.buyHotel(tileID);
+			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.BUY_HOTEL);
+			session.write(nm);
 		} catch (TransactionException e) {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
-		}
-		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-				Messages.BUY_HOTEL);
-		session.write(nm);
+		}	
 	}
 	
 	/**
@@ -169,13 +169,14 @@ public class GameClient {
 	public void sellHouse(int tileID) {
 		try {
 			board.sellHouses(tileID);
+			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.SELL_HOUSE);
+			session.write(nm);
 		} catch (TransactionException e) {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-				Messages.SELL_HOUSE);
-		session.write(nm);
+	
 	}
 	
 	/**
@@ -187,13 +188,13 @@ public class GameClient {
 	public void sellHotel(int tileID) {
 		try {
 			board.sellHotel(tileID);
+			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.SELL_HOTEL);
+			session.write(nm);
 		} catch (TransactionException e) {
 			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
-		}
-		NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-				Messages.SELL_HOTEL);
-		session.write(nm);
+		}	
 	}
 
 	

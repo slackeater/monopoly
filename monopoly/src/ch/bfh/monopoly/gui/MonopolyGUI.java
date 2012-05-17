@@ -179,7 +179,6 @@ public class MonopolyGUI extends JFrame {
 		
 		//!!! leave this here !!!
 		this.bc.initGUI();
-		
 	}
 
 	/**

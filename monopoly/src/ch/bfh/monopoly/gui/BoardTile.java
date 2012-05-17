@@ -64,7 +64,9 @@ public class BoardTile extends JPanel{
 	private JPanel color;
 
 	//to check if we have clicked over a button
-	private boolean buyHouseClicked = false, buyHotelClicked = false;
+	private boolean buyHouseClicked, buyHotelClicked, buyHouseRowClicked,
+	buyHotelRowClicked, sellHouseClicked, sellHotelClicked, sellHouseRowClicked,
+	sellHotelRowClicked, mortgageClicked, unmortgageClicked;
 
 	/**
 	 * Construct a new BoardTile
@@ -312,34 +314,98 @@ public class BoardTile extends JPanel{
 	}
 
 	/**
+	 * Draw an house
+	 * @return JPanel
+	 * 			a JPanel representing an house
+	 */
+	public JPanel drawHouse(){
+		JPanel building = new JPanel();
+		building.setBorder(BorderFactory.createRaisedBevelBorder());
+		building.setBackground(Color.RED);
+		building.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
+		return building;
+	}
+	
+	/**
+	 * Draw an hotel
+	 * @return JPanel
+	 * 			a JPanel representing an hotel
+	 */
+	public JPanel drawHotel(){
+		JPanel building = new JPanel();
+		building.setBorder(BorderFactory.createRaisedBevelBorder());
+		building.setBackground(Color.GREEN);
+		building.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
+		return building;
+	}
+	
+	/**
 	 * Draw a building
 	 * @param type boolean true == hotel ; false == house
 	 */
 	public void drawBuilding(boolean type){
-		JPanel building = new JPanel();
-		building.setBorder(BorderFactory.createRaisedBevelBorder());
-
 		//if true is hotel
 		if(type && !isHotel && houseCount == 4){
 			color.removeAll();
-			building.setBackground(Color.GREEN);
-			building.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
-
 			//we have drawn an hotel
 			isHotel = true;
-			color.add(building);
+			color.add(drawHotel());
 		}
 		else if(!type && houseCount < 4){
-			building.setBackground(Color.RED);
-			building.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
 			houseCount++;
-			color.add(building);
+			color.add(drawHouse());
 		}
 
 		repaint();
 		revalidate();
 	}
+	
+	/**
+	 * Remove a building from this tile
+	 * @param type boolean
+	 * 					a boolean representing the type of building
+	 * 					true == hotel, false = house
+	 */
+	public void removeBuilding(boolean type){
+		//remove house
+		if(!type && houseCount > 0 && houseCount <= 4){
+			houseCount--;
+			color.remove(0);
+		}
+		//remove hotel
+		else if(type && isHotel && houseCount == 4){
+			color.remove(0);
+			color.add(drawHouse());
+			color.add(drawHouse());
+			color.add(drawHouse());
+			color.add(drawHouse());
+			isHotel = false;
+		}
+		
+		repaint();
+		revalidate();
+	}
 
+	/**
+	 * Change the color of the background to show that is mortgaged
+	 */
+	public void mortgagePanel(){
+		System.out.println("INSIDE MORTGAGA PENAL");
+		color.setBackground(Color.BLACK);
+		repaint();
+		revalidate();
+	}
+	
+	/**
+	 * Unmortgage the terrain by change the color to 
+	 * the initial one
+	 */
+	public void unmortgagePanel(){
+		color.setBackground(Color.decode(ti.getRGB()));
+		repaint();
+		revalidate();
+	}
+	
 	/**
 	 * Inner class used to show the popup menu 
 	 * @author snake, shrevek
@@ -380,9 +446,18 @@ public class BoardTile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
+			//reset the buttons
 			buyHouseClicked = false;
 			buyHotelClicked = false;
-
+			buyHouseRowClicked = false;
+			buyHotelRowClicked = false;
+			sellHouseClicked = false;
+			sellHotelClicked = false;
+			sellHouseRowClicked = false;
+			sellHotelRowClicked = false;
+			mortgageClicked = false;
+			unmortgageClicked = false;
+			
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
 				gc.buyHouse(ti.getId());
@@ -390,6 +465,39 @@ public class BoardTile extends JPanel{
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
 				gc.buyHotel(ti.getId());
+			}
+			else if(e.getSource().equals(buyHouseRow)){
+				buyHouseRowClicked = true;
+				//TODO
+			}
+			else if(e.getSource().equals(buyHotelRow)){
+				buyHotelRowClicked = true;
+				//TODO
+			}
+			else if(e.getSource().equals(sellHouse)){
+				sellHouseClicked = true;
+				gc.sellHouse(ti.getId());
+			}
+			else if(e.getSource().equals(sellHotel)){
+				sellHotelClicked = true;
+				gc.sellHotel(ti.getId());
+			}
+			else if(e.getSource().equals(sellHouseRow)){
+				sellHouseRowClicked = true;
+				//TODO
+			}
+			else if(e.getSource().equals(sellHotelRow)){
+				sellHotelRowClicked = true;
+				//TODO
+			}
+			else if(e.getSource().equals(mortgage)){
+				System.out.println("E GET SOURCE MORTGAGE");
+				mortgageClicked = true;
+				//TODO
+			}
+			else if(e.getSource().equals(unmortgage)){
+				unmortgageClicked = true;
+				//TODO
 			}
 			
 		}	
@@ -407,6 +515,31 @@ public class BoardTile extends JPanel{
 			}
 			else if(buyHotelClicked){
 				drawBuilding(true);
+			}
+			else if(buyHouseRowClicked){
+				//TODO
+			}
+			else if(buyHotelRowClicked){
+				//TODO
+			}
+			else if(sellHouseClicked){
+				removeBuilding(false);
+			}
+			else if(sellHotelClicked){
+				removeBuilding(true);
+			}
+			else if(sellHouseRowClicked){
+				//TODO
+			}
+			else if(sellHotelRowClicked){
+				//TODO
+			}
+			else if(mortgageClicked){
+				System.out.println("MORTGAGE");
+				mortgagePanel();
+			}
+			else if(unmortgageClicked){
+				unmortgagePanel();
 			}
 		}
 	}
