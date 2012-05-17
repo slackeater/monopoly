@@ -79,6 +79,7 @@ public class BoardTile extends JPanel{
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
+		
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
@@ -93,7 +94,7 @@ public class BoardTile extends JPanel{
 			this.addMouseListener(btnListener);
 			displayInfo = true;
 		}
-
+		
 		//check if there is a color and add the menu
 		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
@@ -255,7 +256,7 @@ public class BoardTile extends JPanel{
 		sellHotelRow = new JMenuItem(res.getString("label-sellhotelrow"));
 		sellHotelRow.addActionListener(ac);
 
-		mortgage = new JMenuItem(res.getString("label-mortage"));
+		mortgage = new JMenuItem(res.getString("label-mortgage"));
 		mortgage.addActionListener(ac);
 
 		unmortgage = new JMenuItem(res.getString("label-unmortgage"));

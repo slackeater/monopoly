@@ -101,7 +101,9 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(BoardController bc, GameController gc){
 		this.bc = bc;
 		this.gc = gc;
+		
 		this.res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.gui", gc.getLocale());
+		System.out.println(this.res);
 		
 		System.out.println("INSIDE MONOPOLY FRAME");
 		
@@ -125,8 +127,6 @@ public class MonopolyGUI extends JFrame {
 	 * AVOID PROBLEMS !!!
 	 */
 	private void wrapperInit(){
-		System.out.println("AFTER LOOP INIT TILE");
-		
 		/**
 		 * This inner class is used to 
 		 * implement the PlayerListener used
@@ -157,16 +157,23 @@ public class MonopolyGUI extends JFrame {
 		
 		add(leftPanel(), BorderLayout.WEST);
 		
+		System.out.println("AFTER LEFT PANEL ADD");
+		
 		//Initialize all the tiles with the information 
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoById(j);
 		
+			System.out.println("LOOP TILE INIT " + j);
+				
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc, this.res);
+			System.out.println("AFTER BOARD TILE CREATION " + j);
 			
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
 		}
+		
+		System.out.println("AFTER TILE INIT");
 		
 		add(drawBoard(), BorderLayout.CENTER);
 		
