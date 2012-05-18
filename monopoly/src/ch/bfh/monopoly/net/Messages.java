@@ -38,6 +38,10 @@ public enum Messages {
 	TURN_TOKEN(510),
 	END_TURN(520),
 	
+	//when chance cards must be shuffled
+	UPDATE_CHANCE_ORDER(600),
+	UPDATE_COMMCHEST_ORDER(610),
+	
 	//probably only for test
 	ACKNOWLEDGE(999)
 	

@@ -25,7 +25,7 @@ public class NetMessage implements Serializable{
 	private boolean kickAnswer;
 	private Messages m;
 	private int propertyID;
-
+	private int[] cardDrawOrder;
 
 	public NetMessage(Messages m){
 		this.m = m;
@@ -178,5 +178,19 @@ public class NetMessage implements Serializable{
 	 */
 	public Locale getLocale(){
 		return this.loc;
+	}
+	
+	/**
+	 * get the int array which is the draw order for either chance cards or community chess cards
+	 */
+	public int[] getDrawOrder(){
+		return cardDrawOrder;
+	}
+	
+	/**
+	 * set the int array which is the draw order for either chance cards or community chess cards
+	 */
+	public void setDrawOrder(int[] newOrder){
+		cardDrawOrder=newOrder;
 	}
 }

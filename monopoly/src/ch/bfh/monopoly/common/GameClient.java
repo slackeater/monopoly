@@ -399,6 +399,29 @@ public class GameClient {
 		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
+	
+	/**
+	 * send an array of integers which is the new order that cards should be drawn for chance card events
+	 * @param the array of int values to be send to the server
+	 */
+	public void updateChanceDrawOrder(int[] newOrder){
+		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+				Messages.UPDATE_CHANCE_ORDER);
+		nm.setDrawOrder(newOrder);
+		session.write(nm);
+	}
+	
+	/**
+	 * send an array of integers which is the new order that cards should be drawn for chance card events
+	 * @param the array of int values to be send to the server
+	 */
+	public void updateCommChestDrawOrder(int[] newOrder){
+		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+				Messages.UPDATE_COMMCHEST_ORDER);
+		nm.setDrawOrder(newOrder);
+		session.write(nm);
+	}
+	
 
 	public void displayChat(String text) {
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_CHAT, text, 0);
