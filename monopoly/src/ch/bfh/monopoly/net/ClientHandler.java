@@ -43,8 +43,6 @@ public class ClientHandler implements IoHandler {
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
 
-		System.out.println(n.getMessageType());
-
 		switch(n.getMessageType()){
 			case GAME_START:
 				//create the board for this client by passing the locale the users and the name
@@ -61,13 +59,23 @@ public class ClientHandler implements IoHandler {
 				gc.displayChat(n.getText());
 				break;
 			case DICE_ROLL:
+				//TODO dice roll function
 				int rollValue = n.getInt();
 				//gc.roll(rollValue, c);
 				break;
 			case TURN_TOKEN:
-				//TODO remove sysout
-				//check if the name in n.getText is equal to localPlayerName
-				System.out.println("Received a token (my name is " + n.getText() + "),  roll value (" + rollOrderValue + ")");
+				//if the name is equal to the local player, enable buttons and set current player
+				if(n.getText().equals(localPlayerName)){
+					//TODO
+					//function for setting the currentPlayer, turnToken and enable buttons in the GUI
+						System.out.println("IT'S MY TURN : " + n.getText());
+				}
+				else{
+					//TODO 
+					//function for setting the currentPlayer
+						System.out.println("IT'S NOT MY TURN :" + localPlayerName);
+				}
+				
 				break;
 		}
 
@@ -76,10 +84,6 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
-
-		NetMessage n = (NetMessage)arg1;
-
-		System.out.println("======> SENT MESSAGE: " + n.getMessageCode());
 	}
 
 	@Override

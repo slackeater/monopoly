@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -33,8 +34,6 @@ import javax.swing.Timer;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameController;
-import ch.bfh.monopoly.common.Monopoly;
-import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
@@ -53,8 +52,8 @@ import ch.bfh.monopoly.tile.TileInfo;
  */
 public class MonopolyGUI extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = -3409398396221480650L;
+	
 	/**
 	 * Space and counters constants
 	 */
@@ -91,8 +90,16 @@ public class MonopolyGUI extends JFrame {
 	private GameController gc;
 	private ResourceBundle res;
 	private Dice dice = new Dice(6,6);
-	
 	private List<PlayerStateEvent> pse;
+																							//6
+	private int[][] tileGroupMember = { {-1,-1},{3,-1}, {-1,-1}, {1,-1}, {-1,-1},{-1,-1}, {8,9},
+																//14 Via nassa
+	{-1,-1}, {6,9}, {6,8}, {-1,-1}, {13,14}, {-1,-1}, {11,14}, {11,13}, {-1,-1}, {18,19}, {-1,-1}, {16,19}, {16,18},
+	//20 free park											//26								//30
+	{-1,-1}, {23,24}, {-1,-1}, {21,24}, {21,23}, {-1,-1}, {27,29}, {26,29}, {-1,-1}, {26,27}, {-1,-1}, 
+	
+	{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
+	};
 
 	/**
 	 * Construct a MonopolyGUI
@@ -168,9 +175,36 @@ public class MonopolyGUI extends JFrame {
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc, this.res);
 			System.out.println("AFTER BOARD TILE CREATION " + j);
 			
+			System.out.println(tileGroupMember[j][0]);
+			
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
+		}
+		
+		//after we have initialized the tiles, 
+		//add the tile of the same group to each single tile board
+		//so each tile knows the member of the same group
+		for(int i = 0 ; i < TILE_NUMBER ; i++){
+			BoardTile[] member = new BoardTile[2];
+			
+			//get the neighborhood
+			int[] neighborhood = tileGroupMember[i];
+	
+			if(neighborhood[0] != -1 && neighborhood[1] != -1){
+				member[0] = this.tiles.get(neighborhood[0]);
+				member[1] = this.tiles.get(neighborhood[1]);
+			}
+			else if(neighborhood[0] != -1 && neighborhood[1] == -1){
+				member[0] = this.tiles.get(neighborhood[0]);
+				member[1] = null;
+			}
+			else{
+				member[0] = null;
+				member[1] = null;
+			}
+			
+			this.tiles.get(i).setGroupMember(member);
 		}
 		
 		System.out.println("AFTER TILE INIT");
@@ -358,20 +392,21 @@ public class MonopolyGUI extends JFrame {
 		return board;
 	}
 
-	private void initializeButtons(){
-		this.useCard = new JButton(res.getString("button-jailcard"));
-		useCard.setEnabled(false);
-
-		this.throwDice = new JButton(res.getString("button-throwdice"));
-
-		//action listeners
-		throwDice.addActionListener(new ActionListener() {
+	/**
+	 * Move the token
+	 * @param diceButton
+	 * 			the JButton to enable when we throw the dice
+	 * 			set this value to null if you don't need the button but only the movement
+	 * @return Action
+	 * 				the abstract action used to move the token
+	 */
+	private Action moveToken(final JButton diceButton){
+		Action moveToken = new AbstractAction() {
+		
+			private static final long serialVersionUID = 9219941791909195711L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				Timer t = new Timer(DICE_MOVEMENT_DELAY,this);
-
 				//if we start a new turn
 				if(throwValue == 0){
 					step = 0;
@@ -384,16 +419,11 @@ public class MonopolyGUI extends JFrame {
 
 					eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
 
-					throwDice.setEnabled(false);
-
 					//we get the token relative to the player with ID 1
 					//TODO get the token of the current player
 					//then set the position of this current player to the
 					//one after the dice throw
 					newPlace = pse.get(0).getT();
-
-					//start the timer
-					t.start();
 				}
 
 				//move the token for "step" times
@@ -407,6 +437,7 @@ public class MonopolyGUI extends JFrame {
 					tiles.get((currentPos+step)%TILE_NUMBER).addToken(newPlace);
 
 					repaint();
+			
 				}
 				else if(step == throwValue){
 					((Timer)e.getSource()).stop();
@@ -417,10 +448,32 @@ public class MonopolyGUI extends JFrame {
 					//update the current position and reset counter
 					currentPos = (currentPos+throwValue)%TILE_NUMBER;
 					throwValue = 0;
-					step = 0;
+					step = 0;	
+					
+					if(diceButton != null)
+						diceButton.setEnabled(true);
+				}	
+			}
+		};
+		
+		return moveToken;
+	
+	}
+	
+	private void initializeButtons(){
+		this.useCard = new JButton(res.getString("button-jailcard"));
+		useCard.setEnabled(false);
 
-					throwDice.setEnabled(true);
-				}
+		this.throwDice = new JButton(res.getString("button-throwdice"));
+
+		//action listeners
+		throwDice.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				throwDice.setEnabled(false);
+				Timer t = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice));
+				t.start();
 			}
 		});
 

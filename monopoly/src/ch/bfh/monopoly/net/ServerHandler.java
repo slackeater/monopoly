@@ -20,6 +20,9 @@ public class ServerHandler implements IoHandler{
 	private List<PlayerWrapper> plWrap = new ArrayList<PlayerWrapper>();
 	private int userindex = 1;
 	
+	//used to send the token to the user in position userTokenIndex in plWrap
+	private int userTokenIndex = 0;
+	
 	/**
 	 * This inner class is used to wrap the username 
 	 * and the roll value for order into one single 
@@ -61,17 +64,6 @@ public class ServerHandler implements IoHandler{
 	public int getOpenedSessions(){
 		return this.plWrap.size();
 	}
-
-	/**
-	 * Send the turn token to the first in the list
-	 */
-	public void sendFirstTurnToken(){
-		NetMessage tokenMsg = new NetMessage(plWrap.get(0).getUsername(), Messages.TURN_TOKEN);
-		//TODO sysout
-		System.out.println("TOKEN TO " + plWrap.get(0).getUsername());
-		
-		plWrap.get(0).getSession().write(tokenMsg);
-	}
 	
 	/**
 	 * Get the usernames of the players 
@@ -98,6 +90,26 @@ public class ServerHandler implements IoHandler{
 		}
 	}
 
+	/**
+	 * Send the turn token to the next player
+	 */
+	public void sendTurnToken(){
+		NetMessage nm = new NetMessage(plWrap.get(userTokenIndex).getUsername(), Messages.TURN_TOKEN);
+		
+		System.out.println("===  USER TOKEN INDEX : " + userTokenIndex + " TURN TO PLAYER " + plWrap.get(userTokenIndex).getUsername());
+		
+		//broadcast the message to the other players
+		sendBroadcast(nm, null);
+		
+		//if we arrive at the least position reset the counter
+		if((userTokenIndex == plWrap.size()-1))
+			userTokenIndex = 0;
+		else if(userTokenIndex < plWrap.size()-1)
+			userTokenIndex++;
+		
+		
+	}
+	
 	/**
 	 * Build the list of user, by ordering the list looking at the
 	 * roll order value and check if there are equals username
@@ -149,12 +161,10 @@ public class ServerHandler implements IoHandler{
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
 
-		System.out.println("Received a message: " + n.getMessageCode());
-
 		if(n.getMessageType() == Messages.SEND_USERNAME)
 			buildUserList(n, arg0);
 		else if(n.getMessageType() == Messages.END_TURN){
-			//TODO function to send next turn 
+			sendTurnToken();
 		}
 		else
 			//when we receive a message, we must broadcast it
@@ -164,8 +174,7 @@ public class ServerHandler implements IoHandler{
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
-		System.out.println("message sent");
-
+	
 	}
 
 	@Override

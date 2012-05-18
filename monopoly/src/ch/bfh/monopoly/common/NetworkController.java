@@ -89,11 +89,9 @@ public class NetworkController {
 	}
 	
 	/**
-	 * Send the first turn token to the first player in the list
+	 * Send the turn token to the next player
 	 */
-	public void sendFirstTurnToken(){
-		srvHandler.sendFirstTurnToken();
+	public void sendTurnToken(){
+		srvHandler.sendTurnToken();
 	}
-	
-	
 }

@@ -275,6 +275,8 @@ public class Board {
 			prop.setMortgageActive(false);
 		else
 			prop.setMortgageActive(true);
+		int id = prop.getId();
+		tileSubjects[id].notifyListeners();
 	}
 
 	/**
