@@ -49,40 +49,59 @@ public class EventTests {
 		int balance2before = board.getPlayerByName("Damien").getAccount();
 		int balance3before = board.getPlayerByName("Cyril").getAccount();
 		int balance4before = board.getPlayerByName("Elie").getAccount();
-		BoardEvent[] commChestEvents = em.getCommChestEvents();
-		em.setCurrentEvent(commChestEvents[3]);
+		ArrayList<BoardEvent> commChestEvents = em.getCommChestEvents();
+		em.setCurrentEvent(commChestEvents.get(3));
 		em.performEventCommChest();
 		int balanceJustinAfter = board.getPlayerByName("Justin").getAccount();
 		int balance1after = board.getPlayerByName("Giuseppe").getAccount();
 		int balance2after = board.getPlayerByName("Damien").getAccount();
 		int balance3after = board.getPlayerByName("Cyril").getAccount();
 		int balance4after = board.getPlayerByName("Elie").getAccount();
-		assertTrue(balanceJustinBefore ==( balanceJustinAfter - (20*(playerCount-1))) &&
-				balance1before == (balance1after+20) &&
-				balance2before == (balance2after+20) &&
-				balance3before == (balance3after+20) &&
-				balance4before == (balance4after+20));
+		assertTrue(balanceJustinBefore == (balanceJustinAfter - (20 * (playerCount - 1)))
+				&& balance1before == (balance1after + 20)
+				&& balance2before == (balance2after + 20)
+				&& balance3before == (balance3after + 20)
+				&& balance4before == (balance4after + 20));
 	}
 
 	/**
-	 * Test that the Repairs event deducts the appropriate sum from the player's
-	 * account
+	 * Test that once the cards are used up, the list is repopulated in a
+	 * different order this is done just by checking that the first card changes
+	 * after shuffle
 	 */
 	@Test
-	public void eventManagerRandomizesChanceEvents() {
+	public void chanceDecksGetShuffled() {
 		Player p = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(p);
-		p.setPosition(26);
-		// advance player to GO TO JAIL
-		gameClient.advanceCurrentPlayerNSpaces(4);
-		int pos = p.getPosition();
-		Tile t = board.getTileById(pos);
-		AbstractTile tt = (AbstractTile) t;
-		BoardEvent[] chanceEvents = em.getChanceEvents();
-		em.setCurrentEvent(chanceEvents[7]);
-		System.out
-				.println("IF you see this, then eventManagerRandomizesChanceEvents works : "
-						+ em.getEventDescriptionChance());
+		em.drawNextChanceCard();
+		// save a reference to the first event in the deck
+		BoardEvent boardEventA1 = em.getCurrentEvent();
+		em.drawNextChanceCard();
+		BoardEvent boardEventA2 = em.getCurrentEvent();
+		em.drawNextChanceCard();
+		BoardEvent boardEventA3 = em.getCurrentEvent();
+		// go through a cycle of chance cards
+		for (int i = 0; i < 13; i++) {
+			em.drawNextChanceCard();
+
+		}
+		int cardsRemainingInDeck = em.getChanceEventsShuffledSize();
+
+		// calling em.drawNextChanceCard(); should cause reshuffle.
+		BoardEvent boardEventB1 = em.getCurrentEvent();
+		em.drawNextChanceCard();
+		BoardEvent boardEventB2 = em.getCurrentEvent();
+		em.drawNextChanceCard();
+		BoardEvent boardEventB3 = em.getCurrentEvent();
+		// the sets of board events should be different. Test succeeds if at
+		// least on of the events is different from the other
+		assertTrue(boardEventA1 != boardEventB1 || boardEventA2 != boardEventB2
+				|| boardEventA3 != boardEventB3);
+		// this method was also tested by removing the shuffle aspect, and the
+		// events are then the same as their corresponing events. this was good
+		// to know because otherwise it would have meant this test was poorly
+		// written
+
 	}
 
 	/**
@@ -264,19 +283,6 @@ public class EventTests {
 		assertTrue(p.getAccount() == previousBalance - fee);
 	}
 
-	/**
-	 * Check that chance events trigger when landing on any chance tile
-	 */
-	@Test
-	public void chanceEventsTrigger() {
-		Player p = board.getPlayerByName("Justin");
-		int tileId = 7; // Park Place
-		gameClient.setCurrentPlayer(p);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
-		System.out.println("chanceEventsTrigger: " + gc.getEventDescription());
-		gc.performEvent();
-		assertTrue(p.getPosition() != 7);
-
-	}
+	
 
 }
