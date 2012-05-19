@@ -488,6 +488,23 @@ public class MonopolyGUI extends JFrame {
 
 		this.trade = new JButton(res.getString("button-trade"));
 		this.trade.setEnabled(false);
+		
+		class ButtonManager implements PlayerListener{
+
+			@Override
+			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+				for(PlayerStateEvent playerState : playerStates){
+					if(playerState.getName().equals(gc.getLocalPlayerName())){
+						if(playerState.hasToken()){
+							throwDice.setEnabled(true);
+						}
+					}
+				}
+			}	
+		}
+		
+		ButtonManager bl = new ButtonManager();
+
 	}
 
 	/**

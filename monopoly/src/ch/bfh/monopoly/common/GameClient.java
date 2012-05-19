@@ -218,6 +218,7 @@ public class GameClient {
 	 *            the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId) {
+<<<<<<< HEAD
 		try {
 			board.toggleMortgageStatus(tileId);
 		} catch (RuntimeException e) {
@@ -231,6 +232,14 @@ public class GameClient {
 		NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
 				Messages.MORTGAGE);
 		session.write(nm);
+=======
+		board.toggleMortgageStatus(tileId);
+		
+		//TODO send a message for mortgage ; exception management
+		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.TOGGLE_MORTGAGE);
+		//session.write(nm);
+
+>>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
 	}
 
 	/**
