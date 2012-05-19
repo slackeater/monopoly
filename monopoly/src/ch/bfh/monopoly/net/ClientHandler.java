@@ -1,6 +1,5 @@
 package ch.bfh.monopoly.net;
 
-
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -8,10 +7,10 @@ import org.apache.mina.core.session.IoSession;
 import ch.bfh.monopoly.common.GameClient;
 
 /**
- * This class is used to handle the operations of the client
- * over the network
+ * This class is used to handle the operations of the client over the network
+ * 
  * @author snake
- *
+ * 
  */
 public class ClientHandler implements IoHandler {
 
@@ -19,8 +18,9 @@ public class ClientHandler implements IoHandler {
 	private GameClient gc;
 	private String localPlayerName;
 	private int rollOrderValue;
-	
-	public ClientHandler(GameClient gc, String localPlayerName, int rollOrderValue){
+
+	public ClientHandler(GameClient gc, String localPlayerName,
+			int rollOrderValue) {
 		this.gc = gc;
 		this.localPlayerName = localPlayerName;
 		this.rollOrderValue = rollOrderValue;
@@ -28,20 +28,21 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
-	throws Exception {
+			throws Exception {
 	}
 
 	/**
 	 * Check wehter the game can begin or not
+	 * 
 	 * @return a boolean , true if the game can begin, false otherwise
 	 */
-	public boolean gameCanBegin(){
+	public boolean gameCanBegin() {
 		return gameCanBegin;
 	}
 
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
-		NetMessage n = (NetMessage)arg1;
+		NetMessage n = (NetMessage) arg1;
 
 		switch(n.getMessageType()){
 			case GAME_START:
@@ -85,8 +86,6 @@ public class ClientHandler implements IoHandler {
 				
 				break;
 		}
-
-
 	}
 
 	@Override
@@ -112,11 +111,12 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void sessionOpened(IoSession arg0) throws Exception {
-		// TODO Auto-generated method stub	
+		// TODO Auto-generated method stub
 		System.out.println("session opened");
 
-		//as first, send the username and the roll value
-		NetMessage n = new NetMessage(this.localPlayerName, this.rollOrderValue, Messages.SEND_USERNAME);
+		// as first, send the username and the roll value
+		NetMessage n = new NetMessage(this.localPlayerName,
+				this.rollOrderValue, Messages.SEND_USERNAME);
 		arg0.write(n);
 	}
 
