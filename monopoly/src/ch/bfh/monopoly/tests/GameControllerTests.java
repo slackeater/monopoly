@@ -247,7 +247,7 @@ public class GameControllerTests {
 	 * boolean field mortgageActive in objects of the Property class
 	 */
 	@Test
-	public void toggleMortgageStatusWorks() {
+	public void toggleMortgageStatusChangesMortgageStatus() {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
@@ -261,6 +261,29 @@ public class GameControllerTests {
 		gc.toggleMortgageStatus(tileId);
 		assertTrue(!terrain.isMortgageActive());
 	}
+	
+	
+
+	/**
+	 * test that if you mortgage a property the money is transfered to your account
+	 */
+	@Test
+	public void toggleMortgageStatusDepositsMoney() {
+		int tileId = 1;
+		Player plyr = board.getPlayerByName("Justin");
+		Terrain terrain = (Terrain) board.getTileById(1);
+		gameClient.setCurrentPlayer(plyr);
+		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gc.buyCurrentPropertyForPlayer("Justin");
+		int accountBefore = plyr.getAccount();		
+		// is false after creation, will be set to true
+		gc.toggleMortgageStatus(tileId);
+		int accountNow = plyr.getAccount();
+		assertTrue(accountNow==( accountBefore+terrain.getMortgageValue()));
+	}
+	
+	
+	
 
 	/**
 	 * test that a the method transferProperty correctly adjusts the owner field

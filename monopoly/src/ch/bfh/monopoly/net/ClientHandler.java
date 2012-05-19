@@ -66,7 +66,7 @@ public class ClientHandler implements IoHandler {
 			case TURN_TOKEN:
 				//if the name is equal to the local player, enable buttons and set current player
 				if(n.getText().equals(localPlayerName)){
-					//TODO
+					gc.updateTurnTokens(n.getText());
 					//function for setting the currentPlayer, turnToken and enable buttons in the GUI
 						System.out.println("IT'S MY TURN : " + n.getText());
 				}
