@@ -553,6 +553,16 @@ public class Board {
 	}
 
 	/**
+	 * advance the current player a given number n spaces forward
+	 */
+	public void advanceCurrentPlayerNSpaces(String playerName, int n) {
+		Player plyr = getPlayerByName(playerName);
+		int currentPos = plyr.getPosition();
+		plyr.setPosition((currentPos + n) % 40);
+		playerSubject.notifyListeners();
+	}
+
+	/**
 	 * creates an object with all the static tile information to be sent to the
 	 * GUI
 	 * 

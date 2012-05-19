@@ -15,6 +15,7 @@ import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.Tile;
 
 public class GameControllerTests {
 	Locale loc;
@@ -102,6 +103,8 @@ public class GameControllerTests {
 	@Test
 	public void buildHousesCannotBuildMoreThanFour() {
 		Player plyr = board.getPlayerByName("Justin");
+		Tile t = board.getTileById(1);
+		Terrain terrain  = board.castTileToTerrain(t);
 		gameClient.setCurrentPlayer(plyr, true);
 		gameClient.advanceCurrentPlayerNSpaces(1, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
@@ -109,12 +112,13 @@ public class GameControllerTests {
 		gc.buyHouse(1);
 		gc.buyHouse(1);
 		gc.buyHouse(1);
-		try {
-			gc.buyHouse(1);
-			fail("FAIL: Player allowed to build more than 4 houses on a tile");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		int accountBefore = plyr.getAccount();
+		gc.buyHouse(1);
+		int accountAfter = plyr.getAccount();
+		//houses should still be 4
+		assertTrue(terrain.getHouseCount()==4);
+		//no money should have changed hands
+		assertTrue(accountBefore == accountAfter);
 	}
 
 	/**
@@ -123,6 +127,8 @@ public class GameControllerTests {
 	@Test
 	public void buildHotelCannotBuildMoreThanOne() {
 		int tileId = 1;
+		Tile t = board.getTileById(1);
+		Terrain terrain  = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(plyr, true);
 		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
@@ -132,12 +138,13 @@ public class GameControllerTests {
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
 		gc.buyHotel(tileId);
-		try {
-			gc.buyHotel(tileId);
-			fail("FAIL: Player allowed to build more than 1 hotel on a tile");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		int accountBefore = plyr.getAccount();
+		gc.buyHotel(1);
+		int accountAfter = plyr.getAccount();
+		//houses should still be 4
+		assertTrue(terrain.getHotelCount()==1);
+		//no money should have changed hands
+		assertTrue(accountBefore == accountAfter);
 	}
 
 	/**
@@ -147,6 +154,8 @@ public class GameControllerTests {
 	@Test
 	public void buildHotelCannotBuildHotelUnlessFourHousesPresent() {
 		int tileId = 1;
+		Tile t = board.getTileById(1);
+		Terrain terrain  = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(plyr, true);
 		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
@@ -154,12 +163,13 @@ public class GameControllerTests {
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
-		try {
-			gc.buyHotel(tileId);
-			fail("FAIL: Player allowed to build more than 1 hotel on a tile");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+		int accountBefore = plyr.getAccount();
+		gc.buyHotel(1);
+		int accountAfter = plyr.getAccount();
+		//houses should still be 4
+		assertTrue(terrain.getHotelCount()==0);
+		//no money should have changed hands
+		assertTrue(accountBefore == accountAfter);
 	}
 
 	/**

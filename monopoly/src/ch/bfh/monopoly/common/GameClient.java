@@ -72,6 +72,14 @@ public class GameClient {
 	}
 
 	/**
+	 * end the turn for the current player, adjust the turnTokens
+	 */
+	public void endTurn(){
+		NetMessage nm = new NetMessage(Messages.END_TURN);
+		session.write(nm);
+	}
+
+	/**
 	 * calculate the rent of a property, if a player lands on it
 	 * 
 	 * @param tileID
@@ -109,6 +117,7 @@ public class GameClient {
 	 * @param sendNetMessage true if a net message should be sent for this change
 	 */
 	public void setCurrentPlayer(Player p, boolean sendNetMessage ) {
+		//TODO this method is never called by the GUI, and maybe doesn't need the boolean parameter
 		currentPlayer = p;
 	}
 
@@ -118,6 +127,7 @@ public class GameClient {
 	 * @param sendNetMessage true if a net message should be sent for this change
 	 */
 	public void setCurrentPlayer(String playerName, boolean sendNetMessage) {
+		//TODO this method is never called by the GUI, and maybe doesn't need the boolean parameter
 		Player p = board.getPlayerByName(playerName);
 		currentPlayer = p;
 	}
@@ -129,7 +139,7 @@ public class GameClient {
 			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
 					currentPlayer.getPosition());
 		} catch (TransactionException e) {
-			sendTransactionErrorToGUI(e, sendNetMessage);
+			sendTransactionErrorToGUI(e, true);
 		}
 	}
 
@@ -137,17 +147,14 @@ public class GameClient {
 	 * advance the current player a given number n spaces forward
 	 */
 	public void advanceCurrentPlayerNSpaces(int n, boolean sendNetMessage) {
-
-		int currentPos = currentPlayer.getPosition();
-		currentPlayer.setPosition((currentPos + n) % 40);
+		String playerName = currentPlayer.getName();
+		board.advanceCurrentPlayerNSpaces(playerName, n);
 
 		if(sendNetMessage){
-			System.out.println("SENT A ROLL");
 			//send a netmessage with the roll value of this player
 			NetMessage roll = new NetMessage(currentPlayer.getName(), n, Messages.DICE_ROLL);
 			session.write(roll);
 		}
-
 	}
 
 	/**
@@ -488,7 +495,7 @@ public class GameClient {
 	 *            array of int values to be send to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+		NetMessage nm = new NetMessage("NoNameNeeded", 0,
 				Messages.UPDATE_COMMCHEST_ORDER);
 		nm.setDrawOrder(newOrder);
 		session.write(nm);
