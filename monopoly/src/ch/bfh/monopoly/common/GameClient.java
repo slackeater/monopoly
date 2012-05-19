@@ -119,9 +119,7 @@ public class GameClient {
 			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
 					currentPlayer.getPosition());
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 	}
 
@@ -146,9 +144,7 @@ public class GameClient {
 					Messages.BUY_HOUSE);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 	}
 
@@ -165,9 +161,7 @@ public class GameClient {
 					Messages.BUY_HOTEL);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 	}
 
@@ -184,9 +178,7 @@ public class GameClient {
 					Messages.SELL_HOUSE);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 
 	}
@@ -204,9 +196,7 @@ public class GameClient {
 					Messages.SELL_HOTEL);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 	}
 
@@ -218,28 +208,33 @@ public class GameClient {
 	 *            the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId) {
-<<<<<<< HEAD
+
 		try {
 			board.toggleMortgageStatus(tileId);
 		} catch (RuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 		NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
-				Messages.MORTGAGE);
+				Messages.TOGGLE_MORTGAGE);
 		session.write(nm);
-=======
-		board.toggleMortgageStatus(tileId);
-		
-		//TODO send a message for mortgage ; exception management
-		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.TOGGLE_MORTGAGE);
-		//session.write(nm);
 
->>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
+		try {
+			board.toggleMortgageStatus(tileId);
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e);
+		}
+
+		// TODO send a message for mortgage ; exception management
+		// NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
+		// Messages.TOGGLE_MORTGAGE);
+		// session.write(nm);
+
 	}
 
 	/**
@@ -262,9 +257,7 @@ public class GameClient {
 			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
 					price);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 
 	}
@@ -289,9 +282,7 @@ public class GameClient {
 			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
 					price);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 
 	}
@@ -313,9 +304,7 @@ public class GameClient {
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 	}
 
@@ -358,9 +347,7 @@ public class GameClient {
 		try {
 			isOwner = board.playerIsOwnerOfTile(playerName, tileId);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e);
 		}
 		return isOwner;
 	}
@@ -467,14 +454,18 @@ public class GameClient {
 	}
 
 	/**
-	 * method is called after reception of a netMessage and sets all Player's turn tokens to false, except the player whose name was received in the netMessage
-	 * @param name of the player whose turn it is
+	 * method is called after reception of a netMessage and sets all Player's
+	 * turn tokens to false, except the player whose name was received in the
+	 * netMessage
+	 * 
+	 * @param name
+	 *            of the player whose turn it is
 	 */
-		public void updateTurnTokens(String playerName){
-			currentPlayer.setTurnToken(false);
-			board.getPlayerByName(playerName).setTurnToken(true);
-		}
-	
+	public void updateTurnTokens(String playerName) {
+		currentPlayer.setTurnToken(false);
+		board.getPlayerByName(playerName).setTurnToken(true);
+	}
+
 	/**
 	 * send an array of integers which is the new order that cards should be
 	 * drawn for chance card events
@@ -517,6 +508,15 @@ public class GameClient {
 
 	public WindowSubject getWindowSubject() {
 		return ws;
+	}
+
+	/**
+	 * gathers transactions errors from the methods and forwards them to the GUI
+	 */
+	public void sendTransactionErrorToGUI(TransactionException e) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+		ws.notifyListeners(wse);
 	}
 
 	/**
