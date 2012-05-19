@@ -355,7 +355,9 @@ public class WelcomePanel extends JFrame{
 								new NetMessage(Monopoly.communicate.getServerUsernames(),loc, Messages.GAME_START);
 
 							//send a NetMessage GAME_START with the chosen locale
+							
 							Monopoly.communicate.sendBroadcast(gameStart);
+							Monopoly.communicate.sendTurnToken();
 							dispose();
 
 							//create the board

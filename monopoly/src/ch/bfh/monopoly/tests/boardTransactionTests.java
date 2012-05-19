@@ -11,12 +11,12 @@ import org.junit.Test;
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Tile;
 
 public class boardTransactionTests {
 
-	
 	Locale loc;
 	GameClient gameClient;
 	Board board;
@@ -24,18 +24,18 @@ public class boardTransactionTests {
 	@Before
 	public void setup() {
 		TestInstanceGenerator tig = new TestInstanceGenerator();
-		gameClient= tig.getGameClient();
-		board=tig.getBoard();
+		gameClient = tig.getGameClient();
+		board = tig.getBoard();
 	}
-	
-	
 
 	/**
-	 * check that the method addPropertyToPlayer gives a property to a given player
-	 * and updates that property's owner field 
+	 * check that the method addPropertyToPlayer gives a property to a given
+	 * player and updates that property's owner field
+	 * 
+	 * @throws TransactionException
 	 */
 	@Test
-	public void addPropertyToPlayer() {
+	public void addPropertyToPlayer() throws TransactionException {
 		Player p = board.getPlayerByName("Justin");
 		Tile t = board.getTileById(1);
 		gameClient.setCurrentPlayer(p);
@@ -44,30 +44,52 @@ public class boardTransactionTests {
 		// System.out.println(((Property)t).getOwner().getName());
 		assertTrue(((Property) t).getOwner() == p);
 	}
+
 	/**
-	 * check that money can be sent from one player to another, and the money is deducted from one player and added
-	 * to another player's account.  
+	 * check that the method addPropertyToPlayer throws Transaction Exception if
+	 * the player does not have enough money
+	 * 
+	 * @throws TransactionException
+	 */
+	@Test
+	public void addPropertyToPlayerThrowsException()  {
+		Player p = board.getPlayerByName("Justin");
+		Tile t = board.getTileById(1);
+		gameClient.setCurrentPlayer(p);
+		gameClient.advanceCurrentPlayerNSpaces(1);
+		try {
+			board.buyCurrentPropertyForPlayer("Justin", 1);
+			gameClient.advanceCurrentPlayerNSpaces(1);
+			board.buyCurrentPropertyForPlayer("Justin", 1);
+			fail("Player was allowed to but a property, but didn't have enough money to pay for it");
+		} catch (TransactionException e) {
+		}
+	}
+
+	/**
+	 * check that money can be sent from one player to another, and the money is
+	 * deducted from one player and added to another player's account.
 	 */
 	@Test
 	public void moneyTransfersBetweenPlayers() {
 		int transferAmount = 500;
 		Player p1 = board.getPlayerByName("Justin");
-		int p1account = p1.getAccount(); 
+		int p1account = p1.getAccount();
 		Player p2 = board.getPlayerByName("Giuseppe");
 		int p2account = p2.getAccount();
 		board.transferMoney(p1.getName(), p2.getName(), transferAmount);
-		assertTrue(p1.getAccount() == p1account-transferAmount);
-		assertTrue(p2.getAccount() == p2account+transferAmount);
+		assertTrue(p1.getAccount() == p1account - transferAmount);
+		assertTrue(p2.getAccount() == p2account + transferAmount);
 	}
-	
-	
+
 	/**
-	 * check that it is not possible to transfer more money than a given account contains
+	 * check that it is not possible to transfer more money than a given account
+	 * contains
 	 */
 	@Test
 	public void cannotTransferMoreThanYouHave() {
 		int transferAmount = 50000;
-		Player p1 = board.getPlayerByName("Justin"); 
+		Player p1 = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
 		try {
 			board.transferMoney(p1.getName(), p2.getName(), transferAmount);
@@ -76,13 +98,12 @@ public class boardTransactionTests {
 			System.out.println(e.getMessage());
 		}
 	}
-	
-	
-	
+
 	/**
-	 * check that the method transferProperty() takes a given property from one player
-	 * and gives it to another and updates the owner field of that property
-	 * event though the method buyCurrentPropertyForPlayer is here, we are only interested that ownership changes for the tile
+	 * check that the method transferProperty() takes a given property from one
+	 * player and gives it to another and updates the owner field of that
+	 * property event though the method buyCurrentPropertyForPlayer is here, we
+	 * are only interested that ownership changes for the tile
 	 */
 	@Test
 	public void transferPropertiesChangesOwners() {
@@ -93,14 +114,14 @@ public class boardTransactionTests {
 		gameClient.advanceCurrentPlayerNSpaces(1);
 		Tile t = board.getTileById(1);
 		gameClient.buyCurrentPropertyForPlayer(p1.getName());
-		
+
 		assertTrue(((Property) t).getOwner() == p1);
-		board.transferProperty(p1.getName(), p2.getName(), t.getId(),price);
+		board.transferProperty(p1.getName(), p2.getName(), t.getId(), price);
 		assertTrue(((Property) t).getOwner() == p2);
 	}
-	
+
 	/**
-	 * check that the a player cannot transfer a property to another player 
+	 * check that the a player cannot transfer a property to another player
 	 * unless he owns the property
 	 */
 	@Test
@@ -116,5 +137,5 @@ public class boardTransactionTests {
 			System.out.println(e.getMessage());
 		}
 	}
-	
+
 }
