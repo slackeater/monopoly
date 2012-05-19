@@ -187,5 +187,11 @@ public class GameController {
 		return gameClient.getLoc();
 	}
 	
+	/**
+	 * end the turn for the current player
+	 */
+	public void endTurn(){
+		gameClient.endTurn();
+	}
 	
 }

@@ -70,7 +70,7 @@ public class ClientHandler implements IoHandler {
 				//if the name is equal to the local player, enable buttons and set current player
 				if(username.equals(localPlayerName)){
 					//TODO
-					gc.setCurrentPlayer(localPlayerName);
+					gc.setCurrentPlayer(localPlayerName, false);
 					gc.updateTurnTokens(localPlayerName);
 
 					//function for enabling buttons in the GUI
@@ -78,7 +78,7 @@ public class ClientHandler implements IoHandler {
 				}
 				//else set only the current player
 				else{
-					gc.setCurrentPlayer(username);
+					gc.setCurrentPlayer(username, false);
 					//TODO 
 					//function for setting the currentPlayer
 						System.out.println("IT'S NOT MY TURN :" + localPlayerName);
