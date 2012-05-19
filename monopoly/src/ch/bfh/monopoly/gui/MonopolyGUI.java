@@ -53,7 +53,7 @@ import ch.bfh.monopoly.tile.TileInfo;
 public class MonopolyGUI extends JFrame {
 
 	private static final long serialVersionUID = -3409398396221480650L;
-	
+
 	/**
 	 * Space and counters constants
 	 */
@@ -75,10 +75,8 @@ public class MonopolyGUI extends JFrame {
 	private JLabel jailCardLbl, rcvrJailCardLbl;
 
 	/**
-	 * Counters for dice throw
+	 * Counter for dice throw
 	 */
-	private int throwValue = 0;
-	private int currentPos = 0;
 	private int step = 0;
 
 
@@ -91,15 +89,14 @@ public class MonopolyGUI extends JFrame {
 	private ResourceBundle res;
 	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
-	private Token localToken;
 	private boolean tokenPlaced = false;
 	private int[][] tileGroupMember = { {-1,-1},{3,-1}, {-1,-1}, {1,-1}, {-1,-1},{-1,-1}, {8,9},
-																//14 Via nassa
-	{-1,-1}, {6,9}, {6,8}, {-1,-1}, {13,14}, {-1,-1}, {11,14}, {11,13}, {-1,-1}, {18,19}, {-1,-1}, {16,19}, {16,18},
-	//20 free park											//26								//30
-	{-1,-1}, {23,24}, {-1,-1}, {21,24}, {21,23}, {-1,-1}, {27,29}, {26,29}, {-1,-1}, {26,27}, {-1,-1}, 
-	
-	{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
+			//14 Via nassa
+			{-1,-1}, {6,9}, {6,8}, {-1,-1}, {13,14}, {-1,-1}, {11,14}, {11,13}, {-1,-1}, {18,19}, {-1,-1}, {16,19}, {16,18},
+			//20 free park											//26								//30
+			{-1,-1}, {23,24}, {-1,-1}, {21,24}, {21,23}, {-1,-1}, {27,29}, {26,29}, {-1,-1}, {26,27}, {-1,-1}, 
+
+			{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
 	};
 
 	/**
@@ -109,19 +106,19 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(BoardController bc, GameController gc){
 		this.bc = bc;
 		this.gc = gc;
-		
+
 		this.res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.gui", gc.getLocale());
 		System.out.println(this.res);
-		
+
 		System.out.println("INSIDE MONOPOLY FRAME");
-		
+
 		//initialize the buttons with the action listener
 		initializeButtons();
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(res.getString("title"));
 		setLayout(new BorderLayout());
-		
+
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
@@ -144,62 +141,77 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 				pse = playerStates;
-				
-				for(int j = 0 ; j < playerStates.size() ; j++){
+
+				for(PlayerStateEvent singlePlayer : pse){
+					//used to place the token on the first tile for the first time
 					if(!tokenPlaced){
-					System.out.println(playerStates.get(j).getT());
-						Token t = playerStates.get(j).getT();
-						int position = playerStates.get(j).getPosition();
+						System.out.println("DRAING TOKEN ON POSITION" + singlePlayer.getName());
+						Token t = singlePlayer.getT();
+						int position = singlePlayer.getPosition();
 						tiles.get(position).addToken(t);
-						tokenPlaced = true;
 					}
+					//used to move the token 
 					else if(tokenPlaced){
-						Token t = playerStates.get(j).getT();
-						int position = playerStates.get(j).getPosition();
-						moveToken(null, t, position);
+						Token t = singlePlayer.getT();
+						int throwValue = singlePlayer.getPosition()-singlePlayer.getPreviousPosition();
+						int previousPosition = singlePlayer.getPreviousPosition();
+
+						System.out.println("==== TOKEN / DICE VALUES ====");
+						System.out.println("TOKEN COLOR: " + t.getColor());
+						System.out.println("PLAYER NAME: " + singlePlayer.getName());
+						System.out.println("THROW VALUE: " + (singlePlayer.getPosition()-singlePlayer.getPreviousPosition()));
+						System.out.println("START POSITION: " + singlePlayer.getPosition());
+						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
+
+						//move the token
+						Timer timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+						timerAnimation.start();
+
 					}
 				}
+
+				//we have placed the tokenserve
+				tokenPlaced = true;
 			}
 		}
-		
+
 		System.out.println("AFTER INNER CLASS");
-		
+
 		//add the listener to the subject
 		TokenDraw td = new TokenDraw();
 		bc.getSubjectForPlayer().addListener(td);
-		
+
 		//get the playerNumber
 		this.playerNumber = bc.getPlayerCount();
-		
+
 		add(leftPanel(), BorderLayout.WEST);
-		
+
 		System.out.println("AFTER LEFT PANEL ADD");
-		
+
 		//Initialize all the tiles with the information 
 		for(int j = 0 ; j < TILE_NUMBER ; j++){
 			TileInfo t = bc.getTileInfoById(j);
-		
-			System.out.println("LOOP TILE INIT " + j);
-				
+
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc, this.res);
-			System.out.println("AFTER BOARD TILE CREATION " + j);
-			
-			System.out.println(tileGroupMember[j][0]);
-			
+
+			//System.out.println("AFTER BOARD TILE CREATION " + j);
+
+			//System.out.println(tileGroupMember[j][0]);
+
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
 			s.addListener(bt.getTileListener());
 		}
-		
+
 		//after we have initialized the tiles, 
 		//add the tile of the same group to each single tile board
 		//so each tile knows the member of the same group
 		for(int i = 0 ; i < TILE_NUMBER ; i++){
 			BoardTile[] member = new BoardTile[2];
-			
+
 			//get the neighborhood
 			int[] neighborhood = tileGroupMember[i];
-	
+
 			if(neighborhood[0] != -1 && neighborhood[1] != -1){
 				member[0] = this.tiles.get(neighborhood[0]);
 				member[1] = this.tiles.get(neighborhood[1]);
@@ -212,23 +224,16 @@ public class MonopolyGUI extends JFrame {
 				member[0] = null;
 				member[1] = null;
 			}
-			
+
 			this.tiles.get(i).setGroupMember(member);
 		}
-		
+
 		System.out.println("AFTER TILE INIT");
-		
+
 		add(drawBoard(), BorderLayout.CENTER);
-		
+
 		//!!! leave this here !!!
 		this.bc.initGUI();
-		
-		//get the token of the local player
-		for(PlayerStateEvent localPlayer : pse){
-			if(gc.getLocalPlayerName().equals(localPlayer.getName())){
-				this.localToken = localPlayer.getT();
-			}
-		}
 	}
 
 	/**
@@ -263,17 +268,17 @@ public class MonopolyGUI extends JFrame {
 		//for each player create the panel 
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
-			
+
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
-			
+
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
 			//TODO hard to do because, we have the pse arraylist after 
 			//the call to this method, so at this point, pse is empty.
-			
+
 			//if is the local player, show the terrain panel by default
-//			if(gc.getLocalPlayerName().equals(this.pse.get(j).getName()))
-//					plInfo.showTerrains();
+			//			if(gc.getLocalPlayerName().equals(this.pse.get(j).getName()))
+			//					plInfo.showTerrains();
 
 			info.add(plInfo);
 		}
@@ -317,7 +322,7 @@ public class MonopolyGUI extends JFrame {
 		chat.setWrapStyleWord(true);
 		chat.setLineWrap(true);
 		chat.setEditable(false);
-		
+
 		class TextUpdate implements WindowListener{
 
 			@Override
@@ -421,50 +426,54 @@ public class MonopolyGUI extends JFrame {
 	 * @return Action
 	 * 				the abstract action used to move the token
 	 */
-	private Action moveToken(final JButton diceButton, final Token t, final int val){
+	private Action moveToken(final JButton diceButton, final Token t, final int val, final int startPosition){
 		Action moveToken = new AbstractAction() {
-		
+
 			private static final long serialVersionUID = 9219941791909195711L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {		
 				if(diceButton != null)
 					throwDice.setEnabled(false);	
+
+				System.out.println("==== MOVE TOKEN VALUES ====");
 				
 				//move the token for "step" times
 				if(step < val){
 					step++;
 
+					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (startPosition+step-1)%TILE_NUMBER);
+					System.out.println("GET TOKEN TO ADD ON POSITION: " + (startPosition+step)%TILE_NUMBER);
+					
 					//removing the token at the previous tile
-					tiles.get((currentPos+step-1)%TILE_NUMBER).removeToken(t);
+					tiles.get((startPosition+step-1)%TILE_NUMBER).removeToken(t);
 
 					//add the token to the tile we are on
-					tiles.get((currentPos+step)%TILE_NUMBER).addToken(t);
+					tiles.get((startPosition+step)%TILE_NUMBER).addToken(t);
 
 					repaint();
-			
+
 				}
-				else if(step == throwValue){
+				else if(step == val){
 					((Timer)e.getSource()).stop();
 
 					//show tile's information in the card box
-					tiles.get((currentPos+throwValue)%TILE_NUMBER).showCard();
+					tiles.get((startPosition+val)%TILE_NUMBER).showCard();
+					System.out.println("LANDED ON TILE: " + (startPosition+val)%TILE_NUMBER);
 
-					//update the current position and reset counter
-					currentPos = (currentPos+throwValue)%TILE_NUMBER;
 					step = 0;	
-					
+
 					//TODO only for test
 					if(diceButton != null)
 						diceButton.setEnabled(true);
 				}	
 			}
 		};
-		
+
 		return moveToken;
-	
+
 	}
-	
+
 	private void initializeButtons(){
 		this.useCard = new JButton(res.getString("button-jailcard"));
 		useCard.setEnabled(false);
@@ -476,20 +485,16 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				throwValue = dice.throwDice();		
+				int localPlayerthrowValue = dice.throwDice();		
 
 				//TODO only for test
 				tabPane.addTab(res.getString("tab-trade"), tradeTab());
-				
-				//move the token
-				Timer t = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, localToken, throwValue));
-				t.start();
-				
+
 				eventTextArea.setText(res.getString("text-throwindice") + "\n");
-				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
-				
+				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
+
 				//move the player of throwValue positions, and communicate to the other player the new position
-				gc.advancePlayerNSpaces(throwValue);
+				gc.advancePlayerNSpaces(localPlayerthrowValue);
 			}
 		});
 
@@ -504,26 +509,26 @@ public class MonopolyGUI extends JFrame {
 
 		this.trade = new JButton(res.getString("button-trade"));
 		this.trade.setEnabled(false);
-		
+
 		//TODO add hasToken method
-//		class ButtonManager implements PlayerListener{
-//
-//			@Override
-//			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-//				for(PlayerStateEvent playerState : playerStates){
-//					//if the localplayer has the token enable buttons
-//					if(playerState.getName().equals(gc.getLocalPlayerName())){
-//						if(playerState.hasToken()){
-//							throwDice.setEnabled(true);
-//						}
-//					}
-//				}
-//			}	
-//		}
-//		
-//		ButtonManager bl = new ButtonManager();
-		
-//		bc.getSubjectForPlayer().addListener(bl);
+		//		class ButtonManager implements PlayerListener{
+		//
+		//			@Override
+		//			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+		//				for(PlayerStateEvent playerState : playerStates){
+		//					//if the localplayer has the token enable buttons
+		//					if(playerState.getName().equals(gc.getLocalPlayerName())){
+		//						if(playerState.hasToken()){
+		//							throwDice.setEnabled(true);
+		//						}
+		//					}
+		//				}
+		//			}	
+		//		}
+		//		
+		//		ButtonManager bl = new ButtonManager();
+
+		//		bc.getSubjectForPlayer().addListener(bl);
 
 	}
 
@@ -535,58 +540,58 @@ public class MonopolyGUI extends JFrame {
 	private JScrollPane tradeTab(){
 		JPanel yourOffer = new JPanel();
 		yourOffer.setLayout(new GridLayout(9, 2));
-		
+
 		this.terrainCheck = new JCheckBox();
 		this.cardCheck = new JCheckBox();
 		this.moneyCheck = new JCheckBox();
 		this.rcvrTerrainCheck = new JCheckBox();
 		this.rcvrCardCheck = new JCheckBox();
 		this.rcvrMoneyCheck = new JCheckBox();
-		
+
 		this.sendTradeRequest = new JButton(res.getString("button-sendoffer"));
-		
+
 		this.myTerrainBox = new JComboBox();
 		this.moneySpinner = new JSpinner();
 		this.rcvrMoneySpinner = new JSpinner();
 		this.jailCardLbl = new JLabel(res.getString("label-jailcard"));
 		this.rcvrJailCardLbl = new JLabel(res.getString("label-jailcard"));
-		
+
 		this.usersBox = new JComboBox();
-		
+
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
 			this.usersBox.addItem(pse.get(i).getName());
 		}
-		
+
 		this.hisTerrainBox = new JComboBox();
-				
+
 		//change 10 to selectedPlayer.getTerrain.size
 		for(int i = 0 ; i < 10 ; i++){
 			this.hisTerrainBox.addItem(i);
 		}
-		
+
 		myTerrainBox.setEnabled(false);
 		moneySpinner.setEnabled(false);
 		jailCardLbl.setEnabled(false);
-		
+
 		hisTerrainBox.setEnabled(false);
 		rcvrMoneySpinner.setEnabled(false);
 		rcvrJailCardLbl.setEnabled(false);
-		
+
 		JLabel offerLbl = new JLabel(res.getString("label-youroffer"));
 		JLabel wantedRes = new JLabel(res.getString("label-requestfrompl"));
-				
+
 		//change 10 to localPlayer.getTerrains
 		for(int i = 0 ; i < 10 ; i++){
 			myTerrainBox.addItem(i);
 		}
-			
+
 		//money spinner
 		int startMoney = 0;
 		//TODO adjust JSpinner money range
 		moneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
 		rcvrMoneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
-				
+
 		//add the panels to the container
 		yourOffer.add(offerLbl,0);
 		yourOffer.add(new JLabel(" "), 1);
@@ -606,12 +611,12 @@ public class MonopolyGUI extends JFrame {
 		yourOffer.add(rcvrMoneySpinner, 15);
 		yourOffer.add(new JLabel(" "), 16);
 		yourOffer.add(sendTradeRequest, 17);
-				
+
 		JScrollPane scrollInput = new JScrollPane(yourOffer);
 		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
+
 		return scrollInput;
-		
+
 	}
 }
