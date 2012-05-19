@@ -51,6 +51,7 @@ public class BoardTile extends JPanel{
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
+	private BoardTile[] groupMemeber = new BoardTile[2];
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
@@ -81,7 +82,7 @@ public class BoardTile extends JPanel{
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
-		
+
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
@@ -96,7 +97,7 @@ public class BoardTile extends JPanel{
 			this.addMouseListener(btnListener);
 			displayInfo = true;
 		}
-		
+
 		//check if there is a color and add the menu
 		if(ti.getRGB() != null){
 			color.setBackground(Color.decode(ti.getRGB()));
@@ -106,7 +107,7 @@ public class BoardTile extends JPanel{
 		add(color);
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
-		
+
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
 
@@ -147,6 +148,31 @@ public class BoardTile extends JPanel{
 		this.tokens.add(t);
 	}
 
+	public void setGroupMember(BoardTile[] btMember){
+	
+		this.groupMemeber = btMember;
+
+		//TODO REMOVE ONLY FOR TEST
+		if(btMember[0] != null && btMember[1] != null){
+		
+			System.out.println("IM THE TILE : " + ti.getName());
+			System.out.println("=>> " + btMember[0].getNameTile());
+			System.out.println("=>> " + btMember[1].getNameTile());
+		}
+		else if(btMember[0] != null && btMember[1] == null){
+			System.out.println("IM THE TILE : " + ti.getName());
+			System.out.println("=>> " + btMember[0].getNameTile());
+		}
+
+	}
+
+	/**
+	 * TODO => TEMP TEMP TEMP ONLY FOR TESTING THE GROUP MEMBER
+	 */
+	public String getNameTile(){
+		return ti.getName();
+	}
+	
 	/**
 	 * Add the information of a tile (rent, name,costs, etc.) to 
 	 * the tabbed pane
@@ -155,7 +181,7 @@ public class BoardTile extends JPanel{
 		if(displayInfo){
 			//clean the panel
 			tab.removeAll();
-			
+
 			Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize());
 			Font f2 = new Font(getFont().getName(), Font.BOLD, getFont().getSize());
 
@@ -186,9 +212,9 @@ public class BoardTile extends JPanel{
 				JLabel rent = new JLabel(res.getString("label-rent") + Integer.toString(ti.getRent()));
 				rent.setAlignmentX(Component.CENTER_ALIGNMENT);
 				rent.setFont(f);
-				
+
 				tab.add(rent);
-				
+
 				JLabel rent1 = new JLabel(res.getString("label-onehouse") + Integer.toString(ti.getRent1house()));
 				rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
 				rent1.setFont(f);
@@ -208,7 +234,7 @@ public class BoardTile extends JPanel{
 				JLabel hotel = new JLabel(res.getString("label-hotel") + Integer.toString(ti.getRenthotel()));
 				hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
 				hotel.setFont(f);
-								
+
 				tab.add(rent1);
 				tab.add(rent2);
 				tab.add(rent3);
@@ -219,9 +245,9 @@ public class BoardTile extends JPanel{
 			JLabel mortgage = new JLabel(res.getString("label-mortgagevalue") + Integer.toString(ti.getMortgageValue()));
 			mortgage.setAlignmentX(Component.CENTER_ALIGNMENT);
 			mortgage.setFont(f);
-			
+
 			tab.add(mortgage);
-			
+
 			tab.revalidate();
 			tab.repaint();
 		}
@@ -318,27 +344,27 @@ public class BoardTile extends JPanel{
 	 * @return JPanel
 	 * 			a JPanel representing an house
 	 */
-	public JPanel drawHouse(){
+	private JPanel drawHouse(){
 		JPanel building = new JPanel();
 		building.setBorder(BorderFactory.createRaisedBevelBorder());
 		building.setBackground(Color.RED);
 		building.setMaximumSize(new Dimension((int)getWidth()/6, getHeight()));
 		return building;
 	}
-	
+
 	/**
 	 * Draw an hotel
 	 * @return JPanel
 	 * 			a JPanel representing an hotel
 	 */
-	public JPanel drawHotel(){
+	private JPanel drawHotel(){
 		JPanel building = new JPanel();
 		building.setBorder(BorderFactory.createRaisedBevelBorder());
 		building.setBackground(Color.GREEN);
 		building.setMaximumSize(new Dimension((int)getWidth()/3, getHeight()));
 		return building;
 	}
-	
+
 	/**
 	 * Draw a building
 	 * @param type boolean true == hotel ; false == house
@@ -359,7 +385,7 @@ public class BoardTile extends JPanel{
 		repaint();
 		revalidate();
 	}
-	
+
 	/**
 	 * Remove a building from this tile
 	 * @param type boolean
@@ -381,7 +407,7 @@ public class BoardTile extends JPanel{
 			color.add(drawHouse());
 			isHotel = false;
 		}
-		
+
 		repaint();
 		revalidate();
 	}
@@ -389,23 +415,23 @@ public class BoardTile extends JPanel{
 	/**
 	 * Change the color of the background to show that is mortgaged
 	 */
-	public void mortgagePanel(){
+	private void mortgagePanel(){
 		System.out.println("INSIDE MORTGAGA PENAL");
 		color.setBackground(Color.BLACK);
 		repaint();
 		revalidate();
 	}
-	
+
 	/**
 	 * Unmortgage the terrain by change the color to 
 	 * the initial one
 	 */
-	public void unmortgagePanel(){
+	private void unmortgagePanel(){
 		color.setBackground(Color.decode(ti.getRGB()));
 		repaint();
 		revalidate();
 	}
-	
+
 	/**
 	 * Inner class used to show the popup menu 
 	 * @author snake, shrevek
@@ -457,7 +483,7 @@ public class BoardTile extends JPanel{
 			sellHotelRowClicked = false;
 			mortgageClicked = false;
 			unmortgageClicked = false;
-			
+
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
 				gc.buyHouse(ti.getId());
@@ -491,15 +517,15 @@ public class BoardTile extends JPanel{
 				//TODO
 			}
 			else if(e.getSource().equals(mortgage)){
-				System.out.println("E GET SOURCE MORTGAGE");
 				mortgageClicked = true;
-				//TODO
+				System.out.println("INSIDE MORTGAGE");
+				gc.toggleMortgageStatus(ti.getId());
 			}
 			else if(e.getSource().equals(unmortgage)){
 				unmortgageClicked = true;
-				//TODO
+				gc.toggleMortgageStatus(ti.getId());
 			}
-			
+
 		}	
 	}
 
