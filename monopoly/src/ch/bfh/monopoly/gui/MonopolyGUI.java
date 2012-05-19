@@ -494,6 +494,7 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 				for(PlayerStateEvent playerState : playerStates){
+					//if the localplayer has the token enable buttons
 					if(playerState.getName().equals(gc.getLocalPlayerName())){
 						if(playerState.hasToken()){
 							throwDice.setEnabled(true);
