@@ -204,8 +204,9 @@ public class GameClient {
 	public void toggleMortgageStatus(int tileId){
 		board.toggleMortgageStatus(tileId);
 		
-		//TODO send a message for mortgage
-		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.MORTGAGE);
+		//TODO send a message for mortgage ; exception management
+		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.TOGGLE_MORTGAGE);
+		//session.write(nm);
 	}
 	
 	
