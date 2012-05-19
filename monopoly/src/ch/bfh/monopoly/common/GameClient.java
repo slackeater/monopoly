@@ -72,7 +72,7 @@ public class GameClient {
 	}
 
 	/**
-	 * end the turn for the current player, adjust the turnTokens
+	 * end the turn for the current player
 	 */
 	public void endTurn(){
 		//TODO adjust turn token

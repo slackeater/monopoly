@@ -50,7 +50,7 @@ public class PlayerStateEvent {
 		return account;
 	}
 
-	public boolean isTurnToken() {
+	public boolean hasTurnToken() {
 		return turnToken;
 	}
 	
