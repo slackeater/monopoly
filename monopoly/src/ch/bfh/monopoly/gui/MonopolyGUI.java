@@ -163,9 +163,11 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("START POSITION: " + singlePlayer.getPosition());
 						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
 
-						//move the token
-						Timer timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
-						timerAnimation.start();
+						//move the token only when the user has thrown the dice
+						if(throwValue > 1 && throwValue < 13){
+							Timer timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+							timerAnimation.start();
+						}
 
 					}
 				}
@@ -437,14 +439,14 @@ public class MonopolyGUI extends JFrame {
 					throwDice.setEnabled(false);	
 
 				System.out.println("==== MOVE TOKEN VALUES ====");
-				
+
 				//move the token for "step" times
 				if(step < val){
 					step++;
 
 					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (startPosition+step-1)%TILE_NUMBER);
 					System.out.println("GET TOKEN TO ADD ON POSITION: " + (startPosition+step)%TILE_NUMBER);
-					
+
 					//removing the token at the previous tile
 					tiles.get((startPosition+step-1)%TILE_NUMBER).removeToken(t);
 
