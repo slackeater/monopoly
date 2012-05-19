@@ -103,6 +103,11 @@ public class GameClient {
 	public void setCurrentPlayer(Player p) {
 		currentPlayer = p;
 	}
+	
+	public void setCurrentPlayer(String playerName){
+		Player p = board.getPlayerByName(playerName);
+		currentPlayer = p;
+	}
 
 	
 	public void buyCurrentPropertyForPlayer(String playerName){
