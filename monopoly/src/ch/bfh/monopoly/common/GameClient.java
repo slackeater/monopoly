@@ -43,27 +43,29 @@ public class GameClient {
 		}
 
 		public void notifyListeners(WindowStateEvent wse) {
-			
+
 			for (WindowListener pl : listeners) {
 				pl.updateWindow(wse);
 			}
 		}
 	}
 
-	
 	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
-		
+
 	}
 
-
 	/**
-	 * create the board which in turn creates the tiles, events, and chance-type cards
-	 * @param loc the locals chosen by the server
+	 * create the board which in turn creates the tiles, events, and chance-type
+	 * cards
+	 * 
+	 * @param loc
+	 *            the locals chosen by the server
 	 */
-	public void createBoard(Locale loc, List<String> names, String localPlayerName){
-		this.loc=loc;
+	public void createBoard(Locale loc, List<String> names,
+			String localPlayerName) {
+		this.loc = loc;
 		this.board = new Board(this);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
@@ -82,8 +84,9 @@ public class GameClient {
 
 	/**
 	 * Set the IoSession for this game client
-	 * @param session IoSession
-	 * 					the IoSession used to communicate with the server
+	 * 
+	 * @param session
+	 *            IoSession the IoSession used to communicate with the server
 	 */
 	public void setIoSession(IoSession session) {
 		this.session = session;
@@ -103,18 +106,25 @@ public class GameClient {
 	public void setCurrentPlayer(Player p) {
 		currentPlayer = p;
 	}
-	
-	public void buyCurrentPropertyForPlayer(String playerName){
+
+	public void setCurrentPlayer(String playerName) {
+		Player p = board.getPlayerByName(playerName);
+		currentPlayer = p;
+	}
+
+	public void buyCurrentPropertyForPlayer(String playerName) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
-		
+
 		try {
-			board.buyCurrentPropertyForPlayer(playerNameAdjusted, currentPlayer.getPosition());
+			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
+					currentPlayer.getPosition());
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
 	}
-	
+
 	/**
 	 * advance the current player a given number n spaces forward
 	 */
@@ -136,11 +146,12 @@ public class GameClient {
 					Messages.BUY_HOUSE);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
 	}
-	
+
 	/**
 	 * buy a house for a given property
 	 * 
@@ -154,11 +165,12 @@ public class GameClient {
 					Messages.BUY_HOTEL);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
-		}	
+		}
 	}
-	
+
 	/**
 	 * sell a house for a given property
 	 * 
@@ -172,12 +184,13 @@ public class GameClient {
 					Messages.SELL_HOUSE);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-	
+
 	}
-	
+
 	/**
 	 * sell a hotel for a given property
 	 * 
@@ -191,87 +204,110 @@ public class GameClient {
 					Messages.SELL_HOTEL);
 			session.write(nm);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
-		}	
+		}
 	}
 
-	
 	/**
 	 * Toggles the mortgage status of a given property
-	 * @param tileId the id that corresponds to a tile for which we want to toggle the mortgage status.
+	 * 
+	 * @param tileId
+	 *            the id that corresponds to a tile for which we want to toggle
+	 *            the mortgage status.
 	 */
-	public void toggleMortgageStatus(int tileId){
+	public void toggleMortgageStatus(int tileId) {
 		board.toggleMortgageStatus(tileId);
-		
-		//TODO send a message for mortgage
-		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.MORTGAGE);
+
+		// TODO send a message for mortgage
+		// NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
+		// Messages.MORTGAGE);
 	}
-	
-	
+
 	/**
-	 * transfer property from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
-	 * @param fromName the name of the player to transfer the property from
-	 * @param toName the name of the player to transfer the property to
-	 * @param tileId the integer number which represent the tile to be transfered
+	 * transfer property from one player to another. the string "CurrentPlayer"
+	 * should be used to represent the currentPlayer.
+	 * 
+	 * @param fromName
+	 *            the name of the player to transfer the property from
+	 * @param toName
+	 *            the name of the player to transfer the property to
+	 * @param tileId
+	 *            the integer number which represent the tile to be transfered
 	 */
-	public void transferProperty(String fromName, String toName, int tileId, int price){
+	public void transferProperty(String fromName, String toName, int tileId,
+			int price) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		
+
 		try {
-			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId, price);
+			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
+					price);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		
+
 	}
-	
+
 	/**
-	 * transfer jail cards from one player to another.  the string "CurrentPlayer" should be used to represent the currentPlayer.
-	 * @param fromName the name of the player to transfer the card from
-	 * @param toName the name of the player to transfer the card to
-	 * @param tileId the integer number which represent the tile to be transfered
+	 * transfer jail cards from one player to another. the string
+	 * "CurrentPlayer" should be used to represent the currentPlayer.
+	 * 
+	 * @param fromName
+	 *            the name of the player to transfer the card from
+	 * @param toName
+	 *            the name of the player to transfer the card to
+	 * @param tileId
+	 *            the integer number which represent the tile to be transfered
 	 */
-	public void transferJailCards(String fromName, String toName, int quantity, int price){
+	public void transferJailCards(String fromName, String toName, int quantity,
+			int price) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		
+
 		try {
-			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity, price);
+			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
+					price);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		
+
 	}
-	
+
 	/**
 	 * transfer money from one player to another
-	 * @param fromName the name of the player to withdraw money from
-	 * @param toName the name of the player to deposit money to
-	 * @param amount the amount of money to be transfered
+	 * 
+	 * @param fromName
+	 *            the name of the player to withdraw money from
+	 * @param toName
+	 *            the name of the player to deposit money to
+	 * @param amount
+	 *            the amount of money to be transfered
 	 */
-	public void transferMoney(String fromName, String toName, int amount){
+	public void transferMoney(String fromName, String toName, int amount) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-		
+
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
 	}
-	
-	public String adjustNameIfCurrentPlayer(String playerName){
+
+	public String adjustNameIfCurrentPlayer(String playerName) {
 		String adjustedName = playerName;
 		if (playerName.equalsIgnoreCase("currentPlayer"))
-			adjustedName =currentPlayer.getName();
+			adjustedName = currentPlayer.getName();
 		return adjustedName;
 	}
-
 
 	/**
 	 * get the description of the event for the tile on which the current player
@@ -301,11 +337,12 @@ public class GameClient {
 	 *            tile to check ownership of
 	 */
 	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
-		boolean isOwner=false;
+		boolean isOwner = false;
 		try {
-			isOwner= board.playerIsOwnerOfTile(playerName, tileId);
+			isOwner = board.playerIsOwnerOfTile(playerName, tileId);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
 		return isOwner;
@@ -330,7 +367,7 @@ public class GameClient {
 	 *            the amount of the fee to be paid
 	 */
 	public boolean playerHasSufficientFunds(String playerName, int amount) {
-		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName); 
+		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		return board.playerHasSufficientFunds(playerNameAdjusted, amount);
 	}
 
@@ -356,7 +393,6 @@ public class GameClient {
 				.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
-
 
 	/**
 	 * the current player is charged a fee and the amount of the fee is
@@ -389,7 +425,6 @@ public class GameClient {
 		return board.getFreeParking();
 	}
 
-
 	/**
 	 * Send a chat message
 	 * 
@@ -401,37 +436,44 @@ public class GameClient {
 		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
 		session.write(nm);
 	}
-	
+
 	/**
-	 * send an array of integers which is the new order that cards should be drawn for chance card events
-	 * @param the array of int values to be send to the server
+	 * send an array of integers which is the new order that cards should be
+	 * drawn for chance card events
+	 * 
+	 * @param the
+	 *            array of int values to be send to the server
 	 */
-	public void updateChanceDrawOrder(int[] newOrder){
+	public void updateChanceDrawOrder(int[] newOrder) {
 		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
 				Messages.UPDATE_CHANCE_ORDER);
 		nm.setDrawOrder(newOrder);
 		session.write(nm);
 	}
-	
+
 	/**
-	 * send an array of integers which is the new order that cards should be drawn for chance card events
-	 * @param the array of int values to be send to the server
+	 * send an array of integers which is the new order that cards should be
+	 * drawn for chance card events
+	 * 
+	 * @param the
+	 *            array of int values to be send to the server
 	 */
-	public void updateCommChestDrawOrder(int[] newOrder){
+	public void updateCommChestDrawOrder(int[] newOrder) {
 		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
 				Messages.UPDATE_COMMCHEST_ORDER);
 		nm.setDrawOrder(newOrder);
 		session.write(nm);
 	}
-	
 
 	public void displayChat(String text) {
-		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_CHAT, text, 0);
+		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_CHAT,
+				text, 0);
 		ws.notifyListeners(wse);
 	}
-	
+
 	public void displayTransactionError(String text) {
-		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_ERROR, text, 0);
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_FOR_ERROR, text, 0);
 		ws.notifyListeners(wse);
 	}
 
@@ -439,67 +481,74 @@ public class GameClient {
 		return ws;
 	}
 
-	
 	/**
 	 * gives the given player a jail card
-	 * @param String the name of the player to change
+	 * 
+	 * @param String
+	 *            the name of the player to change
 	 */
-	public void addJailCardToPlayer(String playerName){
+	public void addJailCardToPlayer(String playerName) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		board.addJailCardToPlayer(playerNameAdjusted);
 	}
-	
+
 	/**
 	 * removes a jail card from the given player
-	 * @param String the name of the player to change
+	 * 
+	 * @param String
+	 *            the name of the player to change
 	 */
-	public void removeJailCardFromPlayer(String playerName){
+	public void removeJailCardFromPlayer(String playerName) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		board.removeJailCardFromPlayer(playerNameAdjusted);
 	}
-	
+
 	/**
 	 * Get the local player
-	 * @return Player
-	 * 			the local player
+	 * 
+	 * @return Player the local player
 	 */
-	public String getLocalPlayer(){
+	public String getLocalPlayer() {
 		return localPlayer;
 	}
-	
+
 	/**
-	 * Get the number of available houses 
-	 * used by events to calculate the price a player must pay for REPAIRS EVENT
+	 * Get the number of available houses used by events to calculate the price
+	 * a player must pay for REPAIRS EVENT
+	 * 
 	 * @return number of available houses
 	 */
-	public int getAvailableHouses(){
+	public int getAvailableHouses() {
 		return board.getAvailableHouses();
 	}
-	
+
 	/**
-	 * Get the number of available hotels 
-	 * used by events to calculate the price a player must pay for REPAIRS EVENT
+	 * Get the number of available hotels used by events to calculate the price
+	 * a player must pay for REPAIRS EVENT
+	 * 
 	 * @return number of available hotels
 	 */
-	public int getAvailableHotels(){
+	public int getAvailableHotels() {
 		return board.getAvailableHotels();
 	}
-	
+
 	/**
-	 * get the list of players in the game, used to by the BIRTHDAY EVENT to transfer $10 to the player with the BIRTHDAY!
+	 * get the list of players in the game, used to by the BIRTHDAY EVENT to
+	 * transfer $10 to the player with the BIRTHDAY!
+	 * 
 	 * @return list of players
 	 */
-	public List<Player> getPlayers(){
+	public List<Player> getPlayers() {
 		return board.getPlayers();
 	}
-	
+
 	/**
 	 * get the locale for the game
+	 * 
 	 * @return the locale for this game
 	 */
 	public Locale getLoc() {
 		return loc;
 	}
-	
-	
+
 }
