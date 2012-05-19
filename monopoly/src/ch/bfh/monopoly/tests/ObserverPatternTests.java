@@ -56,7 +56,8 @@ public class ObserverPatternTests {
 		PlayerSubject ps = bc.getSubjectForPlayer();
 		PlayerListener pl = new MockPlayerListener();
 		ps.addListener(pl);
-		gameClient.buyHouse(1);
+		gameClient.setCurrentPlayer("Justin", true);
+		gameClient.buyHouse(1, true);
 	}
 
 	@Test

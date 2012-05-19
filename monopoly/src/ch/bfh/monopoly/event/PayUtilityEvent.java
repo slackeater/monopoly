@@ -23,7 +23,7 @@ public class PayUtilityEvent extends AbstractTileEvent {
 		int fee = roll*multiplier;
 		if (!gameClient.hasSufficientFunds(fee))
 			throw new RuntimeException("Player does not have enough money to pay this fee");
-		gameClient.payFee(fee);
+		gameClient.payFee(fee,true);
 		
 
 	}

@@ -39,7 +39,7 @@ public class GameControllerTests {
 	@Test
 	public void buyCurrentPropertyForPlayerChangesPlayersPropertyList() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
+		gameClient.setCurrentPlayer(plyr, true);
 		//add money to player's account to loop is possible
 		plyr.depositMoney(100000);
 		for (int i = 0; i < terrainPositions.length; i++) {
@@ -57,8 +57,8 @@ public class GameControllerTests {
 	@Test
 	public void buyCurrentPropertyForPlayerSetsTilesOwner() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(1);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));
@@ -72,8 +72,8 @@ public class GameControllerTests {
 	@Test
 	public void buyCurrentPropertyForPlayerSetsTilesOwnerCurrentPlayer() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(1);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, true);
 		gc.buyCurrentPropertyForPlayer("CurRentPlaYER");
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));
@@ -89,8 +89,8 @@ public class GameControllerTests {
 		int plyrAccountBefore = plyr.getAccount();
 		Property prop = (Property) board.getTileById(1);
 		int tilePrice = prop.getPrice();
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(1);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		assertTrue(plyr.getAccount() == plyrAccountBefore - tilePrice);
 	}
@@ -102,8 +102,8 @@ public class GameControllerTests {
 	@Test
 	public void buildHousesCannotBuildMoreThanFour() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(1);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		gc.buyHouse(1);
 		gc.buyHouse(1);
@@ -124,8 +124,8 @@ public class GameControllerTests {
 	public void buildHotelCannotBuildMoreThanOne() {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
@@ -148,8 +148,8 @@ public class GameControllerTests {
 	public void buildHotelCannotBuildHotelUnlessFourHousesPresent() {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
@@ -170,8 +170,8 @@ public class GameControllerTests {
 	public void sellHotelCannotSellUnlessHotelPresent() {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		try {
 			gc.sellHotel(tileId);
@@ -189,8 +189,8 @@ public class GameControllerTests {
 	public void sellHouseCannotSellUnlessHousePresent() {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		try {
 			gc.sellHouse(tileId);
@@ -209,8 +209,8 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		gc.buyHouse(tileId);
 		int accountBefore = plyr.getAccount();
@@ -228,8 +228,8 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		gc.buyHouse(tileId);
 		gc.buyHouse(tileId);
@@ -251,8 +251,8 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		// is false after creation, will be set to true
 		gc.toggleMortgageStatus(tileId);
@@ -272,8 +272,8 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int accountBefore = plyr.getAccount();		
 		// is false after creation, will be set to true
@@ -295,8 +295,8 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		assertTrue(terrain.getOwner().getName().equals(plyr1.getName()));
 		gc.transferProperty(plyr1.getName(), plyr2.getName(), tileId);
@@ -314,8 +314,8 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
@@ -335,8 +335,8 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
@@ -356,8 +356,8 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer(player1name);
 		gc.transferPropertyForPrice(plyr1.getName(), plyr2.getName(), tileId,
 				price);
@@ -375,8 +375,8 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(tileId);
-		gameClient.setCurrentPlayer(plyr1);
-		gameClient.advanceCurrentPlayerNSpaces(tileId);
+		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.advanceCurrentPlayerNSpaces(tileId, true);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		assertTrue(plyr1.ownsProperty(terrain));
 		gc.transferPropertyForPrice("curReNTPlayeR", plyr2.getName(), tileId,
@@ -393,7 +393,7 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(plyr1);
+		gameClient.setCurrentPlayer(plyr1, true);
 		plyr1.setJailCard(1);
 		gc.transferJailCards(player1name, player2name, 1);
 		assertTrue(plyr1.getJailCard()==0 && plyr2.getJailCard()==1);
@@ -465,7 +465,7 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName(player2name);
-		gameClient.setCurrentPlayer(plyr1);
+		gameClient.setCurrentPlayer(plyr1,true);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
 		gc.transferMoney("CurRenTPlaYEr", player2name, amount);
@@ -484,7 +484,7 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName(player2name);
-		gameClient.setCurrentPlayer(plyr1);
+		gameClient.setCurrentPlayer(plyr1,true);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
 		gc.transferMoney(player2name, "CurRenTPlaYEr", amount);
@@ -500,7 +500,7 @@ public class GameControllerTests {
 	public void canAdvancedPlayerNSpaces(){
 		String player1name = "Justin";
 		Player plyr1 = board.getPlayerByName(player1name);
-		gameClient.setCurrentPlayer(plyr1);
+		gameClient.setCurrentPlayer(plyr1,true);
 		gc.advancePlayerNSpaces(3);
 		assertTrue(gameClient.getCurrentPlayer().getPosition()==3);
 		//check that modulo is working

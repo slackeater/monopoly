@@ -38,13 +38,13 @@ public class EventManager {
 	public void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
 		chanceDrawIndex=0;
-		gameClient.updateChanceDrawOrder(chanceEventsShuffled);
+		gameClient.updateChanceDrawOrder(chanceEventsShuffled,true);
 	}
 
 	public void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
 		commChestDrawIndex=0;
-		gameClient.updateCommChestDrawOrder(commChestEventsShuffled);
+		gameClient.updateCommChestDrawOrder(commChestEventsShuffled,true);
 	}
 
 	public int[] shuffleDeck() {
