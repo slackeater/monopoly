@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.event;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.exception.TransactionException;
 
 public class GetVariableSumEvent extends AbstractTileEvent {
 
@@ -26,7 +27,11 @@ public class GetVariableSumEvent extends AbstractTileEvent {
 		case 4: // INCOME TAX
 			fee = gameClient.getCurrentPlayer().getAccount();
 			fee /= 10;
-			gameClient.getCurrentPlayer().withdawMoney(fee);
+			try {
+				gameClient.getCurrentPlayer().withdawMoney(fee);
+			} catch (TransactionException e) {
+				gameClient.sendTransactionErrorToGUI(e, true);
+			}
 			break;
 		default:
 			break;

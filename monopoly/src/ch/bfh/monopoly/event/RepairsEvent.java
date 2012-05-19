@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.event;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.exception.TransactionException;
 
 public class RepairsEvent extends AbstractTileEvent{
 
@@ -18,7 +19,11 @@ public class RepairsEvent extends AbstractTileEvent{
 		int housesOnBoard = 32-gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12-gameClient.getAvailableHotels();
 		int fee = housesOnBoard * chargePerHouse + hotelsOnBoard * chargePerHotel;
-		gameClient.getCurrentPlayer().withdawMoney(fee);
+		try {
+			gameClient.getCurrentPlayer().withdawMoney(fee);
+		} catch (TransactionException e) {
+			gameClient.sendTransactionErrorToGUI(e,true);
+		}
 	}
 
 	

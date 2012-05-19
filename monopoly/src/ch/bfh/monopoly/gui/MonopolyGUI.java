@@ -488,7 +488,7 @@ public class MonopolyGUI extends JFrame {
 				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
 				
 				//move the player of throwValue positions, and communicate to the other player the new position
-				gc.advancePlayerNSpaces(throwValue, true);
+				gc.advancePlayerNSpaces(throwValue);
 			}
 		});
 

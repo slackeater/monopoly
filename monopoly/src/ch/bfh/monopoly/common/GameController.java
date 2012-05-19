@@ -17,7 +17,7 @@ public class GameController {
 	 * buy the current property for the currentPlayer where the current player is located. 
 	 */
 	public void buyCurrentPropertyForPlayer(String playerName){
-		gameClient.buyCurrentPropertyForPlayer(playerName);
+		gameClient.buyCurrentPropertyForPlayer(playerName, true);
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class GameController {
 	 * @param tileID the id corresponding to the tile
 	 */
 	public void buyHouse(int tileId){
-		gameClient.buyHouse(tileId);
+		gameClient.buyHouse(tileId, true);
 	}
 	
 	/**
@@ -33,7 +33,7 @@ public class GameController {
 	 * @param tileID the id corresponding to the tile
 	 */
 	public void buyHotel(int tileId){
-		gameClient.buyHotel(tileId);
+		gameClient.buyHotel(tileId, true);
 	}
 	
 
@@ -42,7 +42,7 @@ public class GameController {
 	 * @param tileID the id corresponding to the tile
 	 */
 	public void sellHouse(int tileId){
-		gameClient.sellHouse(tileId);
+		gameClient.sellHouse(tileId, true);
 	}
 	
 	
@@ -51,7 +51,7 @@ public class GameController {
 	 * @param tileID the id corresponding to the tile
 	 */
 	public void sellHotel(int tileId){
-		gameClient.sellHotel(tileId);
+		gameClient.sellHotel(tileId, true);
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class GameController {
 	 * @param tileId the id that corresponds to a tile for which we want to toggle the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId){
-		gameClient.toggleMortgageStatus(tileId);
+		gameClient.toggleMortgageStatus(tileId, true);
 	}
 	
 	/**
@@ -80,7 +80,7 @@ public class GameController {
 	 * @param tileId the integer number which represent the tile to be transfered
 	 */
 	public void transferPropertyForPrice(String fromName, String toName, int tileId, int price){
-		gameClient.transferProperty(fromName, toName, tileId, price);
+		gameClient.transferProperty(fromName, toName, tileId, price, true);
 	}
 	
 	/**
@@ -101,7 +101,7 @@ public class GameController {
 	 * @param quantity the number of cards that should be transfered.  In a rare case it is possible that this is greater than 1.
 	 */
 	public void transferJailCardsForPrice(String fromName, String toName, int quantity, int price){
-		gameClient.transferJailCards(fromName, toName, quantity, price);
+		gameClient.transferJailCards(fromName, toName, quantity, price, true);
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class GameController {
 	 * @param amount the amount of money to be transfered
 	 */
 	public void transferMoney(String fromName, String toName, int amount){
-		gameClient.transferMoney(fromName,toName,amount);
+		gameClient.transferMoney(fromName,toName,amount, true);
 	}
 
 	
@@ -120,7 +120,7 @@ public class GameController {
 	 * @param n is the number of spaces to advance the currentPlayer on the game board
 	 */
 	public void advancePlayerNSpaces(int n){
-		gameClient.advanceCurrentPlayerNSpaces(n);
+		gameClient.advanceCurrentPlayerNSpaces(n, true);
 	}
 	
 	
@@ -141,14 +141,14 @@ public class GameController {
 	 * get the description of the event for the tile on which the current player resides
 	 */
 	public String getEventDescription(){
-		return gameClient.getEventDescription();
+		return gameClient.getEventDescription(true);
 	}
 	
 	/**
 	 * perform the event for the tile that the current player occupies
 	 */
 	public void performEvent(){
-		gameClient.performEvent();
+		gameClient.performEvent(true);
 	}
 	
 	/**

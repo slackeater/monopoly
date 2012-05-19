@@ -402,8 +402,7 @@ public class Board {
 		return p;
 	}
 
-	public boolean playerIsOwnerOfTile(String playerName, int tileId)
-			throws TransactionException {
+	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
 		Property p = castTileToProperty(tiles[tileId]);
 		String ownerName = p.getOwner().getName();
 		return (playerName.equals(ownerName));
@@ -545,7 +544,7 @@ public class Board {
 	 * @param fee
 	 *            the amount of money to withdraw from the current player's
 	 *            account
-	 * @throws TransactionException 
+	 * @throws TransactionException
 	 */
 	public void payFee(String playerName, int fee) throws TransactionException {
 		Player plyr = getPlayerByName(playerName);
@@ -553,9 +552,6 @@ public class Board {
 		setFreeParking(freeParking + fee);
 	}
 
-	
-	
-	
 	/**
 	 * creates an object with all the static tile information to be sent to the
 	 * GUI
