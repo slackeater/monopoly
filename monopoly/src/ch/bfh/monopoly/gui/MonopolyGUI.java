@@ -59,7 +59,7 @@ public class MonopolyGUI extends JFrame {
 	 */
 	public static final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
-	private final int DICE_MOVEMENT_DELAY = 750;
+	private final int DICE_MOVEMENT_DELAY = 850;
 
 	/**
 	 * Graphical elements
@@ -233,7 +233,8 @@ public class MonopolyGUI extends JFrame {
 		System.out.println("AFTER TILE INIT");
 
 		add(drawBoard(), BorderLayout.CENTER);
-
+		
+		
 		//!!! leave this here !!!
 		this.bc.initGUI();
 	}
@@ -508,29 +509,36 @@ public class MonopolyGUI extends JFrame {
 
 		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
+		
+		endTurn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gc.endTurn();
+			}
+		});
 
 		this.trade = new JButton(res.getString("button-trade"));
 		this.trade.setEnabled(false);
 
-		//TODO add hasToken method
-		//		class ButtonManager implements PlayerListener{
-		//
-		//			@Override
-		//			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-		//				for(PlayerStateEvent playerState : playerStates){
-		//					//if the localplayer has the token enable buttons
-		//					if(playerState.getName().equals(gc.getLocalPlayerName())){
-		//						if(playerState.hasToken()){
-		//							throwDice.setEnabled(true);
-		//						}
-		//					}
-		//				}
-		//			}	
-		//		}
-		//		
-		//		ButtonManager bl = new ButtonManager();
+				class ButtonManager implements PlayerListener{
+		
+					@Override
+					public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+						for(PlayerStateEvent playerState : playerStates){
+							//if the localplayer has the token enable buttons
+							if(playerState.getName().equals(gc.getLocalPlayerName())){
+								if(playerState.hasToken()){
+									throwDice.setEnabled(true);
+								}
+							}
+						}
+					}	
+				}
+				
+				ButtonManager bl = new ButtonManager();
 
-		//		bc.getSubjectForPlayer().addListener(bl);
+				bc.getSubjectForPlayer().addListener(bl);
 
 	}
 

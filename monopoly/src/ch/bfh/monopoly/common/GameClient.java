@@ -75,6 +75,7 @@ public class GameClient {
 	 * end the turn for the current player, adjust the turnTokens
 	 */
 	public void endTurn(){
+		//TODO adjust turn token
 		NetMessage nm = new NetMessage(Messages.END_TURN);
 		session.write(nm);
 	}
