@@ -103,7 +103,6 @@ public class GameClient {
 	public void setCurrentPlayer(Player p) {
 		currentPlayer = p;
 	}
-
 	
 	public void buyCurrentPropertyForPlayer(String playerName){
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
@@ -204,6 +203,9 @@ public class GameClient {
 	 */
 	public void toggleMortgageStatus(int tileId){
 		board.toggleMortgageStatus(tileId);
+		
+		//TODO send a message for mortgage
+		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.MORTGAGE);
 	}
 	
 	
