@@ -137,12 +137,17 @@ public class GameClient {
 	 * advance the current player a given number n spaces forward
 	 */
 	public void advanceCurrentPlayerNSpaces(int n, boolean sendNetMessage) {
+
 		int currentPos = currentPlayer.getPosition();
 		currentPlayer.setPosition((currentPos + n) % 40);
-		
-		//send a netmessage with the roll value of this player
-		NetMessage roll = new NetMessage(currentPlayer.getName(), n, Messages.DICE_ROLL);
-		session.write(roll);
+
+		if(sendNetMessage){
+			System.out.println("SENT A ROLL");
+			//send a netmessage with the roll value of this player
+			NetMessage roll = new NetMessage(currentPlayer.getName(), n, Messages.DICE_ROLL);
+			session.write(roll);
+		}
+
 	}
 
 	/**
@@ -321,7 +326,7 @@ public class GameClient {
 	public String getEventDescription(boolean sendNetMessage) {
 		int currentPos = currentPlayer.getPosition();
 		String eventDescription = board.getTileById(currentPos)
-				.getEventDescription();
+		.getEventDescription();
 		return eventDescription;
 	}
 
@@ -387,9 +392,9 @@ public class GameClient {
 	 */
 	public boolean hasBothUtilities() {
 		String ownerOfUtility1 = ((Property) board.getTileById(12)).getOwner()
-				.getName();
+		.getName();
 		String ownerOfUtility2 = ((Property) board.getTileById(28)).getOwner()
-				.getName();
+		.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
 

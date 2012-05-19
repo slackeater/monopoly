@@ -152,16 +152,16 @@ public class BoardTile extends JPanel{
 		this.groupMemeber = btMember;
 
 		//TODO REMOVE ONLY FOR TEST
-		if(btMember[0] != null && btMember[1] != null){
-		
-			System.out.println("IM THE TILE : " + ti.getName());
-			System.out.println("=>> " + btMember[0].getNameTile());
-			System.out.println("=>> " + btMember[1].getNameTile());
-		}
-		else if(btMember[0] != null && btMember[1] == null){
-			System.out.println("IM THE TILE : " + ti.getName());
-			System.out.println("=>> " + btMember[0].getNameTile());
-		}
+//		if(btMember[0] != null && btMember[1] != null){
+//		
+//			System.out.println("IM THE TILE : " + ti.getName());
+//			System.out.println("=>> " + btMember[0].getNameTile());
+//			System.out.println("=>> " + btMember[1].getNameTile());
+//		}
+//		else if(btMember[0] != null && btMember[1] == null){
+//			System.out.println("IM THE TILE : " + ti.getName());
+//			System.out.println("=>> " + btMember[0].getNameTile());
+//		}
 
 	}
 

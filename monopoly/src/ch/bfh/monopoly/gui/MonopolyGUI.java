@@ -151,6 +151,7 @@ public class MonopolyGUI extends JFrame {
 						Token t = playerStates.get(j).getT();
 						int position = playerStates.get(j).getPosition();
 						tiles.get(position).addToken(t);
+						tokenPlaced = true;
 					}
 					else if(tokenPlaced){
 						Token t = playerStates.get(j).getT();
