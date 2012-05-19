@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
@@ -101,10 +102,11 @@ public class Player {
 	 * 
 	 * @param value
 	 *            is the amount of money that should be withdrawn
+	 * @throws TransactionException 
 	 */
-	public void withdawMoney(int value) {
+	public void withdawMoney(int value) throws TransactionException {
 		if (account < value)
-			throw new RuntimeException(
+			throw new TransactionException(
 					"The sum cannot be withdrawn from the player's account, because the player has insufficient funds");
 		this.account -= value;
 		
@@ -192,7 +194,7 @@ public class Player {
 	 * 
 	 * @return the boolean value true if it is this player's turn
 	 */
-	public boolean isTurnToken() {
+	public boolean hasTurnToken() {
 		return turnToken;
 	}
 

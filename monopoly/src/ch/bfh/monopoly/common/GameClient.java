@@ -218,12 +218,28 @@ public class GameClient {
 	 *            the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId) {
+<<<<<<< HEAD
+		try {
+			board.toggleMortgageStatus(tileId);
+		} catch (RuntimeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
+		NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
+				Messages.MORTGAGE);
+		session.write(nm);
+=======
 		board.toggleMortgageStatus(tileId);
 		
 		//TODO send a message for mortgage ; exception management
 		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.TOGGLE_MORTGAGE);
 		//session.write(nm);
 
+>>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
 	}
 
 	/**
@@ -405,7 +421,13 @@ public class GameClient {
 	 */
 	public void payFee(int fee) {
 		String currentPlayerName = currentPlayer.getName();
-		board.payFee(currentPlayerName, fee);
+		try {
+			board.payFee(currentPlayerName, fee);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 	}
 
 	/**
@@ -418,7 +440,13 @@ public class GameClient {
 	 *            the amount of the fee to charge the current player
 	 */
 	public void payFeetoName(String toName, int fee) {
-		currentPlayer.withdawMoney(fee);
+		try {
+			currentPlayer.withdawMoney(fee);
+		} catch (TransactionException e) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		}
 		board.getPlayerByName(toName).depositMoney(fee);
 	}
 
@@ -438,6 +466,15 @@ public class GameClient {
 		session.write(nm);
 	}
 
+	/**
+	 * method is called after reception of a netMessage and sets all Player's turn tokens to false, except the player whose name was received in the netMessage
+	 * @param name of the player whose turn it is
+	 */
+		public void updateTurnTokens(String playerName){
+			currentPlayer.setTurnToken(false);
+			board.getPlayerByName(playerName).setTurnToken(true);
+		}
+	
 	/**
 	 * send an array of integers which is the new order that cards should be
 	 * drawn for chance card events
