@@ -100,6 +100,7 @@ public class TurnTokenTest {
 	/**
 	 * Simulate a complete turn from player 0 to player 7
 	 * At the end the token must return to player 0
+	 * !!! DO SOMETHING MORE CONSISTENT !!!
 	 */
 	public void simulateTurn(){
 		try{

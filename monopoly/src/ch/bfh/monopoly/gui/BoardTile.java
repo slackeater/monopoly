@@ -82,13 +82,12 @@ public class BoardTile extends JPanel{
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
-
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
 		ButtonListener btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
-
+		
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
 						|| !ti.getGroup().equals("Chance"))){

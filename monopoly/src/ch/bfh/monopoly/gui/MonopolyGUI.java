@@ -68,7 +68,6 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
-	private Token newPlace = null;
 	private JButton throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
@@ -82,6 +81,7 @@ public class MonopolyGUI extends JFrame {
 	private int currentPos = 0;
 	private int step = 0;
 
+
 	/**
 	 * Other instance variable
 	 */
@@ -91,7 +91,8 @@ public class MonopolyGUI extends JFrame {
 	private ResourceBundle res;
 	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
-																							//6
+	private Token localToken;
+	private boolean tokenPlaced = false;
 	private int[][] tileGroupMember = { {-1,-1},{3,-1}, {-1,-1}, {1,-1}, {-1,-1},{-1,-1}, {8,9},
 																//14 Via nassa
 	{-1,-1}, {6,9}, {6,8}, {-1,-1}, {13,14}, {-1,-1}, {11,14}, {11,13}, {-1,-1}, {18,19}, {-1,-1}, {16,19}, {16,18},
@@ -145,10 +146,17 @@ public class MonopolyGUI extends JFrame {
 				pse = playerStates;
 				
 				for(int j = 0 ; j < playerStates.size() ; j++){
+					if(!tokenPlaced){
 					System.out.println(playerStates.get(j).getT());
 						Token t = playerStates.get(j).getT();
 						int position = playerStates.get(j).getPosition();
 						tiles.get(position).addToken(t);
+					}
+					else if(tokenPlaced){
+						Token t = playerStates.get(j).getT();
+						int position = playerStates.get(j).getPosition();
+						moveToken(null, t, position);
+					}
 				}
 			}
 		}
@@ -213,6 +221,13 @@ public class MonopolyGUI extends JFrame {
 		
 		//!!! leave this here !!!
 		this.bc.initGUI();
+		
+		//get the token of the local player
+		for(PlayerStateEvent localPlayer : pse){
+			if(gc.getLocalPlayerName().equals(localPlayer.getName())){
+				this.localToken = localPlayer.getT();
+			}
+		}
 	}
 
 	/**
@@ -395,46 +410,35 @@ public class MonopolyGUI extends JFrame {
 	/**
 	 * Move the token
 	 * @param diceButton
-	 * 			the JButton to enable when we throw the dice
+	 * 			the JButton to enable/disable when we throw the dice
 	 * 			set this value to null if you don't need the button but only the movement
+	 * 			this because we don't know when the timer will stops outside this method
+	 * @param t
+	 * 			the Token to move on the board
+	 * @param val
+	 * 			the value of the throw
 	 * @return Action
 	 * 				the abstract action used to move the token
 	 */
-	private Action moveToken(final JButton diceButton){
+	private Action moveToken(final JButton diceButton, final Token t, final int val){
 		Action moveToken = new AbstractAction() {
 		
 			private static final long serialVersionUID = 9219941791909195711L;
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				//if we start a new turn
-				if(throwValue == 0){
-					step = 0;
-					eventTextArea.setText(res.getString("text-throwindice") + "\n");
-
-					//TODO only for test
-					tabPane.addTab(res.getString("tab-trade"), tradeTab());
-											
-					throwValue = dice.throwDice();
-
-					eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
-
-					//we get the token relative to the player with ID 1
-					//TODO get the token of the current player
-					//then set the position of this current player to the
-					//one after the dice throw
-					newPlace = pse.get(0).getT();
-				}
-
+			public void actionPerformed(ActionEvent e) {		
+				if(diceButton != null)
+					throwDice.setEnabled(false);	
+				
 				//move the token for "step" times
-				if(step < throwValue){
+				if(step < val){
 					step++;
 
 					//removing the token at the previous tile
-					tiles.get((currentPos+step-1)%TILE_NUMBER).removeToken(newPlace);
+					tiles.get((currentPos+step-1)%TILE_NUMBER).removeToken(t);
 
 					//add the token to the tile we are on
-					tiles.get((currentPos+step)%TILE_NUMBER).addToken(newPlace);
+					tiles.get((currentPos+step)%TILE_NUMBER).addToken(t);
 
 					repaint();
 			
@@ -447,9 +451,9 @@ public class MonopolyGUI extends JFrame {
 
 					//update the current position and reset counter
 					currentPos = (currentPos+throwValue)%TILE_NUMBER;
-					throwValue = 0;
 					step = 0;	
 					
+					//TODO only for test
 					if(diceButton != null)
 						diceButton.setEnabled(true);
 				}	
@@ -471,9 +475,20 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				throwDice.setEnabled(false);
-				Timer t = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice));
+				throwValue = dice.throwDice();		
+
+				//TODO only for test
+				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+				
+				//move the token
+				Timer t = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, localToken, throwValue));
 				t.start();
+				
+				eventTextArea.setText(res.getString("text-throwindice") + "\n");
+				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + throwValue + "\n");
+				
+				//move the player of throwValue positions, and communicate to the other player the new position
+				gc.advancePlayerNSpaces(throwValue, true);
 			}
 		});
 
@@ -489,22 +504,25 @@ public class MonopolyGUI extends JFrame {
 		this.trade = new JButton(res.getString("button-trade"));
 		this.trade.setEnabled(false);
 		
-		class ButtonManager implements PlayerListener{
-
-			@Override
-			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-				for(PlayerStateEvent playerState : playerStates){
-					//if the localplayer has the token enable buttons
-					if(playerState.getName().equals(gc.getLocalPlayerName())){
-						if(playerState.hasToken()){
-							throwDice.setEnabled(true);
-						}
-					}
-				}
-			}	
-		}
+		//TODO add hasToken method
+//		class ButtonManager implements PlayerListener{
+//
+//			@Override
+//			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+//				for(PlayerStateEvent playerState : playerStates){
+//					//if the localplayer has the token enable buttons
+//					if(playerState.getName().equals(gc.getLocalPlayerName())){
+//						if(playerState.hasToken()){
+//							throwDice.setEnabled(true);
+//						}
+//					}
+//				}
+//			}	
+//		}
+//		
+//		ButtonManager bl = new ButtonManager();
 		
-		ButtonManager bl = new ButtonManager();
+//		bc.getSubjectForPlayer().addListener(bl);
 
 	}
 

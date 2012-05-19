@@ -131,6 +131,10 @@ public class GameClient {
 	public void advanceCurrentPlayerNSpaces(int n) {
 		int currentPos = currentPlayer.getPosition();
 		currentPlayer.setPosition((currentPos + n) % 40);
+		
+		//send a netmessage with the roll value of this player
+		NetMessage roll = new NetMessage(currentPlayer.getName(), n, Messages.DICE_ROLL);
+		session.write(roll);
 	}
 
 	/**
@@ -218,9 +222,11 @@ public class GameClient {
 	 *            the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId) {
-<<<<<<< HEAD
 		try {
 			board.toggleMortgageStatus(tileId);
+			NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
+					Messages.TOGGLE_MORTGAGE);
+			session.write(nm);
 		} catch (RuntimeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -229,17 +235,6 @@ public class GameClient {
 					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
-		NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
-				Messages.MORTGAGE);
-		session.write(nm);
-=======
-		board.toggleMortgageStatus(tileId);
-		
-		//TODO send a message for mortgage ; exception management
-		//NetMessage nm = new NetMessage(currentPlayer.getName(), tileId, Messages.TOGGLE_MORTGAGE);
-		//session.write(nm);
-
->>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
 	}
 
 	/**

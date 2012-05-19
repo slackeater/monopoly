@@ -65,18 +65,17 @@ public class ClientHandler implements IoHandler {
 				break;
 			case TURN_TOKEN:
 				String username = n.getText();
+				
 				//if the name is equal to the local player, enable buttons and set current player
-<<<<<<< HEAD
-				if(n.getText().equals(localPlayerName)){
-					gc.updateTurnTokens(n.getText());
-=======
 				if(username.equals(localPlayerName)){
 					//TODO
 					gc.setCurrentPlayer(localPlayerName);
->>>>>>> branch 'master' of https://shrevek@github.com/slackeater/monopoly.git
-					//function for setting the currentPlayer, turnToken and enable buttons in the GUI
+					gc.updateTurnTokens(localPlayerName);
+
+					//function for enabling buttons in the GUI
 						System.out.println("IT'S MY TURN : " + username);
 				}
+				//else set only the current player
 				else{
 					gc.setCurrentPlayer(username);
 					//TODO 
