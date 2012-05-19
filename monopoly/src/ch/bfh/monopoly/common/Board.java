@@ -58,7 +58,7 @@ public class Board {
 				for (Tile t : plyr.getProperties()) {
 					terrains[t.getId()] = true;
 				}
-				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),
+				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(), plyr.getPreviousPosition(),
 						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
 						plyr.getToken());

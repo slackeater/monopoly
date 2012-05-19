@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.event;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.exception.TransactionException;
 
 public class SimpleFeeEvent extends AbstractTileEvent {
 
@@ -20,7 +21,11 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 			if (!(gameClient.hasSufficientFunds(fee))) throw new RuntimeException("Current Player does not have enough money to pay fee");
 			// TODO how do we allow player to perform other actions if he
 			// doens't have enough money to pay fee?
-			gameClient.getCurrentPlayer().withdawMoney(fee);
+			try {
+				gameClient.getCurrentPlayer().withdawMoney(fee);
+			} catch (TransactionException e) {
+				gameClient.sendTransactionErrorToGUI(e, true);
+			}
 		}
 
 	}

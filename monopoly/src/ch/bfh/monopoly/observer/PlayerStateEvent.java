@@ -12,14 +12,15 @@ public class PlayerStateEvent {
 	int jailCard;
 	boolean[] terrains;
 	private Token t;
-	
+	int previousPosition;
 
 
 	//TODO this class must also carry information Property List... but we don't want to copy the entire list, oder?
-	public PlayerStateEvent(int position, String name, boolean isInJail,
+	public PlayerStateEvent(int position, int previousPosition, String name, boolean isInJail,
 			int account, boolean turnToken, int jailCard, boolean[] terrains, Token t) {
 		super();
 		this.position = position;
+		this.previousPosition= previousPosition;
 		this.name = name;
 		this.isInJail = isInJail;
 		this.account = account;
@@ -31,6 +32,10 @@ public class PlayerStateEvent {
 
 	public int getPosition() {
 		return position;
+	}
+
+	public int getPreviousPosition() {
+		return previousPosition;
 	}
 
 	public String getName() {
