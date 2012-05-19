@@ -1,4 +1,5 @@
 bin/
 lib/
 /.classpath
+/.project
 /.gitignore
