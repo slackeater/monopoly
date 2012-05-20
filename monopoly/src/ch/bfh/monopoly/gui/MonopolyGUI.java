@@ -503,6 +503,7 @@ public class MonopolyGUI extends JFrame {
 					if(diceButton != null){
 						//TODO only for test diceButton
 						//diceButton.setEnabled(true);
+						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
@@ -573,11 +574,14 @@ public class MonopolyGUI extends JFrame {
 					//if the localplayer has the token enable buttons
 					if(playerState.getName().equals(gc.getLocalPlayerName()))
 						if(playerState.hasTurnToken()){
+							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
+							
 							throwDice.setEnabled(true);
 							useCard.setEnabled(true);
 							trade.setEnabled(true);
 						}
 						else{
+							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
 							//TODO remove comment
 							throwDice.setEnabled(false);
 							useCard.setEnabled(false);
