@@ -563,9 +563,9 @@ public class GameClient {
 			System.out
 					.println(">>UpdateTurnToken<< Current Player turn token before change:"
 							+ currentPlayer.hasTurnToken());
-			currentPlayerName = null;
-		} else
 			currentPlayerName = currentPlayer.getName();
+		} else
+			currentPlayerName = null;
 
 		board.updateTurnTokens(playerName, currentPlayerName);
 		
