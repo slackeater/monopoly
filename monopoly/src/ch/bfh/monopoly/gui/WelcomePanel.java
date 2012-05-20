@@ -110,8 +110,10 @@ public class WelcomePanel extends JFrame{
 	/**
 	 * Initialize the client by starting the network
 	 * and checking the user name
+	 * @param startServer boolean
+	 * 				if true start first the server and the the client, if false only the client
 	 */
-	public void initClient() throws IOException, UnknownHostException, Exception{
+	public void initClient(boolean startServer) throws IOException, UnknownHostException, Exception{
 		Pattern p;
 		Matcher m;		
 		IoSession cliSession;
@@ -128,6 +130,12 @@ public class WelcomePanel extends JFrame{
 			if(throwValue > 1){
 				//if the ip doesn't match
 				if(m.matches()){
+					
+					//start a server if wanted
+					if(startServer){
+						Monopoly.communicate.startServer(ip, port);
+					}
+					
 					//if everything works connect to the server
 					cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name, throwValue);
 
@@ -226,19 +234,21 @@ public class WelcomePanel extends JFrame{
 					port = Integer.parseInt(clientPort.getText());
 					name = nameField.getText();
 
-					initClient();
-
 					info.append("Connecting to " + ip + " and port " + port + "\n");
+					
+					//start only a client
+					initClient(false);
 
 					while(true){
-						Thread.sleep(1250);
+						Thread.sleep(750);
 						if(Monopoly.communicate.gameCanBegin()){
-							dispose();
-
+							
 							//create the board
 							bc = new BoardController(gameClient.getBoard());
-
 							System.out.println("BEFORE FRAME");
+							
+							dispose();
+							
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
 							board.setVisible(true);
@@ -253,12 +263,6 @@ public class WelcomePanel extends JFrame{
 				}
 				catch(NullPointerException e1){
 					info.append("Please insert the user name\n");
-					connect.setEnabled(true);
-				} catch (UnknownHostException e1) {
-					info.append(e1.getMessage()+"\n");
-					connect.setEnabled(true);
-				} catch (IOException e1) {
-					info.append(e1.getMessage()+"\n");
 					connect.setEnabled(true);
 				} catch (Exception e1) {
 					info.append(e1.getMessage()+"\n");
@@ -339,36 +343,42 @@ public class WelcomePanel extends JFrame{
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
 
-					Monopoly.communicate.startServer(ip, port);
-
-					initClient();
-
 					info.append("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n");
+					
+					//start the client and the server
+					initClient(true);
 
 					while(true){
-						Thread.sleep(1250);
+						Thread.sleep(550);
 
 						//when all the client are connected
 						if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
-							NetMessage gameStart = 
-								new NetMessage(Monopoly.communicate.getServerUsernames(),loc, Messages.GAME_START);
-
 							//send a NetMessage GAME_START with the chosen locale
-							
-							Monopoly.communicate.sendBroadcast(gameStart);
-							Monopoly.communicate.sendTurnToken();
-							dispose();
-
+							Monopoly.communicate.sendStartGame(loc);
+						
 							//create the board
 							gameClient.createBoard(loc, Monopoly.communicate.getServerUsernames(), name);
+							
+							Thread.sleep(500);
+							
 							bc = new BoardController(gameClient.getBoard());
 
 							System.out.println("BEFORE FRAME");
+							
+							dispose();
+							
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
 							board.setVisible(true);
 							board.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							
+							Thread.sleep(1000);
+							
+							//after the gui are visible send the turn token
+							//!!! leave this here !!!
+							Monopoly.communicate.sendTurnToken();
+							
 							break;
 						}
 					}

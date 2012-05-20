@@ -67,6 +67,8 @@ public class NetworkController {
 	}
 	
 	/**
+	 * TODO
+	 * USELESS, leave here for test
 	 * Get the list of the usernames
 	 * @return a List with the usernames
 	 */
@@ -74,13 +76,6 @@ public class NetworkController {
 		return srvHandler.getUsernames();
 	}
 	
-	/**
-	 * Send a broadcast to the connected client
-	 */
-	public void sendBroadcast(NetMessage m){
-		srvHandler.sendBroadcast(m,null);
-	}
-
 	/**
 	 * Stop the server
 	 */
@@ -93,5 +88,9 @@ public class NetworkController {
 	 */
 	public void sendTurnToken(){
 		srvHandler.sendTurnToken();
+	}
+	
+	public void sendStartGame(Locale loc){
+		srvHandler.sendStartGame(loc);
 	}
 }

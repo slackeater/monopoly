@@ -142,6 +142,8 @@ public class MonopolyGUI extends JFrame {
 			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 				pse = playerStates;
 
+				System.out.println("MOETHOD FOR THE ANIMATION OBSERVER");
+				
 				for(PlayerStateEvent singlePlayer : pse){
 					//used to place the token on the first tile for the first time
 					if(!tokenPlaced){
@@ -168,6 +170,8 @@ public class MonopolyGUI extends JFrame {
 
 						//move the token only when the user has thrown the dice and is the current player
 						if(singlePlayer.hasTurnToken()){
+							System.out.println("-----====----- THE PLAYER WITH THE TOKEN INSIDE THE ANIMATION IS : "  + singlePlayer.getName());
+							
 							if(throwValue > 1 && throwValue < 13){
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){

@@ -3,6 +3,7 @@ package ch.bfh.monopoly.net;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
@@ -81,12 +82,15 @@ public class ServerHandler implements IoHandler{
 
 	/**
 	 * Send a broadcast message to the session of this server
-	 * @param n the NetMessage to broadcast
+	 * @param n NetMessage
+	 * 		the NetMessage to broadcast
+	 * @param notBroadcast IoSession
+	 * 		the session where the message should not be sent
 	 */
-	public void sendBroadcast(NetMessage n, IoSession notBroadcast){
-		for(int j = 0 ; j < plWrap.size() ; j++){
-			if(notBroadcast != plWrap.get(j).getSession())
-				plWrap.get(j).getSession().write(n);
+	private void sendBroadcast(NetMessage n, IoSession notBroadcast){
+		for(PlayerWrapper pW : plWrap){
+			if(pW.getSession() != notBroadcast)
+				pW.getSession().write(n);
 		}
 	}
 
@@ -105,6 +109,15 @@ public class ServerHandler implements IoHandler{
 			userTokenIndex++;
 		
 		//broadcast the message to the other players
+		sendBroadcast(nm, null);	
+	}
+	
+	/**
+	 * Send the message GAME_START to the client
+	 */
+	public void sendStartGame(Locale loc){
+		NetMessage nm = new NetMessage(this.usernames, loc, Messages.GAME_START);
+		
 		sendBroadcast(nm, null);	
 	}
 	

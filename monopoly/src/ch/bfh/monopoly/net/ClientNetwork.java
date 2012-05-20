@@ -1,39 +1,24 @@
 package ch.bfh.monopoly.net;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.apache.mina.core.future.ConnectFuture;
-import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoConnector;
-import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.filter.logging.LoggingFilter;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
-public class Network {
 
-	private IoAcceptor acc;
+public class ClientNetwork {
+
+	private ClientHandler cliHandler;
 	private IoConnector ic;
 	private IoSession clientSession;
-	
-	
-	/**
-	 * Start a server
-	 * @param ip the ip to listen on
-	 * @param port the port to listen on
-	 * @throws IOException
-	 */
-	public void startServer(String ip, int port, ServerHandler srvHandler) throws IOException{
-		acc = new NioSocketAcceptor();
-		acc.setHandler(srvHandler);
-		acc.getFilterChain().addLast("logger", new LoggingFilter());
-		acc.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
-		acc.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, 10);
-		acc.bind(new InetSocketAddress(ip, port));
+
+	public ClientNetwork(ClientHandler cliHandler){
+		this.cliHandler = cliHandler;
 	}
 	
 	/**
@@ -41,7 +26,7 @@ public class Network {
 	 * @param ip the ip of the server
 	 * @param port the port of the server
 	 */
-	public IoSession startClient(String ip, int port, ClientHandler cliHandler){
+	public void startClient(String ip, int port){
 		ic = new NioSocketConnector();
 		ic.getFilterChain().addLast("logger", new LoggingFilter());
 		ic.getFilterChain().addLast("codec", new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
@@ -52,7 +37,6 @@ public class Network {
 		cf.awaitUninterruptibly();
 		
 		this.clientSession = cf.getSession();	
-		return clientSession;
 	}
 	
 	/**
@@ -69,10 +53,9 @@ public class Network {
 	}
 	
 	/**
-	 * Close the connection on the server side
+	 * Close the currently active session
 	 */
-	public void stopServer(){
-		acc.dispose();
+	public void closeConnection(){
+		this.clientSession.close(true);
 	}
-	
 }
