@@ -26,6 +26,11 @@ public class GameClient {
 	private IoSession session;
 	private WindowSubject ws;
 
+	/**
+	 * a subject that is used in an observer pattern with the GUI
+	 * information that must be displayer in the chat message window and in the
+	 * game history or game message windows gets relayed by this class
+	 */
 	private class ConcreteSubject implements WindowSubject {
 
 		public ConcreteSubject() {
@@ -50,6 +55,7 @@ public class GameClient {
 		}
 	}
 
+	
 	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
@@ -75,9 +81,9 @@ public class GameClient {
 	/**
 	 * end the turn for the current player
 	 */
-	public void endTurn(){
+	public void endTurn() {
 		try {
-			//TODO adjust turn token
+			// TODO adjust turn token
 			NetMessage nm = new NetMessage(Messages.END_TURN);
 			session.write(nm).await();
 		} catch (InterruptedException e) {
@@ -174,10 +180,11 @@ public class GameClient {
 		String playerName = currentPlayer.getName();
 		board.advanceCurrentPlayerNSpaces(playerName, n);
 
-		if(sendNetMessage){		
+		if (sendNetMessage) {
 			try {
-				//send a netmessage with the roll value of this player
-				NetMessage roll = new NetMessage(currentPlayer.getName(), n, Messages.DICE_ROLL);
+				// send a netmessage with the roll value of this player
+				NetMessage roll = new NetMessage(currentPlayer.getName(), n,
+						Messages.DICE_ROLL);
 				session.write(roll).await();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -551,6 +558,7 @@ public class GameClient {
 		currentPlayer.setTurnToken(false);
 		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
 		board.getPlayerByName(playerName).setTurnToken(true);
+		setCurrentPlayer(playerName, false);
 	}
 
 	/**
