@@ -74,6 +74,8 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
+		NetMessage n = (NetMessage) arg1;
+		System.out.println("SENT A MESSAGE" + n.getMessageType());
 	}
 
 	@Override
