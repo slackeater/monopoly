@@ -58,8 +58,9 @@ public class Board {
 				for (Tile t : plyr.getProperties()) {
 					terrains[t.getId()] = true;
 				}
-				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(), plyr.getPreviousPosition(),
-						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
+				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),
+						plyr.getPreviousPosition(), plyr.getName(),
+						plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
 						plyr.getToken());
 				playerStates.add(pse);
@@ -164,20 +165,26 @@ public class Board {
 		}
 	}
 
-	
 	/**
-	 * set the turn tokens to true for all players except the one provided as param
-	 * @param playerBeginningTurn who should have a turn token TRUE
-	 * @param playerEndingTurn player who should have a turn token set to false
+	 * set the turn tokens to true for all players except the one provided as
+	 * param
+	 * 
+	 * @param playerBeginningTurn
+	 *            who should have a turn token TRUE
+	 * @param playerEndingTurn
+	 *            player who should have a turn token set to false
 	 */
-	public void updateTurnTokens(String playerBeginningTurn, String playerEndingTurn){
+	public void updateTurnTokens(String playerBeginningTurn,
+			String playerEndingTurn) {
 		Player plyrBegin = getPlayerByName(playerBeginningTurn);
-		Player plyrEnd = getPlayerByName(playerEndingTurn);
-		plyrEnd.setTurnToken(false);
 		plyrBegin.setTurnToken(true);
+		if (playerEndingTurn != null) {
+			Player plyrEnd = getPlayerByName(playerEndingTurn);
+			plyrEnd.setTurnToken(false);
+		}
 		playerSubject.notifyListeners();
 	}
-	
+
 	/**
 	 * buy a house for a given property checks that the tileId provided refers
 	 * to a terrain
