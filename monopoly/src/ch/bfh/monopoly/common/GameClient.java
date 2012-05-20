@@ -59,8 +59,6 @@ public class GameClient {
 	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
-		setCurrentPlayer(bank, false);
-
 	}
 
 	/**
@@ -555,11 +553,18 @@ public class GameClient {
 	 *            of the player whose turn it is
 	 */
 	public void updateTurnTokens(String playerName) {
+		String currentPlayerName;
 		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
 		System.out.println(">>UpdateTurnToken<< playerName received" + playerName);
 		System.out.println(">>UpdateTurnToken<< Current Player is " + currentPlayer.getName());
 		System.out.println(">>UpdateTurnToken<< Current Player turn token before change:" + currentPlayer.hasTurnToken() );
-		board.updateTurnTokens(playerName, currentPlayer.getName());
+		
+		if (currentPlayer==null)
+			currentPlayerName=null;
+		else
+			currentPlayerName=currentPlayer.getName();
+		
+		board.updateTurnTokens(playerName, currentPlayerName);
 		System.out.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"  +board.getPlayerByName(playerName).hasTurnToken());
 		setCurrentPlayer(playerName, false);
 		System.out.println(">>UpdateTurnToken<< The current player is now "+currentPlayer.getName());
