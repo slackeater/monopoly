@@ -555,13 +555,12 @@ public class GameClient {
 	 *            of the player whose turn it is
 	 */
 	public void updateTurnTokens(String playerName) {
+		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
 		System.out.println(">>UpdateTurnToken<< playerName received" + playerName);
 		System.out.println(">>UpdateTurnToken<< Current Player is " + currentPlayer.getName());
 		System.out.println(">>UpdateTurnToken<< Current Player turn token before change:" + currentPlayer.hasTurnToken() );
-		currentPlayer.setTurnToken(false);
-		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-		board.getPlayerByName(playerName).setTurnToken(true);
-		System.out.println(">>UpdateTurnToken<< NEW PLAYER turn token is after change:"  +board.getPlayerByName(playerName).hasTurnToken());
+		board.updateTurnTokens(playerName, currentPlayer.getName());
+		System.out.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"  +board.getPlayerByName(playerName).hasTurnToken());
 		setCurrentPlayer(playerName, false);
 		System.out.println(">>UpdateTurnToken<< The current player is now "+currentPlayer.getName());
 		System.out.println(">>UpdateTurnToken<< The current player's turn token is  "+currentPlayer.hasTurnToken());
