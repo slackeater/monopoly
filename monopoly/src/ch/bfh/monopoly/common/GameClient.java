@@ -27,9 +27,9 @@ public class GameClient {
 	private WindowSubject ws;
 
 	/**
-	 * a subject that is used in an observer pattern with the GUI
-	 * information that must be displayer in the chat message window and in the
-	 * game history or game message windows gets relayed by this class
+	 * a subject that is used in an observer pattern with the GUI information
+	 * that must be displayer in the chat message window and in the game history
+	 * or game message windows gets relayed by this class
 	 */
 	private class ConcreteSubject implements WindowSubject {
 
@@ -55,7 +55,6 @@ public class GameClient {
 		}
 	}
 
-	
 	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
@@ -555,22 +554,30 @@ public class GameClient {
 	public void updateTurnTokens(String playerName) {
 		String currentPlayerName;
 		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-		System.out.println(">>UpdateTurnToken<< playerName received" + playerName);
-		
-	
+		System.out.println(">>UpdateTurnToken<< playerName received"
+				+ playerName);
 
-		if (currentPlayer==null){
-			System.out.println(">>UpdateTurnToken<< Current Player is " + currentPlayer.getName());
-			System.out.println(">>UpdateTurnToken<< Current Player turn token before change:" + currentPlayer.hasTurnToken() );
-			currentPlayerName=null;}
-		else
-			currentPlayerName=currentPlayer.getName();
-		
+		if (currentPlayer != null) {
+			System.out.println(">>UpdateTurnToken<< Current Player is "
+					+ currentPlayer.getName());
+			System.out
+					.println(">>UpdateTurnToken<< Current Player turn token before change:"
+							+ currentPlayer.hasTurnToken());
+			currentPlayerName = null;
+		} else
+			currentPlayerName = currentPlayer.getName();
+
 		board.updateTurnTokens(playerName, currentPlayerName);
-		System.out.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"  +board.getPlayerByName(playerName).hasTurnToken());
+		
+		System.out
+				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
+						+ board.getPlayerByName(playerName).hasTurnToken());
 		setCurrentPlayer(playerName, false);
-		System.out.println(">>UpdateTurnToken<< The current player is now "+currentPlayer.getName());
-		System.out.println(">>UpdateTurnToken<< The current player's turn token is  "+currentPlayer.hasTurnToken());
+		System.out.println(">>UpdateTurnToken<< The current player is now "
+				+ currentPlayer.getName());
+		System.out
+				.println(">>UpdateTurnToken<< The current player's turn token is  "
+						+ currentPlayer.hasTurnToken());
 	}
 
 	/**
