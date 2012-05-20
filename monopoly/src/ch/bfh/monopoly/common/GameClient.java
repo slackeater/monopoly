@@ -556,11 +556,13 @@ public class GameClient {
 		String currentPlayerName;
 		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
 		System.out.println(">>UpdateTurnToken<< playerName received" + playerName);
-		System.out.println(">>UpdateTurnToken<< Current Player is " + currentPlayer.getName());
-		System.out.println(">>UpdateTurnToken<< Current Player turn token before change:" + currentPlayer.hasTurnToken() );
 		
-		if (currentPlayer==null)
-			currentPlayerName=null;
+	
+
+		if (currentPlayer==null){
+			System.out.println(">>UpdateTurnToken<< Current Player is " + currentPlayer.getName());
+			System.out.println(">>UpdateTurnToken<< Current Player turn token before change:" + currentPlayer.hasTurnToken() );
+			currentPlayerName=null;}
 		else
 			currentPlayerName=currentPlayer.getName();
 		
