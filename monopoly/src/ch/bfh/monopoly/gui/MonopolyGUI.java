@@ -145,7 +145,6 @@ public class MonopolyGUI extends JFrame {
 				for(PlayerStateEvent singlePlayer : pse){
 					//used to place the token on the first tile for the first time
 					if(!tokenPlaced){
-						System.out.println("DRAING TOKEN ON POSITION" + singlePlayer.getName());
 						Token t = singlePlayer.getT();
 						int position = singlePlayer.getPosition();
 						tiles.get(position).addToken(t);
@@ -155,6 +154,7 @@ public class MonopolyGUI extends JFrame {
 						Token t = singlePlayer.getT();
 						int throwValue = singlePlayer.getPosition()-singlePlayer.getPreviousPosition();
 						int previousPosition = singlePlayer.getPreviousPosition();
+						Timer timerAnimation = null;
 
 						System.out.println("==== TOKEN / DICE VALUES ====");
 						System.out.println("TOKEN COLOR: " + t.getColor());
@@ -162,12 +162,22 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("THROW VALUE: " + (singlePlayer.getPosition()-singlePlayer.getPreviousPosition()));
 						System.out.println("START POSITION: " + singlePlayer.getPosition());
 						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
+						System.out.println("HAS TURN TOKEN: " + singlePlayer.hasTurnToken());
 
-						//move the token only when the user has thrown the dice
-						if(throwValue > 1 && throwValue < 13){
-							Timer timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
-							timerAnimation.start();
-						}
+//						//move the token only when the user has thrown the dice and is the current player
+//						if(singlePlayer.hasTurnToken()){
+//							if(throwValue > 1 && throwValue < 13){
+//								//if we are the local player enable/disable the buttons
+//								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
+//									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+//								}
+//								else{
+//									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition));
+//								}
+//
+//								timerAnimation.start();
+//							}
+//						}
 
 					}
 				}
@@ -205,6 +215,13 @@ public class MonopolyGUI extends JFrame {
 			s.addListener(bt.getTileListener());
 		}
 
+		//TODO check if these little sleep time are useful 
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		//after we have initialized the tiles, 
 		//add the tile of the same group to each single tile board
 		//so each tile knows the member of the same group
@@ -232,9 +249,21 @@ public class MonopolyGUI extends JFrame {
 
 		System.out.println("AFTER TILE INIT");
 
+		//TODO check if these little sleep time are useful 
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		add(drawBoard(), BorderLayout.CENTER);
-		
-		
+
+		//TODO check if these little sleep time are useful 
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		//!!! leave this here !!!
 		this.bc.initGUI();
 	}
@@ -436,8 +465,11 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {		
-				if(diceButton != null)
-					throwDice.setEnabled(false);	
+				if(diceButton != null){
+					throwDice.setEnabled(false);
+					trade.setEnabled(false);
+					useCard.setEnabled(false);
+				}
 
 				System.out.println("==== MOVE TOKEN VALUES ====");
 
@@ -466,9 +498,13 @@ public class MonopolyGUI extends JFrame {
 
 					step = 0;	
 
-					//TODO only for test
-					if(diceButton != null)
+					if(diceButton != null){
+						//TODO only for test diceButton
 						diceButton.setEnabled(true);
+						trade.setEnabled(true);
+						useCard.setEnabled(true);
+						endTurn.setEnabled(true);
+					}
 				}	
 			}
 		};
@@ -479,9 +515,10 @@ public class MonopolyGUI extends JFrame {
 
 	private void initializeButtons(){
 		this.useCard = new JButton(res.getString("button-jailcard"));
-		useCard.setEnabled(false);
+		//		useCard.setEnabled(false);
 
 		this.throwDice = new JButton(res.getString("button-throwdice"));
+		//		throwDice.setEnabled(false);
 
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
@@ -490,14 +527,16 @@ public class MonopolyGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int localPlayerthrowValue = dice.throwDice();		
 
+				//move the player of throwValue positions, and communicate to the other player the new position
+				gc.advancePlayerNSpaces(localPlayerthrowValue);
+
 				//TODO only for test
 				tabPane.addTab(res.getString("tab-trade"), tradeTab());
 
 				eventTextArea.setText(res.getString("text-throwindice") + "\n");
 				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
 
-				//move the player of throwValue positions, and communicate to the other player the new position
-				gc.advancePlayerNSpaces(localPlayerthrowValue);
+
 			}
 		});
 
@@ -509,36 +548,46 @@ public class MonopolyGUI extends JFrame {
 
 		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
-		
+
 		endTurn.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				endTurn.setEnabled(false);
+				trade.setEnabled(false);
+				useCard.setEnabled(false);
 				gc.endTurn();
 			}
 		});
 
 		this.trade = new JButton(res.getString("button-trade"));
-		this.trade.setEnabled(false);
+		//		this.trade.setEnabled(false);
 
-				class ButtonManager implements PlayerListener{
-		
-					@Override
-					public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-						for(PlayerStateEvent playerState : playerStates){
-							//if the localplayer has the token enable buttons
-							if(playerState.getName().equals(gc.getLocalPlayerName())){
-								if(playerState.hasTurnToken()){
-									throwDice.setEnabled(true);
-								}
-							}
+		class ButtonManager implements PlayerListener{
+
+			@Override
+			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+				for(PlayerStateEvent playerState : playerStates){
+					//if the localplayer has the token enable buttons
+					if(playerState.getName().equals(gc.getLocalPlayerName()))
+						if(playerState.hasTurnToken()){
+							throwDice.setEnabled(true);
+							useCard.setEnabled(true);
+							trade.setEnabled(true);
 						}
-					}	
+						else{
+							//TODO remove comment
+							//throwDice.setEnabled(false);
+							useCard.setEnabled(false);
+							trade.setEnabled(false);
+						}
 				}
-				
-				ButtonManager bl = new ButtonManager();
+			}	
+		}
 
-				bc.getSubjectForPlayer().addListener(bl);
+		ButtonManager bl = new ButtonManager();
+
+		bc.getSubjectForPlayer().addListener(bl);
 
 	}
 

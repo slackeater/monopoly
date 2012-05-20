@@ -98,16 +98,14 @@ public class ServerHandler implements IoHandler{
 		
 		System.out.println("===  USER TOKEN INDEX : " + userTokenIndex + " TURN TO PLAYER " + plWrap.get(userTokenIndex).getUsername());
 		
-		//broadcast the message to the other players
-		sendBroadcast(nm, null);
-		
 		//if we arrive at the least position reset the counter
 		if((userTokenIndex == plWrap.size()-1))
 			userTokenIndex = 0;
 		else if(userTokenIndex < plWrap.size()-1)
 			userTokenIndex++;
 		
-		
+		//broadcast the message to the other players
+		sendBroadcast(nm, null);	
 	}
 	
 	/**
@@ -164,6 +162,7 @@ public class ServerHandler implements IoHandler{
 		if(n.getMessageType() == Messages.SEND_USERNAME)
 			buildUserList(n, arg0);
 		else if(n.getMessageType() == Messages.END_TURN){
+			System.out.println("END TURN RECEIVED");
 			sendTurnToken();
 		}
 		else

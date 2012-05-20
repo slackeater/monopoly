@@ -79,10 +79,11 @@ public class ClientHandler implements IoHandler {
 				}
 				//else set only the current player
 				else{
+					
 					gc.setCurrentPlayer(username, false);
 					//TODO 
 					//function for setting the currentPlayer
-						System.out.println("IT'S NOT MY TURN :" + localPlayerName);
+						System.out.println("IT'S THE TURN OF PLAYER :" + username);
 				}
 				
 				break;
@@ -91,6 +92,8 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
+		NetMessage n = (NetMessage) arg1;
+		System.out.println("SENT A MESSAGE" + n.getMessageType());
 	}
 
 	@Override
