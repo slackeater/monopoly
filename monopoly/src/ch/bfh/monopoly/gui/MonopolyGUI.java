@@ -164,20 +164,20 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
 						System.out.println("HAS TURN TOKEN: " + singlePlayer.hasTurnToken());
 
-//						//move the token only when the user has thrown the dice and is the current player
-//						if(singlePlayer.hasTurnToken()){
-//							if(throwValue > 1 && throwValue < 13){
-//								//if we are the local player enable/disable the buttons
-//								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
-//									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
-//								}
-//								else{
-//									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition));
-//								}
-//
-//								timerAnimation.start();
-//							}
-//						}
+						//move the token only when the user has thrown the dice and is the current player
+						if(singlePlayer.hasTurnToken()){
+							if(throwValue > 1 && throwValue < 13){
+								//if we are the local player enable/disable the buttons
+								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+								}
+								else{
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition));
+								}
+
+								timerAnimation.start();
+							}
+						}
 
 					}
 				}
@@ -500,7 +500,7 @@ public class MonopolyGUI extends JFrame {
 
 					if(diceButton != null){
 						//TODO only for test diceButton
-						diceButton.setEnabled(true);
+						//diceButton.setEnabled(true);
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
@@ -577,7 +577,7 @@ public class MonopolyGUI extends JFrame {
 						}
 						else{
 							//TODO remove comment
-							//throwDice.setEnabled(false);
+							throwDice.setEnabled(false);
 							useCard.setEnabled(false);
 							trade.setEnabled(false);
 						}

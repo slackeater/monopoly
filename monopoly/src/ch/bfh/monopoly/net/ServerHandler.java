@@ -131,7 +131,8 @@ public class ServerHandler implements IoHandler{
 		PlayerWrapper tmp;
 
 		while(x > 0){
-			for (int i = 0; i < x; i++) {                                       
+			for (int i = 0; i < x; i++) {                
+				//sort player from the biggest to the lowest roll value
 				if (plWrap.get(i).getRollValue() < plWrap.get(i+1).getRollValue()) {                          
 					tmp = plWrap.get(i);
 
