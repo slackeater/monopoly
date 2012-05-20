@@ -151,6 +151,8 @@ public class MonopolyGUI extends JFrame {
 					}
 					//used to move the token 
 					else if(tokenPlaced){
+						System.out.println("INSIDE THE METHOD TO DRAW THE ANIMATION");
+						
 						Token t = singlePlayer.getT();
 						int throwValue = singlePlayer.getPosition()-singlePlayer.getPreviousPosition();
 						int previousPosition = singlePlayer.getPreviousPosition();
