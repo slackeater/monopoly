@@ -53,6 +53,7 @@ public class GameClient {
 	public GameClient() {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
+		setCurrentPlayer(bank, false);
 
 	}
 
