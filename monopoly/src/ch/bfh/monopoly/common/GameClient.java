@@ -119,26 +119,38 @@ public class GameClient {
 
 	/**
 	 * set current player by means of a reference to the current player object
-	 * @param p the player object to be set to current player
-	 * @param sendNetMessage true if a net message should be sent for this change
+	 * 
+	 * @param p
+	 *            the player object to be set to current player
+	 * @param sendNetMessage
+	 *            true if a net message should be sent for this change
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
-	public void setCurrentPlayer(Player p, boolean sendNetMessage ) {
-		//TODO this method is never called by the GUI, and maybe doesn't need the boolean parameter
+	public void setCurrentPlayer(Player p, boolean sendNetMessage) {
+		// TODO this method is never called by the GUI, and maybe doesn't need
+		// the boolean parameter
 		currentPlayer = p;
 	}
 
 	/**
-	 * set the current player by means of a string with the name of the current player
-	 * @param playerName the name of the player to be set to current player
-	 * @param sendNetMessage true if a net message should be sent for this change
+	 * set the current player by means of a string with the name of the current
+	 * player
+	 * 
+	 * @param playerName
+	 *            the name of the player to be set to current player
+	 * @param sendNetMessage
+	 *            true if a net message should be sent for this change
 	 */
 	public void setCurrentPlayer(String playerName, boolean sendNetMessage) {
-		//TODO this method is never called by the GUI, and maybe doesn't need the boolean parameter
+		// TODO this method is never called by the GUI, and maybe doesn't need
+		// the boolean parameter
 		Player p = board.getPlayerByName(playerName);
 		currentPlayer = p;
 	}
 
-	public void buyCurrentPropertyForPlayer(String playerName, boolean sendNetMessage) {
+	public void buyCurrentPropertyForPlayer(String playerName,
+			boolean sendNetMessage) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 
 		try {
@@ -151,6 +163,11 @@ public class GameClient {
 
 	/**
 	 * advance the current player a given number n spaces forward
+	 * 
+	 * @param n
+	 *            is the number of spaces to advance the player
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void advanceCurrentPlayerNSpaces(int n, boolean sendNetMessage) {
 		String playerName = currentPlayer.getName();
@@ -173,6 +190,8 @@ public class GameClient {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to build a house on
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void buyHouse(int tileID, boolean sendNetMessage) {
 		try {
@@ -193,6 +212,8 @@ public class GameClient {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to build a house on
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void buyHotel(int tileID, boolean sendNetMessage) {
 		try {
@@ -213,6 +234,8 @@ public class GameClient {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to sell a house from
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void sellHouse(int tileID, boolean sendNetMessage) {
 		try {
@@ -234,6 +257,8 @@ public class GameClient {
 	 * 
 	 * @param tileID
 	 *            the tile number of the property to sell a hotel from
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void sellHotel(int tileID, boolean sendNetMessage) {
 		try {
@@ -255,6 +280,8 @@ public class GameClient {
 	 * @param tileId
 	 *            the id that corresponds to a tile for which we want to toggle
 	 *            the mortgage status.
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
 
@@ -282,6 +309,10 @@ public class GameClient {
 	 *            the name of the player to transfer the property to
 	 * @param tileId
 	 *            the integer number which represent the tile to be transfered
+	 * @param price
+	 *            the price agreed upon by the players for the transfer
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void transferProperty(String fromName, String toName, int tileId,
 			int price, boolean sendNetMessage) {
@@ -305,8 +336,12 @@ public class GameClient {
 	 *            the name of the player to transfer the card from
 	 * @param toName
 	 *            the name of the player to transfer the card to
-	 * @param tileId
-	 *            the integer number which represent the tile to be transfered
+	 * @param quantity
+	 *            the number of jail cards to transfer
+	 * @param price
+	 *            the price agreed upon by the players for the transfer
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void transferJailCards(String fromName, String toName, int quantity,
 			int price, boolean sendNetMessage) {
@@ -331,8 +366,11 @@ public class GameClient {
 	 *            the name of the player to deposit money to
 	 * @param amount
 	 *            the amount of money to be transfered
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
-	public void transferMoney(String fromName, String toName, int amount, boolean sendNetMessage) {
+	public void transferMoney(String fromName, String toName, int amount,
+			boolean sendNetMessage) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 
@@ -353,16 +391,22 @@ public class GameClient {
 	/**
 	 * get the description of the event for the tile on which the current player
 	 * resides
+	 * 
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public String getEventDescription(boolean sendNetMessage) {
 		int currentPos = currentPlayer.getPosition();
 		String eventDescription = board.getTileById(currentPos)
-		.getEventDescription();
+				.getEventDescription();
 		return eventDescription;
 	}
 
 	/**
 	 * perform the event for the tile that the current player occupies
+	 * 
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void performEvent(boolean sendNetMessage) {
 		int currentPos = currentPlayer.getPosition();
@@ -376,6 +420,8 @@ public class GameClient {
 	 *            the player's name to check
 	 * @param tileId
 	 *            tile to check ownership of
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
 		boolean isOwner = false;
@@ -423,9 +469,9 @@ public class GameClient {
 	 */
 	public boolean hasBothUtilities() {
 		String ownerOfUtility1 = ((Property) board.getTileById(12)).getOwner()
-		.getName();
+				.getName();
 		String ownerOfUtility2 = ((Property) board.getTileById(28)).getOwner()
-		.getName();
+				.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
 
@@ -436,6 +482,8 @@ public class GameClient {
 	 * @param fee
 	 *            the amount of money to withdraw from the current player's
 	 *            account
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void payFee(int fee, boolean sendNetMessage) {
 		String currentPlayerName = currentPlayer.getName();
@@ -456,6 +504,8 @@ public class GameClient {
 	 *            the name of hte player to give the money to
 	 * @param fee
 	 *            the amount of the fee to charge the current player
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void payFeetoName(String toName, int fee, boolean sendNetMessage) {
 		try {
@@ -508,6 +558,8 @@ public class GameClient {
 	 * 
 	 * @param the
 	 *            array of int values to be send to the server
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void updateChanceDrawOrder(int[] newOrder, boolean sendNetMessage) {
 		try {
@@ -527,6 +579,8 @@ public class GameClient {
 	 * 
 	 * @param the
 	 *            array of int values to be send to the server
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
 		try {
@@ -559,7 +613,8 @@ public class GameClient {
 	/**
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */
-	public void sendTransactionErrorToGUI(TransactionException e, boolean sendNetMessage) {
+	public void sendTransactionErrorToGUI(TransactionException e,
+			boolean sendNetMessage) {
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
@@ -582,7 +637,8 @@ public class GameClient {
 	 * @param String
 	 *            the name of the player to change
 	 */
-	public void removeJailCardFromPlayer(String playerName, boolean sendNetMessage) {
+	public void removeJailCardFromPlayer(String playerName,
+			boolean sendNetMessage) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		board.removeJailCardFromPlayer(playerNameAdjusted);
 	}
