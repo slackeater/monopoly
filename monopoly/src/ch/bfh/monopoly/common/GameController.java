@@ -55,7 +55,7 @@ public class GameController {
 	}
 	
 	/**
-	 * Toggles the mortgage status of a given property
+	 * Toggles the mortgage status of a given property and credits or debits the player's account
 	 * @param tileId the id that corresponds to a tile for which we want to toggle the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId){
