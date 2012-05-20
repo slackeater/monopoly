@@ -581,7 +581,7 @@ public class MonopolyGUI extends JFrame {
 							trade.setEnabled(true);
 						}
 						else{
-							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
+							System.out.println("===== BUTTONS: DISABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
 							//TODO remove comment
 							throwDice.setEnabled(false);
 							useCard.setEnabled(false);
