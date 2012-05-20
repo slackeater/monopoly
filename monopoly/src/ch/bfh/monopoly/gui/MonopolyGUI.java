@@ -160,7 +160,7 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("TOKEN COLOR: " + t.getColor());
 						System.out.println("PLAYER NAME: " + singlePlayer.getName());
 						System.out.println("THROW VALUE: " + (singlePlayer.getPosition()-singlePlayer.getPreviousPosition()));
-						System.out.println("START POSITION: " + singlePlayer.getPosition());
+						System.out.println("ACTUAL POSITION: " + singlePlayer.getPosition());
 						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
 						System.out.println("HAS TURN TOKEN: " + singlePlayer.hasTurnToken());
 
@@ -169,9 +169,11 @@ public class MonopolyGUI extends JFrame {
 							if(throwValue > 1 && throwValue < 13){
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
+									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
 									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
 								}
 								else{
+									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
 									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition));
 								}
 
