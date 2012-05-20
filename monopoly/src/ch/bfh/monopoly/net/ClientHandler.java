@@ -63,6 +63,7 @@ public class ClientHandler implements IoHandler {
 				//TODO dice roll function
 				System.out.println("ROLL RECEIVED");
 				int rollValue = n.getInt();
+				System.out.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "+rollValue);
 				gc.advanceCurrentPlayerNSpaces(rollValue, false);
 				break;
 			case TURN_TOKEN:
