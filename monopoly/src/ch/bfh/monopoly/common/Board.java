@@ -58,8 +58,8 @@ public class Board {
 				for (Tile t : plyr.getProperties()) {
 					terrains[t.getId()] = true;
 				}
-				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),
-						plyr.getPreviousPosition(), plyr.getName(),
+				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),plyr.getPreviousPosition(),
+						plyr.getRollValue(), plyr.getName(),
 						plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
 						plyr.getToken());
@@ -581,9 +581,9 @@ public class Board {
 		Player plyr = getPlayerByName(playerName);
 		int currentPos = plyr.getPosition();
 		plyr.setPosition((currentPos + n) % 40);
+		plyr.setRollValue(n);
 		System.out.println("HELLO from ADVANCE PLAYER N SPACES in BOARD");
 		playerSubject.notifyListeners();
-		plyr.resetPreviousPosition();
 	}
 
 	/**

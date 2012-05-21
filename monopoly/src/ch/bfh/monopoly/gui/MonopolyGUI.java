@@ -156,16 +156,15 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("INSIDE THE METHOD TO DRAW THE ANIMATION");
 						
 						Token t = singlePlayer.getT();
-						int throwValue = (singlePlayer.getPosition()-singlePlayer.getPreviousPosition())%TILE_NUMBER;
+						int throwValue = singlePlayer.getRollValue();
 						int previousPosition = singlePlayer.getPreviousPosition();
 						Timer timerAnimation = null;
 
 						System.out.println("==== TOKEN / DICE VALUES ====");
 						System.out.println("TOKEN COLOR: " + t.getColor());
 						System.out.println("PLAYER NAME: " + singlePlayer.getName());
-						System.out.println("THROW VALUE: " + (singlePlayer.getPosition()-singlePlayer.getPreviousPosition()));
+						System.out.println("ROLL VALUE: " + singlePlayer.getRollValue());
 						System.out.println("ACTUAL POSITION: " + singlePlayer.getPosition());
-						System.out.println("PREVIOUS POSITION: " + singlePlayer.getPreviousPosition());
 						System.out.println("HAS TURN TOKEN: " + singlePlayer.hasTurnToken());
 
 						//move the token only when the user has thrown the dice and is the current player

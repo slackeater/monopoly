@@ -20,6 +20,7 @@ public class Player {
 	private ArrayList<Tile> properties;
 	private int position;
 	private int previousPosition;
+	private int rollValue;
 	private boolean isInJail;
 	private boolean turnToken;
 	private int jailCard;
@@ -31,7 +32,7 @@ public class Player {
 		this.account = account;
 		this.t = t;
 		position = 0;
-		previousPosition = 0;
+		rollValue = 0;
 		isInJail = false;
 		turnToken = false;
 		jailCard = 0;
@@ -168,7 +169,7 @@ public class Player {
 	 *            is the new position that the player should have
 	 */
 	public void setPosition(int newPosition) {
-		previousPosition=position;
+		previousPosition = position;
 		this.position = newPosition;
 	}
 
@@ -254,19 +255,28 @@ public class Player {
 	}
 	
 	/**
-	 * get the previous position of the player, so the GUI can paint the movement of hte token
+	 * get the roll value of the player, so the GUI can paint the movement of hte token
 	 * @return the int value of hte position of the player on the board before his dice roll
 	 */
-	public int getPreviousPosition(){
-		return previousPosition;
+	public int getRollValue(){
+		return rollValue;
 	}
 	
 	/**
-	 * set the previous position of the player, so the GUI can paint the movement of hte token
+	 * set the rollValue of the player, so the GUI can paint the movement of hte token
 	 */
-	public void resetPreviousPosition(){
-		 previousPosition=position;
+	public void setRollValue(int n){
+		 rollValue = n;
 	}
+	
+	/**
+	 * get the previous of the player, so the GUI can paint the movement of hte token
+	 * @return the int value of hte position of the player on the board before his dice roll
+	 */
+	public int getPreviousPosition(){
+		return rollValue;
+	}
+
 
 
 
