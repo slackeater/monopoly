@@ -87,14 +87,17 @@ public class BoardTile extends JPanel{
 
 		ButtonListener btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
-		
+
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
 						|| !ti.getGroup().equals("Chance"))){
 			//we want a pop-up menu only on the properties where
-			//we can build something 
+			//we can build something and we are the owner
+			//TODO remove if for test
+
 			this.addMouseListener(btnListener);
 			displayInfo = true;
+
 		}
 
 		//check if there is a color and add the menu
@@ -148,20 +151,20 @@ public class BoardTile extends JPanel{
 	}
 
 	public void setGroupMember(BoardTile[] btMember){
-	
+
 		this.groupMemeber = btMember;
 
 		//TODO REMOVE ONLY FOR TEST
-//		if(btMember[0] != null && btMember[1] != null){
-//		
-//			System.out.println("IM THE TILE : " + ti.getName());
-//			System.out.println("=>> " + btMember[0].getNameTile());
-//			System.out.println("=>> " + btMember[1].getNameTile());
-//		}
-//		else if(btMember[0] != null && btMember[1] == null){
-//			System.out.println("IM THE TILE : " + ti.getName());
-//			System.out.println("=>> " + btMember[0].getNameTile());
-//		}
+		//		if(btMember[0] != null && btMember[1] != null){
+		//		
+		//			System.out.println("IM THE TILE : " + ti.getName());
+		//			System.out.println("=>> " + btMember[0].getNameTile());
+		//			System.out.println("=>> " + btMember[1].getNameTile());
+		//		}
+		//		else if(btMember[0] != null && btMember[1] == null){
+		//			System.out.println("IM THE TILE : " + ti.getName());
+		//			System.out.println("=>> " + btMember[0].getNameTile());
+		//		}
 
 	}
 
@@ -171,7 +174,7 @@ public class BoardTile extends JPanel{
 	public String getNameTile(){
 		return ti.getName();
 	}
-	
+
 	/**
 	 * Add the information of a tile (rent, name,costs, etc.) to 
 	 * the tabbed pane
@@ -444,7 +447,7 @@ public class BoardTile extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			//left click
-			System.out.println(e.getButton() + "CONTROL DOWN: " + e.isControlDown());
+			System.out.println(e.getButton() + " CONTROL DOWN: " + e.isControlDown());
 			if(e.getButton() == MouseEvent.BUTTON1 && !e.isControlDown()){ 
 				addInformationOnTab();
 			}
@@ -535,6 +538,9 @@ public class BoardTile extends JPanel{
 	private class InformationUpdate implements TileListener{
 		@Override
 		public void updateTile(TileStateEvent tsi) {
+
+			System.out.println("THE OWNER FROM THE OBSERVER PATTERN IS " + tsi.getOwner());
+
 			if(buyHouseClicked){
 				drawBuilding(false);
 			}

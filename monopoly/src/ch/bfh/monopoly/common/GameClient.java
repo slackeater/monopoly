@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.mina.core.session.IoSession;
-
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
@@ -24,7 +22,7 @@ public class GameClient {
 	private Player bank;
 	private Locale loc;
 	private Board board;
-	private IoSession session;
+	private ClientNetworkController nc;
 	private WindowSubject ws;
 
 	/**
@@ -80,14 +78,9 @@ public class GameClient {
 	 * end the turn for the current player
 	 */
 	public void endTurn() {
-		try {
-			// TODO adjust turn token
-			NetMessage nm = new NetMessage(Messages.END_TURN);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		NetMessage nm = new NetMessage(Messages.END_TURN);
+		nc.sendMessage(nm);
+
 	}
 
 	/**
@@ -107,8 +100,8 @@ public class GameClient {
 	 * @param session
 	 *            IoSession the IoSession used to communicate with the server
 	 */
-	public void setIoSession(IoSession session) {
-		this.session = session;
+	public void setClientNetworkController(ClientNetworkController nCliCtrl) {
+		this.nc = nCliCtrl;
 	}
 
 	/**
@@ -179,15 +172,12 @@ public class GameClient {
 		board.advanceCurrentPlayerNSpaces(playerName, n);
 
 		if (sendNetMessage) {
-			try {
-				// send a netmessage with the roll value of this player
-				NetMessage roll = new NetMessage(currentPlayer.getName(), n,
-						Messages.DICE_ROLL);
-				session.write(roll).await();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
+			// send a netmessage with the roll value of this player
+			NetMessage roll = new NetMessage(currentPlayer.getName(), n,
+					Messages.DICE_ROLL);
+			nc.sendMessage(roll);
+
 		}
 	}
 
@@ -204,13 +194,11 @@ public class GameClient {
 			board.buyHouse(tileID);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.BUY_HOUSE);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+
 	}
 
 	/**
@@ -226,13 +214,10 @@ public class GameClient {
 			board.buyHotel(tileID);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.BUY_HOTEL);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	/**
@@ -248,13 +233,10 @@ public class GameClient {
 			board.sellHouses(tileID);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.SELL_HOUSE);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
 
@@ -271,13 +253,10 @@ public class GameClient {
 			board.sellHotel(tileID);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.SELL_HOTEL);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	/**
@@ -295,14 +274,12 @@ public class GameClient {
 			board.toggleMortgageStatus(tileId);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
 					Messages.TOGGLE_MORTGAGE);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	/**
@@ -405,13 +382,13 @@ public class GameClient {
 		int currentPos = currentPlayer.getPosition();
 		String name = board.getTileInfoById(currentPos).getName();
 		String description = board.getTileById(currentPos)
-				.getEventDescription();
+		.getEventDescription();
 		List<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
 
 		WindowBuilder wb = new WindowBuilder(name, description, actionList);
 
-		
-		
+
+
 		return wb;
 	}
 
@@ -482,9 +459,9 @@ public class GameClient {
 	 */
 	public boolean hasBothUtilities() {
 		String ownerOfUtility1 = ((Property) board.getTileById(12)).getOwner()
-				.getName();
+		.getName();
 		String ownerOfUtility2 = ((Property) board.getTileById(28)).getOwner()
-				.getName();
+		.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
 
@@ -542,13 +519,9 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		try {
-			String text = localPlayer.concat(": " + s + "\n");
-			NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		String text = localPlayer.concat(": " + s + "\n");
+		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
+		nc.sendMessage(nm);
 	}
 
 	/**
@@ -569,23 +542,23 @@ public class GameClient {
 			System.out.println(">>UpdateTurnToken<< Current Player is "
 					+ currentPlayer.getName());
 			System.out
-					.println(">>UpdateTurnToken<< Current Player turn token before change:"
-							+ currentPlayer.hasTurnToken());
+			.println(">>UpdateTurnToken<< Current Player turn token before change:"
+					+ currentPlayer.hasTurnToken());
 			currentPlayerName = currentPlayer.getName();
 		} else
 			currentPlayerName = null;
 
 		board.updateTurnTokens(playerName, currentPlayerName);
-		
+
 		System.out
-				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
-						+ board.getPlayerByName(playerName).hasTurnToken());
+		.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
+				+ board.getPlayerByName(playerName).hasTurnToken());
 		setCurrentPlayer(playerName, false);
 		System.out.println(">>UpdateTurnToken<< The current player is now "
 				+ currentPlayer.getName());
 		System.out
-				.println(">>UpdateTurnToken<< The current player's turn token is  "
-						+ currentPlayer.hasTurnToken());
+		.println(">>UpdateTurnToken<< The current player's turn token is  "
+				+ currentPlayer.hasTurnToken());
 	}
 
 	/**
@@ -598,15 +571,11 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateChanceDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		try {
-			NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
-					Messages.UPDATE_CHANCE_ORDER);
-			nm.setDrawOrder(newOrder);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+				Messages.UPDATE_CHANCE_ORDER);
+		nm.setDrawOrder(newOrder);
+		nc.sendMessage(nm);
+
 	}
 
 	/**
@@ -619,15 +588,12 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		try {
-			NetMessage nm = new NetMessage("NoNameNeeded", 0,
-					Messages.UPDATE_COMMCHEST_ORDER);
-			nm.setDrawOrder(newOrder);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		NetMessage nm = new NetMessage("NoNameNeeded", 0,
+				Messages.UPDATE_COMMCHEST_ORDER);
+		nm.setDrawOrder(newOrder);
+		nc.sendMessage(nm);;
+
 	}
 
 	public void displayChat(String text) {
@@ -655,7 +621,7 @@ public class GameClient {
 				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
 	}
-	
+
 	/**
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */

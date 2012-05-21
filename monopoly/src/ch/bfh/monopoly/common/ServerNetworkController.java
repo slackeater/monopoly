@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.common;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import ch.bfh.monopoly.net.ServerHandler;
@@ -50,6 +51,15 @@ public class ServerNetworkController {
 	 */
 	public void sendTurnToken(){
 		srvHandler.sendTurnToken();
+	}
+	
+	/**
+	 * Get the server username
+	 * @return List
+	 * 		the ordered list of player's user names
+	 */
+	public List<String> getServerUsernames(){
+		return srvHandler.getUsernames();
 	}
 	
 	/**

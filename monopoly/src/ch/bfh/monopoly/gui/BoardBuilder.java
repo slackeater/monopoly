@@ -35,8 +35,6 @@ public class BoardBuilder extends JPanel {
 	
 	private List<JButton> btns;
 	
-	private JButton community, chance;
-
 	private JTextArea txt;
 	
 	/**
@@ -44,13 +42,11 @@ public class BoardBuilder extends JPanel {
 	 * @param eventPane the JTextArea used to draw event
 	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea txt, JTabbedPane tabPane, List<BoardTile> tiles, List<JButton> btns, JButton communityBtn, JButton chanceBtn){
+	public BoardBuilder(JTextArea txt, JTabbedPane tabPane, List<BoardTile> tiles, List<JButton> btns){
 		this.txt = txt;
 		this.btns = btns;
 		this.eventPane = tabPane;
 		this.tilesList = tiles;
-		this.community = communityBtn;
-		this.chance = chanceBtn;
 		
 		setLayout(new GridBagLayout());
 		
@@ -88,28 +84,6 @@ public class BoardBuilder extends JPanel {
 		this.eventPane.addTab("Events", p);
 		
 		add(this.eventPane, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
-		/****************************************/
-		/****************************************/
-
-		/******* Community chest card button **************/
-
-		JPanel commP = new JPanel();
-		commP.add(community);
-		commP.setLayout(new GridLayout(1,1));
-		add(commP, new GridBagConstraints(2, 2, 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-
-		/****************************************/
-		/****************************************/
-
-		/******* Chance card button **************/
-
-		JPanel chancePan = new JPanel();
-		chancePan.add(chance);
-		chancePan.setLayout(new GridLayout(1,1));
-		add(chancePan, new GridBagConstraints(8, 8, 1, 1, WEIGHT_TILE_X, WEIGHT_TILE_X, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
 		/****************************************/

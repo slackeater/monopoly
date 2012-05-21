@@ -11,8 +11,6 @@ import ch.bfh.monopoly.gui.WelcomePanel;
 
 public class Monopoly {
 
-	public static NetworkController communicate = new NetworkController();
-
 	public static void main(String[] args) throws IOException {
 //		
 		JFrame welcome = new WelcomePanel();
