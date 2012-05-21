@@ -400,11 +400,13 @@ public class GameClient {
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public String getEventDescription(boolean sendNetMessage) {
+	public WindowBuilder getWindowBuilder(boolean sendNetMessage) {
 		int currentPos = currentPlayer.getPosition();
-		String eventDescription = board.getTileById(currentPos)
+		String name = board.getTileInfoById(currentPos).getName();
+		String description = board.getTileById(currentPos)
 				.getEventDescription();
-		return eventDescription;
+		WindowBuilder wb = new WindowBuilder(name, description, null);
+		return wb;
 	}
 
 	/**

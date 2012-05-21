@@ -35,6 +35,7 @@ import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileSubject;
@@ -535,7 +536,14 @@ public class MonopolyGUI extends JFrame {
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
 					}
-				}	
+				
+				WindowBuilder wb = gc.getWindowBuilder();
+				String name = wb.getName();
+				JTabbedPane tp = new JTabbedPane();
+				
+				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+				}
+				
 			}
 		};
 
