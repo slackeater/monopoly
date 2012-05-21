@@ -17,7 +17,7 @@ public class EventManager {
 	int[] chanceEventsShuffled = new int[16];
 	int[] commChestEventsShuffled = new int[16];
 	ArrayList<Integer> integersTo16;
-	GameClient gameClient;
+	public GameClient gameClient;
 	ResourceBundle res;
 	int chanceDrawIndex = 16;
 	int commChestDrawIndex = 16;
