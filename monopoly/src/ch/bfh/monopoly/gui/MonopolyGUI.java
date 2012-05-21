@@ -540,7 +540,11 @@ public class MonopolyGUI extends JFrame {
 				WindowBuilder wb = gc.getWindowBuilder();
 				String name = wb.getName();
 				JPanel jp = new JPanel();
+				JButton testButton = new JButton("TEST");
+				testButton.addActionListener(wb.getActionList().get(0));
+				
 				jp.add(new JLabel(wb.getDescription()));
+				jp.add(testButton);
 				
 				tabPane.addTab(name,  jp);
 				}
