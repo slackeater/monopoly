@@ -3,6 +3,7 @@ package ch.bfh.monopoly.tile;
 public class TileInfo {
 
 	String name;
+	String owner;
 	int price;
 	int houseCost;
 	int hotelCost;
@@ -21,6 +22,7 @@ public class TileInfo {
 
 	public TileInfo() {
 		name = null;
+		owner = null;
 		price = -1;
 		houseCost = -1;
 		hotelCost = -1;
@@ -44,6 +46,15 @@ public class TileInfo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	public int getPrice() {

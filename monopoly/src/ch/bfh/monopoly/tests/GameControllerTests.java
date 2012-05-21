@@ -59,7 +59,7 @@ public class GameControllerTests {
 	public void buyCurrentPropertyForPlayerSetsTilesOwner() {
 		Player plyr = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(plyr, true);
-		gameClient.advanceCurrentPlayerNSpaces(1, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, false);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));
@@ -74,7 +74,7 @@ public class GameControllerTests {
 	public void buyCurrentPropertyForPlayerSetsTilesOwnerCurrentPlayer() {
 		Player plyr = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(plyr, true);
-		gameClient.advanceCurrentPlayerNSpaces(1, true);
+		gameClient.advanceCurrentPlayerNSpaces(1, false);
 		gc.buyCurrentPropertyForPlayer("CurRentPlaYER");
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));

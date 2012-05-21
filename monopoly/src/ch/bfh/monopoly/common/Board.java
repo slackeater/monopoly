@@ -600,6 +600,7 @@ public class Board {
 		if (tile instanceof Terrain) {
 			Terrain t = (Terrain) tile;
 			tileInfo.setName(t.getName());
+			tileInfo.setOwner(t.getOwner().getName());
 			tileInfo.setPrice(t.getPrice());
 			tileInfo.setHouseCost(t.getHouseCost());
 			tileInfo.setHotelCost(t.getHotelCost());
