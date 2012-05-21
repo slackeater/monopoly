@@ -539,9 +539,10 @@ public class MonopolyGUI extends JFrame {
 				
 				WindowBuilder wb = gc.getWindowBuilder();
 				String name = wb.getName();
-				JTabbedPane tp = new JTabbedPane();
+				JPanel jp = new JPanel();
+				jp.add(new JLabel(wb.getDescription()));
 				
-				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+				tabPane.addTab(name,  jp);
 				}
 				
 			}
