@@ -59,7 +59,7 @@ public class MonopolyGUI extends JFrame {
 	 */
 	public static final int TILE_NUMBER = 40;
 	private final int LEFT_SPACER_HEIGHT = 10;
-	private final int DICE_MOVEMENT_DELAY = 850;
+	private final int DICE_MOVEMENT_DELAY = 650;
 
 	/**
 	 * Graphical elements
@@ -156,7 +156,7 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("INSIDE THE METHOD TO DRAW THE ANIMATION");
 						
 						Token t = singlePlayer.getT();
-						int throwValue = singlePlayer.getPosition()-singlePlayer.getPreviousPosition();
+						int throwValue = (singlePlayer.getPosition()-singlePlayer.getPreviousPosition())%TILE_NUMBER;
 						int previousPosition = singlePlayer.getPreviousPosition();
 						Timer timerAnimation = null;
 
