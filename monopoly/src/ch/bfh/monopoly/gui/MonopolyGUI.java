@@ -158,7 +158,7 @@ public class MonopolyGUI extends JFrame {
 						Token t = singlePlayer.getT();
 						int throwValue = singlePlayer.getRollValue();
 						int previousPosition = singlePlayer.getPreviousPosition();
-						System.out.println("PREVIOUS POSITION "+ previousPosition);
+						
 						Timer timerAnimation = null;
 
 						System.out.println("==== TOKEN / DICE VALUES ====");
@@ -167,6 +167,7 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("ROLL VALUE: " + singlePlayer.getRollValue());
 						System.out.println("ACTUAL POSITION: " + singlePlayer.getPosition());
 						System.out.println("HAS TURN TOKEN: " + singlePlayer.hasTurnToken());
+						System.out.println("PREVIOUS POSITION "+ previousPosition);
 
 						//move the token only when the user has thrown the dice and is the current player
 						if(singlePlayer.hasTurnToken()){
@@ -190,7 +191,7 @@ public class MonopolyGUI extends JFrame {
 					}
 				}
 
-				//we have placed the tokenserve
+				//we have placed the on the first tile
 				tokenPlaced = true;
 			}
 		}
@@ -200,6 +201,26 @@ public class MonopolyGUI extends JFrame {
 		//add the listener to the subject
 		TokenDraw td = new TokenDraw();
 		bc.getSubjectForPlayer().addListener(td);
+
+		/**
+		 * This inner class represent the implementation
+		 * of the observer pattern for the area with state
+		 * messages at the center of the board
+		 * @author snake
+		 *
+		 */
+		class InfoAreaUpdate implements WindowListener{
+
+			@Override
+			public void updateWindow(WindowStateEvent wse) {
+				//TODO	
+				//add functoin for adding message to the text area
+			}
+	
+		}
+		
+		InfoAreaUpdate iau = new InfoAreaUpdate();
+		gc.getWindowSubject().addListener(iau);
 
 		//get the playerNumber
 		this.playerNumber = bc.getPlayerCount();
@@ -363,7 +384,7 @@ public class MonopolyGUI extends JFrame {
 		chat.setLineWrap(true);
 		chat.setEditable(false);
 
-		class TextUpdate implements WindowListener{
+		class ChatUpdate implements WindowListener{
 
 			@Override
 			public void updateWindow(WindowStateEvent wse) {
@@ -374,7 +395,7 @@ public class MonopolyGUI extends JFrame {
 			}
 		}
 
-		TextUpdate tu = new TextUpdate();
+		ChatUpdate tu = new ChatUpdate();
 
 		gc.getWindowSubject().addListener(tu);
 
