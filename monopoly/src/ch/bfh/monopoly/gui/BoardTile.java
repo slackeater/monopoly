@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -27,6 +28,8 @@ import javax.swing.JPopupMenu;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileListener;
 import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.TileInfo;
@@ -51,7 +54,9 @@ public class BoardTile extends JPanel{
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
+	private String owner;
 	private BoardTile[] groupMemeber = new BoardTile[2];
+	private ButtonListener btnListener;
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
@@ -81,11 +86,11 @@ public class BoardTile extends JPanel{
 		this.res = res;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
-
+		
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
-		ButtonListener btnListener = new ButtonListener();
+		btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
 
 		if(ti.getGroup() != null && 
@@ -96,6 +101,7 @@ public class BoardTile extends JPanel{
 			//TODO remove if for test
 
 			this.addMouseListener(btnListener);
+			bc.getSubjectForPlayer().addListener(new OwnerUpdater());
 			displayInfo = true;
 
 		}
@@ -440,6 +446,7 @@ public class BoardTile extends JPanel{
 	 */
 	private class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
+		boolean owner = false;
 
 		public void addPopUp(JPopupMenu pop){
 			this.popup = pop;
@@ -453,8 +460,14 @@ public class BoardTile extends JPanel{
 			}
 			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
+				if(owner){
 				showPopup(e);
+				}
 			}
+		}
+		
+		public void setOwner(){
+			owner = true;
 		}
 
 		private void showPopup(MouseEvent e) {
@@ -539,7 +552,8 @@ public class BoardTile extends JPanel{
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 
-			System.out.println("THE OWNER FROM THE OBSERVER PATTERN IS " + tsi.getOwner());
+			System.out.println(bc.getTileInfoById(ti.getId()).getOwner());
+			
 
 			if(buyHouseClicked){
 				drawBuilding(false);
@@ -574,7 +588,17 @@ public class BoardTile extends JPanel{
 			}
 		}
 	}
-
+	
+	class OwnerUpdater implements PlayerListener{
+		@Override
+		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+					if(ti.getId() != -1 && 
+					bc.getTileInfoById(ti.getId()).getOwner() != null && bc.getTileInfoById(ti.getId()).getOwner().equals(gc.getLocalPlayerName())){
+						btnListener.setOwner();
+					}
+		}	
+	}
+	
 	/**
 	 * This method is called by an external
 	 * class to update the information on this tile
@@ -587,6 +611,8 @@ public class BoardTile extends JPanel{
 	public TileListener getTileListener(){
 		return this.iu;
 	}
+	
+	
 
 
 }
