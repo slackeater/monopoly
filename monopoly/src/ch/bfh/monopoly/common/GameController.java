@@ -140,8 +140,8 @@ public class GameController {
 	/**
 	 * get the description of the event for the tile on which the current player resides
 	 */
-	public String getEventDescription(){
-		return gameClient.getEventDescription(true);
+	public WindowBuilder getWindowBuilder(){
+		return gameClient.getWindowBuilder(false);
 	}
 	
 	/**

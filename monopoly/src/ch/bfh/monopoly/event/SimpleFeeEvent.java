@@ -21,6 +21,7 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 			if (!(gameClient.hasSufficientFunds(fee))) throw new RuntimeException("Current Player does not have enough money to pay fee");
 			// TODO how do we allow player to perform other actions if he
 			// doens't have enough money to pay fee?
+			gameClient.sendTransactionErrorToGUI(e, true);
 			try {
 				gameClient.getCurrentPlayer().withdawMoney(fee);
 			} catch (TransactionException e) {
