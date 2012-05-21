@@ -583,6 +583,7 @@ public class Board {
 		plyr.setPosition((currentPos + n) % 40);
 		System.out.println("HELLO from ADVANCE PLAYER N SPACES in BOARD");
 		playerSubject.notifyListeners();
+		plyr.resetPreviousPosition();
 	}
 
 	/**

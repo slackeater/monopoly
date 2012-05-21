@@ -260,6 +260,13 @@ public class Player {
 	public int getPreviousPosition(){
 		return previousPosition;
 	}
+	
+	/**
+	 * set the previous position of the player, so the GUI can paint the movement of hte token
+	 */
+	public void resetPreviousPosition(){
+		 previousPosition=position;
+	}
 
 
 
