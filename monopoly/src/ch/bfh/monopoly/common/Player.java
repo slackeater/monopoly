@@ -278,10 +278,10 @@ public class Player {
 	}
 
 	/**
-	 * reset the previousPosition to the current position
+	 * reset the value of the roll to zero, so the GUI doesn't redraw the movement to often
 	 */
-	public void resetPreviousPosition(){
-		previousPosition=position;
+	public void resetRollValue(){
+		rollValue=0;
 	}
 
 

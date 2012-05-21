@@ -584,7 +584,7 @@ public class Board {
 		plyr.setRollValue(n);
 		System.out.println("HELLO from ADVANCE PLAYER N SPACES in BOARD");
 		playerSubject.notifyListeners();
-		plyr.resetPreviousPosition();
+		plyr.resetRollValue();
 	}
 
 	/**
