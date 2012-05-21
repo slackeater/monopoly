@@ -2,12 +2,13 @@ package ch.bfh.monopoly.common;
 
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WindowBuilder {
 	
 	String name;
 	String description;
-	ArrayList<ActionListener> actionList;
+	List<ActionListener> actionList;
 	
 	
 	public String getName() {
@@ -18,12 +19,12 @@ public class WindowBuilder {
 		return description;
 	}
 
-	public ArrayList<ActionListener> getActionList() {
+	public List<ActionListener> getActionList() {
 		return actionList;
 	}
 
 
-	public WindowBuilder(String name, String description, ArrayList<ActionListener> actionList){
+	public WindowBuilder(String name, String description, List<ActionListener> actionList){
 		this.name = name;
 		this.description = description;
 		this.actionList =actionList;

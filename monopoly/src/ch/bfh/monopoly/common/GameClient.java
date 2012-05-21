@@ -406,8 +406,8 @@ public class GameClient {
 		String name = board.getTileInfoById(currentPos).getName();
 		String description = board.getTileById(currentPos)
 				.getEventDescription();
-		ArrayList<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
-		WindowBuilder wb = new WindowBuilder(name, description, null);
+		List<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
+		WindowBuilder wb = new WindowBuilder(name, description, actionList);
 		
 		
 		
