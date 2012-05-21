@@ -170,7 +170,7 @@ public class Player {
 	 */
 	public void setPosition(int newPosition) {
 		previousPosition = position;
-		this.position = newPosition;
+		position = newPosition;
 	}
 
 	/**
@@ -277,6 +277,12 @@ public class Player {
 		return previousPosition;
 	}
 
+	/**
+	 * reset the previousPosition to the current position
+	 */
+	public void resetPreviousPosition(){
+		previousPosition=position;
+	}
 
 
 
