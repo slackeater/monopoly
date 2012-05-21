@@ -407,11 +407,9 @@ public class GameClient {
 		String description = board.getTileById(currentPos)
 				.getEventDescription();
 		List<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
-		WindowBuilder wb = new WindowBuilder(name, description, null);
-		
-		
-		
-		
+
+		WindowBuilder wb = new WindowBuilder(name, description, actionList);
+
 		
 		
 		return wb;
