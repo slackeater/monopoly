@@ -213,9 +213,9 @@ public class MonopolyGUI extends JFrame {
 		class InfoAreaUpdate implements WindowListener{
 
 			@Override
-			public void updateWindow(WindowStateEvent wse) {
-				//TODO	
-				//add functoin for adding message to the text area
+			public void updateWindow(WindowStateEvent wse) {;
+				if (wse.getType() == WindowMessage.MSG_FOR_ERROR)
+					eventTextArea.append(wse.getEventDescription()+"\n");
 			}
 	
 		}

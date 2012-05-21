@@ -1,5 +1,9 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
 
@@ -112,7 +116,24 @@ public class Terrain extends Property {
 				"\nowner: " + owner;
 	}
 
-
+	@Override
+	public List<ActionListener> getActionListenerList(){
+		boolean owned=true;
+		if (owner.getName().equals("bank"))
+			owned = false;
+		
+		if (owned){
+			ActionListener al = new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					performEvent();
+					
+				}
+			};
+		}
+		return 
+	}
 
 	@Override
 	public void performEvent() {

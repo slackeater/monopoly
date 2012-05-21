@@ -18,16 +18,17 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 		int currentPos = gameClient.getCurrentPlayer().getPosition();
 		if (!(gameClient.playerIsOwnerOfTile(currentPlayer, currentPos))) {
 			int fee = gameClient.getFeeForTileAtId(currentPos);
-			if (!(gameClient.hasSufficientFunds(fee))) throw new RuntimeException("Current Player does not have enough money to pay fee");
-			// TODO how do we allow player to perform other actions if he
-			// doens't have enough money to pay fee?
-			gameClient.sendTransactionErrorToGUI(e, true);
+			// TODO make a distinction between paying a player and playing a fee
+			// into FREE PARKING
 			try {
 				gameClient.getCurrentPlayer().withdawMoney(fee);
 			} catch (TransactionException e) {
 				gameClient.sendTransactionErrorToGUI(e, true);
 			}
 		}
+		TransactionException te = new TransactionException(
+				"Player has completed the event successfully");
+		gameClient.sendTransactionSuccesToGUI(te, true);
 
 	}
 
@@ -37,7 +38,8 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		String eventDescription = super.getEventDescription() + rent;
 		if (!(gameClient.hasSufficientFunds(rent)))
-			eventDescription=super.getEventDescription() + rent+ "\nBut you do not have sufficient fund to pay!";
+			eventDescription = super.getEventDescription() + rent
+					+ "\nBut you do not have sufficient fund to pay!";
 		return eventDescription;
 	}
 

@@ -9,6 +9,7 @@ public class WindowBuilder {
 	String description;
 	ArrayList<ActionListener> actionList;
 	
+	
 	public String getName() {
 		return name;
 	}

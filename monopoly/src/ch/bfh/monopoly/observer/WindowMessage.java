@@ -8,7 +8,8 @@ package ch.bfh.monopoly.observer;
 	public enum WindowMessage {
 	
 		MSG_FOR_CHAT(0),
-		MSG_FOR_ERROR(1)
+		MSG_FOR_ERROR(1),
+		MSG_EVENT_COMPLETION(2)
 
 		
 		;

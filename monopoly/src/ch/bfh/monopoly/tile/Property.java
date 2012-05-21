@@ -1,5 +1,8 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
 
@@ -19,6 +22,7 @@ public abstract class Property extends AbstractTile implements IProperty{
 		this.mortgageValue=mortgageValue;
 		this.mortgageActive=false;
 	}
+	
 	
 	public boolean isMortgageActive() {
 		return mortgageActive;

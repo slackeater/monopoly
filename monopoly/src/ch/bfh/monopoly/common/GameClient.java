@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.common;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -405,7 +406,14 @@ public class GameClient {
 		String name = board.getTileInfoById(currentPos).getName();
 		String description = board.getTileById(currentPos)
 				.getEventDescription();
+		ArrayList<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
 		WindowBuilder wb = new WindowBuilder(name, description, null);
+		
+		
+		
+		
+		
+		
 		return wb;
 	}
 
@@ -647,6 +655,16 @@ public class GameClient {
 			boolean sendNetMessage) {
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+		ws.notifyListeners(wse);
+	}
+	
+	/**
+	 * gathers transactions errors from the methods and forwards them to the GUI
+	 */
+	public void sendTransactionSuccesToGUI(TransactionException e,
+			boolean sendNetMessage) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_EVENT_COMPLETION, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
 	}
 
