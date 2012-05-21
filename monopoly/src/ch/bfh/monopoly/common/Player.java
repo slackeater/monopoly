@@ -274,7 +274,7 @@ public class Player {
 	 * @return the int value of hte position of the player on the board before his dice roll
 	 */
 	public int getPreviousPosition(){
-		return rollValue;
+		return previousPosition;
 	}
 
 

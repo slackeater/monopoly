@@ -158,6 +158,7 @@ public class MonopolyGUI extends JFrame {
 						Token t = singlePlayer.getT();
 						int throwValue = singlePlayer.getRollValue();
 						int previousPosition = singlePlayer.getPreviousPosition();
+						System.out.println("PREVIOUS POSITION "+ previousPosition);
 						Timer timerAnimation = null;
 
 						System.out.println("==== TOKEN / DICE VALUES ====");
