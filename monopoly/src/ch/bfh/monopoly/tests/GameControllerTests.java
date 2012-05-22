@@ -586,7 +586,7 @@ public class GameControllerTests {
 	}
 	
 	/**
-	 * the method payFee deducts the corrent amount from the current player's account
+	 * the method payFee deducts the correct amount from the current player's account
 	 */
 	@Test 
 	public void payFeeDeductsMoneyFromCurrentPlayer(){
@@ -612,5 +612,27 @@ public class GameControllerTests {
 		gameClient.payFee(fee,false);
 		assertTrue(gameClient.getFreeParking()==freeParkingAmount+fee);	
 	}
+	
+	
+	/**
+	 * check that a player cannot buy a property from the bank, unless he has
+	 * enough money
+	 * 
+	 * @throws TransactionException
+	 *             if there isn't enough money in the account, this is thrown
+	 */
+	@Test
+	public void cantBuyPropertyWithInsufficientFunds() throws TransactionException {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		p.withdawMoney(p.getAccount() - 1);
+		gameClient.setCurrentPlayer(p, false);
+		gameClient.advancePlayerNSpaces(tileId, false);
+		int plyrAccountBefore = p.getAccount();
+		gameClient.buyCurrentPropertyForPlayer(p.getName(), false);
+		int plyrAccountAfter = p.getAccount();
+		assertTrue(plyrAccountAfter == plyrAccountBefore);
+	}
+
 
 }
