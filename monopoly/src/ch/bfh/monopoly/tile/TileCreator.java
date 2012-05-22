@@ -27,7 +27,7 @@ public class TileCreator {
 
 	public void createTiles(GameClient gameClient) {
 		Tile t =null;
-		ResourceBundle res = ResourceBundle.getBundle("tile", loc);
+		ResourceBundle res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc);
 		
 		for (int i = 0; i < 40; i++) {
 

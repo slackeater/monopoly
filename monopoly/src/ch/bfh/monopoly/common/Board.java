@@ -127,7 +127,7 @@ public class Board {
 	}
 
 	public Board(GameClient gameClient) {
-		goMoney= Integer.parseInt(ResourceBundle.getBundle("tile", gameClient.getLoc()).getString("goMoney"));
+		goMoney= Integer.parseInt(ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", gameClient.getLoc()).getString("goMoney"));
 		// create tiles, cards, and events and tokens
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();

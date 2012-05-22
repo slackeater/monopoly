@@ -29,7 +29,7 @@ public class EventManager {
 	public EventManager(GameClient gameClient) {
 		integersTo16 = makeIntegerList();
 		this.gameClient = gameClient;
-		res = ResourceBundle.getBundle("events", gameClient.getLoc());
+		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events", gameClient.getLoc());
 		createTileEvents();
 		createChanceEvents();
 		createCommChestEvents();
