@@ -33,19 +33,19 @@ public class GameClientBasicMethodTests {
 		int fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 2);
 		// get fee for tile 1 with 1 house
-		gameClient.buyHouse(1);
+		gameClient.buyHouse(1,false);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 10);
 		// get fee for tile 1 with 2 houses
-		gameClient.buyHouse(1);
+		gameClient.buyHouse(1,false);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 30);
 		// get fee for tile 1 with 3 houses
-		gameClient.buyHouse(1);
+		gameClient.buyHouse(1,false);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 90);
 		// get fee for tile 1 with 4 houses
-		gameClient.buyHouse(1);
+		gameClient.buyHouse(1,false);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 160);
 	}
@@ -57,11 +57,11 @@ public class GameClientBasicMethodTests {
 	@Test
 	public void playersPositionAdvancesNSpaces() {
 		Player p = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(p);
-		gameClient.advanceCurrentPlayerNSpaces(4);
+		gameClient.setCurrentPlayer(p,false);
+		gameClient.advancePlayerNSpaces(4,false);
 		int newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 4);
-		gameClient.advanceCurrentPlayerNSpaces(10);
+		gameClient.advancePlayerNSpaces(10,false);
 		newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 14);
 	}

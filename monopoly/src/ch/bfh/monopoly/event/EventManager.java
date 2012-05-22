@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.event;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -10,8 +11,8 @@ public class EventManager {
 
 	BoardEvent[] tileEvents = new BoardEvent[40];
 	// length of 16 for each deck of chance-type cards
-	ArrayList<BoardEvent> chanceEvents = new ArrayList<BoardEvent>();
-	ArrayList<BoardEvent> commChestEvents = new ArrayList<BoardEvent>();
+	List<BoardEvent> chanceEvents = new ArrayList<BoardEvent>();
+	List<BoardEvent> commChestEvents = new ArrayList<BoardEvent>();
 	// holds the order that the cards will be drawn, these lists are shuffled
 	// when used once
 	int[] chanceEventsShuffled = new int[16];
@@ -21,6 +22,7 @@ public class EventManager {
 	ResourceBundle res;
 	int chanceDrawIndex = 16;
 	int commChestDrawIndex = 16;
+	private boolean sendNetMessage = true;
 
 	// set when GUI calls getEventDescription so program then knows which
 	// chance / Comm chest card to execute when GUI calls performEVent()
@@ -29,7 +31,8 @@ public class EventManager {
 	public EventManager(GameClient gameClient) {
 		integersTo16 = makeIntegerList();
 		this.gameClient = gameClient;
-		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events", gameClient.getLoc());
+		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
+				gameClient.getLoc());
 		createTileEvents();
 		createChanceEvents();
 		createCommChestEvents();
@@ -37,14 +40,16 @@ public class EventManager {
 
 	public void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
-		chanceDrawIndex=0;
-		gameClient.updateChanceDrawOrder(chanceEventsShuffled,true);
+		chanceDrawIndex = 0;
+		if (sendNetMessage)
+			gameClient.updateChanceDrawOrder(chanceEventsShuffled, true);
 	}
 
 	public void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
-		commChestDrawIndex=0;
-		gameClient.updateCommChestDrawOrder(commChestEventsShuffled,true);
+		commChestDrawIndex = 0;
+		if (sendNetMessage)
+			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, true);
 	}
 
 	public int[] shuffleDeck() {
@@ -52,8 +57,8 @@ public class EventManager {
 		for (int i = 0; i < newOrder.length; i++) {
 			Random r = new Random();
 			int randomIndex = r.nextInt(integersTo16.size());
-			newOrder[i]=integersTo16.get(randomIndex).intValue();
-			//remove the number from the list, so it can't be used again
+			newOrder[i] = integersTo16.get(randomIndex).intValue();
+			// remove the number from the list, so it can't be used again
 			integersTo16.remove(randomIndex);
 		}
 		integersTo16 = makeIntegerList();
@@ -225,9 +230,29 @@ public class EventManager {
 		BoardEvent te = new GetFixedSumEvent(name, cardText, amount, gameClient);
 		tileEvents[0] = te;
 
-		// CREATE COMMUNITY CHEST DEFAULT EVENT --> default event just sends
-		// performEvent() method to get a random card here
-
+		// CREATE COMMUNITY CHEST DEFAULT EVENT 
+		name = res.getString("commChest-name");
+		name = name.trim();
+//		cardText = res.getString("commChest-cardText");
+//		cardText = cardText.trim();
+		//TODO do we want to have some description of this event?
+		te = new ChanceEvent(name, "", gameClient);
+		tileEvents[2] = te;
+		tileEvents[17] = te;
+		tileEvents[33] = te;
+		
+		// CREATE CHANCE DEFAULT EVENT 
+		name = res.getString("chance-name");
+		name = name.trim();
+//		cardText = res.getString("chance-cardText");
+//		cardText = cardText.trim();
+		//TODO do we want to have some description of this event?
+		te = new ChanceEvent(name, "", gameClient);
+		tileEvents[7] = te;
+		tileEvents[22] = te;
+		tileEvents[36] = te;
+		
+		
 		// CREATE INCOME TAX EVENT
 		name = res.getString("incomeTax-name");
 		name = name.trim();
@@ -284,11 +309,11 @@ public class EventManager {
 		return tileEvents;
 	}
 
-	public ArrayList<BoardEvent> getChanceEvents() {
+	public List<BoardEvent> getChanceEvents() {
 		return chanceEvents;
 	}
 
-	public ArrayList<BoardEvent> getCommChestEvents() {
+	public List<BoardEvent> getCommChestEvents() {
 		return commChestEvents;
 	}
 
@@ -323,4 +348,26 @@ public class EventManager {
 		return commChestEventsShuffled.length;
 	}
 
+	/**
+	 * used for testing. If it is set to false, no net messages will be sent
+	 * 
+	 * @param sendNetMessage
+	 *            the truth value to set to
+	 */
+	public void setSendNetMessage(boolean sendNetMessage) {
+		this.sendNetMessage = sendNetMessage;
+		
+//		for (BoardEvent be : tileEvents){
+//			AbstractTileEvent ate = (AbstractTileEvent)be;
+//			ate.setSendNetMessage(sendNetMessage);
+//		}
+		for (BoardEvent be : chanceEvents){
+			AbstractTileEvent ate = (AbstractTileEvent)be;
+			ate.setSendNetMessage(sendNetMessage);
+		}
+		for (BoardEvent be : commChestEvents){
+			AbstractTileEvent ate = (AbstractTileEvent)be;
+			ate.setSendNetMessage(sendNetMessage);
+		}
+	}
 }

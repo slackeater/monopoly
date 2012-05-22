@@ -147,6 +147,17 @@ public class GameClient {
 		currentPlayer = p;
 	}
 
+	/**
+	 * a given player buys the property on which the current player is located.
+	 * It must not be the current player who buys it, but the property is
+	 * decided by his location
+	 * 
+	 * @param playerName
+	 *            the name of the player who wants to buy the property
+	 * @param sendNetMessage
+	 *            true if you wish that a netMessage be sent informing the
+	 *            clients of this action
+	 */
 	public void buyCurrentPropertyForPlayer(String playerName,
 			boolean sendNetMessage) {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
@@ -319,7 +330,7 @@ public class GameClient {
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
-		
+
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
 					Messages.TOGGLE_MORTGAGE);
@@ -624,7 +635,6 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
-
 		NetMessage nm = new NetMessage("NoNameNeeded", 0,
 				Messages.UPDATE_COMMCHEST_ORDER);
 		nm.setDrawOrder(newOrder);

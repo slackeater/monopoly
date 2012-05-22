@@ -30,18 +30,21 @@ public abstract class AbstractTile implements Tile {
 	protected String name;
 	protected BoardEvent event;
 	protected EventManager em;
-	
-	public AbstractTile(String name, int coordX, int coordY, int tileId,EventManager em){
-		this.name= name;
-		this.coordX=coordX;
-		this.coordY=coordY;
-		this.tileId=tileId;
-		this.em=em;
+	protected boolean sendNetMessage = true;
+
+	public AbstractTile(String name, int coordX, int coordY, int tileId,
+			EventManager em) {
+		this.name = name;
+		this.coordX = coordX;
+		this.coordY = coordY;
+		this.tileId = tileId;
+		this.em = em;
 	}
 
 	/**
 	 * Get the id of this tile
-	 * @return an int that correspond to the id 
+	 * 
+	 * @return an int that correspond to the id
 	 */
 	public int getTileId() {
 		return tileId;
@@ -49,7 +52,9 @@ public abstract class AbstractTile implements Tile {
 
 	/**
 	 * Set the id for this tile
-	 * @param id the id of this tile
+	 * 
+	 * @param id
+	 *            the id of this tile
 	 */
 	public void setId(int tileId) {
 		this.tileId = tileId;
@@ -57,11 +62,13 @@ public abstract class AbstractTile implements Tile {
 
 	/**
 	 * MAYBE TO DELETE
+	 * 
 	 * @return
 	 */
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -80,17 +87,18 @@ public abstract class AbstractTile implements Tile {
 		this.name = name;
 	}
 
-//	/**
-//	 * Set the X coordinate for this tile
-//	 * it will be used for draw the board
-//	 * @param coordX the X coordinate
-//	 */
-//	public void setCoordX(int coordX) {
-//		this.coordX = coordX;
-//	}
+	// /**
+	// * Set the X coordinate for this tile
+	// * it will be used for draw the board
+	// * @param coordX the X coordinate
+	// */
+	// public void setCoordX(int coordX) {
+	// this.coordX = coordX;
+	// }
 
 	/**
 	 * Get the X coordinate of this tile
+	 * 
 	 * @return an int representing the x coordindate
 	 */
 	public int getCoordX() {
@@ -99,7 +107,9 @@ public abstract class AbstractTile implements Tile {
 
 	/**
 	 * Set the Y coordinate of this tile
-	 * @param coordY the Y coordinate
+	 * 
+	 * @param coordY
+	 *            the Y coordinate
 	 */
 	public void setCoordY(int coordY) {
 		this.coordY = coordY;
@@ -107,16 +117,34 @@ public abstract class AbstractTile implements Tile {
 
 	/**
 	 * Get the Y coordinate of this tile
+	 * 
 	 * @return an int representing the y coordindate
 	 */
 	public int getCoordY() {
 		return coordY;
 	}
-	
-	//TODO Needed to test events, delete or comment out for final product
-	public EventManager getEventManager(){
+
+	// TODO Needed to test events, delete or comment out for final product
+	public EventManager getEventManager() {
 		return this.em;
 	}
 
+	
+	/**
+	 * used for testing. If it is set to false, no net messages will be sent
+	 * 
+	 * @param sendNetMessage the truth value to set to
+	 */
+	public void setSendNetMessage(boolean sendNetMessage) {
+		this.sendNetMessage = sendNetMessage;
+	}
+	
+	public void shuffleChanceCards() {
+		em.shuffleChanceCards();
+	}
+
+	public void shuffleCommChestCards() {
+		em.shuffleCommChestCards();
+	}
 
 }

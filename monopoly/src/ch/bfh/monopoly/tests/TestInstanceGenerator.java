@@ -47,6 +47,8 @@ public class TestInstanceGenerator {
 		board = gameClient.getBoard();
 		bc = new BoardController(board);
 		em = ((AbstractTile)board.getTileById(1)).getEventManager();
+		
+		em.setSendNetMessage(false);
 	}
 
 

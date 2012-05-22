@@ -3,12 +3,12 @@ package ch.bfh.monopoly.event;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.exception.TransactionException;
 
-public class PayRentEvent extends AbstractTileEvent {
+public class CommChestEvent extends AbstractTileEvent {
 
-	public PayRentEvent(String name, GameClient gameClient) {
+	public CommChestEvent(String name, String eventDescription, GameClient gameClient) {
 		super(
 				name,
-				"If you are not the owner of this tile, you must pay rent.  The rent for this tile is ",
+				eventDescription,
 				gameClient);
 	}
 
