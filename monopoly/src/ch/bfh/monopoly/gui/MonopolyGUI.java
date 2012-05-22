@@ -104,38 +104,6 @@ public class MonopolyGUI extends JFrame {
 
 			{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
 	};
-
-
-	class WindowManagement extends WindowAdapter{
-
-		JFrame parent;
-		
-		public WindowManagement(JFrame parent){
-			this.parent = parent;
-		}
-		
-		
-		@Override
-		public void windowClosing(WindowEvent e) {
-			// TODO Auto-generated method stub
-			super.windowClosing(e);
-			
-			if(e.getID() == WindowEvent.WINDOW_CLOSING)
-			System.out.println("Window is closing");
-			int n = JOptionPane.showConfirmDialog(
-				    parent,
-				    "Would you like to quit the game?",
-				    "Monopoly",
-				    JOptionPane.YES_NO_OPTION);
-			
-			System.out.println(n);
-			
-		}
-	
-		
-	}
-
-	
 	
 	/**
 	 * Construct a MonopolyGUI
@@ -156,7 +124,6 @@ public class MonopolyGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(res.getString("title"));
 		setLayout(new BorderLayout());
-		addWindowListener(new WindowManagement(this));
 
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
@@ -173,6 +140,14 @@ public class MonopolyGUI extends JFrame {
 		       
             int exit = JOptionPane.showConfirmDialog(this, "Are you sure?");
             if (exit == JOptionPane.YES_OPTION) {
+            	gc.sendQuitGame();
+            	
+            	try {
+					Thread.sleep(250);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				
                 System.exit(0);
             }
            

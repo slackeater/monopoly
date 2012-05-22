@@ -737,4 +737,12 @@ public class GameClient {
 		return loc;
 	}
 
+	/**
+	 * Send a message of type QUIT_GAME to the other players
+	 */
+	public void sendQuitGame() {
+		NetMessage nm = new NetMessage(this.localPlayer, Messages.QUIT_GAME);
+		nc.sendMessage(nm);
+	}
+
 }

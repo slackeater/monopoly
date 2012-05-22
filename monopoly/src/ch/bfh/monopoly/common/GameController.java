@@ -194,4 +194,8 @@ public class GameController {
 		gameClient.endTurn();
 	}
 	
+	public void sendQuitGame(){
+		gameClient.sendQuitGame();
+	}
+	
 }
