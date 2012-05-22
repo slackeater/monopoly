@@ -86,7 +86,7 @@ public class BoardTile extends JPanel{
 		this.res = res;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
-		
+
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
@@ -461,11 +461,11 @@ public class BoardTile extends JPanel{
 			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
 				if(owner){
-				showPopup(e);
+					showPopup(e);
 				}
 			}
 		}
-		
+
 		public void setOwner(){
 			owner = true;
 		}
@@ -552,9 +552,6 @@ public class BoardTile extends JPanel{
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 
-			System.out.println(bc.getTileInfoById(ti.getId()).getOwner());
-			
-
 			if(buyHouseClicked){
 				drawBuilding(false);
 			}
@@ -588,17 +585,17 @@ public class BoardTile extends JPanel{
 			}
 		}
 	}
-	
+
 	class OwnerUpdater implements PlayerListener{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-					if(ti.getId() != -1 && 
-					bc.getTileInfoById(ti.getId()).getOwner() != null && bc.getTileInfoById(ti.getId()).getOwner().equals(gc.getLocalPlayerName())){
-						btnListener.setOwner();
-					}
+			if(ti.getTileId() != -1 && 
+					bc.getTileInfoById(ti.getTileId()).getOwner() != null && bc.getTileInfoById(ti.getTileId()).getOwner().equals(gc.getLocalPlayerName())){
+				btnListener.setOwner();
+			}
 		}	
 	}
-	
+
 	/**
 	 * This method is called by an external
 	 * class to update the information on this tile
@@ -611,8 +608,8 @@ public class BoardTile extends JPanel{
 	public TileListener getTileListener(){
 		return this.iu;
 	}
-	
-	
+
+
 
 
 }

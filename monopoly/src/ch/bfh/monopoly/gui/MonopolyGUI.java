@@ -10,6 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -22,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -100,6 +105,38 @@ public class MonopolyGUI extends JFrame {
 			{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
 	};
 
+
+	class WindowManagement extends WindowAdapter{
+
+		JFrame parent;
+		
+		public WindowManagement(JFrame parent){
+			this.parent = parent;
+		}
+		
+		
+		@Override
+		public void windowClosing(WindowEvent e) {
+			// TODO Auto-generated method stub
+			super.windowClosing(e);
+			
+			if(e.getID() == WindowEvent.WINDOW_CLOSING)
+			System.out.println("Window is closing");
+			int n = JOptionPane.showConfirmDialog(
+				    parent,
+				    "Would you like to quit the game?",
+				    "Monopoly",
+				    JOptionPane.YES_NO_OPTION);
+			
+			System.out.println(n);
+			
+		}
+	
+		
+	}
+
+	
+	
 	/**
 	 * Construct a MonopolyGUI
 	 * @param bc the board controller used to query the board
@@ -119,13 +156,31 @@ public class MonopolyGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle(res.getString("title"));
 		setLayout(new BorderLayout());
+		addWindowListener(new WindowManagement(this));
 
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
 
 		pack();
+		
 	}
+
+	
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+		       
+            int exit = JOptionPane.showConfirmDialog(this, "Are you sure?");
+            if (exit == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
+           
+        } else {
+            super.processWindowEvent(e);
+        }
+	}
+
 
 	/**
 	 * Initialize the list of tiles, tokens and player listener
