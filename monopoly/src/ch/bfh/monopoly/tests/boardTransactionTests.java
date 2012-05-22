@@ -39,7 +39,7 @@ public class boardTransactionTests {
 		Player p = board.getPlayerByName("Justin");
 		Tile t = board.getTileById(1);
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(1,true);
+		gameClient.advancePlayerNSpaces(1,true);
 		board.buyCurrentPropertyForPlayer("Justin", 1);
 		// System.out.println(((Property)t).getOwner().getName());
 		assertTrue(((Property) t).getOwner() == p);
@@ -56,10 +56,10 @@ public class boardTransactionTests {
 		Player p = board.getPlayerByName("Justin");
 		Tile t = board.getTileById(1);
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(1,true);
+		gameClient.advancePlayerNSpaces(1,true);
 		try {
 			board.buyCurrentPropertyForPlayer("Justin", 1);
-			gameClient.advanceCurrentPlayerNSpaces(1,true);
+			gameClient.advancePlayerNSpaces(1,true);
 			board.buyCurrentPropertyForPlayer("Justin", 1);
 			fail("Player was allowed to but a property, but didn't have enough money to pay for it");
 		} catch (TransactionException e) {
@@ -111,12 +111,12 @@ public class boardTransactionTests {
 		Player p1 = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
 		gameClient.setCurrentPlayer(p1,true);
-		gameClient.advanceCurrentPlayerNSpaces(1,true);
+		gameClient.advancePlayerNSpaces(1,true);
 		Tile t = board.getTileById(1);
 		gameClient.buyCurrentPropertyForPlayer(p1.getName(),true);
 
 		assertTrue(((Property) t).getOwner() == p1);
-		board.transferProperty(p1.getName(), p2.getName(), t.getId(), price);
+		board.transferProperty(p1.getName(), p2.getName(), t.getTileId(), price);
 		assertTrue(((Property) t).getOwner() == p2);
 	}
 

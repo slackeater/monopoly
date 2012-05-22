@@ -21,11 +21,11 @@ public class Player {
 	private int position;
 	private int previousPosition;
 	private int rollValue;
+	private int jailCard;
 	private boolean isInJail;
 	private boolean turnToken;
-	private int jailCard;
 	private Token t;
-
+	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
 	public Player (String name, int account, Token t){
 		this.name = name;

@@ -1,6 +1,12 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.event.EventManager;
 
 public class Utility extends Property{
@@ -29,16 +35,71 @@ public class Utility extends Property{
 	}
 
 	
+	/**
+	 * get the window builder object needed for the GUI to display a window in
+	 * response to landing on a tile
+	 * 
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
+	 */
 	@Override
-	public String getEventDescription() {
-		// TODO Auto-generated method stub
-		return null;
+	public WindowBuilder getWindowBuilder() {
+		return new WindowBuilder(name, getEventDescription(),
+				getActionListenerList());
+
 	}
 
+	/**
+	 * creates the actionListeners that the GUI should display in response to a
+	 * player landing on this tile
+	 * 
+	 * @return a list of actionListeners for the GUI to add to buttons
+	 */
+	public List<ActionListener> getActionListenerList() {
+		List<ActionListener> actionList = new ArrayList<ActionListener>();
+		//check if this property is already owned
+		boolean owned = true;
+		if (owner.getName().equals("bank"))
+			owned = false;
+		
+		if (owned) {
+			ActionListener al = new ActionListener() {
+				//TODO implement a means to ROLL DICE AND then PAY RENT
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					performEvent();
+
+				}
+			};
+			actionList.add(al);
+		} else {
+			ActionListener al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					em.gameClient.buyCurrentPropertyForPlayer("currentPlayer",
+							true);
+				}
+			};
+			actionList.add(al);
+		}
+		return actionList;
+	}
+
+	/**
+	 * perform the action that this tile causes if a player lands on it
+	 */
 	@Override
 	public void performEvent() {
-		// TODO Auto-generated method stub
-		
+		em.performEventForTileAtId(tileId);
+
+	}
+
+	/**
+	 * get the text that should be displayed when a play lands on this tile
+	 */
+	@Override
+	public String getEventDescription() {
+		return em.getEventDescriptionById(tileId);
 	}
 	
 }

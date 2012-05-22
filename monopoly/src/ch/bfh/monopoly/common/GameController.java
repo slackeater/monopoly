@@ -120,7 +120,7 @@ public class GameController {
 	 * @param n is the number of spaces to advance the currentPlayer on the game board
 	 */
 	public void advancePlayerNSpaces(int n){
-		gameClient.advanceCurrentPlayerNSpaces(n, true);
+		gameClient.advancePlayerNSpaces(n, true);
 	}
 	
 	

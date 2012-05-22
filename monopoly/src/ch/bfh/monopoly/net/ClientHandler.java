@@ -64,7 +64,7 @@ public class ClientHandler implements IoHandler {
 				System.out.println("ROLL RECEIVED");
 				int rollValue = n.getInt();
 				System.out.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "+rollValue);
-				gc.advanceCurrentPlayerNSpaces(rollValue, false);
+				gc.advancePlayerNSpaces(rollValue, false);
 				break;
 			case TURN_TOKEN:
 				String username = n.getText();

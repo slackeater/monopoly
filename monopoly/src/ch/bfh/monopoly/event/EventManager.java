@@ -209,10 +209,10 @@ public class EventManager {
 		// CREATE TERRAIN AND RAILROAD EVENTS
 		int[] terrainAndRRSpaces = { 1, 3, 5, 6, 8, 9, 11, 13, 14, 15, 16, 18,
 				19, 21, 23, 24, 25, 26, 27, 29, 31, 32, 34, 35, 37, 39 };
-		SimpleFeeEvent sfe = new SimpleFeeEvent("Pay Rent", gameClient);
+		PayRentEvent pre = new PayRentEvent("Pay Rent", gameClient);
 		for (int i = 0; i < terrainAndRRSpaces.length; i++) {
 			int boardPosition = terrainAndRRSpaces[i];
-			tileEvents[boardPosition] = sfe;
+			tileEvents[boardPosition] = pre;
 		}
 
 		// CREATE GO EVENT

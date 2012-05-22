@@ -23,7 +23,7 @@ import ch.bfh.monopoly.event.BoardEvent;
 public abstract class AbstractTile implements Tile {
 
 	private static final long serialVersionUID = 1L;
-	protected int id;
+	protected int tileId;
 	private int coordX;
 	private int coordY;
 	private String description;
@@ -35,7 +35,7 @@ public abstract class AbstractTile implements Tile {
 		this.name= name;
 		this.coordX=coordX;
 		this.coordY=coordY;
-		this.id=id;
+		this.tileId=tileId;
 		this.em=em;
 	}
 
@@ -43,8 +43,8 @@ public abstract class AbstractTile implements Tile {
 	 * Get the id of this tile
 	 * @return an int that correspond to the id 
 	 */
-	public int getId() {
-		return id;
+	public int getTileId() {
+		return tileId;
 	}
 
 	/**
@@ -52,7 +52,7 @@ public abstract class AbstractTile implements Tile {
 	 * @param id the id of this tile
 	 */
 	public void setId(int id) {
-		this.id = id;
+		this.tileId = tileId;
 	}
 
 	/**

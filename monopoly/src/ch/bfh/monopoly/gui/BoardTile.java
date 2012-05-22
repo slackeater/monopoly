@@ -485,11 +485,11 @@ public class BoardTile extends JPanel{
 
 			if(e.getSource().equals(buyHouse)){
 				buyHouseClicked = true;
-				gc.buyHouse(ti.getId());
+				gc.buyHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHotel)){
 				buyHotelClicked = true;
-				gc.buyHotel(ti.getId());
+				gc.buyHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHouseRow)){
 				buyHouseRowClicked = true;
@@ -501,11 +501,11 @@ public class BoardTile extends JPanel{
 			}
 			else if(e.getSource().equals(sellHouse)){
 				sellHouseClicked = true;
-				gc.sellHouse(ti.getId());
+				gc.sellHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotel)){
 				sellHotelClicked = true;
-				gc.sellHotel(ti.getId());
+				gc.sellHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouseRow)){
 				sellHouseRowClicked = true;
@@ -518,11 +518,11 @@ public class BoardTile extends JPanel{
 			else if(e.getSource().equals(mortgage)){
 				mortgageClicked = true;
 				System.out.println("INSIDE MORTGAGE");
-				gc.toggleMortgageStatus(ti.getId());
+				gc.toggleMortgageStatus(ti.getTileId());
 			}
 			else if(e.getSource().equals(unmortgage)){
 				unmortgageClicked = true;
-				gc.toggleMortgageStatus(ti.getId());
+				gc.toggleMortgageStatus(ti.getTileId());
 			}
 
 		}	

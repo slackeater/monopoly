@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.common;
 
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +25,7 @@ public class Board {
 	private Token[] tokens = new Token[8];
 	private int freeParking;
 	private PlayerSubject playerSubject;
+	private final int goMoney;
 
 	/**
 	 * this inner class is connected to the GUI through an observer pattern. The
@@ -56,7 +58,7 @@ public class Board {
 				// the player owns
 				boolean[] terrains = new boolean[40];
 				for (Tile t : plyr.getProperties()) {
-					terrains[t.getId()] = true;
+					terrains[t.getTileId()] = true;
 				}
 				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),plyr.getPreviousPosition(),
 						plyr.getRollValue(), plyr.getName(),
@@ -126,6 +128,7 @@ public class Board {
 	}
 
 	public Board(GameClient gameClient) {
+		goMoney= Integer.parseInt(ResourceBundle.getBundle("tile", gameClient.getLoc()).getString("goMoney"));
 		// create tiles, cards, and events and tokens
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
@@ -187,6 +190,13 @@ public class Board {
 	}
 
 	/**
+	 * credit the current player's account his GO money 
+	 */
+	public void passGo(Player currentPlayer){
+		currentPlayer.depositMoney(goMoney);
+	}
+	
+	/**
 	 * buy a house for a given property checks that the tileId provided refers
 	 * to a terrain
 	 * 
@@ -204,7 +214,7 @@ public class Board {
 			throw new TransactionException(
 					"The maximum number of houses that may be built on a property is 4");
 		terrain.buildHouse();
-		int id = terrain.getId();
+		int id = terrain.getTileId();
 		availableHouses--;
 		int price = terrain.getHouseCost();
 		terrain.getOwner().withdawMoney(price);
@@ -232,7 +242,7 @@ public class Board {
 			throw new TransactionException(
 					"It's monopoly, but hey there are still rules!  You can't build more than one hotel on a tile.");
 		terrain.buildHotel();
-		int id = terrain.getId();
+		int id = terrain.getTileId();
 		availableHotels--;
 		int price = terrain.getHotelCost();
 		terrain.getOwner().withdawMoney(price);
@@ -254,7 +264,7 @@ public class Board {
 					"There are no houses present on tile with tile Id="
 							+ tileId);
 		terrain.buildHotel();
-		int id = terrain.getId();
+		int id = terrain.getTileId();
 		availableHotels++;
 		int price = terrain.getHouseCost();
 		terrain.getOwner().depositMoney(price);
@@ -275,7 +285,7 @@ public class Board {
 			throw new TransactionException(
 					"No hotels present on tile with tile Id=" + tileId);
 		terrain.buildHotel();
-		int id = terrain.getId();
+		int id = terrain.getTileId();
 		availableHotels++;
 		int price = terrain.getHotelCost();
 		terrain.getOwner().depositMoney(price);
@@ -315,7 +325,7 @@ public class Board {
 			prop.getOwner().depositMoney(value);
 			prop.setMortgageActive(true);
 		}
-		int id = prop.getId();
+		int id = prop.getTileId();
 		tileSubjects[id].notifyListeners();
 	}
 
@@ -355,6 +365,18 @@ public class Board {
 		return tiles[tileId];
 	}
 
+	
+	/**
+	 * get the window builder object needed for the GUI to display a window in response to landing on a tile
+	 * 
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
+	 */
+	public WindowBuilder getWindowBuilderForTile(int tileId) {
+		Tile t = getTileById(tileId);
+		return t.getWindowBuilder();
+	}
+	
 	/**
 	 * transfers a given amount of money from one player to another
 	 * 
@@ -615,7 +637,7 @@ public class Board {
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
 			tileInfo.setRGB(t.getRGB());
-			tileInfo.setId(t.getId());
+			tileInfo.setTileId(t.getTileId());
 		}
 		if (tile instanceof Railroad) {
 			Railroad t = (Railroad) tile;

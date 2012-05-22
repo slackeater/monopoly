@@ -174,23 +174,27 @@ public class GameClient {
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public void advanceCurrentPlayerNSpaces(int n, boolean sendNetMessage) {
+	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
 		String playerName = currentPlayer.getName();
+		
+		int previousPosition = currentPlayer.getPosition();
 		board.advanceCurrentPlayerNSpaces(playerName, n);
-
+		int newPosition = currentPlayer.getPosition();
+		
+		//if passes go
+		if (newPosition<previousPosition)
+			board.passGo(currentPlayer);
+			
 		if (sendNetMessage) {
-			try {
-				// send a netmessage with the roll value of this player
-				NetMessage roll = new NetMessage(currentPlayer.getName(), n,
-						Messages.DICE_ROLL);
-				session.write(roll).await();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
+					Messages.DICE_ROLL);
+			sendNetMessageToGUI(netMsg);
 		}
 	}
+	
 
+	
+	
 	/**
 	 * buy a house for a given property
 	 * 
@@ -202,14 +206,13 @@ public class GameClient {
 	public void buyHouse(int tileID, boolean sendNetMessage) {
 		try {
 			board.buyHouse(tileID);
-			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.BUY_HOUSE);
-			session.write(nm).await();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.BUY_HOUSE);
+			sendNetMessageToGUI(netMsg);
 		}
 	}
 
@@ -224,14 +227,13 @@ public class GameClient {
 	public void buyHotel(int tileID, boolean sendNetMessage) {
 		try {
 			board.buyHotel(tileID);
-			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.BUY_HOTEL);
-			session.write(nm).await();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.BUY_HOTEL);
+			sendNetMessageToGUI(netMsg);
 		}
 	}
 
@@ -246,14 +248,13 @@ public class GameClient {
 	public void sellHouse(int tileID, boolean sendNetMessage) {
 		try {
 			board.sellHouses(tileID);
-			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.SELL_HOUSE);
-			session.write(nm).await();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.SELL_HOUSE);
+			sendNetMessageToGUI(netMsg);
 		}
 
 	}
@@ -269,14 +270,13 @@ public class GameClient {
 	public void sellHotel(int tileID, boolean sendNetMessage) {
 		try {
 			board.sellHotel(tileID);
-			NetMessage nm = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.SELL_HOTEL);
-			session.write(nm).await();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+					Messages.SELL_HOTEL);
+			sendNetMessageToGUI(netMsg);
 		}
 	}
 
@@ -395,23 +395,15 @@ public class GameClient {
 	}
 
 	/**
-	 * get the description of the event for the tile on which the current player
-	 * resides
+	 * get the window builder object needed for the GUI to display a window in
+	 * response to landing on a tile
 	 * 
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
 	public WindowBuilder getWindowBuilder(boolean sendNetMessage) {
 		int currentPos = currentPlayer.getPosition();
-		String name = board.getTileInfoById(currentPos).getName();
-		String description = board.getTileById(currentPos)
-				.getEventDescription();
-		List<ActionListener> actionList = board.getTileById(currentPos).getActionListenerList();
-
-		WindowBuilder wb = new WindowBuilder(name, description, actionList);
-
-		
-		
+		WindowBuilder wb = board.getWindowBuilderForTile(currentPos);
 		return wb;
 	}
 
@@ -486,6 +478,28 @@ public class GameClient {
 		String ownerOfUtility2 = ((Property) board.getTileById(28)).getOwner()
 				.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
+	}
+
+	/**
+	 * the current player is charge the rent for the tile he is on the fee is
+	 * withdrawn from his bank account and added to the tile owner's account
+	 * 
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
+	 */
+	public void payRent(boolean sendNetMessage) {
+		String currentPlayerName = currentPlayer.getName();
+		int currentPosition = currentPlayer.getPosition();
+		Property prop = board.castTileToProperty(board
+				.getTileById(currentPosition));
+		String owner = prop.getOwner().getName();
+		int amount = getFeeForTileAtId(currentPosition);
+		transferMoney(currentPlayerName, owner, amount, false);
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.PAY_RENT);
+			sendNetMessageToGUI(msg);
+		}
 	}
 
 	/**
@@ -576,7 +590,7 @@ public class GameClient {
 			currentPlayerName = null;
 
 		board.updateTurnTokens(playerName, currentPlayerName);
-		
+
 		System.out
 				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
 						+ board.getPlayerByName(playerName).hasTurnToken());
@@ -655,7 +669,7 @@ public class GameClient {
 				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
 	}
-	
+
 	/**
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */
@@ -664,6 +678,18 @@ public class GameClient {
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_EVENT_COMPLETION, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
+	}
+
+	/**
+	 * gathers transactions errors from the methods and forwards them to the GUI
+	 */
+	public void sendNetMessageToGUI(NetMessage netMsg) {
+		try {
+			session.write(netMsg).await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

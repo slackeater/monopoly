@@ -63,6 +63,7 @@ public class EventTests {
 				&& balance3before == (balance3after + 20)
 				&& balance4before == (balance4after + 20));
 	}
+	
 
 	/**
 	 * Test that once the cards are used up, the list is repopulated in a
@@ -114,7 +115,7 @@ public class EventTests {
 		gameClient.setCurrentPlayer(p,true);
 		p.setPosition(26);
 		// advance player to GO TO JAIL
-		gameClient.advanceCurrentPlayerNSpaces(4,true);
+		gameClient.advancePlayerNSpaces(4,true);
 		gc.performEvent();
 		assertTrue(p.isInJail());
 		assertTrue(p.getPosition() == 10);
@@ -134,7 +135,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 6; // oriental avenue
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		String expectedDescription = "If you are not the owner of this tile, you must pay rent.  The rent for this tile is "
 				+ rent;
@@ -158,7 +159,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 14; // Virginia Avenue
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		String expectedDescription = "If you are not the owner of this tile, you must pay rent.  The rent for this tile is "
 				+ rent;
@@ -182,7 +183,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 14; // Virginia Avenue
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		int previousBalance = p.getAccount();
 		gc.performEvent();
@@ -198,7 +199,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 14; // Virginia Avenue
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		// set player's account to 1 dollar
 		try {
@@ -218,7 +219,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 12; // Virginia Avenue
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		int previousBalance = p.getAccount();
 		gc.performEvent();
@@ -233,8 +234,8 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 37; // Park Place
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
-		gameClient.advanceCurrentPlayerNSpaces(3,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(3,true);
 		System.out.println(gameClient.getCurrentPlayer().getPosition());
 		int previousBalance = p.getAccount();
 		gc.performEvent();
@@ -253,7 +254,7 @@ public class EventTests {
 		gameClient.setCurrentPlayer(plyr1,true);
 		gameClient.payFee(fee,true);
 		gameClient.setCurrentPlayer(plyr2,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int previousBalance = plyr2.getAccount();
 		gc.performEvent();
 		assertTrue(plyr2.getAccount() == previousBalance + fee);
@@ -276,7 +277,7 @@ public class EventTests {
 		Player p = board.getPlayerByName("Justin");
 		int tileId = 4; // Park Place
 		gameClient.setCurrentPlayer(p,true);
-		gameClient.advanceCurrentPlayerNSpaces(tileId,true);
+		gameClient.advancePlayerNSpaces(tileId,true);
 		int previousBalance = p.getAccount();
 		int fee = previousBalance / 10;
 		gc.performEvent();
