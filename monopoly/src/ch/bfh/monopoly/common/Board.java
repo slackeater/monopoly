@@ -415,7 +415,7 @@ public class Board {
 	 */
 	public void createPlayers(List<String> playerNames, Locale loc) {
 		players = new ArrayList<Player>();
-		String bundleData = ResourceBundle.getBundle("tile", loc).getString(
+		String bundleData = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc).getString(
 				"startMoney");
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
