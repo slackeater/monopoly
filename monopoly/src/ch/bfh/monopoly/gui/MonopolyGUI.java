@@ -218,6 +218,9 @@ public class MonopolyGUI extends JFrame {
 								}
 
 								timerAnimation.start();
+								
+								if(timerAnimation.isRunning())
+									System.out.println("== T= = T= T= T= server	 RUNNING");
 
 							}
 						}
@@ -628,7 +631,14 @@ public class MonopolyGUI extends JFrame {
 				endTurn.setEnabled(false);
 				trade.setEnabled(false);
 				useCard.setEnabled(false);
+				
+				//remove the useless tab. Only the event tab must remain
+				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--){
+					tabPane.remove(j);
+				}
+				
 				gc.endTurn();
+
 			}
 		});
 

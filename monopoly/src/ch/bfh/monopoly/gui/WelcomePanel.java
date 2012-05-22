@@ -136,14 +136,12 @@ public class WelcomePanel extends JFrame{
 					if(startServer){
 						this.nSrvCtrl = new ServerNetworkController();
 						this.nSrvCtrl.startServer(ip, port);
-//						Monopoly.communicate.startServer(ip, port);
 					}
 					
 					//if everything works connect to the server
 					this.nCliCtrl = new ClientNetworkController(gameClient, name, throwValue);
 					this.nCliCtrl.startClient(ip, port);
 					this.bc = new BoardController(gameClient.getBoard());
-//					cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name, throwValue);
 
 					//set the ClientNetworkControllerIoSession in the GameClient
 					gameClient.setClientNetworkController(nCliCtrl);

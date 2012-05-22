@@ -70,6 +70,8 @@ public class ClientHandler implements IoHandler {
 				String username = n.getText();
 				gc.updateTurnTokens(username);
 				break;
+			case QUIT_GAME:
+				//TODO quit gamed
 		}
 	}
 
