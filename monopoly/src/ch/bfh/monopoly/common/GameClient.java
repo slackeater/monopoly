@@ -281,16 +281,15 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
-
 		try {
 			board.toggleMortgageStatus(tileId);
-			NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
-					Messages.TOGGLE_MORTGAGE);
-			nc.sendMessage(nm);
-		} catch (RuntimeException e) {
-			e.printStackTrace();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+					Messages.TOGGLE_MORTGAGE);
+			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -319,6 +318,12 @@ public class GameClient {
 					price);
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+		
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+					Messages.TOGGLE_MORTGAGE);
+			nc.sendMessage(netMsg);
 		}
 
 	}
@@ -510,6 +515,11 @@ public class GameClient {
 					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 			ws.notifyListeners(wse);
 		}
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.PAY_FEE);
+			sendNetMessageToGUI(msg);
+		}
 	}
 
 	/**
@@ -619,7 +629,6 @@ public class GameClient {
 				Messages.UPDATE_COMMCHEST_ORDER);
 		nm.setDrawOrder(newOrder);
 		nc.sendMessage(nm);
-		;
 
 	}
 

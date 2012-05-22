@@ -14,18 +14,10 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 
 	@Override
 	public void performEvent() {
-		String currentPlayer = gameClient.getCurrentPlayer().getName();
 		int currentPos = gameClient.getCurrentPlayer().getPosition();
-		if (!(gameClient.playerIsOwnerOfTile(currentPlayer, currentPos))) {
-			int fee = gameClient.getFeeForTileAtId(currentPos);
-			// TODO make a distinction between paying a player and playing a fee
-			// into FREE PARKING
-			try {
-				gameClient.getCurrentPlayer().withdawMoney(fee);
-			} catch (TransactionException e) {
-				gameClient.sendTransactionErrorToGUI(e, true);
-			}
-		}
+		int fee = gameClient.getFeeForTileAtId(currentPos);
+		gameClient.payFee(fee, sendNetMessage);	
+		
 		TransactionException te = new TransactionException(
 				"Player has completed the event successfully");
 		gameClient.sendTransactionSuccesToGUI(te, true);
@@ -34,6 +26,7 @@ public class SimpleFeeEvent extends AbstractTileEvent {
 
 	@Override
 	public String getEventDescription() {
+		//TODO internationalization
 		int tileId = gameClient.getCurrentPlayer().getPosition();
 		int rent = gameClient.getFeeForTileAtId(tileId);
 		String eventDescription = super.getEventDescription() + rent;

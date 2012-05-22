@@ -13,6 +13,7 @@ import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
@@ -272,10 +273,10 @@ public class GameControllerTests {
 		gameClient.advancePlayerNSpaces(tileId, false);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		// is false after creation, will be set to true
-		gc.toggleMortgageStatus(tileId);
+		gameClient.toggleMortgageStatus(tileId, false);
 		assertTrue(terrain.isMortgageActive());
 		// And once more, just for fun
-		gc.toggleMortgageStatus(tileId);
+		gameClient.toggleMortgageStatus(tileId,false);
 		assertTrue(!terrain.isMortgageActive());
 	}
 
@@ -293,7 +294,7 @@ public class GameControllerTests {
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int accountBefore = plyr.getAccount();
 		// is false after creation, will be set to true
-		gc.toggleMortgageStatus(tileId);
+		gameClient.toggleMortgageStatus(tileId,false);
 		int accountNow = plyr.getAccount();
 		assertTrue(accountNow == (accountBefore + terrain.getMortgageValue()));
 	}
@@ -310,9 +311,9 @@ public class GameControllerTests {
 		Terrain terrain = (Terrain) board.getTileById(1);
 		gameClient.setCurrentPlayer(plyr1, false);
 		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.buyCurrentPropertyForPlayer("Justin",false);
 		assertTrue(terrain.getOwner().getName().equals(plyr1.getName()));
-		gc.transferProperty(plyr1.getName(), plyr2.getName(), tileId);
+		gameClient.transferProperty(plyr1.getName(), plyr2.getName(),tileId,0,false);
 		assertTrue(terrain.getOwner().getName().equals(plyr2.getName()));
 	}
 
@@ -332,8 +333,8 @@ public class GameControllerTests {
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
-		gc.transferPropertyForPrice(plyr1.getName(), plyr2.getName(), tileId,
-				price);
+		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
+				price, false);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore + price);
 	}
 
@@ -353,8 +354,8 @@ public class GameControllerTests {
 		gc.buyCurrentPropertyForPlayer("Justin");
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
-		gc.transferPropertyForPrice(plyr1.getName(), plyr2.getName(), tileId,
-				price);
+		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
+				price, false);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore - price);
 	}
 
@@ -371,9 +372,9 @@ public class GameControllerTests {
 		Terrain terrain = (Terrain) board.getTileById(1);
 		gameClient.setCurrentPlayer(plyr1, false);
 		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer(player1name);
-		gc.transferPropertyForPrice(plyr1.getName(), plyr2.getName(), tileId,
-				price);
+		gameClient.buyCurrentPropertyForPlayer(player1name, false);
+		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
+				price, false);
 		assertTrue(plyr2.ownsProperty(terrain));
 	}
 
@@ -392,8 +393,8 @@ public class GameControllerTests {
 		gameClient.advancePlayerNSpaces(tileId, false);
 		gc.buyCurrentPropertyForPlayer("Justin");
 		assertTrue(plyr1.ownsProperty(terrain));
-		gc.transferPropertyForPrice("curReNTPlayeR", plyr2.getName(), tileId,
-				price);
+		gameClient.transferProperty("curReNTPlayeR", plyr2.getName(), tileId,
+				price, false);
 		assertTrue(plyr2.ownsProperty(terrain));
 	}
 
@@ -522,6 +523,7 @@ public class GameControllerTests {
 
 	}
 
+	
 	/**
 	 * test gc.playerHasSufficientFunds returns true if a player has more than a
 	 * given amount of money
@@ -530,7 +532,7 @@ public class GameControllerTests {
 	public void playerHasSufficientFunds() {
 		String player1name = "Justin";
 		int amount = 10000;
-		assertTrue(gc.playerHasSufficientFunds(player1name, amount));
+		assertTrue(gameClient.playerHasSufficientFunds(player1name, amount));
 	}
 
 	/**
@@ -541,7 +543,74 @@ public class GameControllerTests {
 	public void playerDoesNotHaveSufficientFunds() {
 		String player1name = "Justin";
 		int amount = 16000;
-		assertTrue(!gc.playerHasSufficientFunds(player1name, amount));
+		assertTrue(!gameClient.playerHasSufficientFunds(player1name, amount));
+	}
+	
+	
+	/**
+	 *  check that the method gameClient.buyCurrentPropertyForPlayer deducts the money from the players account correctly
+	 */
+	@Test
+	public void buyPropertyFromBankWithdrawsCorrectly() {
+		int tileId = 39;
+		Player p = board.getPlayerByName("Justin");
+		int previousBalance = p.getAccount();
+		gameClient.setCurrentPlayer(p,false);
+		gameClient.advancePlayerNSpaces(39,false);
+		gameClient.buyCurrentPropertyForPlayer(p.getName(),false);
+		Tile t = board.getTileById(tileId);
+		Property prop =(Property)t;
+		int priceOfProperty = prop.getPrice();
+		int newBalance = p.getAccount();
+		assertTrue(newBalance==(previousBalance-priceOfProperty));
+	}
+	
+	
+	
+	/**
+	 *  check that a player cannot buy a property from the bank, unless he has enough money
+	 * @throws TransactionException 
+	 */
+	@Test
+	public void propertyFromBankInsufficientFunds() throws TransactionException {
+		int tileId = 39;
+		Player plyr = board.getPlayerByName("Justin");
+		plyr.withdawMoney(plyr.getAccount()-1);
+		gameClient.setCurrentPlayer(plyr,false);
+		gameClient.advancePlayerNSpaces(tileId,false);
+		int plyrAccountBefore=plyr.getAccount();
+		gameClient.buyCurrentPropertyForPlayer(plyr.getName(),false);
+		int plyrAccountAfter=plyr.getAccount();
+		assertTrue(plyrAccountAfter==plyrAccountBefore);
+
+	}
+	
+	/**
+	 * the method payFee deducts the corrent amount from the current player's account
+	 */
+	@Test 
+	public void payFeeDeductsMoneyFromCurrentPlayer(){
+		String playerName = "Justin";
+		Player plyr = board.getPlayerByName(playerName);
+		int playerAccountBefore = plyr.getAccount();
+		gameClient.setCurrentPlayer(plyr,false);
+		int fee = 100;
+		gameClient.payFee(fee,false);
+		assertTrue(plyr.getAccount()==playerAccountBefore-fee);
+	}
+	
+	/**
+	 * the method payFee() credits the amount of the fee to the variable freeParking
+	 */
+	@Test 
+	public void payFeeCreditsFeeToFreeParking(){
+		String playerName = "Justin";
+		Player plyr = board.getPlayerByName(playerName);
+		gameClient.setCurrentPlayer(plyr,false);
+		int fee = 100;
+		int freeParkingAmount = gameClient.getFreeParking();
+		gameClient.payFee(fee,false);
+		assertTrue(gameClient.getFreeParking()==freeParkingAmount+fee);	
 	}
 
 }

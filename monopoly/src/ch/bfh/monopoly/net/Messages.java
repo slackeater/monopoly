@@ -36,6 +36,7 @@ public enum Messages {
 	PAY_RENT(500),
 	TURN_TOKEN(510),
 	END_TURN(520),
+	PAY_FEE(530),
 	
 	//when chance cards must be shuffled
 	UPDATE_CHANCE_ORDER(600),

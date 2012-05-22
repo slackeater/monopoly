@@ -67,7 +67,6 @@ public class Board {
 						plyr.getToken());
 				playerStates.add(pse);
 			}
-			System.out.println("HELLO from updatePlayer in playerObserver subject");
 			for (PlayerListener pl : listeners) {
 				pl.updatePlayer(playerStates);
 			}
@@ -604,7 +603,6 @@ public class Board {
 		int currentPos = plyr.getPosition();
 		plyr.setPosition((currentPos + n) % 40);
 		plyr.setRollValue(n);
-		System.out.println("HELLO from ADVANCE PLAYER N SPACES in BOARD");
 		playerSubject.notifyListeners();
 		plyr.resetRollValue();
 	}

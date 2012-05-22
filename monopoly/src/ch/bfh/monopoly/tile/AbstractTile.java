@@ -31,7 +31,7 @@ public abstract class AbstractTile implements Tile {
 	protected BoardEvent event;
 	protected EventManager em;
 	
-	public AbstractTile(String name, int coordX, int coordY, int id,EventManager em){
+	public AbstractTile(String name, int coordX, int coordY, int tileId,EventManager em){
 		this.name= name;
 		this.coordX=coordX;
 		this.coordY=coordY;
@@ -51,7 +51,7 @@ public abstract class AbstractTile implements Tile {
 	 * Set the id for this tile
 	 * @param id the id of this tile
 	 */
-	public void setId(int id) {
+	public void setId(int tileId) {
 		this.tileId = tileId;
 	}
 
