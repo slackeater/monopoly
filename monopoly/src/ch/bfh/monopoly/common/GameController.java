@@ -245,6 +245,9 @@ public class GameController {
 		gameClient.endTurn();
 	}
 	
+	/**
+	 * send a message when the player quit the game
+	 */
 	public void sendQuitGame(){
 		gameClient.sendQuitGame();
 	}
