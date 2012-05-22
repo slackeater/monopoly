@@ -69,7 +69,7 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
-	private JButton throwDice, useCard, community, chance, endTurn, trade, sendTradeRequest;
+	private JButton throwDice, useCard, endTurn, trade, sendTradeRequest;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
 	private JSpinner moneySpinner, rcvrMoneySpinner;
@@ -144,7 +144,7 @@ public class MonopolyGUI extends JFrame {
 				pse = playerStates;
 
 				System.out.println("MOETHOD FOR THE ANIMATION OBSERVER");
-				
+
 				for(PlayerStateEvent singlePlayer : pse){
 					//used to place the token on the first tile for the first time
 					if(!tokenPlaced){
@@ -155,11 +155,11 @@ public class MonopolyGUI extends JFrame {
 					//used to move the token 
 					else if(tokenPlaced){
 						System.out.println("INSIDE THE METHOD TO DRAW THE ANIMATION");
-						
+
 						Token t = singlePlayer.getT();
 						int throwValue = singlePlayer.getRollValue();
 						int previousPosition = singlePlayer.getPreviousPosition();
-						
+
 						Timer timerAnimation = null;
 
 						System.out.println("==== TOKEN / DICE VALUES ====");
@@ -173,12 +173,14 @@ public class MonopolyGUI extends JFrame {
 						//move the token only when the user has thrown the dice and is the current player
 						if(singlePlayer.hasTurnToken()){
 							System.out.println("-----====----- THE PLAYER WITH THE TOKEN INSIDE THE ANIMATION IS : "  + singlePlayer.getName());
-							
+
 							if(throwValue > 1 && throwValue < 13){
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
 									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+
+
 								}
 								else{
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
@@ -186,6 +188,7 @@ public class MonopolyGUI extends JFrame {
 								}
 
 								timerAnimation.start();
+
 							}
 						}
 
@@ -214,12 +217,12 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updateWindow(WindowStateEvent wse) {;
-				if (wse.getType() == WindowMessage.MSG_FOR_ERROR)
-					eventTextArea.append(wse.getEventDescription()+"\n");
+			if (wse.getType() == WindowMessage.MSG_FOR_ERROR)
+				eventTextArea.append(wse.getEventDescription()+"\n");
 			}
-	
+
 		}
-		
+
 		InfoAreaUpdate iau = new InfoAreaUpdate();
 		gc.getWindowSubject().addListener(iau);
 
@@ -470,7 +473,7 @@ public class MonopolyGUI extends JFrame {
 		eventTextArea.setEditable(false);
 
 		System.out.println("DRAWBOARD METHOD");
-		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons, community, chance);
+		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons);
 
 		return board;
 	}
@@ -536,22 +539,21 @@ public class MonopolyGUI extends JFrame {
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
 					}
-				
-				WindowBuilder wb = gc.getWindowBuilder();
-				String name = wb.getName();
-				JPanel jp = new JPanel();
-				JButton testButton = new JButton("TEST");
-				
-	
-				testButton.addActionListener(wb.getActionList().get(0));
-				//testButton.addActionListener(wb.getActionList().get(1));
-				
-				jp.add(new JLabel(wb.getDescription()));
-				jp.add(testButton);
-				
-				tabPane.addTab(name,  jp);
+
+					WindowBuilder wb = gc.getWindowBuilder();
+					String name = wb.getName();
+					JPanel jp = new JPanel();
+					JButton testButton = new JButton("TEST");
+
+					testButton.addActionListener(wb.getActionList().get(0));
+					//testButton.addActionListener(wb.getActionList().get(1));
+
+					jp.add(new JLabel(wb.getDescription()));
+					jp.add(testButton);
+
+					tabPane.addTab(name,  jp);
 				}
-				
+
 			}
 		};
 
@@ -586,12 +588,6 @@ public class MonopolyGUI extends JFrame {
 			}
 		});
 
-		this.community = new JButton(res.getString("button-communitychest"));
-		this.community.setEnabled(false);
-
-		this.chance = new JButton(res.getString("button-chance"));
-		this.chance.setEnabled(false);
-
 		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
 
@@ -618,7 +614,7 @@ public class MonopolyGUI extends JFrame {
 					if(playerState.getName().equals(gc.getLocalPlayerName()))
 						if(playerState.hasTurnToken()){
 							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
-							
+
 							throwDice.setEnabled(true);
 							useCard.setEnabled(true);
 							trade.setEnabled(true);

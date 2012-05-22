@@ -8,7 +8,7 @@ import ch.bfh.monopoly.net.ClientHandler;
 import ch.bfh.monopoly.net.ClientNetwork;
 import ch.bfh.monopoly.net.NetMessage;
 
-public class NetworkClientController {
+public class ClientNetworkController {
 
 	private ClientNetwork net;
 	private ClientHandler cliHandler;
@@ -22,10 +22,11 @@ public class NetworkClientController {
 	 * @param rollOrderValue int
 	 * 			the value of the roll for order
 	 */
-	public NetworkClientController(GameClient gc, String localPlayerName, int rollOrderValue){
+	public ClientNetworkController(GameClient gc, String localPlayerName, int rollOrderValue){
 		this.cliHandler = new ClientHandler(gc, localPlayerName, rollOrderValue);
 		this.net = new ClientNetwork(cliHandler);
 	}
+
 	
 	/**
 	 * Start a client and connect it to the server

@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.mina.core.session.IoSession;
-
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
@@ -24,7 +22,7 @@ public class GameClient {
 	private Player bank;
 	private Locale loc;
 	private Board board;
-	private IoSession session;
+	private ClientNetworkController nc;
 	private WindowSubject ws;
 
 	/**
@@ -80,14 +78,9 @@ public class GameClient {
 	 * end the turn for the current player
 	 */
 	public void endTurn() {
-		try {
-			// TODO adjust turn token
-			NetMessage nm = new NetMessage(Messages.END_TURN);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		NetMessage nm = new NetMessage(Messages.END_TURN);
+		nc.sendMessage(nm);
+
 	}
 
 	/**
@@ -107,8 +100,8 @@ public class GameClient {
 	 * @param session
 	 *            IoSession the IoSession used to communicate with the server
 	 */
-	public void setIoSession(IoSession session) {
-		this.session = session;
+	public void setClientNetworkController(ClientNetworkController nCliCtrl) {
+		this.nc = nCliCtrl;
 	}
 
 	/**
@@ -176,25 +169,23 @@ public class GameClient {
 	 */
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
 		String playerName = currentPlayer.getName();
-		
+
 		int previousPosition = currentPlayer.getPosition();
 		board.advanceCurrentPlayerNSpaces(playerName, n);
 		int newPosition = currentPlayer.getPosition();
-		
-		//if passes go
-		if (newPosition<previousPosition)
+
+		// if passes go
+		if (newPosition < previousPosition)
 			board.passGo(currentPlayer);
-			
+
 		if (sendNetMessage) {
+			// send a netmessage with the roll value of this player
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
 					Messages.DICE_ROLL);
-			sendNetMessageToGUI(netMsg);
+			nc.sendMessage(netMsg);
 		}
 	}
-	
 
-	
-	
 	/**
 	 * buy a house for a given property
 	 * 
@@ -212,8 +203,9 @@ public class GameClient {
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.BUY_HOUSE);
-			sendNetMessageToGUI(netMsg);
+			nc.sendMessage(netMsg);
 		}
+
 	}
 
 	/**
@@ -233,7 +225,7 @@ public class GameClient {
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.BUY_HOTEL);
-			sendNetMessageToGUI(netMsg);
+			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -254,9 +246,8 @@ public class GameClient {
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.SELL_HOUSE);
-			sendNetMessageToGUI(netMsg);
+			nc.sendMessage(netMsg);
 		}
-
 	}
 
 	/**
@@ -276,7 +267,7 @@ public class GameClient {
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 					Messages.SELL_HOTEL);
-			sendNetMessageToGUI(netMsg);
+			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -295,13 +286,11 @@ public class GameClient {
 			board.toggleMortgageStatus(tileId);
 			NetMessage nm = new NetMessage(currentPlayer.getName(), tileId,
 					Messages.TOGGLE_MORTGAGE);
-			session.write(nm).await();
+			nc.sendMessage(nm);
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -556,13 +545,9 @@ public class GameClient {
 	 *            the message
 	 */
 	public void sendChatMessage(String s) {
-		try {
-			String text = localPlayer.concat(": " + s + "\n");
-			NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		String text = localPlayer.concat(": " + s + "\n");
+		NetMessage nm = new NetMessage(text, Messages.CHAT_MSG);
+		nc.sendMessage(nm);
 	}
 
 	/**
@@ -612,15 +597,11 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateChanceDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		try {
-			NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
-					Messages.UPDATE_CHANCE_ORDER);
-			nm.setDrawOrder(newOrder);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+				Messages.UPDATE_CHANCE_ORDER);
+		nm.setDrawOrder(newOrder);
+		nc.sendMessage(nm);
+
 	}
 
 	/**
@@ -633,15 +614,13 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		try {
-			NetMessage nm = new NetMessage("NoNameNeeded", 0,
-					Messages.UPDATE_COMMCHEST_ORDER);
-			nm.setDrawOrder(newOrder);
-			session.write(nm).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		NetMessage nm = new NetMessage("NoNameNeeded", 0,
+				Messages.UPDATE_COMMCHEST_ORDER);
+		nm.setDrawOrder(newOrder);
+		nc.sendMessage(nm);
+		;
+
 	}
 
 	public void displayChat(String text) {
@@ -684,12 +663,7 @@ public class GameClient {
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */
 	public void sendNetMessageToGUI(NetMessage netMsg) {
-		try {
-			session.write(netMsg).await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		nc.sendMessage(netMsg);
 	}
 
 	/**

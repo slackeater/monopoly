@@ -29,10 +29,12 @@ import javax.swing.SpinnerNumberModel;
 import org.apache.mina.core.session.IoSession;
 
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.ClientNetworkController;
 import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Monopoly;
+import ch.bfh.monopoly.common.ServerNetworkController;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
 
@@ -57,6 +59,8 @@ public class WelcomePanel extends JFrame{
 	private GameClient gameClient;
 	private GameController gc;
 	private BoardController bc;
+	private ClientNetworkController nCliCtrl;
+	private ServerNetworkController nSrvCtrl;
 
 	private Dimension fieldSize, panelSize;
 
@@ -80,12 +84,7 @@ public class WelcomePanel extends JFrame{
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(){
-		this.gameClient = new GameClient();
-		this.gc = new GameController(this.gameClient);
-
-		//TODO AT THIS POINT THE BC IS NULL
-		this.bc = new BoardController(gameClient.getBoard());
-
+		
 		this.strIP = "IP";
 		this.strPort = "Port";
 
@@ -116,7 +115,6 @@ public class WelcomePanel extends JFrame{
 	public void initClient(boolean startServer) throws IOException, UnknownHostException, Exception{
 		Pattern p;
 		Matcher m;		
-		IoSession cliSession;
 
 		p = Pattern.compile(USER_NAME_PATTERN);
 		m = p.matcher(name);
@@ -131,16 +129,24 @@ public class WelcomePanel extends JFrame{
 				//if the ip doesn't match
 				if(m.matches()){
 					
+					this.gameClient = new GameClient();
+					this.gc = new GameController(this.gameClient);
+					
 					//start a server if wanted
 					if(startServer){
-						Monopoly.communicate.startServer(ip, port);
+						this.nSrvCtrl = new ServerNetworkController();
+						this.nSrvCtrl.startServer(ip, port);
+//						Monopoly.communicate.startServer(ip, port);
 					}
 					
 					//if everything works connect to the server
-					cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name, throwValue);
+					this.nCliCtrl = new ClientNetworkController(gameClient, name, throwValue);
+					this.nCliCtrl.startClient(ip, port);
+					this.bc = new BoardController(gameClient.getBoard());
+//					cliSession = Monopoly.communicate.startClient(ip, port, gameClient, name, throwValue);
 
-					//set the IoSession in the GameClient
-					gameClient.setIoSession(cliSession);
+					//set the ClientNetworkControllerIoSession in the GameClient
+					gameClient.setClientNetworkController(nCliCtrl);
 				}
 				else
 					throw new Exception("Please insert a valid IPv4 address");
@@ -241,7 +247,7 @@ public class WelcomePanel extends JFrame{
 
 					while(true){
 						Thread.sleep(750);
-						if(Monopoly.communicate.gameCanBegin()){
+						if(nCliCtrl.gameCanBegin()){
 							
 							//create the board
 							bc = new BoardController(gameClient.getBoard());
@@ -353,12 +359,12 @@ public class WelcomePanel extends JFrame{
 						Thread.sleep(550);
 
 						//when all the client are connected
-						if(Monopoly.communicate.getServerOpenedSession() == maxPlayers){
+						if(nSrvCtrl.getServerOpenedSession() == maxPlayers){
 							//send a NetMessage GAME_START with the chosen locale
-							Monopoly.communicate.sendStartGame(loc);
+							nSrvCtrl.sendStartGame(loc);
 						
 							//create the board
-							gameClient.createBoard(loc, Monopoly.communicate.getServerUsernames(), name);
+							gameClient.createBoard(loc, nSrvCtrl.getServerUsernames(), name);
 							
 							Thread.sleep(500);
 							
@@ -377,7 +383,7 @@ public class WelcomePanel extends JFrame{
 							
 							//after the gui are visible send the turn token
 							//!!! leave this here !!!
-							Monopoly.communicate.sendTurnToken();
+							nSrvCtrl.sendTurnToken();
 							
 							break;
 						}

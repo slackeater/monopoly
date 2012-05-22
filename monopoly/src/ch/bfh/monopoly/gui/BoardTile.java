@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -27,6 +28,8 @@ import javax.swing.JPopupMenu;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileListener;
 import ch.bfh.monopoly.observer.TileStateEvent;
 import ch.bfh.monopoly.tile.TileInfo;
@@ -51,7 +54,9 @@ public class BoardTile extends JPanel{
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
+	private String owner;
 	private BoardTile[] groupMemeber = new BoardTile[2];
+	private ButtonListener btnListener;
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
@@ -81,20 +86,24 @@ public class BoardTile extends JPanel{
 		this.res = res;
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
-
+		
 		color = new JPanel();
 		color.setLayout(new BoxLayout(color, BoxLayout.LINE_AXIS));
 
-		ButtonListener btnListener = new ButtonListener();
+		btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
-		
+
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
 						|| !ti.getGroup().equals("Chance"))){
 			//we want a pop-up menu only on the properties where
-			//we can build something 
+			//we can build something and we are the owner
+			//TODO remove if for test
+
 			this.addMouseListener(btnListener);
+			bc.getSubjectForPlayer().addListener(new OwnerUpdater());
 			displayInfo = true;
+
 		}
 
 		//check if there is a color and add the menu
@@ -148,20 +157,20 @@ public class BoardTile extends JPanel{
 	}
 
 	public void setGroupMember(BoardTile[] btMember){
-	
+
 		this.groupMemeber = btMember;
 
 		//TODO REMOVE ONLY FOR TEST
-//		if(btMember[0] != null && btMember[1] != null){
-//		
-//			System.out.println("IM THE TILE : " + ti.getName());
-//			System.out.println("=>> " + btMember[0].getNameTile());
-//			System.out.println("=>> " + btMember[1].getNameTile());
-//		}
-//		else if(btMember[0] != null && btMember[1] == null){
-//			System.out.println("IM THE TILE : " + ti.getName());
-//			System.out.println("=>> " + btMember[0].getNameTile());
-//		}
+		//		if(btMember[0] != null && btMember[1] != null){
+		//		
+		//			System.out.println("IM THE TILE : " + ti.getName());
+		//			System.out.println("=>> " + btMember[0].getNameTile());
+		//			System.out.println("=>> " + btMember[1].getNameTile());
+		//		}
+		//		else if(btMember[0] != null && btMember[1] == null){
+		//			System.out.println("IM THE TILE : " + ti.getName());
+		//			System.out.println("=>> " + btMember[0].getNameTile());
+		//		}
 
 	}
 
@@ -171,7 +180,7 @@ public class BoardTile extends JPanel{
 	public String getNameTile(){
 		return ti.getName();
 	}
-	
+
 	/**
 	 * Add the information of a tile (rent, name,costs, etc.) to 
 	 * the tabbed pane
@@ -437,6 +446,7 @@ public class BoardTile extends JPanel{
 	 */
 	private class ButtonListener extends MouseAdapter{
 		JPopupMenu popup;
+		boolean owner = false;
 
 		public void addPopUp(JPopupMenu pop){
 			this.popup = pop;
@@ -444,14 +454,20 @@ public class BoardTile extends JPanel{
 
 		public void mousePressed(MouseEvent e) {
 			//left click
-			System.out.println(e.getButton() + "CONTROL DOWN: " + e.isControlDown());
+			System.out.println(e.getButton() + " CONTROL DOWN: " + e.isControlDown());
 			if(e.getButton() == MouseEvent.BUTTON1 && !e.isControlDown()){ 
 				addInformationOnTab();
 			}
 			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
+				if(owner){
 				showPopup(e);
+				}
 			}
+		}
+		
+		public void setOwner(){
+			owner = true;
 		}
 
 		private void showPopup(MouseEvent e) {
@@ -535,6 +551,10 @@ public class BoardTile extends JPanel{
 	private class InformationUpdate implements TileListener{
 		@Override
 		public void updateTile(TileStateEvent tsi) {
+
+			System.out.println(bc.getTileInfoById(ti.getId()).getOwner());
+			
+
 			if(buyHouseClicked){
 				drawBuilding(false);
 			}
@@ -568,7 +588,17 @@ public class BoardTile extends JPanel{
 			}
 		}
 	}
-
+	
+	class OwnerUpdater implements PlayerListener{
+		@Override
+		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+					if(ti.getId() != -1 && 
+					bc.getTileInfoById(ti.getId()).getOwner() != null && bc.getTileInfoById(ti.getId()).getOwner().equals(gc.getLocalPlayerName())){
+						btnListener.setOwner();
+					}
+		}	
+	}
+	
 	/**
 	 * This method is called by an external
 	 * class to update the information on this tile
@@ -581,6 +611,8 @@ public class BoardTile extends JPanel{
 	public TileListener getTileListener(){
 		return this.iu;
 	}
+	
+	
 
 
 }
