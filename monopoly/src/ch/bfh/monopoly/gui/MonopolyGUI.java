@@ -61,10 +61,9 @@ public class MonopolyGUI extends JFrame {
 	private static final long serialVersionUID = -3409398396221480650L;
 
 	/**
-	 * Space and counters constants
+	 * Counters constants
 	 */
 	public static final int TILE_NUMBER = 40;
-	private final int LEFT_SPACER_HEIGHT = 10;
 	private final int DICE_MOVEMENT_DELAY = 650;
 
 	/**
@@ -341,15 +340,13 @@ public class MonopolyGUI extends JFrame {
 	private JPanel leftPanel(){
 		JPanel left = new JPanel();
 
-		Dimension spacer = new Dimension(0,LEFT_SPACER_HEIGHT);
-
 		left.setLayout(new BoxLayout(left, BoxLayout.PAGE_AXIS));
 		left.setBorder(BorderFactory.createMatteBorder(0, 3, 0, 2, Color.decode("0xEEEEEE")));
 
 		left.add(cardPanel());
-		left.add(Box.createRigidArea(spacer));
+		left.add(Box.createVerticalGlue());
 		left.add(infoPanel());
-		left.add(Box.createRigidArea(spacer));
+		left.add(Box.createVerticalGlue());
 		left.add(historyChatPanel());
 
 		return left;
