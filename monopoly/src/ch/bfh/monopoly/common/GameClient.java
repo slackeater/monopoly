@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
@@ -14,6 +16,7 @@ import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Tile;
 
 public class GameClient {
 
@@ -400,16 +403,21 @@ public class GameClient {
 	}
 
 	/**
-	 * get the window builder object needed for the GUI to display a window in
-	 * response to landing on a tile
+	 * Get the JPanel for the tile's event. Should be called when a player rolls
+	 * and lands on a new tile
 	 * 
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
+	 * @param the
+	 *            id of the tile of which to get the JPanel
+	 * @return the JPanel that the GUI will display
 	 */
-	public WindowBuilder getWindowBuilder(boolean sendNetMessage) {
-		int currentPos = currentPlayer.getPosition();
-		WindowBuilder wb = board.getWindowBuilderForTile(currentPos);
-		return wb;
+	public JPanel getTileEventPanel(boolean sendNetMessage) {
+		int tileId = currentPlayer.getPosition();
+		JPanel jpanel =  board.getTileEventPanelForTile(tileId);
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(Messages.GET_EVENT_WINDOW);
+			sendNetMessageToGUI(netMsg);
+		}
+		return jpanel;
 	}
 
 	/**

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
@@ -148,6 +150,16 @@ public class Board {
 		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
+	/**
+	 * Get the JPanel for the tile's event.  Should be called when a player rolls and lands on a new tile
+	 * @param the id of the tile of which to get the JPanel
+	 * @return the JPanel that the GUI will display
+	 */
+	public JPanel getTileEventPanelForTile(int tileId){
+		Tile t = getTileById(tileId);
+		return t.getTileEventPanel();
+	}
+	
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
@@ -364,17 +376,7 @@ public class Board {
 		return tiles[tileId];
 	}
 
-	
-	/**
-	 * get the window builder object needed for the GUI to display a window in response to landing on a tile
-	 * 
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	public WindowBuilder getWindowBuilderForTile(int tileId) {
-		Tile t = getTileById(tileId);
-		return t.getWindowBuilder();
-	}
+
 	
 	/**
 	 * transfers a given amount of money from one player to another

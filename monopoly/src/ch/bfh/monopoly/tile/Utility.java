@@ -27,6 +27,9 @@ public class Utility extends Property {
 		this.name = name;
 		this.price = price;
 		this.mortgageValue = mortgageValue;
+		buttonLeft = new JButton();
+		buttonRight = new JButton();
+		descriptionLabel=new JLabel();
 	}
 
 	// TODO this method need to be implemented in a TileEvent and accessed
@@ -53,7 +56,7 @@ public class Utility extends Property {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showSecondStep(this);
+				showSecondStep();
 			}
 		});
 		descriptionLabel
@@ -65,7 +68,9 @@ public class Utility extends Property {
 		return jp;
 	}
 
-	public void showSecondStep(ActionListener al) {
+	public void showSecondStep() {
+		descriptionLabel.setText("Text Change");
+		System.out.println("Dick");
 		Random r = new Random();
 		int roll = r.nextInt(10) + 2;
 		int multiplier = 4;
@@ -90,19 +95,6 @@ public class Utility extends Property {
 		jp.add(buttonRight);
 	}
 
-	/**
-	 * get the window builder object needed for the GUI to display a window in
-	 * response to landing on a tile
-	 * 
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	@Override
-	public WindowBuilder getWindowBuilder() {
-		return new WindowBuilder(name, getEventDescription(),
-				getActionListenerList());
-
-	}
 
 	/**
 	 * creates the actionListeners that the GUI should display in response to a

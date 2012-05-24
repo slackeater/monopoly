@@ -186,13 +186,7 @@ public class GameController {
 		return gameClient.playerHasSufficientFunds(playerName, amount);
 	}
 
-	/**
-	 * get the description of the event for the tile on which the current player
-	 * resides
-	 */
-	public WindowBuilder getWindowBuilder() {
-		return gameClient.getWindowBuilder(false);
-	}
+
 
 	/**
 	 * perform the event for the tile that the current player occupies

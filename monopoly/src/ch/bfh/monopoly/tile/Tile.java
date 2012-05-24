@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.common.WindowBuilder;
 
 public interface Tile{
@@ -13,7 +15,7 @@ public interface Tile{
 	int getCoordY();
 	public String getEventDescription();
 	public void performEvent();
-	public WindowBuilder getWindowBuilder();
+	public JPanel getTileEventPanel();
 	
 	
 }
