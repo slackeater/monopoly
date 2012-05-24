@@ -420,16 +420,6 @@ public class GameClient {
 		return jpanel;
 	}
 
-	/**
-	 * perform the event for the tile that the current player occupies
-	 * 
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	public void performEvent(boolean sendNetMessage) {
-		int currentPos = currentPlayer.getPosition();
-		board.getTileById(currentPos).performEvent();
-	}
 
 	/**
 	 * checks if a given player is the owner of a given tile
@@ -679,10 +669,11 @@ public class GameClient {
 	/**
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */
-	public void sendTransactionSuccesToGUI(TransactionException e,
-			boolean sendNetMessage) {
+	public void sendTransactionSuccesToGUI(boolean sendNetMessage) {
+		//TODO this doesn't seem like the best way to signal success to the GUI
+		TransactionException te = new TransactionException("The event was completed successfully");
 		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_EVENT_COMPLETION, e.getErrorMsg(), 0);
+				WindowMessage.MSG_EVENT_COMPLETION,te.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
 	}
 

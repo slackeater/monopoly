@@ -1,7 +1,6 @@
 package ch.bfh.monopoly.common;
 
 import java.awt.Color;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -463,6 +462,7 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
+//		System.out.println("board.castTileToProperty received the tileId:" +t.getTileId());
 		if (!(t instanceof Property))
 			throw new RuntimeException(
 					"the tile in question is not a property: this transaction cannot be completed");

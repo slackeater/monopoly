@@ -49,6 +49,7 @@ public class TestInstanceGenerator {
 		em = ((AbstractTile)board.getTileById(1)).getEventManager();
 		
 		em.setSendNetMessage(false);
+		setTileSendNetMessage(false);
 	}
 
 
@@ -72,4 +73,10 @@ public class TestInstanceGenerator {
 		return em;
 	}
 
+	public void setTileSendNetMessage(boolean sendNetMessage){
+		for (int i=0; i<40;i++){
+			((AbstractTile)board.getTileById(i)).setSendNetMessage(sendNetMessage);
+		}
+	}
+	
 }

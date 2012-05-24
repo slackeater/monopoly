@@ -2,11 +2,10 @@ package ch.bfh.monopoly.tile;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.ResourceBundle;
+import javax.swing.JPanel;
+import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
-import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.event.EventManager;
 
 public class Terrain extends Property {
@@ -18,13 +17,14 @@ public class Terrain extends Property {
 	private int[] rentRates = new int[5];
 	private int renthotel;
 	private String rgb;
-
+		
+		
 	public Terrain(String name, int price, int houseCost, int hotelCost,
 			int rent, int rent1house, int rent2house, int rent3house,
 			int rent4house, int renthotel, String group, int mortgageValue,
 			int coordX, int coordY, int tileId, String rgb, EventManager em,
-			Player bank) {
-		super(name, price, group, mortgageValue, coordX, coordY, tileId, em, bank);
+			Player bank,GameClient gameClient, ResourceBundle rb) {
+		super(name, price, group, mortgageValue, coordX, coordY, tileId, em, bank, gameClient, rb);
 		this.name = name;
 		// this.id = id;
 		this.rentRates[0] = rent;
@@ -116,71 +116,43 @@ public class Terrain extends Property {
 				+ "\nrent w/Hotel" + renthotel + "\nowner: " + owner;
 	}
 
-	/**
-	 * get the window builder object needed for the GUI to display a window in
-	 * response to landing on a tile
-	 * 
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	@Override
-	public WindowBuilder getWindowBuilder() {
-		return new WindowBuilder(name, getEventDescription(),
-				getActionListenerList());
-
-	}
 
 	/**
-	 * creates the actionListeners that the GUI should display in response to a
-	 * player landing on this tile
-	 * 
-	 * @return a list of actionListeners for the GUI to add to buttons
+	 * get the JPanel to show in the GUI for this tile's event
 	 */
-	public List<ActionListener> getActionListenerList() {
-		boolean owned = true;
-		List<ActionListener> actionList = new ArrayList<ActionListener>();
-
-		if (owner.getName().equals("bank"))
-			owned = false;
-
-		if (owned) {
-			ActionListener al = new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					performEvent();
-
-				}
-			};
-			actionList.add(al);
-		} else {
-			ActionListener al = new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					em.gameClient.buyCurrentPropertyForPlayer("currentPlayer",
-							true);
-				}
-			};
-			actionList.add(al);
-		}
-		return actionList;
+	public JPanel getTileEventPanel() {
+		boolean owned=!(owner.getName()=="bank");
+		if(owned)
+			return tileOwnedEvent();
+		else
+			return tileNotOwnedEvent();
 	}
 
-	/**
-	 * perform the action that this tile causes if a player lands on it
-	 */
-	@Override
-	public void performEvent() {
-		em.performEventForTileAtId(tileId);
+	public JPanel tileOwnedEvent(){
+		buttonRight.addActionListener(new ActionListener() {
 
-	}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.payRent(sendNetMessage);
+				buttonRight.setEnabled(false);
+				eventInfoLabel.setText(thankYouRent);
+				System.out.println("The owner's bank account balance: " + owner.getAccount());
+				System.out.println("The buyer's bank account balance: " + gameClient.getCurrentPlayer().getAccount());
+			}
+		});
+		buttonRight.setText("Pay Rent");
+		eventInfoLabel
+				.setText(name+" "+msgIsOwned+" "+ owner.getName() + ".  \n" + msgIsOwnedRent +" "+ feeToCharge());
+	
+		jpanel.add(eventInfoLabel);
+		jpanel.add(buttonRight);
 
-	/**
-	 * get the text that should be displayed when a play lands on this tile
-	 */
-	@Override
-	public String getEventDescription() {
-		return em.getEventDescriptionById(tileId);
+		return jpanel;
 	}
+	
+	public JPanel tileNotOwnedEvent(){
+		return getBuyTileWindow();
+	}
+	
+	
 }

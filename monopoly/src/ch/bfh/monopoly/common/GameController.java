@@ -3,6 +3,10 @@ package ch.bfh.monopoly.common;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.JPanel;
+
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.WindowSubject;
 
 public class GameController {
@@ -11,6 +15,18 @@ public class GameController {
 
 	public GameController(GameClient gameClient) {
 		this.gameClient = gameClient;
+	}
+	
+	/**
+	 * Get the JPanel for the tile's event. Should be called when a player rolls
+	 * and lands on a new tile
+	 * 
+	 * @param the
+	 *            id of the tile of which to get the JPanel
+	 * @return the JPanel that the GUI will display
+	 */
+	public JPanel getTileEventPanel() {
+		return gameClient.getTileEventPanel(true);
 	}
 
 	/**
@@ -186,14 +202,6 @@ public class GameController {
 		return gameClient.playerHasSufficientFunds(playerName, amount);
 	}
 
-
-
-	/**
-	 * perform the event for the tile that the current player occupies
-	 */
-	public void performEvent() {
-		gameClient.performEvent(true);
-	}
 
 	/**
 	 * Send a chat message
