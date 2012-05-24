@@ -19,7 +19,7 @@ public class ClientHandlerTests {
 
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("En");
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();

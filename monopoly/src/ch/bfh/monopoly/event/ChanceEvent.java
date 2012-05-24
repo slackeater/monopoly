@@ -1,7 +1,6 @@
 package ch.bfh.monopoly.event;
 
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.exception.TransactionException;
 
 public class ChanceEvent extends AbstractTileEvent {
 
@@ -14,13 +13,8 @@ public class ChanceEvent extends AbstractTileEvent {
 
 	@Override
 	public void performEvent() {
-		
 		gameClient.payRent(sendNetMessage);
-		
-		TransactionException te = new TransactionException(
-				"Player has completed the event successfully");
-		gameClient.sendTransactionSuccesToGUI(te, true);
-
+		gameClient.sendTransactionSuccesToGUI(true);
 	}
 
 	@Override

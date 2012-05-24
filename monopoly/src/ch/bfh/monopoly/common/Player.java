@@ -1,16 +1,9 @@
 package ch.bfh.monopoly.common;
 
-import java.awt.Color;
-import java.net.Socket;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import ch.bfh.monopoly.exception.TransactionException;
-import ch.bfh.monopoly.observer.PlayerListener;
-import ch.bfh.monopoly.observer.PlayerStateEvent;
-import ch.bfh.monopoly.observer.PlayerSubject;
-import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Railroad;
-import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 
 public class Player {

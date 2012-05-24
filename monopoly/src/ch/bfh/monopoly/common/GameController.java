@@ -1,12 +1,7 @@
 package ch.bfh.monopoly.common;
 
-import java.util.List;
 import java.util.Locale;
-
 import javax.swing.JPanel;
-
-import ch.bfh.monopoly.net.Messages;
-import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.WindowSubject;
 
 public class GameController {

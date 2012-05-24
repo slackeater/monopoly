@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.event.EventManager;
 
 public class Chance extends AbstractTile {

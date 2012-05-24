@@ -23,6 +23,9 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected String msgIsNotOwned;
 	protected String msgYouBought;
 	protected String thankYouRent;
+	protected String buttonTextBuy;
+	protected String buttonTextPay;
+	protected String buttonTextContinue;
 	private String group;
 	protected JPanel jpanel = new JPanel();
 	protected JButton buttonRight = new JButton();
@@ -38,18 +41,21 @@ public abstract class Property extends AbstractTile implements IProperty {
 			System.out.println(gameClient.getCurrentPlayer().getAccount());
 			System.out.println(gameClient.getCurrentPlayer().ownsProperty(
 					(Tile) Property.this));
-			buttonRight = new JButton();
+			buttonRight.removeAll();
+			buttonRight.setText(buttonTextContinue);
 			buttonRight.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
+					jpanel.removeAll();
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					System.out
 							.println("The GUI should receive a message to hide this JPanel");
 				}
 			});
-			buttonRight.setEnabled(false);
+//			buttonRight.setEnabled(false);
 			eventInfoLabel.setText(msgYouBought +" "+ name);
+			
 
 		}
 	};
@@ -67,14 +73,16 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.msgIsOwned= rb.getString("isOwned");
 		this.msgIsOwnedRent= rb.getString("isOwnedRent");
 		this.msgYouBought= rb.getString("youBought");
-		thankYouRent= rb.getString("thankYouRent");
-		
+		this.thankYouRent= rb.getString("thankYouRent");
+		this.buttonTextPay = rb.getString("payButton");
+		this.buttonTextBuy= rb.getString("buyButton");
+		this.buttonTextContinue= rb.getString("continueButton");
 	}
 
 	public JPanel getBuyTileWindow() {
 		eventInfoLabel.setText(name +" "+msgIsNotOwned);
 		jpanel.add(eventInfoLabel);
-		buttonRight = new JButton("Buy");
+		buttonRight = new JButton(buttonTextBuy);
 		buttonRight.addActionListener(actionBuy);
 		jpanel.add(buttonRight);
 		return jpanel;

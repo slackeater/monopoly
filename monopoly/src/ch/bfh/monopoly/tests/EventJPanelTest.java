@@ -27,12 +27,12 @@ public class EventJPanelTest extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	boolean sendNetMessage = false;
-	Locale loc;
 	GameClient gameClient;
 	Board board;
 	GameController gc;
 	JPanel jpanel;
-	TestInstanceGenerator tig= new TestInstanceGenerator();
+	Locale loc ;
+	TestInstanceGenerator tig= new TestInstanceGenerator("fr");
 
 	public EventJPanelTest(){
 		gameClient = tig.getGameClient();
@@ -41,8 +41,8 @@ public class EventJPanelTest extends JFrame {
 		
 //		testElectricCompanyOwned();
 //		testElectricCompanyNotOwned();
-		testMediterraneanOwned();
-//		testMediterraneanNotOwned();
+//		testMediterraneanOwned();
+		testMediterraneanNotOwned();
 		
 		jpanel= gameClient.getTileEventPanel(sendNetMessage);
 		setSize(300, 300);

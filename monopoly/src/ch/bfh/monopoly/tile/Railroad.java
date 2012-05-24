@@ -61,7 +61,7 @@ public class Railroad extends Property {
 				System.out.println("The buyer's bank account balance: " + gameClient.getCurrentPlayer().getAccount());
 			}
 		});
-		buttonRight.setText("Pay Rent");
+		buttonRight.setText(buttonTextPay);
 		eventInfoLabel
 				.setText(name+" "+msgIsOwned+" "+ owner.getName() + ".  \n" + msgIsOwnedRent +" "+ feeToCharge());
 	

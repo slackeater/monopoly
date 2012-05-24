@@ -1,12 +1,10 @@
 package ch.bfh.monopoly.common;
 
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import javax.swing.JPanel;
-
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
@@ -16,7 +14,6 @@ import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
-import ch.bfh.monopoly.tile.Tile;
 
 public class GameClient {
 

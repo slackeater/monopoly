@@ -1,18 +1,15 @@
 package ch.bfh.monopoly.tests;
 
 import static org.junit.Assert.assertTrue;
-
 import java.util.Locale;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Player;
-import ch.bfh.monopoly.tile.Tile;
+
 
 public class PlayerCreationTests {
 
@@ -27,7 +24,7 @@ public class PlayerCreationTests {
 	
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("en");
 		gameClient= tig.getGameClient();
 		board=tig.getBoard();
 		gc=tig.getGc();

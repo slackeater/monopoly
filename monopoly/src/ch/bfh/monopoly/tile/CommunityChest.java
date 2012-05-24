@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
-import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.event.EventManager;
 
 public class CommunityChest extends AbstractTile {
@@ -17,23 +16,6 @@ public class CommunityChest extends AbstractTile {
 		super(name, coordX, coordY, tileId,em,gameClient);
 	}
 
-	
-
-	/**
-	 * perform the action that this tile causes if a player lands on it
-	 */
-	@Override
-	public void performEvent() {
-		em.performEventCommChest();
-	}
-
-	/**
-	 * get the text that should be displayed when a play lands on this tile
-	 */
-	@Override
-	public String getEventDescription() {
-		return em.getEventDescriptionCommChest();
-	}
 
 	@Override
 	public JPanel getTileEventPanel() {
@@ -43,7 +25,6 @@ public class CommunityChest extends AbstractTile {
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				performEvent();
 			}
 		};
 		actionList.add(al);

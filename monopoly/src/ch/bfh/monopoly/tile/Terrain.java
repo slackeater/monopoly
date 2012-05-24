@@ -134,13 +134,23 @@ public class Terrain extends Property {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameClient.payRent(sendNetMessage);
-				buttonRight.setEnabled(false);
+//				buttonRight.setEnabled(false);
 				eventInfoLabel.setText(thankYouRent);
+				buttonRight.removeAll();
+				buttonRight.setText(buttonTextContinue);
+				buttonRight.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						jpanel.removeAll();
+						
+					}
+				});
 				System.out.println("The owner's bank account balance: " + owner.getAccount());
 				System.out.println("The buyer's bank account balance: " + gameClient.getCurrentPlayer().getAccount());
 			}
 		});
-		buttonRight.setText("Pay Rent");
+		buttonRight.setText(buttonTextPay);
 		eventInfoLabel
 				.setText(name+" "+msgIsOwned+" "+ owner.getName() + ".  \n" + msgIsOwnedRent +" "+ feeToCharge());
 	

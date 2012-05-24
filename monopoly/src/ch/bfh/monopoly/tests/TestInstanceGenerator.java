@@ -1,23 +1,7 @@
 package ch.bfh.monopoly.tests;
 
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Set;
-
-import org.apache.mina.core.filterchain.IoFilterChain;
-import org.apache.mina.core.future.CloseFuture;
-import org.apache.mina.core.future.ReadFuture;
-import org.apache.mina.core.future.WriteFuture;
-import org.apache.mina.core.service.IoHandler;
-import org.apache.mina.core.service.IoService;
-import org.apache.mina.core.service.TransportMetadata;
-import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.core.session.IoSessionConfig;
-import org.apache.mina.core.write.WriteRequest;
-import org.apache.mina.core.write.WriteRequestQueue;
-
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.GameClient;
@@ -32,7 +16,7 @@ public class TestInstanceGenerator {
 	Board board;
 	BoardController bc;
 	EventManager em;
-	public TestInstanceGenerator() {
+	public TestInstanceGenerator(String localeName) {
 		String myName = "Justin";
 		ArrayList<String> playerNames = new ArrayList<String>();
 		playerNames.add(myName);
@@ -42,7 +26,7 @@ public class TestInstanceGenerator {
 		playerNames.add("Elie");
 
 		gameClient = new GameClient();
-		gameClient.createBoard(new Locale("EN"), playerNames, myName);
+		gameClient.createBoard(new Locale(localeName), playerNames, myName);
 		gc = new GameController(gameClient);
 		board = gameClient.getBoard();
 		bc = new BoardController(board);
