@@ -32,9 +32,11 @@ public class PlayerInfo extends JPanel{
 	private static final int MYTERRAIN_PANEL_SIZE = 20;
 	private static final int PLAYER_LABEL_SPACE = 4;
 
-	private JLabel playerInfo = new JLabel();
-	JPanel terrainUp = new JPanel();
-	JPanel terrainDown = new JPanel();
+	private JLabel playerName = new JLabel();
+	private JLabel account = new JLabel();
+	private JPanel terrainUp = new JPanel();
+	private JPanel terrainDown = new JPanel();
+	private JPanel turn = new JPanel();
 	private List<SmallTerrain> smlTer = new ArrayList<SmallTerrain>();
 	
 	private boolean toggleVisibility = false;
@@ -54,13 +56,17 @@ public class PlayerInfo extends JPanel{
 		System.out.println("INSIDE PLAYER INFO");
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		//playerInfo.setText(p.getName() + "    " + p.getAccount());
-		playerInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//playerInfo.setForeground(c);
+		playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		JPanel ctrInfo = new JPanel();
+		ctrInfo.setLayout(new BoxLayout(ctrInfo, BoxLayout.LINE_AXIS));
 		
 		//create a new mouse listener
 		LabelClick lblClick = new LabelClick();
-		playerInfo.addMouseListener(lblClick);
+		playerName.addMouseListener(lblClick);
+		
+		turn.setMaximumSize(new Dimension(20, 20));
+		turn.setBorder(BorderFactory.createEtchedBorder());
 
 		terrainUp.setLayout(new BoxLayout(terrainUp, BoxLayout.LINE_AXIS));
 		terrainDown.setLayout(new BoxLayout(terrainDown, BoxLayout.LINE_AXIS));
@@ -69,7 +75,13 @@ public class PlayerInfo extends JPanel{
 		//draw the small panels 
 		drawSmallTerrainPanel();
 		
-		add(playerInfo);
+		ctrInfo.add(playerName);
+		ctrInfo.add(Box.createHorizontalGlue());
+		ctrInfo.add(account);
+		ctrInfo.add(Box.createHorizontalGlue());
+		ctrInfo.add(turn);
+		
+		add(ctrInfo);
 		add(terrainUp);
 		add(terrainDown);
 		add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
@@ -176,6 +188,16 @@ public class PlayerInfo extends JPanel{
 	}
 	
 	/**
+	 * Set the background of the turn panel
+	 */
+	private void setTurnPanelBackground(boolean turnToken, Color c){
+		if(turnToken)
+			turn.setBackground(c);
+		else
+			turn.setBackground(Color.WHITE);
+	}
+	
+	/**
 	 * This inner class represent the small terrain in the viewer
 	 * @author snake
 	 * TODO check if the field ID is useful
@@ -258,8 +280,9 @@ public class PlayerInfo extends JPanel{
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 			
 				String name = playerStates.get(playerIndex).getName();
-				int account = playerStates.get(playerIndex).getAccount();
+				int plAccount = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
+				boolean turn = playerStates.get(playerIndex).hasTurnToken();
 				
 				boolean[] smallTerrainState = playerStates.get(playerIndex).getTerrains();
 									
@@ -275,8 +298,9 @@ public class PlayerInfo extends JPanel{
 					
 				}
 				
-				playerInfo.setText(name + "  " + account);
-				playerInfo.setForeground(c);
+				setTurnPanelBackground(turn, c);
+				playerName.setText(name);		
+				account.setText(Integer.toString(plAccount));
 				repaint();
 				revalidate();
 		}

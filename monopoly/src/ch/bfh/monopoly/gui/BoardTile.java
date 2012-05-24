@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ public class BoardTile extends JPanel{
 	private GameController gc;
 	private ResourceBundle res;
 	private String owner;
-	private BoardTile[] groupMemeber = new BoardTile[2];
+	private List<BoardTile> groupMember = new ArrayList<BoardTile>();
 	private ButtonListener btnListener;
 
 	//used when we right click on a tile
@@ -158,8 +159,12 @@ public class BoardTile extends JPanel{
 
 	public void setGroupMember(BoardTile[] btMember){
 
-		this.groupMemeber = btMember;
-
+		for(int j = 0 ; j < btMember.length ; j++){
+			this.groupMember.add(btMember[j]);
+		}
+	
+		System.out.println("THE SIZE OF MEMBER FOR TILE " + ti.getName() + groupMember.size());
+		
 		//TODO REMOVE ONLY FOR TEST
 		//		if(btMember[0] != null && btMember[1] != null){
 		//		
@@ -348,6 +353,15 @@ public class BoardTile extends JPanel{
 	}
 
 	/**
+	 * Get the board tile id.
+	 * Used for the row functionalities
+	 * @return
+	 */
+	public int getBoardTileID(){
+		return ti.getTileId();
+	}
+	
+	/**
 	 * Draw an house
 	 * @return JPanel
 	 * 			a JPanel representing an house
@@ -509,7 +523,14 @@ public class BoardTile extends JPanel{
 			}
 			else if(e.getSource().equals(buyHouseRow)){
 				buyHouseRowClicked = true;
-				//TODO
+				
+				//this tile house
+				gc.buyHouse(ti.getTileId());
+				
+				//other member tile
+				for(BoardTile bt : groupMember){
+					gc.buyHouse(bt.getBoardTileID());
+				}
 			}
 			else if(e.getSource().equals(buyHotelRow)){
 				buyHotelRowClicked = true;
@@ -559,9 +580,20 @@ public class BoardTile extends JPanel{
 				drawBuilding(true);
 			}
 			else if(buyHouseRowClicked){
-				//TODO
+				drawBuilding(true);
+				
+				//other member tile
+				for(BoardTile bt : groupMember){
+					bt.drawBuilding(true);
+				}
 			}
 			else if(buyHotelRowClicked){
+				drawBuilding(false);
+				
+				//other member tile
+				for(BoardTile bt : groupMember){
+					bt.drawBuilding(false);
+				}
 				//TODO
 			}
 			else if(sellHouseClicked){
