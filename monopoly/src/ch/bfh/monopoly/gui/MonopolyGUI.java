@@ -10,10 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
-import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -570,18 +567,18 @@ public class MonopolyGUI extends JFrame {
 						endTurn.setEnabled(true);
 					}
 
-					WindowBuilder wb = gc.getWindowBuilder();
-					String name = wb.getName();
-					JPanel jp = new JPanel();
-					JButton testButton = new JButton("TEST");
-
-					testButton.addActionListener(wb.getActionList().get(0));
-					//testButton.addActionListener(wb.getActionList().get(1));
-
-					jp.add(new JLabel(wb.getDescription()));
-					jp.add(testButton);
-
-					tabPane.addTab(name,  jp);
+//					WindowBuilder wb = gc.getWindowBuilder();
+//					String name = wb.getName();
+//					JPanel jp = new JPanel();
+//					JButton testButton = new JButton("TEST");
+//
+//					testButton.addActionListener(wb.getActionList().get(0));
+//					//testButton.addActionListener(wb.getActionList().get(1));
+//
+//					jp.add(new JLabel(wb.getDescription()));
+//					jp.add(testButton);
+//
+//					tabPane.addTab(name,  jp);
 				}
 
 			}
