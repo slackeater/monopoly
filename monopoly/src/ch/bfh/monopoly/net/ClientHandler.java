@@ -15,13 +15,13 @@ import ch.bfh.monopoly.common.GameClient;
 public class ClientHandler implements IoHandler {
 
 	private boolean gameCanBegin = false;
-	private GameClient gc;
+	private GameClient gameClient;
 	private String localPlayerName;
 	private int rollOrderValue;
 
 	public ClientHandler(GameClient gc, String localPlayerName,
 			int rollOrderValue) {
-		this.gc = gc;
+		this.gameClient = gc;
 		this.localPlayerName = localPlayerName;
 		this.rollOrderValue = rollOrderValue;
 	}
@@ -48,7 +48,7 @@ public class ClientHandler implements IoHandler {
 			case GAME_START:
 				//create the board for this client by passing the locale the users and the name
 				//of the locaplayer
-				gc.createBoard(n.getLocale(), n.getUserNameList(), this.localPlayerName);
+				gameClient.createBoard(n.getLocale(), n.getUserNameList(), this.localPlayerName);
 							
 				//TODO only for test
 				System.out.println("Client list:" + n.getUserNameList().size());
@@ -57,18 +57,39 @@ public class ClientHandler implements IoHandler {
 				gameCanBegin = true;
 				break;
 			case CHAT_MSG:
-				gc.displayChat(n.getText());
+				gameClient.displayChat(n.getText());
 				break;
 			case DICE_ROLL:
 				//TODO dice roll function
 				System.out.println("ROLL RECEIVED");
 				int rollValue = n.getInt();
 				System.out.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "+rollValue);
-				gc.advancePlayerNSpaces(rollValue, false);
+				gameClient.advancePlayerNSpaces(rollValue, false);
+				break;
+			case BUY_HOTEL:
+				gameClient.buyHotel(n.getInt(), false);
+				break;
+			case BUY_HOUSE:
+				gameClient.buyHouse(n.getInt(), false);
+				break;
+			case SELL_HOTEL:
+				gameClient.sellHotel(n.getInt(), false);
+				break;
+			case SELL_HOUSE:
+				gameClient.sellHouse(n.getInt(), false);
+				break;
+			case SELL_PROPERTY:
+				gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(), n.getPrice(), false);
+				break;
+			case SELL_CARD:
+				gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(), n.getPrice(), false);
+				break;
+			case TOGGLE_MORTGAGE:
+				gameClient.toggleMortgageStatus(n.getInt(), false);
 				break;
 			case TURN_TOKEN:
 				String username = n.getText();
-				gc.updateTurnTokens(username);
+				gameClient.updateTurnTokens(username);
 				break;
 			case QUIT_GAME:
 				//TODO quit gamed

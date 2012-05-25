@@ -13,14 +13,14 @@ public class NetMessage implements Serializable{
 	private static final long serialVersionUID = -6004188281012651357L;
 	
 	private Player player;
-	
-	private String from_player;
-	private String to_player;
+	private String fromName;
+	private String toName;
 	private Color c;
 	private List<String> playerNames;
 	private Locale loc;
 	private String string;
 	private int integerValue;
+	private int price;
 	private Player playerToKick;
 	private boolean kickAnswer;
 	private Messages m;
@@ -31,15 +31,41 @@ public class NetMessage implements Serializable{
 		this.m = m;
 	}
 
-	/** Construct a NetMessage
-	 * @param player a player
-	 * @param integerValue the roll results / the new price of an auction / the base / the id of the property
-	 * price if we sell the jail card
+	/** Construct a NetMessage to transfer MONEY between two players
+	 * @param player to transfer from
+	 * @param toName  player to transfer to
+	 * @param integerValue the tileID/quantity of Jail cards/amount of money to transfer
 	 * @param m the message type
 	 */
-	public NetMessage(String player, int integerValue, Messages m) {
-		this.string = player;
+	public NetMessage(String fromName, String toName, int integerValue, Messages m) {
+		this.toName=toName;
+		this.fromName = fromName;
 		this.integerValue = integerValue;
+		this.m = m;
+	}
+	
+	/** Construct a NetMessage 
+	 * @param player name of player
+	 * @param integerValue 
+	 * @param m the message type
+	 */
+	public NetMessage(String string, int integerValue, Messages m) {
+		this.string=string;
+		this.integerValue = integerValue;
+		this.m = m;
+	}
+	
+	/** Construct a NetMessage to transfer Properties or Jailcards between two players
+	 * @param player to transfer from
+	 * @param toName  player to transfer to
+	 * @param integerValue the amount of money to transfer
+	 * @param m the message type
+	 */
+	public NetMessage(String fromName, String toName, int integerValue, int price, Messages m) {
+		this.toName=toName;
+		this.fromName = fromName;
+		this.integerValue = integerValue;
+		this.price = price;
 		this.m = m;
 	}
 
@@ -193,4 +219,17 @@ public class NetMessage implements Serializable{
 	public void setDrawOrder(int[] newOrder){
 		cardDrawOrder=newOrder;
 	}
+	
+	public String getFromName() {
+		return fromName;
+	}
+
+	public String getToName() {
+		return toName;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
 }

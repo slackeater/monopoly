@@ -165,6 +165,11 @@ public class GameClient {
 		try {
 			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
 					currentPlayer.getPosition());
+			if (sendNetMessage) {
+				// send a netmessage with the roll value of this player
+				NetMessage netMsg = new NetMessage(Messages.BUY_PROPERTY);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, true);
 		}
@@ -208,15 +213,14 @@ public class GameClient {
 	public void buyHouse(int tileID, boolean sendNetMessage) {
 		try {
 			board.buyHouse(tileID);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+						Messages.BUY_HOUSE);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.BUY_HOUSE);
-			nc.sendMessage(netMsg);
-		}
-
 	}
 
 	/**
@@ -230,13 +234,13 @@ public class GameClient {
 	public void buyHotel(int tileID, boolean sendNetMessage) {
 		try {
 			board.buyHotel(tileID);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+						Messages.BUY_HOTEL);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		}
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.BUY_HOTEL);
-			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -251,13 +255,13 @@ public class GameClient {
 	public void sellHouse(int tileID, boolean sendNetMessage) {
 		try {
 			board.sellHouses(tileID);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+						Messages.SELL_HOUSE);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		}
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.SELL_HOUSE);
-			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -272,13 +276,13 @@ public class GameClient {
 	public void sellHotel(int tileID, boolean sendNetMessage) {
 		try {
 			board.sellHotel(tileID);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+						Messages.SELL_HOTEL);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		}
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
-					Messages.SELL_HOTEL);
-			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -294,13 +298,13 @@ public class GameClient {
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
 		try {
 			board.toggleMortgageStatus(tileId);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+						Messages.TOGGLE_MORTGAGE);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
-		}
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-					Messages.TOGGLE_MORTGAGE);
-			nc.sendMessage(netMsg);
 		}
 	}
 
@@ -323,20 +327,17 @@ public class GameClient {
 			int price, boolean sendNetMessage) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-
 		try {
 			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
 					price);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(fromName,toName, tileId,
+						Messages.TRANSFER_PROPERTY);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
-
-		if (sendNetMessage) {
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-					Messages.TOGGLE_MORTGAGE);
-			nc.sendMessage(netMsg);
-		}
-
 	}
 
 	/**
@@ -358,10 +359,14 @@ public class GameClient {
 			int price, boolean sendNetMessage) {
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
-
 		try {
 			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
 					price);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), quantity,
+						Messages.TRANSFER_JAILCARD);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -387,6 +392,11 @@ public class GameClient {
 
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), amount,
+						Messages.TRANSFER_MONEY);
+				nc.sendMessage(netMsg);
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -516,15 +526,13 @@ public class GameClient {
 		String currentPlayerName = currentPlayer.getName();
 		try {
 			board.payFee(currentPlayerName, fee);
+			if (sendNetMessage) {
+				NetMessage msg = new NetMessage(currentPlayer.getName(),
+						Messages.PAY_FEE);
+				sendNetMessageToGUI(msg);
+			}
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
-		}
-		if (sendNetMessage) {
-			NetMessage msg = new NetMessage(currentPlayer.getName(),
-					Messages.PAY_FEE);
-			sendNetMessageToGUI(msg);
+			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
 
@@ -543,9 +551,7 @@ public class GameClient {
 		try {
 			currentPlayer.withdawMoney(fee);
 		} catch (TransactionException e) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-			ws.notifyListeners(wse);
+			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 		board.getPlayerByName(toName).depositMoney(fee);
 	}
@@ -576,31 +582,32 @@ public class GameClient {
 	 */
 	public void updateTurnTokens(String playerName) {
 		String currentPlayerName;
-		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-		System.out.println(">>UpdateTurnToken<< playerName received"
-				+ playerName);
+//		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
+//		System.out.println(">>UpdateTurnToken<< playerName received"
+//				+ playerName);
 
 		if (currentPlayer != null) {
-			System.out.println(">>UpdateTurnToken<< Current Player is "
-					+ currentPlayer.getName());
-			System.out
-					.println(">>UpdateTurnToken<< Current Player turn token before change:"
-							+ currentPlayer.hasTurnToken());
+//			System.out.println(">>UpdateTurnToken<< Current Player is "
+//					+ currentPlayer.getName());
+//			System.out
+//					.println(">>UpdateTurnToken<< Current Player turn token before change:"
+//							+ currentPlayer.hasTurnToken());
+			
 			currentPlayerName = currentPlayer.getName();
 		} else
 			currentPlayerName = null;
 
 		board.updateTurnTokens(playerName, currentPlayerName);
-
-		System.out
-				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
-						+ board.getPlayerByName(playerName).hasTurnToken());
-		setCurrentPlayer(playerName, false);
-		System.out.println(">>UpdateTurnToken<< The current player is now "
-				+ currentPlayer.getName());
-		System.out
-				.println(">>UpdateTurnToken<< The current player's turn token is  "
-						+ currentPlayer.hasTurnToken());
+//USED FOR DEBUGGING THE GUI
+//		System.out
+//				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
+//						+ board.getPlayerByName(playerName).hasTurnToken());
+//		setCurrentPlayer(playerName, false);
+//		System.out.println(">>UpdateTurnToken<< The current player is now "
+//				+ currentPlayer.getName());
+//		System.out
+//				.println(">>UpdateTurnToken<< The current player's turn token is  "
+//						+ currentPlayer.hasTurnToken());
 	}
 
 	/**

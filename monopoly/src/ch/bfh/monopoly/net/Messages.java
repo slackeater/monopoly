@@ -24,6 +24,7 @@ public enum Messages {
 	BUY_HOTELROW(215),
 	BUY_PROPERTY(220),
 	
+	
 	SELL_HOUSE(300),
 	SELL_HOUSEROW(305),
 	SELL_HOTEL(310),
@@ -31,13 +32,17 @@ public enum Messages {
 	SELL_PROPERTY(320),
 	SELL_CARD(330),
 	
+	TRANSFER_JAILCARD(350),
+	TRANSFER_MONEY(360),
+	TRANSFER_PROPERTY(370),
+	
 	TOGGLE_MORTGAGE(400),
 	
 	PAY_RENT(500),
 	TURN_TOKEN(510),
 	END_TURN(520),
 	PAY_FEE(530),
-	
+
 	
 	//when chance cards must be shuffled
 	UPDATE_CHANCE_ORDER(600),
