@@ -460,7 +460,8 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
-//		System.out.println("board.castTileToProperty received the tileId:" +t.getTileId());
+		System.out.println("board.castTileToProperty received the tileId:" +t.getTileId());
+		System.out.println("board.castTileToProperty received the tileId:" +t.getName());
 		if (!(t instanceof Property))
 			throw new RuntimeException(
 					"the tile in question is not a property: this transaction cannot be completed");

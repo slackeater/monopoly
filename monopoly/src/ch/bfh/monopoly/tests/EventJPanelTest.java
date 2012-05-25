@@ -32,7 +32,7 @@ public class EventJPanelTest extends JFrame {
 	GameController gc;
 	JPanel jpanel;
 	Locale loc ;
-	TestInstanceGenerator tig= new TestInstanceGenerator("fr");
+	TestInstanceGenerator tig= new TestInstanceGenerator("en");
 
 	public EventJPanelTest(){
 		gameClient = tig.getGameClient();
@@ -43,6 +43,8 @@ public class EventJPanelTest extends JFrame {
 //		testElectricCompanyNotOwned();
 //		testMediterraneanOwned();
 		testMediterraneanNotOwned();
+//		testFirstRailRoadOwned();
+//		testFirstRailRoadNotOwned();
 		
 		jpanel= gameClient.getTileEventPanel(sendNetMessage);
 		setSize(300, 300);
@@ -87,6 +89,25 @@ public class EventJPanelTest extends JFrame {
 		//refund the money for purchase so comparison of result is clearer
 		gameClient.getCurrentPlayer().depositMoney(board.castTileToTerrain(board.getTileById(tileId)).getPrice());
 		System.out.println("Rent for "+board.castTileToTerrain(board.getTileById(tileId)).getName() + " is " + board.castTileToTerrain(board.getTileById(tileId)).feeToCharge());
+		gameClient.setCurrentPlayer("Giuseppe", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
+	public void testFirstRailRoadOwned(){
+		//first railroad
+		int tileId = 5;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	public void testFirstRailRoadNotOwned(){
+		//first railroad
+		int tileId = 5;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
+		//refund the money for purchase so comparison of result is clearer
+		gameClient.getCurrentPlayer().depositMoney(board.castTileToProperty(board.getTileById(tileId)).getPrice());
+		System.out.println("Rent for "+board.castTileToProperty(board.getTileById(tileId)).getName() + " is " + board.castTileToProperty(board.getTileById(tileId)).feeToCharge());
 		gameClient.setCurrentPlayer("Giuseppe", sendNetMessage);
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 	}

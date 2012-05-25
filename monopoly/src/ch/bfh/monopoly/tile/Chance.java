@@ -19,30 +19,12 @@ public class Chance extends AbstractTile {
 
 
 
-	/**
-	 * creates the actionListeners that the GUI should display in response to a
-	 * player landing on this tile
-	 * 
-	 * @return a list of actionListeners for the GUI to add to buttons
-	 */
-	public List<ActionListener> getActionListenerList() {
-		List<ActionListener> actionList = new ArrayList<ActionListener>();
-		ActionListener al = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-			}
-		};
-		actionList.add(al);
-
-		return actionList;
-	}
-
-
-
-
 	@Override
 	public JPanel getTileEventPanel() {
+		//make the JPanel here
+		//the events have a default method in the superclass that will give a button performAction
+		//the events that have a special event override the method to return a list with two buttons 
+		em.getEventDescriptionChance();
 		// TODO Auto-generated method stub
 		return null;
 	}
