@@ -1,28 +1,12 @@
 package ch.bfh.monopoly.tile;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-
-import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.EventManager;
 import ch.bfh.monopoly.event.BoardEvent;
 
 public abstract class AbstractTile implements Tile {
 
-	private static final long serialVersionUID = 1L;
 	protected int tileId;
 	private int coordX;
 	private int coordY;
@@ -31,14 +15,16 @@ public abstract class AbstractTile implements Tile {
 	protected BoardEvent event;
 	protected EventManager em;
 	protected boolean sendNetMessage = true;
+	protected GameClient gameClient;
 
 	public AbstractTile(String name, int coordX, int coordY, int tileId,
-			EventManager em) {
+			EventManager em, GameClient gameClient) {
 		this.name = name;
 		this.coordX = coordX;
 		this.coordY = coordY;
 		this.tileId = tileId;
 		this.em = em;
+		this.gameClient = gameClient;
 	}
 
 	/**

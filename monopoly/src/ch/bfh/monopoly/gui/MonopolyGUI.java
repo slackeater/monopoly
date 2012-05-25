@@ -567,18 +567,8 @@ public class MonopolyGUI extends JFrame {
 						endTurn.setEnabled(true);
 					}
 
-//					WindowBuilder wb = gc.getWindowBuilder();
-//					String name = wb.getName();
-//					JPanel jp = new JPanel();
-//					JButton testButton = new JButton("TEST");
-//
-//					testButton.addActionListener(wb.getActionList().get(0));
-//					//testButton.addActionListener(wb.getActionList().get(1));
-//
-//					jp.add(new JLabel(wb.getDescription()));
-//					jp.add(testButton);
-//
-//					tabPane.addTab(name,  jp);
+					JPanel eventPanel = gc.getTileEventPanel();
+					tabPane.addTab("EVENT!",  eventPanel);
 				}
 
 			}

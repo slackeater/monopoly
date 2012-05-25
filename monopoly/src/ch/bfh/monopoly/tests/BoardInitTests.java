@@ -2,22 +2,17 @@ package ch.bfh.monopoly.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Color;
-import java.util.Locale;
 
+import java.util.Locale;
 import org.junit.Before;
 import org.junit.Test;
-
 import ch.bfh.monopoly.common.*;
-import ch.bfh.monopoly.event.MovementEvent;
 import ch.bfh.monopoly.tile.Chance;
-import ch.bfh.monopoly.tile.Property;
 import ch.bfh.monopoly.tile.Railroad;
 import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 import ch.bfh.monopoly.tile.TileInfo;
 import ch.bfh.monopoly.tile.Utility;
-
 
 
 
@@ -31,7 +26,7 @@ public class BoardInitTests {
 	
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("en");
 		gameClient= tig.getGameClient();
 		board=tig.getBoard();
 	}
@@ -149,14 +144,14 @@ public class BoardInitTests {
 		tileNumber  = 5;
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getName().equals("Reading Railroad"));
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getPrice()==200);
-		assertTrue(((Railroad)board.getTileById(tileNumber)).getRent()==25);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).feeToCharge()==25);
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getMortgageValue()==100);
 		//System.out.println(sm.getTileById(tileNumber));
 		
 		tileNumber  = 25;
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getName().equals("B&O Railroad"));
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getPrice()==200);
-		assertTrue(((Railroad)board.getTileById(tileNumber)).getRent()==25);
+		assertTrue(((Railroad)board.getTileById(tileNumber)).feeToCharge()==25);
 		assertTrue(((Railroad)board.getTileById(tileNumber)).getMortgageValue()==100);
 		//System.out.println(sm.getTileById(tileNumber));
 		
