@@ -41,6 +41,7 @@ public class PlayerInfo extends JPanel{
 	
 	private boolean toggleVisibility = false;
 	private int playerIndex;
+	private String localPlayerName;
 	
 	private PlayerUpdate plU = new PlayerUpdate();
 	private BoardController bc;
@@ -49,9 +50,10 @@ public class PlayerInfo extends JPanel{
 	 * Construct a PlayerInfo
 	 * @param c the color of this player
 	 */
-	public PlayerInfo(int playerIndex, BoardController bc){
+	public PlayerInfo(int playerIndex, BoardController bc, String localPlayerName){
 		this.playerIndex = playerIndex;
 		this.bc = bc;
+		this.localPlayerName = localPlayerName;
 		
 		System.out.println("INSIDE PLAYER INFO");
 		
@@ -99,7 +101,7 @@ public class PlayerInfo extends JPanel{
 	/**
 	 * Show the terrains
 	 */
-	public void showTerrains(){
+	private void showTerrains(){
 		this.terrainDown.setVisible(true);
 		this.terrainUp.setVisible(true);
 	}
@@ -301,6 +303,11 @@ public class PlayerInfo extends JPanel{
 				setTurnPanelBackground(turn, c);
 				playerName.setText(name);		
 				account.setText(Integer.toString(plAccount));
+				
+				if(localPlayerName.equals(name)){
+					showTerrains();
+				}
+				
 				repaint();
 				revalidate();
 		}

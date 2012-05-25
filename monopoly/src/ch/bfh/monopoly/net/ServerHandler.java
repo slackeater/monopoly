@@ -169,6 +169,38 @@ public class ServerHandler implements IoHandler{
 		System.out.println("========");
 	}
 	
+	/**
+	 * If a user went down, update the username list (for broadcast) 
+	 * turn counter
+	 * @param session
+	 */
+	private void playerQuit(IoSession session){
+		int usernameCounter = 0;
+		
+		for(PlayerWrapper pl : this.plWrap){
+			if(session == pl.getSession()){
+				this.usernames.remove(usernameCounter);
+				String quitPlayer = plWrap.get(usernameCounter).getUsername();
+				plWrap.remove(pl);
+				userTokenIndex--;
+				System.out.println("PL WRAP SIZE : " +plWrap.size());
+				System.out.println("USERNAMES SIZE: " + usernames.size());
+				System.out.println("TURN TOKEN INDEX : " + userTokenIndex);
+				
+				//send the message to the other user in the list
+				//this is why the second parameter is null
+				NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
+				
+				sendBroadcast(playerDown, null);
+				
+				break;
+			}
+			usernameCounter++;
+		}
+		
+
+	}
+	
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
@@ -192,6 +224,8 @@ public class ServerHandler implements IoHandler{
 
 	@Override
 	public void sessionClosed(IoSession arg0) throws Exception {
+		System.out.println("QUIT GAME RECEIVED");
+		playerQuit(arg0);
 		System.out.println("A player went down. Taking his properties and money.");
 
 	}

@@ -37,7 +37,6 @@ import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
-import ch.bfh.monopoly.common.WindowBuilder;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.TileSubject;
@@ -118,7 +117,7 @@ public class MonopolyGUI extends JFrame {
 		initializeButtons();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle(res.getString("title"));
+		setTitle(res.getString("title")  + " - " + gc.getLocalPlayerName());
 		setLayout(new BorderLayout());
 
 		System.out.println("BEFORE WRAPPER INIT");
@@ -134,10 +133,11 @@ public class MonopolyGUI extends JFrame {
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 		       
-            int exit = JOptionPane.showConfirmDialog(this, "Are you sure?");
+            int exit = JOptionPane.showConfirmDialog(this, res.getString("text-quitgame"));
+            
             if (exit == JOptionPane.YES_OPTION) {
             	gc.sendQuitGame();
-            	
+            	            	
             	try {
 					Thread.sleep(250);
 				} catch (InterruptedException e1) {
@@ -361,16 +361,11 @@ public class MonopolyGUI extends JFrame {
 		//with his info
 		for(int j = 0 ; j < playerNumber ; j++){
 
-			PlayerInfo plInfo = new PlayerInfo(j, this.bc);
+			//TODO remove bc
+			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
 
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
-
-			//TODO hard to do because, we have the pse arraylist after 
-			//the call to this method, so at this point, pse is empty.
-
-			//if is the local player, show the terrain panel by default
-			//			if(gc.getLocalPlayerName().equals(this.pse.get(j).getName()))
-			//					plInfo.showTerrains();
+			
 
 			info.add(plInfo);
 		}
