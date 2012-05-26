@@ -89,8 +89,8 @@ public class Utility extends Property {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// SHOW THE ROLL VALUE AND TELL WHAT THEY HAVE TO PAY
-				// CHANGE THE BUTTOM TEXT AND LISTENER
-				gameClient.payFee(fee, sendNetMessage);
+				// CHANGE THE BUTTOM TEXT AND LISTENE
+				gameClient.payUtilityFee(fee,true);
 				System.out.println(gameClient.getCurrentPlayer().getAccount());
 //				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}

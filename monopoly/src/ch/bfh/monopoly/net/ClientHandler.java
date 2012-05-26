@@ -113,6 +113,12 @@ public class ClientHandler implements IoHandler {
 		case TOGGLE_MORTGAGE:
 			gameClient.toggleMortgageStatus(n.getInt(), false);
 			break;
+			
+		case PAY_RENT:
+			gameClient.payRent(false);
+			break;
+		case PAY_UTILITY_FEE:
+			gameClient.payUtilityFee(n.getInt(), false);
 		case TURN_TOKEN:
 			String username = n.getText();
 			gameClient.updateTurnTokens(username);

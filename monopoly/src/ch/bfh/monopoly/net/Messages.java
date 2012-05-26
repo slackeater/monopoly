@@ -42,6 +42,7 @@ public enum Messages {
 	TURN_TOKEN(510),
 	END_TURN(520),
 	PAY_FEE(530),
+	PAY_UTILITY_FEE(535),
 
 	
 	//when chance cards must be shuffled

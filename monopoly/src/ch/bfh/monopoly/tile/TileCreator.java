@@ -2,9 +2,11 @@ package ch.bfh.monopoly.tile;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.event.BoardEvent;
 import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.event.GoToJailEvent;
+import ch.bfh.monopoly.event.RepairsEvent;
 
 public class TileCreator {
 
@@ -28,75 +30,84 @@ public class TileCreator {
 
 	public void createTiles(GameClient gameClient) {
 		Tile t = null;
-		ResourceBundle rb = ResourceBundle.getBundle(
+		ResourceBundle rbTile = ResourceBundle.getBundle(
 				"ch.bfh.monopoly.resources.tile", loc);
 
 		for (int i = 0; i < 40; i++) {
 
-			String name = rb.getString("tile" + i + "-name");
+			String name = rbTile.getString("tile" + i + "-name");
 			name = name.trim();
 
-			String toParse = rb.getString("tile" + i + "-price");
+			String toParse = rbTile.getString("tile" + i + "-price");
 			int price = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-houseCost");
+			toParse = rbTile.getString("tile" + i + "-houseCost");
 			int houseCost = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-hotelCost");
+			toParse = rbTile.getString("tile" + i + "-hotelCost");
 			int hotelCost = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-rent");
+			toParse = rbTile.getString("tile" + i + "-rent");
 			int rent = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-rent1house");
+			toParse = rbTile.getString("tile" + i + "-rent1house");
 			int rent1house = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-rent2house");
+			toParse = rbTile.getString("tile" + i + "-rent2house");
 			int rent2house = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-rent3house");
+			toParse = rbTile.getString("tile" + i + "-rent3house");
 			int rent3house = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-rent4house");
+			toParse = rbTile.getString("tile" + i + "-rent4house");
 			int rent4house = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-renthotel");
+			toParse = rbTile.getString("tile" + i + "-renthotel");
 			int renthotel = parseResource(toParse);
 
-			String group = rb.getString("tile" + i + "-group");
+			String group = rbTile.getString("tile" + i + "-group");
 			group = group.trim();
 
-			toParse = rb.getString("tile" + i + "-mortgageValue");
+			toParse = rbTile.getString("tile" + i + "-mortgageValue");
 			int mortgageValue = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-coordX");
+			toParse = rbTile.getString("tile" + i + "-coordX");
 			int coordX = parseResource(toParse);
 
-			toParse = rb.getString("tile" + i + "-coordY");
+			toParse = rbTile.getString("tile" + i + "-coordY");
 			int coordY = parseResource(toParse);
 
-			String rgb = rb.getString("tile" + i + "-rgb");
+			String rgb = rbTile.getString("tile" + i + "-rgb");
 
 			rgb = rgb.trim();
 
 			if (group.equals("railroad"))
 				t = new Railroad(name, price, rent, group, mortgageValue,
 						coordX, coordY, i, em, gameClient.getBankPlayer(),
-						gameClient,rb);
+						gameClient, rbTile);
 			else if (group.equals("utility"))
 				t = new Utility(name, price, group, mortgageValue, coordX,
-						coordY, i, em, gameClient.getBankPlayer(), gameClient,rb);
-			else if (group.equals("Chance"))
+						coordY, i, em, gameClient.getBankPlayer(), gameClient,
+						rbTile);
+			else if (group.equalsIgnoreCase("Chance"))
 				t = new Chance(name, coordX, coordY, i, gameClient, em);
-			else if (group.equals("Community Chest"))
+			else if (group.equalsIgnoreCase("Community Chest"))
 				t = new CommunityChest(name, coordX, coordY, i, gameClient, em);
-			else if (group.equals("cornersAndTax"))
+			else if (i==0)
+				t = new Go(name, coordX, coordY, i, em, gameClient);
+			else if (i==10)
+				t = new Jail(name, coordX, coordY, i, em, gameClient);
+			else if (i==20)
+				t = new FreeParking(name, coordX, coordY, i, em, gameClient);
+			else if (i==30)
+				t = new GoToJail(name, coordX, coordY, i, em, gameClient);
+			else if (i==4 || i==38)
 				t = new NonProperty(name, coordX, coordY, i, em, gameClient);
 			else
 				t = new Terrain(name, price, houseCost, hotelCost, rent,
 						rent1house, rent2house, rent3house, rent4house,
 						renthotel, group, mortgageValue, coordX, coordY, i,
-						rgb, em, gameClient.getBankPlayer(), gameClient, rb);
+						rgb, em, gameClient.getBankPlayer(), gameClient, rbTile);
 			tiles[i] = t;
 		}
 	}
