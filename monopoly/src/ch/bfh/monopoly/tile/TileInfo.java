@@ -48,6 +48,7 @@ public class TileInfo {
 		this.name = name;
 	}
 	
+	
 
 	public String getOwner() {
 		return owner;
