@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -55,8 +54,7 @@ public class BoardTile extends JPanel{
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
-	private String owner;
-	private List<BoardTile> groupMember = new ArrayList<BoardTile>();
+	private JLabel owner;
 	private ButtonListener btnListener;
 
 	//used when we right click on a tile
@@ -69,11 +67,6 @@ public class BoardTile extends JPanel{
 	sellHotelRow, mortgage, unmortgage;
 
 	private JPanel color;
-
-	//to check if we have clicked over a button
-	private boolean buyHouseClicked, buyHotelClicked, buyHouseRowClicked,
-	buyHotelRowClicked, sellHouseClicked, sellHotelClicked, sellHouseRowClicked,
-	sellHotelRowClicked, mortgageClicked, unmortgageClicked;
 
 	/**
 	 * Construct a new BoardTile
@@ -157,35 +150,6 @@ public class BoardTile extends JPanel{
 		this.tokens.add(t);
 	}
 
-	public void setGroupMember(BoardTile[] btMember){
-
-		for(int j = 0 ; j < btMember.length ; j++){
-			this.groupMember.add(btMember[j]);
-		}
-	
-		System.out.println("THE SIZE OF MEMBER FOR TILE " + ti.getName() + groupMember.size());
-		
-		//TODO REMOVE ONLY FOR TEST
-		//		if(btMember[0] != null && btMember[1] != null){
-		//		
-		//			System.out.println("IM THE TILE : " + ti.getName());
-		//			System.out.println("=>> " + btMember[0].getNameTile());
-		//			System.out.println("=>> " + btMember[1].getNameTile());
-		//		}
-		//		else if(btMember[0] != null && btMember[1] == null){
-		//			System.out.println("IM THE TILE : " + ti.getName());
-		//			System.out.println("=>> " + btMember[0].getNameTile());
-		//		}
-
-	}
-
-	/**
-	 * TODO => TEMP TEMP TEMP ONLY FOR TESTING THE GROUP MEMBER
-	 */
-	public String getNameTile(){
-		return ti.getName();
-	}
-
 	/**
 	 * Add the information of a tile (rent, name,costs, etc.) to 
 	 * the tabbed pane
@@ -248,11 +212,26 @@ public class BoardTile extends JPanel{
 				hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
 				hotel.setFont(f);
 
+				JLabel houseCost = new JLabel(res.getString("label-houseprice") + Integer.toString(ti.getHouseCost()));
+				houseCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+				houseCost.setFont(f);
+
+				JLabel hotelCost = new JLabel(res.getString("label-hotelprice") + Integer.toString(ti.getHotelCost()));
+				hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+				hotelCost.setFont(f);
+
+				owner = new JLabel(res.getString("label-owner") + ti.getOwner());
+				owner.setAlignmentX(Component.CENTER_ALIGNMENT);
+				owner.setFont(f);
+
 				tab.add(rent1);
 				tab.add(rent2);
 				tab.add(rent3);
 				tab.add(rent4);
 				tab.add(hotel);
+				tab.add(houseCost);
+				tab.add(hotelCost);
+				tab.add(owner);
 			}
 
 			JLabel mortgage = new JLabel(res.getString("label-mortgagevalue") + Integer.toString(ti.getMortgageValue()));
@@ -353,15 +332,6 @@ public class BoardTile extends JPanel{
 	}
 
 	/**
-	 * Get the board tile id.
-	 * Used for the row functionalities
-	 * @return
-	 */
-	public int getBoardTileID(){
-		return ti.getTileId();
-	}
-	
-	/**
 	 * Draw an house
 	 * @return JPanel
 	 * 			a JPanel representing an house
@@ -404,8 +374,9 @@ public class BoardTile extends JPanel{
 			color.add(drawHouse());
 		}
 
-		repaint();
 		revalidate();
+		repaint();
+
 	}
 
 	/**
@@ -417,8 +388,9 @@ public class BoardTile extends JPanel{
 	public void removeBuilding(boolean type){
 		//remove house
 		if(!type && houseCount > 0 && houseCount <= 4){
-			houseCount--;
 			color.remove(0);
+			houseCount--;
+			System.out.println("REMOVED HOUSE INSIDE REMOVE BUILDING");
 		}
 		//remove hotel
 		else if(type && isHotel && houseCount == 4){
@@ -430,8 +402,9 @@ public class BoardTile extends JPanel{
 			isHotel = false;
 		}
 
-		repaint();
 		revalidate();
+		repaint();
+
 	}
 
 	/**
@@ -450,8 +423,9 @@ public class BoardTile extends JPanel{
 	 */
 	private void unmortgagePanel(){
 		color.setBackground(Color.decode(ti.getRGB()));
-		repaint();
+
 		revalidate();
+		repaint();
 	}
 
 	/**
@@ -501,67 +475,37 @@ public class BoardTile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			//reset the buttons
-			buyHouseClicked = false;
-			buyHotelClicked = false;
-			buyHouseRowClicked = false;
-			buyHotelRowClicked = false;
-			sellHouseClicked = false;
-			sellHotelClicked = false;
-			sellHouseRowClicked = false;
-			sellHotelRowClicked = false;
-			mortgageClicked = false;
-			unmortgageClicked = false;
-
 			if(e.getSource().equals(buyHouse)){
-				buyHouseClicked = true;
 				gc.buyHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHotel)){
-				buyHotelClicked = true;
 				gc.buyHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHouseRow)){
-				buyHouseRowClicked = true;
-				
-				//this tile house
-				gc.buyHouse(ti.getTileId());
-				
-				//other member tile
-				for(BoardTile bt : groupMember){
-					gc.buyHouse(bt.getBoardTileID());
-				}
+				gc.buyHouseRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHotelRow)){
-				buyHotelRowClicked = true;
-				//TODO
+				gc.buyHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouse)){
-				sellHouseClicked = true;
 				gc.sellHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotel)){
-				sellHotelClicked = true;
 				gc.sellHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouseRow)){
-				sellHouseRowClicked = true;
-				//TODO
+				gc.sellHouseRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotelRow)){
-				sellHotelRowClicked = true;
-				//TODO
+				gc.sellHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(mortgage)){
-				mortgageClicked = true;
 				System.out.println("INSIDE MORTGAGE");
 				gc.toggleMortgageStatus(ti.getTileId());
 			}
 			else if(e.getSource().equals(unmortgage)){
-				unmortgageClicked = true;
 				gc.toggleMortgageStatus(ti.getTileId());
 			}
-
 		}	
 	}
 
@@ -573,46 +517,25 @@ public class BoardTile extends JPanel{
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 
-			if(buyHouseClicked){
+			System.out.println("HOUSES : " + tsi.getHouseCount());
+			System.out.println("HOTELS : " + tsi.getHotelsCount());
+
+			if(tsi.getHouseCount() > houseCount){
 				drawBuilding(false);
 			}
-			else if(buyHotelClicked){
-				drawBuilding(true);
-			}
-			else if(buyHouseRowClicked){
-				drawBuilding(true);
-				
-				//other member tile
-				for(BoardTile bt : groupMember){
-					bt.drawBuilding(true);
-				}
-			}
-			else if(buyHotelRowClicked){
-				drawBuilding(false);
-				
-				//other member tile
-				for(BoardTile bt : groupMember){
-					bt.drawBuilding(false);
-				}
-				//TODO
-			}
-			else if(sellHouseClicked){
+			else if(tsi.getHouseCount() < houseCount){
 				removeBuilding(false);
 			}
-			else if(sellHotelClicked){
+			else if(tsi.getHotelsCount() == 1){
+				drawBuilding(true);
+			}
+			else if(tsi.getHotelsCount() == 0){
 				removeBuilding(true);
 			}
-			else if(sellHouseRowClicked){
-				//TODO
-			}
-			else if(sellHotelRowClicked){
-				//TODO
-			}
-			else if(mortgageClicked){
-				System.out.println("MORTGAGE");
+			else if(tsi.isMortgageActive()){
 				mortgagePanel();
 			}
-			else if(unmortgageClicked){
+			else if(!tsi.isMortgageActive()){
 				unmortgagePanel();
 			}
 		}
@@ -624,6 +547,7 @@ public class BoardTile extends JPanel{
 			if(ti.getTileId() != -1 && 
 					bc.getTileInfoById(ti.getTileId()).getOwner() != null && bc.getTileInfoById(ti.getTileId()).getOwner().equals(gc.getLocalPlayerName())){
 				btnListener.setOwner();
+				owner.setText(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
 			}
 		}	
 	}

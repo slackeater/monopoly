@@ -69,7 +69,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to build on
 	 */
 	public void buyHotelRow(int tileId) {
-		gameClient.buyHouseRow(tileId, true);
+		gameClient.buyHotelRow(tileId, true);
 	}
 	
 	/**
@@ -87,7 +87,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to sell from
 	 */
 	public void sellHouseRow(int tileId) {
-		gameClient.buyHouseRow(tileId, true);
+		gameClient.sellHouseRow(tileId, true);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to sell from
 	 */
 	public void sellHotelRow(int tileId) {
-		gameClient.buyHouseRow(tileId, true);
+		gameClient.sellHotelRow(tileId, true);
 	}
 	
 	/**

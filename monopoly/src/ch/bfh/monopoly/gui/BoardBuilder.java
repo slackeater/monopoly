@@ -97,6 +97,9 @@ public class BoardBuilder extends JPanel {
 	private void drawBoard(){
 		for(int j = 0 ; j < this.tilesList.size() ; j++){
 			BoardTile tile = this.tilesList.get(j);
+		
+			System.out.println("X COORD " + tile.getTileInfoX());
+			System.out.println("Y COORD " + tile.getTileInfoY());
 			
 			//corner
 			if(j % 10 == 0)
