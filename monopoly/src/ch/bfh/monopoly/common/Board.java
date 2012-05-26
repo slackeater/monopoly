@@ -914,12 +914,11 @@ public class Board {
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
 		}
-		if (tile instanceof NonProperty) {
-			NonProperty t = (NonProperty) tile;
-			tileInfo.setName(t.getName());
+		else {
+			tileInfo.setName(tile.getName());
 
-			tileInfo.setCoordX(t.getCoordX());
-			tileInfo.setCoordY(t.getCoordY());
+			tileInfo.setCoordX(tile.getCoordX());
+			tileInfo.setCoordY(tile.getCoordY());
 		}
 		return tileInfo;
 	}

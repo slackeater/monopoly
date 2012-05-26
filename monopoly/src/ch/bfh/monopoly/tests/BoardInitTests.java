@@ -26,9 +26,10 @@ public class BoardInitTests {
 	
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator("en");
+		TestInstanceGenerator tig = new TestInstanceGenerator("fr");
 		gameClient= tig.getGameClient();
 		board=tig.getBoard();
+		
 	}
 	
 
@@ -80,7 +81,6 @@ public class BoardInitTests {
 		assertTrue(ti.getName().equals("Mediterranean Avenue"));
 		assertTrue(ti.getPrice()==60);
 		assertTrue(ti.getGroup().equals("purple"));
-		
 	}
 	
 	
@@ -170,6 +170,18 @@ public class BoardInitTests {
 		assertTrue(((Utility)board.getTileById(tileNumber)).getMortgageValue()==75);
 		//System.out.println(board.tiles[tileNumber]);
 		
+	}
+	
+	@Test
+	public void checkTileStats(){
+		for(int i =0; i<40;i++){
+			String name = board.getTileById(i).getName();
+			int position = board.getTileById(i).getTileId();
+			int xcoord  = board.getTileById(i).getCoordX();
+			int ycoord  = board.getTileById(i).getCoordY();
+			System.out.println(name);
+			System.out.println("\t"+ position +"\t" + xcoord + "\t"+ycoord );
+		}
 	}
 	
 	

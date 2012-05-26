@@ -44,13 +44,14 @@ public enum Messages {
 	PAY_FEE(530),
 	PAY_UTILITY_FEE(535),
 
+
 	
 	//when chance cards must be shuffled
 	UPDATE_CHANCE_ORDER(600),
 	UPDATE_COMMCHEST_ORDER(610),
 	//WHEN GUI CALLS FOR THE EVENT WINDOW
 	GET_EVENT_WINDOW(620),
-	
+	GO_TO_JAIL(666),
 	//probably only for test
 	ACKNOWLEDGE(999)
 	

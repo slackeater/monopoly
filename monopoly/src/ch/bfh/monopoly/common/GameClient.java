@@ -638,7 +638,7 @@ public class GameClient {
 				.getOwner().getName();
 		transferMoney(currentPlayerName, owner, fee, false);
 		if (sendNetMessage) {
-			NetMessage msg = new NetMessage(currentPlayer.getName(),fee,
+			NetMessage msg = new NetMessage(currentPlayer.getName(), fee,
 					Messages.PAY_UTILITY_FEE);
 			sendNetMessageToGUI(msg);
 		}
@@ -667,21 +667,25 @@ public class GameClient {
 	/**
 	 * sends the currentPlayer to jail
 	 */
-	public void goToJail(boolean sendNetMessage){
+	public void goToJail(boolean sendNetMessage) {
 		board.goToJail(currentPlayer.getName());
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.GO_TO_JAIL);
+			sendNetMessageToGUI(msg);
+		}
 	}
-	
+
 	/**
 	 * pass go, get money
 	 */
-	public void passGo(){
+	public void passGo() {
 		board.passGo(currentPlayer);
 	}
-	
+
 	public int getFreeParking() {
 		return board.getFreeParking();
 	}
-
 
 	/**
 	 * Send a chat message
