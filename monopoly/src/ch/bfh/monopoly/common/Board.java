@@ -212,6 +212,32 @@ public class Board {
 	}
 
 	/**
+	 * buy a property that is currently owned by the bank at the price that is
+	 * written on the card
+	 * 
+	 * @param tileId
+	 *            the id of the property to be bought
+	 * @throws TransactionException
+	 */
+	public void buyCurrentPropertyForPlayer(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Property p = castTileToProperty(t);
+		if (!(p.getOwner().getName().equals("bank")))
+			throw new RuntimeException(
+					"The property to be bought is not owned by the bank, use transfer property instead");
+		int priceOfProperty = p.getPrice();
+		if (!playerHasSufficientFunds(playerName, priceOfProperty))
+			throw new TransactionException(
+					"Player Does not have enough money to by the property from the bank");
+		Player player = getPlayerByName(playerName);
+		player.addProperty(p);
+		p.setOwner(player);
+		player.withdawMoney(p.getPrice());
+		playerSubject.notifyListeners();
+	}
+	
+	/**
 	 * buy a house for a given property checks that the tileId provided refers
 	 * to a terrain
 	 * 
@@ -243,6 +269,7 @@ public class Board {
 		int price = terrain.getHouseCost();
 		terrain.getOwner().withdawMoney(price);
 		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -282,41 +309,10 @@ public class Board {
 			tileSubjects[groupMember.getTileId()].notifyListeners();
 		}
 		plyr.withdawMoney(costToBuild);
+		playerSubject.notifyListeners();
 	}
 	
 	
-	/**
-	 * sell 1 house for each property belonging to a group
-	 * 
-	 * @param tileId
-	 *            the id of any tile in the group to sell from
-	 * @throws TransactionException
-	 */
-	public void sellHouseRow(String playerName, int tileId)
-			throws TransactionException {
-		Tile t = tiles[tileId];
-		Terrain terrain = castTileToTerrain(t);
-		Player plyr = getPlayerByName(playerName);
-		String groupName = terrain.getGroup();
-		List<Terrain> groupMembers = getGroupMembers(groupName);
-		int amountOfSale = terrain.getHouseCost() * groupMembers.size();
-		// Check if player is owner of all the properties in the group
-		if (!playerOwnsTileGroup(playerName, tileId))
-			throw new TransactionException(
-					"You don't own all the properties in the group.");
-		// check that all tiles in the group have a house to sell
-		for (Terrain groupMember : groupMembers) {
-			if (groupMember.getHotelCount() < 1)
-				throw new TransactionException(
-						"At least one tile does not have a house to sell");
-		}
-		for (Terrain groupMember : groupMembers) {
-			groupMember.removeHouse();
-			availableHouses++;
-			tileSubjects[groupMember.getTileId()].notifyListeners();
-		}
-		plyr.depositMoney(amountOfSale);
-	}
 
 	/**
 	 * buy 1 hotel for each property belonging to a group
@@ -359,6 +355,7 @@ public class Board {
 			tileSubjects[groupMember.getTileId()].notifyListeners();
 		}
 		plyr.withdawMoney(costToBuild);
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -396,6 +393,7 @@ public class Board {
 		int price = terrain.getHotelCost();
 		terrain.getOwner().withdawMoney(price);
 		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -417,8 +415,44 @@ public class Board {
 		int price = terrain.getHouseCost();
 		terrain.getOwner().depositMoney(price);
 		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
 	}
 
+	
+	/**
+	 * sell 1 house for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
+	 * @throws TransactionException
+	 */
+	public void sellHouseRow(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		Player plyr = getPlayerByName(playerName);
+		String groupName = terrain.getGroup();
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		int amountOfSale = terrain.getHouseCost() * groupMembers.size();
+		// Check if player is owner of all the properties in the group
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
+		// check that all tiles in the group have a house to sell
+		for (Terrain groupMember : groupMembers) {
+			if (groupMember.getHouseCount() < 1)
+				throw new TransactionException(
+						"At least one tile does not have a house to sell");
+		}
+		for (Terrain groupMember : groupMembers) {
+			groupMember.removeHouse();
+			availableHouses++;
+			tileSubjects[groupMember.getTileId()].notifyListeners();
+		}
+		plyr.depositMoney(amountOfSale);
+		playerSubject.notifyListeners();
+	}
+	
 	/**
 	 * sell a hotel for a given property
 	 * 
@@ -439,8 +473,45 @@ public class Board {
 		int price = terrain.getHotelCost();
 		plyr.depositMoney(price);
 		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
 	}
 
+	
+	/**
+	 * sell 1 hotel for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
+	 * @throws TransactionException
+	 */
+	public void sellHotelRow(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		Player plyr = getPlayerByName(playerName);
+		String groupName = terrain.getGroup();
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		int amountOfSale = terrain.getHotelCost() * groupMembers.size();
+		// Check if player is owner of all the properties in the group
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
+		// check that all tiles in the group have a house to sell
+		for (Terrain groupMember : groupMembers) {
+			if (groupMember.getHotelCount() < 1)
+				throw new TransactionException(
+						"At least one tile does not have a hotel to sell");
+		}
+		for (Terrain groupMember : groupMembers) {
+			groupMember.removeHotel();
+			availableHotels++;
+			tileSubjects[groupMember.getTileId()].notifyListeners();
+		}
+		plyr.depositMoney(amountOfSale);
+		playerSubject.notifyListeners();
+		
+	}
+	
 	/**
 	 * Toggles the mortgage status of a given property
 	 * 
@@ -450,9 +521,10 @@ public class Board {
 	 * @throws RuntimeException
 	 * @throws TransactionException
 	 */
-	public void toggleMortgageStatus(int tileId) throws RuntimeException,
+	public void toggleMortgageStatus(String playerName, int tileId) throws RuntimeException,
 			TransactionException {
 		Tile t = tiles[tileId];
+		checkPlayerIsOwnerOfTile(playerName, tileId);
 		Property prop = castTileToProperty(t);
 		Terrain terrain = castTileToTerrain(prop);
 		// if mortgage is active
@@ -474,8 +546,8 @@ public class Board {
 			prop.getOwner().depositMoney(value);
 			prop.setMortgageActive(true);
 		}
-		int id = prop.getTileId();
-		tileSubjects[id].notifyListeners();
+		tileSubjects[tileId].notifyListeners();
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -507,11 +579,6 @@ public class Board {
 		toPlayer.addProperty(t);
 		tileSubjects[tileId].notifyListeners();
 		playerSubject.notifyListeners();
-
-	}
-
-	public Tile getTileById(int tileId) {
-		return tiles[tileId];
 	}
 
 	/**
@@ -540,6 +607,64 @@ public class Board {
 	}
 
 	/**
+	 * transfer jail cards from one player to another. the string
+	 * "CurrentPlayer" should be used to represent the currentPlayer.
+	 * 
+	 * @param fromName
+	 *            the name of the player to transfer the card from
+	 * @param toName
+	 *            the name of the player to transfer the card to
+	 * @param tileId
+	 *            the integer number which represent the tile to be transfered
+	 * @throws TransactionException
+	 */
+	public void transferJailCards(String fromName, String toName, int quantity,
+			int price) throws TransactionException {
+		Player fromPlayer = getPlayerByName(fromName);
+		if (fromPlayer.getJailCard() < quantity)
+			throw new TransactionException(
+					"Cannot complete transaction: \n\t"
+							+ fromPlayer.getName()
+							+ " has insufficient jail cards. \n\tReqeusted to transfer: "
+							+ quantity + " quantity available: "
+							+ fromPlayer.getJailCard());
+		// Switch order of fromName and toName because money goes in opposite
+		// direction than do jailCards
+		transferMoney(toName, fromName, price);
+		removeJailCardFromPlayer(fromName);
+		addJailCardToPlayer(toName);
+		playerSubject.notifyListeners();
+	}
+	
+	/**
+	 * gives the given player a jail card
+	 * 
+	 * @param String
+	 *            the name of the player to change
+	 */
+	public void addJailCardToPlayer(String playerName) {
+		Player plyr = getPlayerByName(playerName);
+		int jailCards = plyr.getJailCard();
+		plyr.setJailCard(jailCards + 1);
+		playerSubject.notifyListeners();
+	}
+
+	/**
+	 * removes a jail card from the given player
+	 * 
+	 * @param String
+	 *            the name of the player to change
+	 */
+	public void removeJailCardFromPlayer(String playerName) {
+		Player plyr = getPlayerByName(playerName);
+		int jailCards = plyr.getJailCard();
+		plyr.setJailCard(jailCards - 1);
+		playerSubject.notifyListeners();
+	}
+
+	
+	
+	/**
 	 * create the player objects from the list of strings that comes from the
 	 * server when the game begins
 	 * 
@@ -562,7 +687,36 @@ public class Board {
 			players.add(plyr);
 		}
 	}
+	
 
+	/**
+	 * the player is charged a fee and the amount of the fee is withdrawn from
+	 * his bank account. This amount is added to the FREE PARKING
+	 * 
+	 * @param playerName
+	 *            the name of the player to charge the fee to
+	 * @param fee
+	 *            the amount of money to withdraw from the current player's
+	 *            account
+	 * @throws TransactionException
+	 */
+	public void payFee(String playerName, int fee) throws TransactionException {
+		Player plyr = getPlayerByName(playerName);
+		plyr.withdawMoney(fee);
+		setFreeParking(freeParking + fee);
+	}
+
+	
+	/**
+	 * get the tile with the id that is equal to the one passed as a parameter
+	 * @param tileId the id of the tile to find
+	 * @return the tile with the id tileId
+	 */
+	public Tile getTileById(int tileId) {
+		return tiles[tileId];
+	}
+
+	
 	/**
 	 * get the player object whose name field corresponds to a given name
 	 * 
@@ -584,10 +738,10 @@ public class Board {
 	}
 
 	public void checkPlayerIsOwnerOfTile(String playerName, int tileId) throws TransactionException {
-		Property p = castTileToProperty(tiles[tileId]);
-		String ownerName = p.getOwner().getName();
+		Property prop = castTileToProperty(tiles[tileId]);
+		String ownerName = prop.getOwner().getName();
 		if (!playerName.equals(ownerName))
-			throw new TransactionException("The player" + ownerName + "does not own the property " + p.getName() + " It is owned by "+ p.getOwner().getName());
+			throw new TransactionException(playerName + "does not own the property " + prop.getName() + " It is owned by "+ prop.getOwner().getName());
 	}
 
 	/**
@@ -656,61 +810,8 @@ public class Board {
 		return ((Terrain) t);
 	}
 
-	/**
-	 * buy a property that is currently owned by the bank at the price that is
-	 * written on the card
-	 * 
-	 * @param tileId
-	 *            the id of the property to be bought
-	 * @throws TransactionException
-	 */
-	public void buyCurrentPropertyForPlayer(String playerName, int tileId)
-			throws TransactionException {
-		Tile t = tiles[tileId];
-		Property p = castTileToProperty(t);
-		if (!(p.getOwner().getName().equals("bank")))
-			throw new RuntimeException(
-					"The property to be bought is not owned by the bank, use transfer property instead");
-		int priceOfProperty = p.getPrice();
-		if (!playerHasSufficientFunds(playerName, priceOfProperty))
-			throw new TransactionException(
-					"Player Does not have enough money to by the property from the bank");
-		Player player = getPlayerByName(playerName);
-		player.addProperty(p);
-		p.setOwner(player);
-		player.withdawMoney(p.getPrice());
-		playerSubject.notifyListeners();
-	}
 
-	/**
-	 * transfer jail cards from one player to another. the string
-	 * "CurrentPlayer" should be used to represent the currentPlayer.
-	 * 
-	 * @param fromName
-	 *            the name of the player to transfer the card from
-	 * @param toName
-	 *            the name of the player to transfer the card to
-	 * @param tileId
-	 *            the integer number which represent the tile to be transfered
-	 * @throws TransactionException
-	 */
-	public void transferJailCards(String fromName, String toName, int quantity,
-			int price) throws TransactionException {
-		Player fromPlayer = getPlayerByName(fromName);
-		if (fromPlayer.getJailCard() < quantity)
-			throw new TransactionException(
-					"Cannot complete transaction: \n\t"
-							+ fromPlayer.getName()
-							+ " has insufficient jail cards. \n\tReqeusted to transfer: "
-							+ quantity + " quantity available: "
-							+ fromPlayer.getJailCard());
-		// Switch order of fromName and toName because money goes in opposite
-		// direction than do jailCards
-		transferMoney(toName, fromName, price);
-		removeJailCardFromPlayer(fromName);
-		addJailCardToPlayer(toName);
-		playerSubject.notifyListeners();
-	}
+
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
@@ -727,46 +828,7 @@ public class Board {
 		return (plyr.hasSufficientFunds(amount));
 	}
 
-	/**
-	 * gives the given player a jail card
-	 * 
-	 * @param String
-	 *            the name of the player to change
-	 */
-	public void addJailCardToPlayer(String playerName) {
-		Player plyr = getPlayerByName(playerName);
-		int jailCards = plyr.getJailCard();
-		plyr.setJailCard(jailCards + 1);
-	}
 
-	/**
-	 * removes a jail card from the given player
-	 * 
-	 * @param String
-	 *            the name of the player to change
-	 */
-	public void removeJailCardFromPlayer(String playerName) {
-		Player plyr = getPlayerByName(playerName);
-		int jailCards = plyr.getJailCard();
-		plyr.setJailCard(jailCards - 1);
-	}
-
-	/**
-	 * the player is charged a fee and the amount of the fee is withdrawn from
-	 * his bank account. This amount is added to the FREE PARKING
-	 * 
-	 * @param playerName
-	 *            the name of the player to charge the fee to
-	 * @param fee
-	 *            the amount of money to withdraw from the current player's
-	 *            account
-	 * @throws TransactionException
-	 */
-	public void payFee(String playerName, int fee) throws TransactionException {
-		Player plyr = getPlayerByName(playerName);
-		plyr.withdawMoney(fee);
-		setFreeParking(freeParking + fee);
-	}
 
 	/**
 	 * advance the current player a given number n spaces forward

@@ -332,7 +332,7 @@ public class GameClient {
 	 */
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
 		try {
-			board.toggleMortgageStatus(tileId);
+			board.toggleMortgageStatus(currentPlayer.getName(),tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
 						Messages.TOGGLE_MORTGAGE);
