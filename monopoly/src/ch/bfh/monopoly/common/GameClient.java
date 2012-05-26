@@ -1,6 +1,5 @@
 package ch.bfh.monopoly.common;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -169,7 +168,8 @@ public class GameClient {
 					currentPlayer.getPosition());
 			if (sendNetMessage) {
 				// send a netmessage with the roll value of this player
-				NetMessage netMsg = new NetMessage(playerNameAdjusted, Messages.BUY_PROPERTY);
+				NetMessage netMsg = new NetMessage(playerNameAdjusted,
+						Messages.BUY_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -194,7 +194,7 @@ public class GameClient {
 
 		// if passes go
 		if (newPosition < previousPosition)
-			board.passGo(currentPlayer);
+			passGo();
 
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
@@ -216,8 +216,8 @@ public class GameClient {
 		try {
 			board.buyHouse(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.BUY_HOUSE);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.BUY_HOUSE);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -227,39 +227,42 @@ public class GameClient {
 
 	/**
 	 * buy 1 house for each property belonging to a group
-	 * @param tileId the id of any tile in the group to build on
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
 	 */
 	public void buyHouseRow(int tileId, boolean sendNetMessage) {
 		try {
 			board.buyHouseRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.BUY_HOUSEROW);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.BUY_HOUSEROW);
 				nc.sendMessage(netMsg);
-			}	
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
-	
+
 	/**
 	 * buy 1 hotel for each property belonging to a group
-	 * @param tileId the id of any tile in the group to build on
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
 	 */
 	public void buyHotelRow(int tileId, boolean sendNetMessage) {
 		try {
 			board.buyHotelRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.BUY_HOTELROW);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.BUY_HOTELROW);
 				nc.sendMessage(netMsg);
-			}	
+			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
-	
-	
+
 	/**
 	 * buy a house for a given property
 	 * 
@@ -272,8 +275,8 @@ public class GameClient {
 		try {
 			board.buyHotel(currentPlayer.getName(), tileID);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
-						Messages.BUY_HOTEL);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileID, Messages.BUY_HOTEL);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -293,8 +296,8 @@ public class GameClient {
 		try {
 			board.sellHouses(tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.SELL_HOUSE);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.SELL_HOUSE);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -302,7 +305,6 @@ public class GameClient {
 		}
 	}
 
-	
 	/**
 	 * sell 1 house for each property belonging to a group
 	 * 
@@ -310,19 +312,19 @@ public class GameClient {
 	 *            the id of any tile in the group to sell from
 	 * @throws TransactionException
 	 */
-	public void sellHouseRow(int tileId, boolean sendNetMessage){
+	public void sellHouseRow(int tileId, boolean sendNetMessage) {
 		try {
 			board.sellHouseRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.SELL_HOUSEROW);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.SELL_HOUSEROW);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
-	
+
 	/**
 	 * sell a hotel for a given property
 	 * 
@@ -335,8 +337,8 @@ public class GameClient {
 		try {
 			board.sellHotel(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.SELL_HOTEL);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.SELL_HOTEL);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -344,7 +346,6 @@ public class GameClient {
 		}
 	}
 
-	
 	/**
 	 * sell 1 hotel for each property belonging to a group
 	 * 
@@ -352,20 +353,19 @@ public class GameClient {
 	 *            the id of any tile in the group to sell from
 	 * @throws TransactionException
 	 */
-	public void sellHotelRow(int tileId, boolean sendNetMessage){
+	public void sellHotelRow(int tileId, boolean sendNetMessage) {
 		try {
 			board.sellHotelRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.SELL_HOTELROW);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.SELL_HOTELROW);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
-	
-	
+
 	/**
 	 * Toggles the mortgage status of a given property
 	 * 
@@ -377,10 +377,10 @@ public class GameClient {
 	 */
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
 		try {
-			board.toggleMortgageStatus(currentPlayer.getName(),tileId);
+			board.toggleMortgageStatus(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
-						Messages.TOGGLE_MORTGAGE);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						tileId, Messages.TOGGLE_MORTGAGE);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -411,7 +411,7 @@ public class GameClient {
 			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
 					price);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(fromName,toName, tileId,
+				NetMessage netMsg = new NetMessage(fromName, toName, tileId,
 						Messages.TRANSFER_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
@@ -443,8 +443,8 @@ public class GameClient {
 			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
 					price);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), quantity,
-						Messages.TRANSFER_JAILCARD);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						quantity, Messages.TRANSFER_JAILCARD);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -473,8 +473,8 @@ public class GameClient {
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), amount,
-						Messages.TRANSFER_MONEY);
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+						amount, Messages.TRANSFER_MONEY);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -499,7 +499,7 @@ public class GameClient {
 	 */
 	public JPanel getTileEventPanel(boolean sendNetMessage) {
 		int tileId = currentPlayer.getPosition();
-		JPanel jpanel =  board.getTileEventPanelForTile(tileId);
+		JPanel jpanel = board.getTileEventPanelForTile(tileId);
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(Messages.GET_EVENT_WINDOW);
 			sendNetMessageToGUI(netMsg);
@@ -507,32 +507,32 @@ public class GameClient {
 		return jpanel;
 	}
 
-
-//	/**
-//	 * checks if a given player is the owner of a given tile
-//	 * 
-//	 * @param playerName
-//	 *            the player's name to check
-//	 * @param tileId
-//	 *            tile to check ownership of
-//	 * @param sendNetMessage
-//	 *            true if a net message should be sent to the server
-//	 */
-//	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
-//		boolean isOwner = false;
-//		isOwner = board.checkPlayerIsOwnerOfTile(playerName, tileId);
-//		return isOwner;
-//	}
+	// /**
+	// * checks if a given player is the owner of a given tile
+	// *
+	// * @param playerName
+	// * the player's name to check
+	// * @param tileId
+	// * tile to check ownership of
+	// * @param sendNetMessage
+	// * true if a net message should be sent to the server
+	// */
+	// public boolean playerIsOwnerOfTile(String playerName, int tileId) {
+	// boolean isOwner = false;
+	// isOwner = board.checkPlayerIsOwnerOfTile(playerName, tileId);
+	// return isOwner;
+	// }
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
 	 * 
 	 * @param fee
 	 *            the amount of the fee to be paid
-	 * @throws TransactionException 
-	 * @throws RuntimeException 
+	 * @throws TransactionException
+	 * @throws RuntimeException
 	 */
-	public void hasSufficientFunds(int fee) throws RuntimeException, TransactionException {
+	public void hasSufficientFunds(int fee) throws RuntimeException,
+			TransactionException {
 		board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
 
@@ -543,9 +543,10 @@ public class GameClient {
 	 *            the player to check the account of
 	 * @param fee
 	 *            the amount of the fee to be paid
-	 * @throws TransactionException 
+	 * @throws TransactionException
 	 */
-	public void playerHasSufficientFunds(String playerName, int amount) throws TransactionException {
+	public void playerHasSufficientFunds(String playerName, int amount)
+			throws TransactionException {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		board.playerHasSufficientFunds(playerNameAdjusted, amount);
 	}
@@ -620,6 +621,30 @@ public class GameClient {
 	}
 
 	/**
+	 * the current player is charged a fee and the amount of the fee is
+	 * withdrawn from his bank account. This amount is added to the FREE PARKING
+	 * 
+	 * @param fee
+	 *            the amount of money to withdraw from the current player's
+	 *            account
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
+	 */
+	public void payUtilityFee(int fee, boolean sendNetMessage) {
+		String currentPlayerName = currentPlayer.getName();
+		String owner = board
+				.castTileToProperty(
+						board.getTileById(currentPlayer.getPosition()))
+				.getOwner().getName();
+		transferMoney(currentPlayerName, owner, fee, false);
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),fee,
+					Messages.PAY_UTILITY_FEE);
+			sendNetMessageToGUI(msg);
+		}
+	}
+
+	/**
 	 * The current player is charged a given fee, which is withdrawn from his
 	 * account the amount of the fee is then credited to the toName's account
 	 * 
@@ -639,9 +664,24 @@ public class GameClient {
 		board.getPlayerByName(toName).depositMoney(fee);
 	}
 
+	/**
+	 * sends the currentPlayer to jail
+	 */
+	public void goToJail(boolean sendNetMessage){
+		board.goToJail(currentPlayer.getName());
+	}
+	
+	/**
+	 * pass go, get money
+	 */
+	public void passGo(){
+		board.passGo(currentPlayer);
+	}
+	
 	public int getFreeParking() {
 		return board.getFreeParking();
 	}
+
 
 	/**
 	 * Send a chat message
@@ -665,32 +705,32 @@ public class GameClient {
 	 */
 	public void updateTurnTokens(String playerName) {
 		String currentPlayerName;
-//		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-//		System.out.println(">>UpdateTurnToken<< playerName received"
-//				+ playerName);
+		// System.out.println("GAME CLIENT UPDATE TURN TOKEN");
+		// System.out.println(">>UpdateTurnToken<< playerName received"
+		// + playerName);
 
 		if (currentPlayer != null) {
-//			System.out.println(">>UpdateTurnToken<< Current Player is "
-//					+ currentPlayer.getName());
-//			System.out
-//					.println(">>UpdateTurnToken<< Current Player turn token before change:"
-//							+ currentPlayer.hasTurnToken());
-			
+			// System.out.println(">>UpdateTurnToken<< Current Player is "
+			// + currentPlayer.getName());
+			// System.out
+			// .println(">>UpdateTurnToken<< Current Player turn token before change:"
+			// + currentPlayer.hasTurnToken());
+
 			currentPlayerName = currentPlayer.getName();
 		} else
 			currentPlayerName = null;
 
 		board.updateTurnTokens(playerName, currentPlayerName);
-//USED FOR DEBUGGING THE GUI
-//		System.out
-//				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
-//						+ board.getPlayerByName(playerName).hasTurnToken());
+		// USED FOR DEBUGGING THE GUI
+		// System.out
+		// .println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
+		// + board.getPlayerByName(playerName).hasTurnToken());
 		setCurrentPlayer(playerName, false);
-//		System.out.println(">>UpdateTurnToken<< The current player is now "
-//				+ currentPlayer.getName());
-//		System.out
-//				.println(">>UpdateTurnToken<< The current player's turn token is  "
-//						+ currentPlayer.hasTurnToken());
+		// System.out.println(">>UpdateTurnToken<< The current player is now "
+		// + currentPlayer.getName());
+		// System.out
+		// .println(">>UpdateTurnToken<< The current player's turn token is  "
+		// + currentPlayer.hasTurnToken());
 	}
 
 	/**
@@ -748,24 +788,24 @@ public class GameClient {
 	 */
 	public void sendTransactionErrorToGUI(TransactionException e,
 			boolean sendNetMessage) {
-		if (sendNetMessage){
-		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
-		ws.notifyListeners(wse);
-		}
-		else {
+		if (sendNetMessage) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
+			ws.notifyListeners(wse);
+		} else {
 			System.out.println(e.getErrorMsg());
-			}
+		}
 	}
 
 	/**
 	 * gathers transactions errors from the methods and forwards them to the GUI
 	 */
 	public void sendTransactionSuccesToGUI(boolean sendNetMessage) {
-		//TODO this doesn't seem like the best way to signal success to the GUI
-		TransactionException te = new TransactionException("The event was completed successfully");
+		// TODO this doesn't seem like the best way to signal success to the GUI
+		TransactionException te = new TransactionException(
+				"The event was completed successfully");
 		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_EVENT_COMPLETION,te.getErrorMsg(), 0);
+				WindowMessage.MSG_EVENT_COMPLETION, te.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
 	}
 

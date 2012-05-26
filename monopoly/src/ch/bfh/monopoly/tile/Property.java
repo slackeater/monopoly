@@ -27,10 +27,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected String buttonTextPay;
 	protected String buttonTextContinue;
 	private String group;
-	protected JPanel jpanel = new JPanel();
-	protected JButton buttonRight = new JButton();
-	protected JButton buttonLeft = new JButton();
-	protected JLabel eventInfoLabel = new JLabel();
+
 
 	private ActionListener actionBuy = new ActionListener() {
 

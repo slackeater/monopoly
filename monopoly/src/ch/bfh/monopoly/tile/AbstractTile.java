@@ -1,6 +1,10 @@
 package ch.bfh.monopoly.tile;
 
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.EventManager;
 import ch.bfh.monopoly.event.BoardEvent;
@@ -10,13 +14,17 @@ public abstract class AbstractTile implements Tile {
 	protected int tileId;
 	private int coordX;
 	private int coordY;
-	private String description;
+
 	protected String name;
 	protected BoardEvent event;
 	protected EventManager em;
 	protected boolean sendNetMessage = true;
 	protected GameClient gameClient;
-
+	protected JPanel jpanel = new JPanel();
+	protected JButton buttonRight = new JButton();
+	protected JButton buttonLeft = new JButton();
+	protected JLabel eventInfoLabel = new JLabel();
+	
 	public AbstractTile(String name, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		this.name = name;
@@ -46,18 +54,6 @@ public abstract class AbstractTile implements Tile {
 		this.tileId = tileId;
 	}
 
-	/**
-	 * MAYBE TO DELETE
-	 * 
-	 * @return
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 	/**
 	 * Get the name of this tile
@@ -73,14 +69,6 @@ public abstract class AbstractTile implements Tile {
 		this.name = name;
 	}
 
-	// /**
-	// * Set the X coordinate for this tile
-	// * it will be used for draw the board
-	// * @param coordX the X coordinate
-	// */
-	// public void setCoordX(int coordX) {
-	// this.coordX = coordX;
-	// }
 
 	/**
 	 * Get the X coordinate of this tile
@@ -91,15 +79,6 @@ public abstract class AbstractTile implements Tile {
 		return coordX;
 	}
 
-	/**
-	 * Set the Y coordinate of this tile
-	 * 
-	 * @param coordY
-	 *            the Y coordinate
-	 */
-	public void setCoordY(int coordY) {
-		this.coordY = coordY;
-	}
 
 	/**
 	 * Get the Y coordinate of this tile

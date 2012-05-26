@@ -42,9 +42,13 @@ public class EventJPanelTest extends JFrame {
 //		testElectricCompanyOwned();
 //		testElectricCompanyNotOwned();
 //		testMediterraneanOwned();
-		testMediterraneanNotOwned();
+//		testMediterraneanNotOwned();
 //		testFirstRailRoadOwned();
 //		testFirstRailRoadNotOwned();
+		testLandOnGo();
+//		testJustVisiting();
+//		testFreeParking();
+//		testGoToJail();
 		
 		jpanel= gameClient.getTileEventPanel(sendNetMessage);
 		setSize(300, 300);
@@ -61,13 +65,13 @@ public class EventJPanelTest extends JFrame {
 	}
 	
 	
-	public void testElectricCompanyOwned(){
+	public void testElectricCompanyNotOwned(){
 		int electricCompany = 12;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(electricCompany, sendNetMessage);
 	}
 	
-	public void testElectricCompanyNotOwned(){
+	public void testElectricCompanyOwned(){
 		int electricCompany = 12;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(electricCompany, sendNetMessage);
@@ -112,4 +116,34 @@ public class EventJPanelTest extends JFrame {
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 	}
 
+	public void testLandOnGo(){
+		//goToJail tile
+		int tileId=0;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
+	public void testJustVisiting(){
+		//goToJail tile
+		int tileId=10;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
+	public void testFreeParking(){
+		//goToJail tile
+		int tileId=20;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}	
+	
+	public void testGoToJail(){
+		//goToJail tile
+		int tileId=30;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+
 }
+
+
