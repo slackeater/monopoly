@@ -800,11 +800,10 @@ public class GameClient {
 	}
 
 	/**
-	 * Send a message of type QUIT_GAME to the other players
+	 * Close the connection with the server
 	 */
 	public void sendQuitGame() {
-		NetMessage nm = new NetMessage(this.localPlayer, Messages.QUIT_GAME);
-		nc.sendMessage(nm);
+		nc.closeConnection();
 	}
 
 }
