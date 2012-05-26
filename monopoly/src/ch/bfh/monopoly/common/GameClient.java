@@ -637,7 +637,7 @@ public class GameClient {
 //		System.out
 //				.println(">>UpdateTurnToken<< NEW PLAYER turn token after change:"
 //						+ board.getPlayerByName(playerName).hasTurnToken());
-//		setCurrentPlayer(playerName, false);
+		setCurrentPlayer(playerName, false);
 //		System.out.println(">>UpdateTurnToken<< The current player is now "
 //				+ currentPlayer.getName());
 //		System.out
