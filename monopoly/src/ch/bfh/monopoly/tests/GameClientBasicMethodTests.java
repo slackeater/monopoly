@@ -19,10 +19,10 @@ public class GameClientBasicMethodTests {
 	Locale loc;
 	GameClient gameClient;
 	Board board;
-
+	boolean sendNetMessage=false;
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("en");
 		gameClient= tig.getGameClient();
 		board=tig.getBoard();
 	}
@@ -30,22 +30,27 @@ public class GameClientBasicMethodTests {
 
 	@Test
 	public void returnsCorrectFeeForHouses() {
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 2);
 		// get fee for tile 1 with 1 house
-		gameClient.buyHouse(1,false);
+		gameClient.buyHouse(1,sendNetMessage);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 10);
 		// get fee for tile 1 with 2 houses
-		gameClient.buyHouse(1,false);
+		gameClient.buyHouse(1,sendNetMessage);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 30);
 		// get fee for tile 1 with 3 houses
-		gameClient.buyHouse(1,false);
+		gameClient.buyHouse(1,sendNetMessage);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 90);
 		// get fee for tile 1 with 4 houses
-		gameClient.buyHouse(1,false);
+		gameClient.buyHouse(1,sendNetMessage);
 		fee = gameClient.getFeeForTileAtId(1);
 		assertTrue(fee == 160);
 	}
@@ -73,37 +78,15 @@ public class GameClientBasicMethodTests {
 	@Test
 	public void playerCompletesTourAroundBoard() {
 		Player p = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(p);
+		gameClient.setCurrentPlayer(p,sendNetMessage);
 		gameClient.getCurrentPlayer().setPosition(36);
-		gameClient.advanceCurrentPlayerNSpaces(10);
+		gameClient.advancePlayerNSpaces(10,sendNetMessage);
 		int newPosition = gameClient.getCurrentPlayer().getPosition();
 		assertTrue(newPosition == 6);
 	}
 	
-	/**
-	 * Test that the gameClient.hasSufficientFunds method returns
-	 * false when a the currentPlayer doesn't have enough money to pay a given fee
-	 */
-	@Test
-	public void currentPlayerHasSufficientFunds(){
-		Player p = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(p);
-		p.withdawMoney(14000);
-		assertTrue(!gameClient.hasSufficientFunds(2000));
-	}
+
 	
-	/**
-	 * Test that the gameClient.playerHasSufficientFunds method returns
-	 * false when a player other than the currentPlayer doesn't have enough money to pay a given fee
-	 */
-	@Test
-	public void otherPlayerHasSufficientFunds(){
-		Player p = board.getPlayerByName("Justin");
-		Player p2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(p);
-		p2.withdawMoney(14000);
-		assertTrue(!gameClient.playerHasSufficientFunds("Giuseppe",2000));
-	}
 	
 	/**
 	 * test that when one player owns both utility tiles that gameClient.hasBothUtilites
@@ -113,12 +96,12 @@ public class GameClientBasicMethodTests {
 	@Test
 	public void playerHasBothUtilities(){
 		Player p = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(p);
-		gameClient.advanceCurrentPlayerNSpaces(12);
-		gameClient.buyCurrentPropertyForPlayer(p.getName());
+		gameClient.setCurrentPlayer(p,sendNetMessage);
+		gameClient.advancePlayerNSpaces(12,sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(p.getName(),sendNetMessage);
 		//Advance current player to tile number 28
-		gameClient.advanceCurrentPlayerNSpaces(16);
-		gameClient.buyCurrentPropertyForPlayer(p.getName());
+		gameClient.advancePlayerNSpaces(16,sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(p.getName(),sendNetMessage);
 		assertTrue(gameClient.hasBothUtilities());
 	}
 	
@@ -130,13 +113,13 @@ public class GameClientBasicMethodTests {
 	public void playerDoesNotHaveBothUtilities(){
 		Player p1= board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(p1);
-		gameClient.advanceCurrentPlayerNSpaces(12);
-		gameClient.buyCurrentPropertyForPlayer(p1.getName());
+		gameClient.setCurrentPlayer(p1,sendNetMessage);
+		gameClient.advancePlayerNSpaces(12,sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(p1.getName(),sendNetMessage);
 	
-		gameClient.setCurrentPlayer(p2);
-		gameClient.advanceCurrentPlayerNSpaces(28);
-		gameClient.buyCurrentPropertyForPlayer(p2.getName());
+		gameClient.setCurrentPlayer(p2,sendNetMessage);
+		gameClient.advancePlayerNSpaces(28,sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(p2.getName(),sendNetMessage);
 		assertTrue(!gameClient.hasBothUtilities());
 	}
 	
@@ -146,7 +129,7 @@ public class GameClientBasicMethodTests {
 	@Test
 	public void addJailCardsWorks(){
 		Player plyr1 = board.getPlayerByName("Justin");
-		gameClient.addJailCardToPlayer(plyr1.getName());
+		gameClient.addJailCardToPlayer(plyr1.getName(),sendNetMessage);
 		assertTrue(plyr1.getJailCard()==1);
 	}
 	
@@ -157,7 +140,7 @@ public class GameClientBasicMethodTests {
 	public void removeJailCardsWorks(){
 		Player plyr1 = board.getPlayerByName("Justin");
 		plyr1.setJailCard(2);
-		gameClient.removeJailCardFromPlayer(plyr1.getName());
+		gameClient.removeJailCardFromPlayer(plyr1.getName(),sendNetMessage);
 		assertTrue(plyr1.getJailCard()==1);
 	}
 	

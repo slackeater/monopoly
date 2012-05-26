@@ -14,6 +14,8 @@ import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.Tile;
 
 public class GameClient {
 
@@ -167,7 +169,7 @@ public class GameClient {
 					currentPlayer.getPosition());
 			if (sendNetMessage) {
 				// send a netmessage with the roll value of this player
-				NetMessage netMsg = new NetMessage(Messages.BUY_PROPERTY);
+				NetMessage netMsg = new NetMessage(playerNameAdjusted, Messages.BUY_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -282,16 +284,16 @@ public class GameClient {
 	/**
 	 * sell a house for a given property
 	 * 
-	 * @param tileID
+	 * @param tileId
 	 *            the tile number of the property to sell a house from
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public void sellHouse(int tileID, boolean sendNetMessage) {
+	public void sellHouse(int tileId, boolean sendNetMessage) {
 		try {
-			board.sellHouses(tileID);
+			board.sellHouses(tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
 						Messages.SELL_HOUSE);
 				nc.sendMessage(netMsg);
 			}
@@ -300,19 +302,40 @@ public class GameClient {
 		}
 	}
 
+	
+	/**
+	 * sell 1 house for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
+	 * @throws TransactionException
+	 */
+	public void sellHouseRow(int tileId, boolean sendNetMessage){
+		try {
+			board.sellHouseRow(currentPlayer.getName(), tileId);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+						Messages.SELL_HOUSEROW);
+				nc.sendMessage(netMsg);
+			}
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+	}
+	
 	/**
 	 * sell a hotel for a given property
 	 * 
-	 * @param tileID
+	 * @param tileId
 	 *            the tile number of the property to sell a hotel from
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public void sellHotel(int tileID, boolean sendNetMessage) {
+	public void sellHotel(int tileId, boolean sendNetMessage) {
 		try {
-			board.sellHotel(currentPlayer.getName(), tileID);
+			board.sellHotel(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
 						Messages.SELL_HOTEL);
 				nc.sendMessage(netMsg);
 			}
@@ -321,6 +344,28 @@ public class GameClient {
 		}
 	}
 
+	
+	/**
+	 * sell 1 hotel for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
+	 * @throws TransactionException
+	 */
+	public void sellHotelRow(int tileId, boolean sendNetMessage){
+		try {
+			board.sellHotelRow(currentPlayer.getName(), tileId);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+						Messages.SELL_HOTELROW);
+				nc.sendMessage(netMsg);
+			}
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+	}
+	
+	
 	/**
 	 * Toggles the mortgage status of a given property
 	 * 
