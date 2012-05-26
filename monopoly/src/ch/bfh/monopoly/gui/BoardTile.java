@@ -56,7 +56,7 @@ public class BoardTile extends JPanel{
 	private GameController gc;
 	private ResourceBundle res;
 	private String owner;
-	private List<BoardTile> groupMember = new ArrayList<BoardTile>();
+	private List<BoardTile> groupMember = null;
 	private ButtonListener btnListener;
 
 	//used when we right click on a tile
@@ -157,26 +157,20 @@ public class BoardTile extends JPanel{
 		this.tokens.add(t);
 	}
 
-	public void setGroupMember(BoardTile[] btMember){
-
-		for(int j = 0 ; j < btMember.length ; j++){
-			this.groupMember.add(btMember[j]);
-		}
+	/**
+	 * Add the other member of this tile in order to draw the
+	 * row functionalities
+	 * @param btMember BoardTile[]
+	 * 				the BoardTile of the same group of this one
+	 */
+	public void setGroupMember(List<BoardTile> btMember){
+		this.groupMember = btMember;
 	
 		System.out.println("THE SIZE OF MEMBER FOR TILE " + ti.getName() + groupMember.size());
-		
-		//TODO REMOVE ONLY FOR TEST
-		//		if(btMember[0] != null && btMember[1] != null){
-		//		
-		//			System.out.println("IM THE TILE : " + ti.getName());
-		//			System.out.println("=>> " + btMember[0].getNameTile());
-		//			System.out.println("=>> " + btMember[1].getNameTile());
-		//		}
-		//		else if(btMember[0] != null && btMember[1] == null){
-		//			System.out.println("IM THE TILE : " + ti.getName());
-		//			System.out.println("=>> " + btMember[0].getNameTile());
-		//		}
 
+		for(BoardTile bt : groupMember){
+			System.out.println(bt.getNameTile());
+		}
 	}
 
 	/**
@@ -247,12 +241,23 @@ public class BoardTile extends JPanel{
 				JLabel hotel = new JLabel(res.getString("label-hotel") + Integer.toString(ti.getRenthotel()));
 				hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
 				hotel.setFont(f);
-
+				
+				JLabel houseCost = new JLabel(res.getString("label-houseprice") + Integer.toString(ti.getHouseCost()));
+				houseCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+				houseCost.setFont(f);
+				
+				JLabel hotelCost = new JLabel(res.getString("label-hotelprice") + Integer.toString(ti.getHotelCost()));
+				hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+				hotelCost.setFont(f);
+				
+				
 				tab.add(rent1);
 				tab.add(rent2);
 				tab.add(rent3);
 				tab.add(rent4);
 				tab.add(hotel);
+				tab.add(houseCost);
+				tab.add(hotelCost);
 			}
 
 			JLabel mortgage = new JLabel(res.getString("label-mortgagevalue") + Integer.toString(ti.getMortgageValue()));
@@ -523,18 +528,11 @@ public class BoardTile extends JPanel{
 			}
 			else if(e.getSource().equals(buyHouseRow)){
 				buyHouseRowClicked = true;
-				
-				//this tile house
-				gc.buyHouse(ti.getTileId());
-				
-				//other member tile
-				for(BoardTile bt : groupMember){
-					gc.buyHouse(bt.getBoardTileID());
-				}
+				gc.buyHouseRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(buyHotelRow)){
 				buyHotelRowClicked = true;
-				//TODO
+				gc.buyHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouse)){
 				sellHouseClicked = true;
@@ -546,11 +544,11 @@ public class BoardTile extends JPanel{
 			}
 			else if(e.getSource().equals(sellHouseRow)){
 				sellHouseRowClicked = true;
-				//TODO
+				gc.sellHouseRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotelRow)){
 				sellHotelRowClicked = true;
-				//TODO
+				gc.sellHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(mortgage)){
 				mortgageClicked = true;

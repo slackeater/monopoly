@@ -213,10 +213,6 @@ public class MonopolyGUI extends JFrame {
 								}
 
 								timerAnimation.start();
-								
-								if(timerAnimation.isRunning())
-									System.out.println("== T= = T= T= T= server	 RUNNING");
-
 							}
 						}
 
@@ -287,25 +283,20 @@ public class MonopolyGUI extends JFrame {
 		//add the tile of the same group to each single tile board
 		//so each tile knows the member of the same group
 		for(int i = 0 ; i < TILE_NUMBER ; i++){
-			BoardTile[] member = new BoardTile[2];
+			List<BoardTile> memberTile = new ArrayList<BoardTile>();;
 
 			//get the neighborhood
 			int[] neighborhood = tileGroupMember[i];
 
 			if(neighborhood[0] != -1 && neighborhood[1] != -1){
-				member[0] = this.tiles.get(neighborhood[0]);
-				member[1] = this.tiles.get(neighborhood[1]);
+				memberTile.add(this.tiles.get(neighborhood[0]));
+				memberTile.add(this.tiles.get(neighborhood[1]));
+				this.tiles.get(i).setGroupMember(memberTile);
 			}
 			else if(neighborhood[0] != -1 && neighborhood[1] == -1){
-				member[0] = this.tiles.get(neighborhood[0]);
-				member[1] = null;
-			}
-			else{
-				member[0] = null;
-				member[1] = null;
-			}
-
-			this.tiles.get(i).setGroupMember(member);
+				memberTile.add(this.tiles.get(neighborhood[0]));
+				this.tiles.get(i).setGroupMember(memberTile);
+			}	
 		}
 
 		System.out.println("AFTER TILE INIT");
