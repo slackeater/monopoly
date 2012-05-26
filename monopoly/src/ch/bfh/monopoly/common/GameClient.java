@@ -13,8 +13,6 @@ import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
-import ch.bfh.monopoly.tile.Terrain;
-import ch.bfh.monopoly.tile.Tile;
 
 public class GameClient {
 

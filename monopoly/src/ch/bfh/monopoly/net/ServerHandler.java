@@ -20,10 +20,10 @@ public class ServerHandler implements IoHandler{
 	private List<String> usernames = new ArrayList<String>();
 	private List<PlayerWrapper> plWrap = new ArrayList<PlayerWrapper>();
 	private int userindex = 1;
-	
+
 	//used to send the token to the user in position userTokenIndex in plWrap
 	private int userTokenIndex = 0;
-	
+
 	/**
 	 * This inner class is used to wrap the username 
 	 * and the roll value for order into one single 
@@ -47,7 +47,7 @@ public class ServerHandler implements IoHandler{
 		public IoSession getSession(){
 			return this.session;
 		}
-		
+
 		public String getUsername() {
 			return username;
 		}
@@ -65,7 +65,7 @@ public class ServerHandler implements IoHandler{
 	public int getOpenedSessions(){
 		return this.plWrap.size();
 	}
-	
+
 	/**
 	 * Get the usernames of the players 
 	 * @return a List that contains the player's names
@@ -99,28 +99,28 @@ public class ServerHandler implements IoHandler{
 	 */
 	public void sendTurnToken(){
 		NetMessage nm = new NetMessage(plWrap.get(userTokenIndex).getUsername(), Messages.TURN_TOKEN);
-		
+
 		System.out.println("===  USER TOKEN INDEX : " + userTokenIndex + " TURN TO PLAYER " + plWrap.get(userTokenIndex).getUsername());
-		
+
 		//if we arrive at the least position reset the counter
 		if((userTokenIndex == plWrap.size()-1))
 			userTokenIndex = 0;
 		else if(userTokenIndex < plWrap.size()-1)
 			userTokenIndex++;
-		
+
 		//broadcast the message to the other players
 		sendBroadcast(nm, null);	
 	}
-	
+
 	/**
 	 * Send the message GAME_START to the client
 	 */
 	public void sendStartGame(Locale loc){
 		NetMessage nm = new NetMessage(this.usernames, loc, Messages.GAME_START);
-		
+
 		sendBroadcast(nm, null);	
 	}
-	
+
 	/**
 	 * Build the list of user, by ordering the list looking at the
 	 * roll order value and check if there are equals username
@@ -128,7 +128,7 @@ public class ServerHandler implements IoHandler{
 	 */
 	private void buildUserList(NetMessage n, IoSession session){
 		String checkedName = n.getText();
-		
+
 		//if the username sended is equal to one in the wrap list, add a number to it
 		for(int j = 0 ; j < plWrap.size() ; j++){
 			if(n.getText().equals(plWrap.get(j).getUsername())){
@@ -136,9 +136,9 @@ public class ServerHandler implements IoHandler{
 				this.userindex++;
 			}
 		}
-		
+
 		this.plWrap.add(new PlayerWrapper(checkedName, n.getInt(), session));
-		
+
 		//bubble sort for sorting players
 		int x = plWrap.size()-1;
 		PlayerWrapper tmp;
@@ -159,16 +159,16 @@ public class ServerHandler implements IoHandler{
 		}
 
 		this.usernames.clear();
-		
+
 		for(int q = 0 ; q < plWrap.size() ; q++){
 			//TODO remove sysout
 			this.usernames.add(plWrap.get(q).getUsername());
 			System.out.println("USER " + plWrap.get(q).getUsername() + " " + plWrap.get(q).getRollValue());
 		}
-		
+
 		System.out.println("========");
 	}
-	
+
 	/**
 	 * If a user went down, update the username list (for broadcast) 
 	 * turn counter
@@ -176,31 +176,59 @@ public class ServerHandler implements IoHandler{
 	 */
 	private void playerQuit(IoSession session){
 		int usernameCounter = 0;
-		
-		for(PlayerWrapper pl : this.plWrap){
-			if(session == pl.getSession()){
-				this.usernames.remove(usernameCounter);
-				String quitPlayer = plWrap.get(usernameCounter).getUsername();
-				plWrap.remove(pl);
-				userTokenIndex--;
-				System.out.println("PL WRAP SIZE : " +plWrap.size());
-				System.out.println("USERNAMES SIZE: " + usernames.size());
-				System.out.println("TURN TOKEN INDEX : " + userTokenIndex);
-				
-				//send the message to the other user in the list
-				//this is why the second parameter is null
-				NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
-				
-				sendBroadcast(playerDown, null);
-				
-				break;
-			}
-			usernameCounter++;
-		}
-		
 
+		//if the user who sent quit has the token
+		if(plWrap.get(userTokenIndex).getSession() == session){
+			String quitPlayer = plWrap.get(userTokenIndex).getUsername();
+			plWrap.remove(plWrap.get(userTokenIndex));
+			usernames.remove(userTokenIndex);
+
+			
+
+			//send quit game, so the other client can remove user resorces
+			NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
+			sendBroadcast(playerDown, null);
+
+			//to avoid overlapping
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			//send new turn token
+			sendTurnToken();
+
+		}
+		//else if the user who sent quit has no turn token
+		else{
+			for(PlayerWrapper pl : this.plWrap){
+				if(session == pl.getSession()){
+
+
+					this.usernames.remove(usernameCounter);
+					String quitPlayer = plWrap.get(usernameCounter).getUsername();
+					plWrap.remove(pl);
+					
+					
+					System.out.println("PL WRAP SIZE : " +plWrap.size());
+					System.out.println("USERNAMES SIZE: " + usernames.size());
+					System.out.println("TURN TOKEN INDEX : " + userTokenIndex);
+
+					//send the message to the other user in the list
+					//this is why the second parameter is null
+					NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
+
+					sendBroadcast(playerDown, null);
+
+					break;
+				}
+				usernameCounter++;
+			}
+		}
 	}
-	
+
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
@@ -219,7 +247,7 @@ public class ServerHandler implements IoHandler{
 
 	@Override
 	public void messageSent(IoSession arg0, Object arg1) throws Exception {
-	
+
 	}
 
 	@Override

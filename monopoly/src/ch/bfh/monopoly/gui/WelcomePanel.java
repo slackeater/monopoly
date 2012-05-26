@@ -26,8 +26,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
-import org.apache.mina.core.session.IoSession;
-
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.ClientNetworkController;
 import ch.bfh.monopoly.common.Dice;
@@ -35,8 +33,6 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Monopoly;
 import ch.bfh.monopoly.common.ServerNetworkController;
-import ch.bfh.monopoly.net.Messages;
-import ch.bfh.monopoly.net.NetMessage;
 
 /**
  * This class is used to represent the welcome window of our game

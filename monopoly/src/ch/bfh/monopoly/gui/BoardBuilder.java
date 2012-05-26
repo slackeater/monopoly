@@ -2,7 +2,6 @@ package ch.bfh.monopoly.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
 

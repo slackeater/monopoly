@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Locale;
 
 import ch.bfh.monopoly.common.Player;
-import ch.bfh.monopoly.tile.Property;
 
 public class NetMessage implements Serializable{
 

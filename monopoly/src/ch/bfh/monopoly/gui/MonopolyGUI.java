@@ -59,12 +59,12 @@ public class MonopolyGUI extends JFrame {
 	 * Counters constants
 	 */
 	public static final int TILE_NUMBER = 40;
-	private final int DICE_MOVEMENT_DELAY = 650;
+	private final int DICE_MOVEMENT_DELAY = 450;
 
 	/**
 	 * Graphical elements
 	 */
-	private JTextArea eventTextArea, chat, history;
+	private JTextArea eventTextArea,chat, history;
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
@@ -508,6 +508,18 @@ public class MonopolyGUI extends JFrame {
 				else if(step == val){
 					((Timer)e.getSource()).stop();
 
+					//position 30 is go to jail
+					if((startPosition+val) == 30){
+						//removing the token at go to jail
+						tiles.get(30).removeToken(t);
+						
+						//add token to jail 
+						tiles.get(10).addToken(t);	
+						
+						repaint();
+						
+					}
+					
 					//show tile's information in the card box
 					tiles.get((startPosition+val)%TILE_NUMBER).showCard();
 					System.out.println("LANDED ON TILE: " + (startPosition+val)%TILE_NUMBER);
@@ -546,15 +558,17 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int localPlayerthrowValue = dice.throwDice();		
-
+				int localPlayerthrowValue = dice.throwDice();
+				//TODO remove this 
+//				int localPlayerthrowValue = 10;		
+				
 				//move the player of throwValue positions, and communicate to the other player the new position
 				gc.advancePlayerNSpaces(localPlayerthrowValue);
 
 				//TODO only for test
 				tabPane.addTab(res.getString("tab-trade"), tradeTab());
 
-				eventTextArea.setText(res.getString("text-throwindice") + "\n");
+				eventTextArea.append(res.getString("text-throwindice") + "\n");
 				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
 
 
@@ -701,6 +715,6 @@ public class MonopolyGUI extends JFrame {
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return scrollInput;
-
 	}
+	
 }

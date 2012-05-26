@@ -32,8 +32,7 @@ public class PlayerInfo extends JPanel{
 	private static final int MYTERRAIN_PANEL_SIZE = 20;
 	private static final int PLAYER_LABEL_SPACE = 4;
 
-	private JLabel playerName = new JLabel();
-	private JLabel account = new JLabel();
+	private JLabel playerName = new JLabel(), account = new JLabel(), jailCard = new JLabel(), userInJail = new JLabel();
 	private JPanel terrainUp = new JPanel();
 	private JPanel terrainDown = new JPanel();
 	private JPanel turn = new JPanel();
@@ -80,6 +79,10 @@ public class PlayerInfo extends JPanel{
 		ctrInfo.add(playerName);
 		ctrInfo.add(Box.createHorizontalGlue());
 		ctrInfo.add(account);
+		ctrInfo.add(Box.createHorizontalGlue());
+		ctrInfo.add(jailCard);
+		ctrInfo.add(Box.createHorizontalGlue());
+		ctrInfo.add(userInJail);
 		ctrInfo.add(Box.createHorizontalGlue());
 		ctrInfo.add(turn);
 		
@@ -202,7 +205,6 @@ public class PlayerInfo extends JPanel{
 	/**
 	 * This inner class represent the small terrain in the viewer
 	 * @author snake
-	 * TODO check if the field ID is useful
 	 */
 	private class SmallTerrain extends JPanel{
 		private static final long serialVersionUID = 7182696401752617070L;
@@ -285,6 +287,8 @@ public class PlayerInfo extends JPanel{
 				int plAccount = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
 				boolean turn = playerStates.get(playerIndex).hasTurnToken();
+				int jailCardValue = playerStates.get(playerIndex).getJailCard();
+				boolean isInJail = playerStates.get(playerIndex).isInJail();
 				
 				boolean[] smallTerrainState = playerStates.get(playerIndex).getTerrains();
 									
@@ -303,6 +307,14 @@ public class PlayerInfo extends JPanel{
 				setTurnPanelBackground(turn, c);
 				playerName.setText(name);		
 				account.setText(Integer.toString(plAccount));
+				
+				if(jailCardValue == 1){
+					jailCard.setText("JCard");
+				}
+				
+				if(isInJail){
+					userInJail.setText("Jail");
+				}
 				
 				if(localPlayerName.equals(name)){
 					showTerrains();

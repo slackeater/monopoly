@@ -7,8 +7,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
-import ch.bfh.monopoly.net.Messages;
-import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
