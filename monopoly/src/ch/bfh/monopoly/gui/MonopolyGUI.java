@@ -90,14 +90,6 @@ public class MonopolyGUI extends JFrame {
 	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
 	private boolean tokenPlaced = false;
-	private int[][] tileGroupMember = { {-1,-1},{3,-1}, {-1,-1}, {1,-1}, {-1,-1},{-1,-1}, {8,9},
-			//14 Via nassa
-			{-1,-1}, {6,9}, {6,8}, {-1,-1}, {13,14}, {-1,-1}, {11,14}, {11,13}, {-1,-1}, {18,19}, {-1,-1}, {16,19}, {16,18},
-			//20 free park											//26								//30
-			{-1,-1}, {23,24}, {-1,-1}, {21,24}, {21,23}, {-1,-1}, {27,29}, {26,29}, {-1,-1}, {26,27}, {-1,-1}, 
-
-			{32,34},{31,34}, {-1,-1},{31,32},{-1,-1},{-1,-1},{39,-1},{-1,-1},{37,-1}
-	};
 	
 	/**
 	 * Construct a MonopolyGUI
@@ -265,7 +257,6 @@ public class MonopolyGUI extends JFrame {
 
 			//System.out.println("AFTER BOARD TILE CREATION " + j);
 
-			//System.out.println(tileGroupMember[j][0]);
 
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
@@ -277,26 +268,6 @@ public class MonopolyGUI extends JFrame {
 			Thread.sleep(250);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
-
-		//after we have initialized the tiles, 
-		//add the tile of the same group to each single tile board
-		//so each tile knows the member of the same group
-		for(int i = 0 ; i < TILE_NUMBER ; i++){
-			List<BoardTile> memberTile = new ArrayList<BoardTile>();;
-
-			//get the neighborhood
-			int[] neighborhood = tileGroupMember[i];
-
-			if(neighborhood[0] != -1 && neighborhood[1] != -1){
-				memberTile.add(this.tiles.get(neighborhood[0]));
-				memberTile.add(this.tiles.get(neighborhood[1]));
-				this.tiles.get(i).setGroupMember(memberTile);
-			}
-			else if(neighborhood[0] != -1 && neighborhood[1] == -1){
-				memberTile.add(this.tiles.get(neighborhood[0]));
-				this.tiles.get(i).setGroupMember(memberTile);
-			}	
 		}
 
 		System.out.println("AFTER TILE INIT");

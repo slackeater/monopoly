@@ -281,7 +281,7 @@ public class Board {
 		Player plyr = getPlayerByName(playerName);
 		Terrain terrain = castTileToTerrain(t);
 		String groupName = terrain.getGroup();
-		List<Terrain> groupMembers = getGroupMembers(groupName);
+	List<Terrain> groupMembers = getGroupMembers(groupName);
 		int costToBuild = terrain.getHouseCost() * groupMembers.size();
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
@@ -342,7 +342,7 @@ public class Board {
 						"There is already 1 hotel on one of the properties");
 		}
 		for (Terrain groupMember : groupMembers) {
-			groupMember.buildHouse();
+			groupMember.buildHotel();
 			availableHotels--;
 			tileSubjects[groupMember.getTileId()].notifyListeners();
 		}
