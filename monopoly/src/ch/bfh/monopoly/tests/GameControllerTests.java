@@ -986,27 +986,6 @@ public class GameControllerTests {
 
 	}
 
-	/**
-	 * test gameClient.playerHasSufficientFunds returns true if a player has
-	 * more than a given amount of money
-	 */
-	@Test
-	public void playerHasSufficientFunds() {
-		String player1name = "Justin";
-		int amount = 10000;
-		assertTrue(gameClient.playerHasSufficientFunds(player1name, amount));
-	}
-
-	/**
-	 * test gameClient.playerHasSufficientFunds returnssendNetMessage if a
-	 * player has less than a given amount of money
-	 */
-	@Test
-	public void playerDoesNotHaveSufficientFunds() {
-		String player1name = "Justin";
-		int amount = 16000;
-		assertTrue(!gameClient.playerHasSufficientFunds(player1name, amount));
-	}
 
 	/**
 	 * check that the method gameClient.buyCurrentPropertyForPlayer deducts the

@@ -44,7 +44,7 @@ public class ObserverPatternTests {
 
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("en");
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();

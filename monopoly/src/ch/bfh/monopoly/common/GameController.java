@@ -215,21 +215,6 @@ public class GameController {
 	}
 
 	/**
-	 * check if a player has more than a given amount of money in his account
-	 * for example if he has enough money to buy a property
-	 * 
-	 * @param playerName
-	 *            the name of the player whose balance is to be checked. Use
-	 *            "currentPlayer" as playerName to check the currentPlayer
-	 * @param amount
-	 *            the amount of money to compare the player's account to
-	 * @return true if the player has more than the amount
-	 */
-	public boolean playerHasSufficientFunds(String playerName, int amount) {
-		return gameClient.playerHasSufficientFunds(playerName, amount);
-	}
-
-	/**
 	 * Send a chat message
 	 * 
 	 * @param s

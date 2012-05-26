@@ -227,9 +227,7 @@ public class Board {
 			throw new RuntimeException(
 					"The property to be bought is not owned by the bank, use transfer property instead");
 		int priceOfProperty = p.getPrice();
-		if (!playerHasSufficientFunds(playerName, priceOfProperty))
-			throw new TransactionException(
-					"Player Does not have enough money to by the property from the bank");
+		playerHasSufficientFunds(playerName, priceOfProperty);
 		Player player = getPlayerByName(playerName);
 		player.addProperty(p);
 		p.setOwner(player);
@@ -261,9 +259,7 @@ public class Board {
 			throw new TransactionException(
 					"The maximum number of houses that may be built on a property is 4");
 		int costToBuild = terrain.getHouseCost();
-		if (!playerHasSufficientFunds(playerName, costToBuild))
-			throw new TransactionException(
-					"Player does not have enough money to build");
+		playerHasSufficientFunds(playerName, costToBuild);
 		terrain.buildHouse();
 		availableHouses--;
 		int price = terrain.getHouseCost();
@@ -291,9 +287,7 @@ public class Board {
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
 					"You don't own all the properties in the group.");
-		if (!playerHasSufficientFunds(playerName, costToBuild))
-			throw new TransactionException(
-					"Player does not have enough money to build the row of houses");
+		playerHasSufficientFunds(playerName, costToBuild);
 		if (availableHouses < groupMembers.size())
 			throw new TransactionException(
 					"Not enough houses available to complete the transaction");
@@ -337,9 +331,7 @@ public class Board {
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
 					"You don't own all the properties in the group.");
-		if (!playerHasSufficientFunds(playerName, costToBuild))
-			throw new TransactionException(
-					"Player does not have enough money to build the row of houses");
+		playerHasSufficientFunds(playerName, costToBuild);
 		if (availableHotels < groupMembers.size())
 			throw new TransactionException(
 					"Not enough hotels available to complete the transaction");
@@ -385,9 +377,7 @@ public class Board {
 			throw new TransactionException(
 					"You can't build more than one hotel on a tile.");
 		int costToBuild = terrain.getHotelCost();
-		if (!playerHasSufficientFunds(playerName, costToBuild))
-			throw new TransactionException(
-					"Player does not have enough money to build");
+		playerHasSufficientFunds(playerName, costToBuild);
 		terrain.buildHotel();
 		availableHotels--;
 		int price = terrain.getHotelCost();
@@ -528,11 +518,12 @@ public class Board {
 		Property prop = castTileToProperty(t);
 		Terrain terrain = castTileToTerrain(prop);
 		// if mortgage is active
-		int value;
+		int amount;
 		if (prop.isMortgageActive()) {
 			// try to withdraw the sum required to unmortgage the property
-			value = prop.getPrice() / 10;
-			prop.getOwner().withdawMoney(value);
+			amount = prop.getPrice() / 10;
+			playerHasSufficientFunds(playerName, amount);
+			prop.getOwner().withdawMoney(amount);
 			prop.setMortgageActive(false);
 		}
 		// if mortgage is not active
@@ -542,8 +533,8 @@ public class Board {
 				throw new TransactionException(
 						"In order to mortgage this property, all houses and hotels must first be sold to the bank");
 			// credit the owner with the mortgage value
-			value = prop.getMortgageValue();
-			prop.getOwner().depositMoney(value);
+			amount = prop.getMortgageValue();
+			prop.getOwner().depositMoney(amount);
 			prop.setMortgageActive(true);
 		}
 		tileSubjects[tileId].notifyListeners();
@@ -820,12 +811,13 @@ public class Board {
 	 *            the player to check the account of
 	 * @param fee
 	 *            the amount of the fee to be paid
-	 * @throws RuntimeException
+	 * @throws TransactionException 
 	 */
-	public boolean playerHasSufficientFunds(String playerName, int amount)
-			throws RuntimeException {
+	public void playerHasSufficientFunds(String playerName, int amount)
+			throws TransactionException {
 		Player plyr = getPlayerByName(playerName);
-		return (plyr.hasSufficientFunds(amount));
+		if (!plyr.hasSufficientFunds(amount))
+			throw new TransactionException(playerName + " does not have enough money to perform the action");
 	}
 
 

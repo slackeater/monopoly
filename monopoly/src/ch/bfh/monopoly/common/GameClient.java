@@ -484,9 +484,11 @@ public class GameClient {
 	 * 
 	 * @param fee
 	 *            the amount of the fee to be paid
+	 * @throws TransactionException 
+	 * @throws RuntimeException 
 	 */
-	public boolean hasSufficientFunds(int fee) {
-		return board.playerHasSufficientFunds(currentPlayer.getName(), fee);
+	public void hasSufficientFunds(int fee) throws RuntimeException, TransactionException {
+		board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
 
 	/**
@@ -496,10 +498,11 @@ public class GameClient {
 	 *            the player to check the account of
 	 * @param fee
 	 *            the amount of the fee to be paid
+	 * @throws TransactionException 
 	 */
-	public boolean playerHasSufficientFunds(String playerName, int amount) {
+	public void playerHasSufficientFunds(String playerName, int amount) throws TransactionException {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
-		return board.playerHasSufficientFunds(playerNameAdjusted, amount);
+		board.playerHasSufficientFunds(playerNameAdjusted, amount);
 	}
 
 	/**
