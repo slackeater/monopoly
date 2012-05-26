@@ -11,7 +11,7 @@ public class GameController {
 	public GameController(GameClient gameClient) {
 		this.gameClient = gameClient;
 	}
-	
+
 	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
@@ -47,6 +47,14 @@ public class GameController {
 	}
 
 	/**
+	 * buy 1 house for each property belonging to a group
+	 * @param tileId the id of any tile in the group to build on
+	 */
+	public void buyHouseRow(int tileId) {
+		gameClient.buyHouseRow(tileId, true);
+	}
+
+	/**
 	 * buy/build a hotel on the given tile
 	 * 
 	 * @param tileID
@@ -56,6 +64,14 @@ public class GameController {
 		gameClient.buyHotel(tileId, true);
 	}
 
+	/**
+	 * buy 1 hotel for each property belonging to a group
+	 * @param tileId the id of any tile in the group to build on
+	 */
+	public void buyHotelRow(int tileId) {
+		gameClient.buyHouseRow(tileId, true);
+	}
+	
 	/**
 	 * sell a house from the given tile
 	 * 
@@ -67,6 +83,14 @@ public class GameController {
 	}
 
 	/**
+	 * sell 1 house for each property belonging to a group
+	 * @param tileId the id of any tile in the group to sell from
+	 */
+	public void sellHouseRow(int tileId) {
+		gameClient.buyHouseRow(tileId, true);
+	}
+	
+	/**
 	 * sell a hotel from the given tile
 	 * 
 	 * @param tileID
@@ -76,6 +100,14 @@ public class GameController {
 		gameClient.sellHotel(tileId, true);
 	}
 
+	/**
+	 * sell 1 hotel for each property belonging to a group
+	 * @param tileId the id of any tile in the group to sell from
+	 */
+	public void sellHotelRow(int tileId) {
+		gameClient.buyHouseRow(tileId, true);
+	}
+	
 	/**
 	 * Toggles the mortgage status of a given property and credits or debits the
 	 * player's account
@@ -197,7 +229,6 @@ public class GameController {
 		return gameClient.playerHasSufficientFunds(playerName, amount);
 	}
 
-
 	/**
 	 * Send a chat message
 	 * 
@@ -241,11 +272,11 @@ public class GameController {
 	public void endTurn() {
 		gameClient.endTurn();
 	}
-	
+
 	/**
 	 * send a message when the player quit the game
 	 */
-	public void sendQuitGame(){
+	public void sendQuitGame() {
 		gameClient.sendQuitGame();
 	}
 

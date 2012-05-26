@@ -13,6 +13,7 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 
 public class boardTransactionTests {
@@ -118,5 +119,6 @@ public class boardTransactionTests {
 			//System.out.println(e.getMessage());
 		}
 	}
-
+	
+	
 }

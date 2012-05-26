@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
@@ -59,9 +61,9 @@ public class Board {
 				for (Tile t : plyr.getProperties()) {
 					terrains[t.getTileId()] = true;
 				}
-				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),plyr.getPreviousPosition(),
-						plyr.getRollValue(), plyr.getName(),
-						plyr.isInJail(), plyr.getAccount(),
+				PlayerStateEvent pse = new PlayerStateEvent(plyr.getPosition(),
+						plyr.getPreviousPosition(), plyr.getRollValue(),
+						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
 						plyr.getToken());
 				playerStates.add(pse);
@@ -126,7 +128,9 @@ public class Board {
 	}
 
 	public Board(GameClient gameClient) {
-		goMoney= Integer.parseInt(ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", gameClient.getLoc()).getString("goMoney"));
+		goMoney = Integer.parseInt(ResourceBundle.getBundle(
+				"ch.bfh.monopoly.resources.tile", gameClient.getLoc())
+				.getString("goMoney"));
 		// create tiles, cards, and events and tokens
 		TileCreator tc = new TileCreator(gameClient);
 		tiles = tc.getTilesArray();
@@ -148,15 +152,18 @@ public class Board {
 	}
 
 	/**
-	 * Get the JPanel for the tile's event.  Should be called when a player rolls and lands on a new tile
-	 * @param the id of the tile of which to get the JPanel
+	 * Get the JPanel for the tile's event. Should be called when a player rolls
+	 * and lands on a new tile
+	 * 
+	 * @param the
+	 *            id of the tile of which to get the JPanel
 	 * @return the JPanel that the GUI will display
 	 */
-	public JPanel getTileEventPanelForTile(int tileId){
+	public JPanel getTileEventPanelForTile(int tileId) {
 		Tile t = getTileById(tileId);
 		return t.getTileEventPanel();
 	}
-	
+
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
@@ -198,21 +205,27 @@ public class Board {
 	}
 
 	/**
-	 * credit the current player's account his GO money 
+	 * credit the current player's account his GO money
 	 */
-	public void passGo(Player currentPlayer){
+	public void passGo(Player currentPlayer) {
 		currentPlayer.depositMoney(goMoney);
 	}
-	
+
 	/**
 	 * buy a house for a given property checks that the tileId provided refers
 	 * to a terrain
 	 * 
+	 * @param playerName
+	 *            the name of the player to build for
 	 * @param tileId
 	 *            the tile number of the property to build a house on
 	 * @throws TransactionException
 	 */
-	public void buyHouse(int tileId) throws TransactionException {
+	public void buyHouse(String playerName, int tileId)
+			throws TransactionException {
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You must first own all the properties in the color group before you can build");
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHouses < 1)
@@ -221,24 +234,149 @@ public class Board {
 		if (terrain.getHouseCount() >= 4)
 			throw new TransactionException(
 					"The maximum number of houses that may be built on a property is 4");
+		int costToBuild = terrain.getHouseCost();
+		if (!playerHasSufficientFunds(playerName, costToBuild))
+			throw new TransactionException(
+					"Player does not have enough money to build");
 		terrain.buildHouse();
-		int id = terrain.getTileId();
 		availableHouses--;
 		int price = terrain.getHouseCost();
 		terrain.getOwner().withdawMoney(price);
-		tileSubjects[id].notifyListeners();
+		tileSubjects[tileId].notifyListeners();
+	}
+
+	/**
+	 * buy 1 house for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
+	 * @throws TransactionException
+	 */
+	public void buyHouseRow(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Player plyr = getPlayerByName(playerName);
+		Terrain terrain = castTileToTerrain(t);
+		String groupName = terrain.getGroup();
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		int costToBuild = terrain.getHouseCost() * groupMembers.size();
+		// Check if player is owner of all the properties in the group
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
+		if (!playerHasSufficientFunds(playerName, costToBuild))
+			throw new TransactionException(
+					"Player does not have enough money to build the row of houses");
+		if (availableHouses < groupMembers.size())
+			throw new TransactionException(
+					"Not enough houses available to complete the transaction");
+		// check if on any of the tiles there are already 4 houses
+		for (Terrain groupMember : groupMembers) {
+			if (groupMember.getHouseCount() >= 4)
+				throw new TransactionException(
+						"There are already 4 houses on one of the properties");
+		}
+		for (Terrain groupMember : groupMembers) {
+			groupMember.buildHouse();
+			availableHouses--;
+			tileSubjects[groupMember.getTileId()].notifyListeners();
+		}
+		plyr.withdawMoney(costToBuild);
+	}
+	
+	
+	/**
+	 * sell 1 house for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
+	 * @throws TransactionException
+	 */
+	public void sellHouseRow(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		Player plyr = getPlayerByName(playerName);
+		String groupName = terrain.getGroup();
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		int amountOfSale = terrain.getHouseCost() * groupMembers.size();
+		// Check if player is owner of all the properties in the group
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
+		// check that all tiles in the group have a house to sell
+		for (Terrain groupMember : groupMembers) {
+			if (groupMember.getHotelCount() < 1)
+				throw new TransactionException(
+						"At least one tile does not have a house to sell");
+		}
+		for (Terrain groupMember : groupMembers) {
+			groupMember.removeHouse();
+			availableHouses++;
+			tileSubjects[groupMember.getTileId()].notifyListeners();
+		}
+		plyr.depositMoney(amountOfSale);
+	}
+
+	/**
+	 * buy 1 hotel for each property belonging to a group
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
+	 * @throws TransactionException
+	 */
+	public void buyHotelRow(String playerName, int tileId)
+			throws TransactionException {
+		Tile t = tiles[tileId];
+		Terrain terrain = castTileToTerrain(t);
+		String groupName = terrain.getGroup();
+		Player plyr = getPlayerByName(playerName);
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		for (Terrain ter : groupMembers) {
+			System.out.println(ter.getName() + " is in group: "
+					+ ter.getGroup());
+		}
+		int costToBuild = terrain.getHotelCost() * groupMembers.size();
+		// Check if player is owner of all the properties in the group
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
+		if (!playerHasSufficientFunds(playerName, costToBuild))
+			throw new TransactionException(
+					"Player does not have enough money to build the row of houses");
+		if (availableHotels < groupMembers.size())
+			throw new TransactionException(
+					"Not enough hotels available to complete the transaction");
+		// check if on any of the tiles there are already 4 houses
+		for (Terrain groupMember : groupMembers) {
+			if (groupMember.getHotelCount() >= 1)
+				throw new TransactionException(
+						"There is already 1 hotel on one of the properties");
+		}
+		for (Terrain groupMember : groupMembers) {
+			groupMember.buildHouse();
+			availableHotels--;
+			tileSubjects[groupMember.getTileId()].notifyListeners();
+		}
+		plyr.withdawMoney(costToBuild);
 	}
 
 	/**
 	 * buy a hotel for a given property checks that the tileId provided refers
 	 * to a terrain
 	 * 
+	 * @param playerName
+	 *            the name of the player to build for
 	 * @param tileId
 	 *            the tile number of the property to build a house on
 	 * @throws TransactionException
 	 */
-	public void buyHotel(int tileId) throws TransactionException {
+	public void buyHotel(String playerName, int tileId)
+			throws TransactionException {
 		Tile t = tiles[tileId];
+		if (!playerOwnsTileGroup(playerName, tileId))
+			throw new TransactionException(
+					"You don't own all the properties in the group.");
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHotels < 1)
 			throw new TransactionException(
@@ -248,13 +386,16 @@ public class Board {
 					"There must be 4 houses present on this property in order to build a hotel");
 		if (terrain.getHotelCount() >= 1)
 			throw new TransactionException(
-					"It's monopoly, but hey there are still rules!  You can't build more than one hotel on a tile.");
+					"You can't build more than one hotel on a tile.");
+		int costToBuild = terrain.getHotelCost();
+		if (!playerHasSufficientFunds(playerName, costToBuild))
+			throw new TransactionException(
+					"Player does not have enough money to build");
 		terrain.buildHotel();
-		int id = terrain.getTileId();
 		availableHotels--;
 		int price = terrain.getHotelCost();
 		terrain.getOwner().withdawMoney(price);
-		tileSubjects[id].notifyListeners();
+		tileSubjects[tileId].notifyListeners();
 	}
 
 	/**
@@ -271,12 +412,11 @@ public class Board {
 			throw new TransactionException(
 					"There are no houses present on tile with tile Id="
 							+ tileId);
-		terrain.buildHotel();
-		int id = terrain.getTileId();
+		terrain.removeHouse();
 		availableHotels++;
 		int price = terrain.getHouseCost();
 		terrain.getOwner().depositMoney(price);
-		tileSubjects[id].notifyListeners();
+		tileSubjects[tileId].notifyListeners();
 	}
 
 	/**
@@ -286,18 +426,19 @@ public class Board {
 	 *            the tile number of the property to sell a hotel from
 	 * @throws TransactionException
 	 */
-	public void sellHotel(int tileId) throws TransactionException {
+	public void sellHotel(String playerName, int tileId) throws TransactionException {
 		Tile t = tiles[tileId];
+		Player plyr = getPlayerByName(playerName);
+		checkPlayerIsOwnerOfTile(playerName, tileId);
 		Terrain terrain = castTileToTerrain(t);
 		if (terrain.getHotelCount() <= 0)
 			throw new TransactionException(
 					"No hotels present on tile with tile Id=" + tileId);
-		terrain.buildHotel();
-		int id = terrain.getTileId();
+		terrain.removeHotel();
 		availableHotels++;
 		int price = terrain.getHotelCost();
-		terrain.getOwner().depositMoney(price);
-		tileSubjects[id].notifyListeners();
+		plyr.depositMoney(price);
+		tileSubjects[tileId].notifyListeners();
 	}
 
 	/**
@@ -373,8 +514,6 @@ public class Board {
 		return tiles[tileId];
 	}
 
-
-	
 	/**
 	 * transfers a given amount of money from one player to another
 	 * 
@@ -414,8 +553,8 @@ public class Board {
 	 */
 	public void createPlayers(List<String> playerNames, Locale loc) {
 		players = new ArrayList<Player>();
-		String bundleData = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc).getString(
-				"startMoney");
+		String bundleData = ResourceBundle.getBundle(
+				"ch.bfh.monopoly.resources.tile", loc).getString("startMoney");
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
@@ -444,10 +583,42 @@ public class Board {
 		return p;
 	}
 
-	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
+	public void checkPlayerIsOwnerOfTile(String playerName, int tileId) throws TransactionException {
 		Property p = castTileToProperty(tiles[tileId]);
 		String ownerName = p.getOwner().getName();
-		return (playerName.equals(ownerName));
+		if (!playerName.equals(ownerName))
+			throw new TransactionException("The player" + ownerName + "does not own the property " + p.getName() + " It is owned by "+ p.getOwner().getName());
+	}
+
+	/**
+	 * 
+	 * find the other number of group members for a specific tile
+	 */
+	public List<Terrain> getGroupMembers(String groupName) {
+		List<Terrain> groupMembers = new ArrayList<Terrain>();
+		for (int i = 0; i < tiles.length; i++) {
+			if (tiles[i] instanceof Terrain) {
+				Terrain terrain = castTileToTerrain(tiles[i]);
+				if (groupName.equals(terrain.getGroup()))
+					// System.out.println(terrain.getName() + "WAS ADDED");
+					groupMembers.add(terrain);
+
+			}
+		}
+		return groupMembers;
+	}
+
+	/**
+	 * check if a given player is the owner of all the properties in a group
+	 */
+	public boolean playerOwnsTileGroup(String playerName, int tileId) {
+		String groupName = castTileToTerrain(getTileById(tileId)).getGroup();
+		List<Terrain> groupMembers = getGroupMembers(groupName);
+		for (Terrain groupMember : groupMembers) {
+			if (!playerName.equals(groupMember.getOwner().getName()))
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -460,8 +631,9 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
-		System.out.println("board.castTileToProperty received the tileId:" +t.getTileId());
-		System.out.println("board.castTileToProperty received the tileId:" +t.getName());
+		// System.out.println("board.castTileToProperty received: tileId:"
+		// + t.getTileId() + "which is:" + t.getName() );
+
 		if (!(t instanceof Property))
 			throw new RuntimeException(
 					"the tile in question is not a property: this transaction cannot be completed");

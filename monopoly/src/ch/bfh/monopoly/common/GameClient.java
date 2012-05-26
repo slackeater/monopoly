@@ -210,11 +210,11 @@ public class GameClient {
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public void buyHouse(int tileID, boolean sendNetMessage) {
+	public void buyHouse(int tileId, boolean sendNetMessage) {
 		try {
-			board.buyHouse(tileID);
+			board.buyHouse(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
 						Messages.BUY_HOUSE);
 				nc.sendMessage(netMsg);
 			}
@@ -223,6 +223,41 @@ public class GameClient {
 		}
 	}
 
+	/**
+	 * buy 1 house for each property belonging to a group
+	 * @param tileId the id of any tile in the group to build on
+	 */
+	public void buyHouseRow(int tileId, boolean sendNetMessage) {
+		try {
+			board.buyHouseRow(currentPlayer.getName(), tileId);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+						Messages.BUY_HOUSEROW);
+				nc.sendMessage(netMsg);
+			}	
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+	}
+	
+	/**
+	 * buy 1 hotel for each property belonging to a group
+	 * @param tileId the id of any tile in the group to build on
+	 */
+	public void buyHotelRow(int tileId, boolean sendNetMessage) {
+		try {
+			board.buyHotelRow(currentPlayer.getName(), tileId);
+			if (sendNetMessage) {
+				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileId,
+						Messages.BUY_HOTELROW);
+				nc.sendMessage(netMsg);
+			}	
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+	}
+	
+	
 	/**
 	 * buy a house for a given property
 	 * 
@@ -233,7 +268,7 @@ public class GameClient {
 	 */
 	public void buyHotel(int tileID, boolean sendNetMessage) {
 		try {
-			board.buyHotel(tileID);
+			board.buyHotel(currentPlayer.getName(), tileID);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 						Messages.BUY_HOTEL);
@@ -275,7 +310,7 @@ public class GameClient {
 	 */
 	public void sellHotel(int tileID, boolean sendNetMessage) {
 		try {
-			board.sellHotel(tileID);
+			board.sellHotel(currentPlayer.getName(), tileID);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(), tileID,
 						Messages.SELL_HOTEL);
@@ -428,21 +463,21 @@ public class GameClient {
 	}
 
 
-	/**
-	 * checks if a given player is the owner of a given tile
-	 * 
-	 * @param playerName
-	 *            the player's name to check
-	 * @param tileId
-	 *            tile to check ownership of
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
-		boolean isOwner = false;
-		isOwner = board.playerIsOwnerOfTile(playerName, tileId);
-		return isOwner;
-	}
+//	/**
+//	 * checks if a given player is the owner of a given tile
+//	 * 
+//	 * @param playerName
+//	 *            the player's name to check
+//	 * @param tileId
+//	 *            tile to check ownership of
+//	 * @param sendNetMessage
+//	 *            true if a net message should be sent to the server
+//	 */
+//	public boolean playerIsOwnerOfTile(String playerName, int tileId) {
+//		boolean isOwner = false;
+//		isOwner = board.checkPlayerIsOwnerOfTile(playerName, tileId);
+//		return isOwner;
+//	}
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
@@ -665,9 +700,14 @@ public class GameClient {
 	 */
 	public void sendTransactionErrorToGUI(TransactionException e,
 			boolean sendNetMessage) {
+		if (sendNetMessage){
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_FOR_ERROR, e.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
+		}
+		else {
+			System.out.println(e.getErrorMsg());
+			}
 	}
 
 	/**

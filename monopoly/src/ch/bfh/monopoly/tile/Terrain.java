@@ -50,6 +50,14 @@ public class Terrain extends Property {
 	public void buildHotel() {
 		hotelCount++;
 	}
+	
+	public void removeHouse() {
+		houseCount--;
+	}
+
+	public void removeHotel() {
+		hotelCount--;
+	}
 
 	public int getRentByHouseCount(int houseCount) {
 		return rentRates[houseCount];
@@ -67,33 +75,20 @@ public class Terrain extends Property {
 		return houseCost;
 	}
 
-	public void setHouseCost(int houseCost) {
-		this.houseCost = houseCost;
-	}
 
 	public int getHotelCost() {
 		return hotelCost;
 	}
 
-	public void setHotelCost(int hotelCost) {
-		this.hotelCost = hotelCost;
-	}
 
 	public int getHouseCount() {
 		return houseCount;
-	}
-
-	public void setHouseCount(int houseCount) {
-		this.houseCount = houseCount;
 	}
 
 	public int getHotelCount() {
 		return hotelCount;
 	}
 
-	public void setHotelCount(int hotelCount) {
-		this.hotelCount = hotelCount;
-	}
 
 	public boolean isMortgageActive() {
 		return mortgageActive;

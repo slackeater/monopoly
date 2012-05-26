@@ -19,6 +19,7 @@ import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 
 public class GameControllerTests {
+	boolean sendNetMessage = false;
 	Locale loc;
 	GameClient gameClient;
 	Board board;
@@ -28,11 +29,329 @@ public class GameControllerTests {
 
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator();
+		TestInstanceGenerator tig = new TestInstanceGenerator("en");
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();
 	}
+
+	/**
+	 * test that buyHouseRow doesn't allow purchase if at least 1 tile has 4
+	 * houses already
+	 */
+	@Test
+	public void buyHouseRowTooManyHouses() {
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		for (int i = 0; i < 3; i++) {
+			gameClient.buyHouse(6, sendNetMessage);
+			gameClient.buyHouse(8, sendNetMessage);
+			gameClient.buyHouse(9, sendNetMessage);
+		}
+		// tile 9 will have 4 houses, the others have 3, so buildRow is not
+		// possible
+		gameClient.buyHouse(9, sendNetMessage);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore);
+	}
+
+	/**
+	 * test that buyHouseRow doesn't change any state if player doesn't have
+	 * enough money to buy all the houses for the row houses already
+	 */
+	@Test
+	public void buyHouseRowNotEnoughMoney() throws TransactionException {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		// house cost is 50, must buy 3, so 100 is not enough, set account so
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		plyr1.withdawMoney(plyr1.getAccount() - 100);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		 assertTrue(plyr1AccountAfter==plyr1AccountBefore);
+		// check that all terrain still ahve no houses
+		assertTrue(terrainConnecticut.getHouseCount() == 0
+				&& terrainOriental.getHouseCount() == 0
+				&& terrainVermont.getHouseCount() == 0);
+	}
+
+	/**
+	 * test that buyHouseRow doesn't allow construction if the currentPlayer
+	 * does not own all properties
+	 */
+	@Test
+	public void buyHouseRowNotDoesntOwnAllProperties()
+			throws TransactionException {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		// house cost is 50, must buy 3, so 100 is not enough, set account so
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		 assertTrue(plyr1AccountAfter==plyr1AccountBefore);
+		// check that all terrain still ahve no houses
+		assertTrue(terrainConnecticut.getHouseCount() == 0
+				&& terrainOriental.getHouseCount() == 0
+				&& terrainVermont.getHouseCount() == 0);
+	}
+
+	/**
+	 * test that buyHouseRow builds 1 house on each property when all conditions
+	 * are met, and withdraws the correct amount
+	 */
+	@Test
+	public void buyHouseRowBuildsHouses() throws TransactionException {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		// house cost is 50, must buy 3, so 100 is not enough, set account so
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 150);
+		assertTrue(terrainConnecticut.getHouseCount() == 1
+				&& terrainOriental.getHouseCount() == 1
+				&& terrainVermont.getHouseCount() == 1);
+		gameClient.buyHouseRow(6, sendNetMessage);
+		plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 300);
+		assertTrue(terrainConnecticut.getHouseCount() == 2
+				&& terrainOriental.getHouseCount() == 2
+				&& terrainVermont.getHouseCount() == 2);
+		// can't build more than 4 houses
+		gameClient.buyHouseRow(6, sendNetMessage);
+		gameClient.buyHouseRow(6, sendNetMessage);
+		gameClient.buyHouseRow(6, sendNetMessage);
+		plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 600);
+		assertTrue(terrainConnecticut.getHouseCount() == 4
+				&& terrainOriental.getHouseCount() == 4
+				&& terrainVermont.getHouseCount() == 4);
+	}
+
+	/**
+	 * test that buyHotelRow doesn't allow purchase if at least 1 tile has 1
+	 * hotel already
+	 */
+	@Test
+	public void buyHotelRowTooManyHotels() {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		for (int i = 0; i < 4; i++) {
+			gameClient.buyHouse(6, sendNetMessage);
+			gameClient.buyHouse(8, sendNetMessage);
+			gameClient.buyHouse(9, sendNetMessage);
+		}
+		// tile 9 will have 4 houses, the others have 3, so buildRow is not
+		// possible
+		gameClient.buyHotel(9, sendNetMessage);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore);
+		assertTrue(terrainConnecticut.getHotelCount() == 1
+				&& terrainOriental.getHotelCount() == 0
+				&& terrainVermont.getHotelCount() == 0);
+		assertTrue(terrainOriental.getHouseCount() == 4
+				&& terrainVermont.getHouseCount() == 4);
+	}
+
+	/**
+	 * test that buyHotelRow doesn't change any state if player doesn't have
+	 * enough money to buy all the hotels for the row
+	 */
+	@Test
+	public void buyHotelRowNotEnoughMoney() throws TransactionException {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		for (int i = 0; i < 4; i++) {
+			gameClient.buyHouse(6, sendNetMessage);
+			gameClient.buyHouse(8, sendNetMessage);
+			gameClient.buyHouse(9, sendNetMessage);
+		}
+		// hotel cost is 50, must buy 3, so 100 is not enough, set account so
+		plyr1.withdawMoney(plyr1.getAccount() - 100);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHotelRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter==plyr1AccountBefore);
+		// check that all terrain still ahve no houses
+		assertTrue(terrainConnecticut.getHouseCount() == 4
+				&& terrainOriental.getHouseCount() == 4
+				&& terrainVermont.getHouseCount() == 4);
+	}
+
+	//
+	// /**
+	// * test that buyHotelRow doesn't allow construction if the currentPlayer
+	// does not own all properties
+	// */
+	// @Test
+	// public void buyHotelRowNotDoesntOwnAllProperties() throws
+	// TransactionException {
+	// int oriental=6;
+	// int vermont=8;
+	// int connecticut=9;
+	// String player1name = "Justin";
+	// Player plyr1 = board.getPlayerByName("Justin");
+	// gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+	// gameClient.advancePlayerNSpaces(6, sendNetMessage);
+	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	// gameClient.advancePlayerNSpaces(2, sendNetMessage);
+	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	// //house cost is 50, must buy 3, so 100 is not enough, set account so
+	// Tile t1 = board.getTileById(oriental);
+	// Terrain terrainOriental = board.castTileToTerrain(t1);
+	// Tile t2 = board.getTileById(vermont);
+	// Terrain terrainVermont = board.castTileToTerrain(t2);
+	// Tile t3 = board.getTileById(connecticut);
+	// Terrain terrainConnecticut = board.castTileToTerrain(t3);
+	// int plyr1AccountBefore = plyr1.getAccount();
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// int plyr1AccountAfter = plyr1.getAccount();
+	// System.out.println(plyr1AccountAfter +"  and before was:"+
+	// plyr1AccountBefore);
+	// // assertTrue(plyr1AccountAfter==plyr1AccountBefore);
+	// //check that all terrain still ahve no houses
+	// assertTrue(terrainConnecticut.getHouseCount()==0
+	// &&terrainOriental.getHouseCount()==0
+	// &&terrainVermont.getHouseCount()==0);
+	// }
+	//
+	// /**
+	// * test that buyHotelRow builds 1 house on each property when all
+	// conditions are met, and withdraws the correct amount
+	// */
+	// @Test
+	// public void buyHotelRowBuildsHotels() throws TransactionException {
+	// int oriental=6;
+	// int vermont=8;
+	// int connecticut=9;
+	// String player1name = "Justin";
+	// Player plyr1 = board.getPlayerByName("Justin");
+	// gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+	// gameClient.advancePlayerNSpaces(6, sendNetMessage);
+	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	// gameClient.advancePlayerNSpaces(2, sendNetMessage);
+	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	// gameClient.advancePlayerNSpaces(1, sendNetMessage);
+	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	// //house cost is 50, must buy 3, so 100 is not enough, set account so
+	// Tile t1 = board.getTileById(oriental);
+	// Terrain terrainOriental = board.castTileToTerrain(t1);
+	// Tile t2 = board.getTileById(vermont);
+	// Terrain terrainVermont = board.castTileToTerrain(t2);
+	// Tile t3 = board.getTileById(connecticut);
+	// Terrain terrainConnecticut = board.castTileToTerrain(t3);
+	// int plyr1AccountBefore = plyr1.getAccount();
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// int plyr1AccountAfter = plyr1.getAccount();
+	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-150);
+	// assertTrue(terrainConnecticut.getHouseCount()==1
+	// &&terrainOriental.getHouseCount()==1
+	// &&terrainVermont.getHouseCount()==1);
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// plyr1AccountAfter = plyr1.getAccount();
+	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-300);
+	// assertTrue(terrainConnecticut.getHouseCount()==2
+	// &&terrainOriental.getHouseCount()==2
+	// &&terrainVermont.getHouseCount()==2);
+	// //can't build more than 4 houses
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// gameClient.buyHouseRow(6, sendNetMessage);
+	// plyr1AccountAfter = plyr1.getAccount();
+	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-600);
+	// assertTrue(terrainConnecticut.getHouseCount()==4
+	// &&terrainOriental.getHouseCount()==4
+	// &&terrainVermont.getHouseCount()==4);
+	// }
 
 	/**
 	 * test that the method buyCurrentPropertyForPlayer updates the change in
@@ -41,13 +360,13 @@ public class GameControllerTests {
 	@Test
 	public void buyCurrentPropertyForPlayerChangesPlayersPropertyList() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, true);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
 		// add money to player's account to loop is possible
 		plyr.depositMoney(100000);
 		for (int i = 0; i < terrainPositions.length; i++) {
 			int tileId = terrainPositions[i];
 			plyr.setPosition(tileId);
-			gc.buyCurrentPropertyForPlayer("Justin");
+			gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 			assertTrue(plyr.ownsProperty(board.getTileById(tileId)));
 		}
 	}
@@ -59,9 +378,9 @@ public class GameControllerTests {
 	@Test
 	public void buyCurrentPropertyForPlayerSetsTilesOwner() {
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, true);
-		gameClient.advancePlayerNSpaces(1, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", false);
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));
 	}
@@ -76,8 +395,8 @@ public class GameControllerTests {
 	public void buyCurrentPropertyForPlayerSetsTilesOwnerCurrentPlayer() {
 		Player plyr = board.getPlayerByName("Justin");
 		gameClient.setCurrentPlayer(plyr, true);
-		gameClient.advancePlayerNSpaces(1, false);
-		gc.buyCurrentPropertyForPlayer("CurRentPlaYER");
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("CurRentPlaYER", sendNetMessage);
 		Property prop = (Property) board.getTileById(1);
 		assertTrue(prop.getOwner().getName().equals("Justin"));
 	}
@@ -92,9 +411,9 @@ public class GameControllerTests {
 		int plyrAccountBefore = plyr.getAccount();
 		Property prop = (Property) board.getTileById(1);
 		int tilePrice = prop.getPrice();
-		gameClient.setCurrentPlayer(plyr, true);
-		gameClient.advancePlayerNSpaces(1, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		assertTrue(plyr.getAccount() == plyrAccountBefore - tilePrice);
 	}
 
@@ -107,18 +426,80 @@ public class GameControllerTests {
 		Player plyr = board.getPlayerByName("Justin");
 		Tile t = board.getTileById(1);
 		Terrain terrain = board.castTileToTerrain(t);
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(1, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
-		gameClient.buyHouse(1, false);
-		gameClient.buyHouse(1, false);
-		gameClient.buyHouse(1, false);
-		gameClient.buyHouse(1, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		gameClient.buyHouse(1, false);
+		gameClient.buyHouse(1, sendNetMessage);
 		int accountAfter = plyr.getAccount();
 		// houses should still be 4
 		assertTrue(terrain.getHouseCount() == 4);
+		// no money should have changed hands
+		assertTrue(accountBefore == accountAfter);
+	}
+
+	/**
+	 * test that it is not possible to build houses if the player does not have
+	 * enough money, and that the states aren't change in such a case tile
+	 * @throws TransactionException 
+	 */
+	@Test
+	public void buildHousesNotEnoughMoney() throws TransactionException {
+		Player plyr = board.getPlayerByName("Justin");
+		Tile t = board.getTileById(1);
+		Terrain terrain = board.castTileToTerrain(t);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		//house cost for mediterranean is 50, leave enough to build 2 houses
+		plyr.withdawMoney(plyr.getAccount()-100);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		//the following houses should not be able to be built
+		int accountBefore = plyr.getAccount();
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		int accountAfter = plyr.getAccount();
+		// houses should still be 4
+		assertTrue(terrain.getHouseCount() == 2);
+		// no money should have changed hands
+		assertTrue(accountBefore == accountAfter);
+	}
+	
+	
+	/**
+	 * test that it is not possible to build hotels if the player does not have
+	 * enough money, and that the states aren't change in such a case tile
+	 * @throws TransactionException 
+	 */
+	@Test
+	public void buildHotelsNotEnoughMoney() throws TransactionException {
+		Player plyr = board.getPlayerByName("Justin");
+		Tile t = board.getTileById(1);
+		Terrain terrain = board.castTileToTerrain(t);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		//house cost for mediterranean is 50, leave enough to build 2 houses
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		gameClient.buyHouse(1, sendNetMessage);
+		//the following hotel should not be able to be built
+		plyr.withdawMoney(plyr.getAccount()-10);
+		int accountBefore = plyr.getAccount();
+		gameClient.buyHotel(1, sendNetMessage);
+		int accountAfter = plyr.getAccount();
+		// houses should still be 4
+		assertTrue(terrain.getHotelCount() == 0);
 		// no money should have changed hands
 		assertTrue(accountBefore == accountAfter);
 	}
@@ -132,16 +513,18 @@ public class GameControllerTests {
 		Tile t = board.getTileById(1);
 		Terrain terrain = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHotel(tileId, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHotel(tileId, sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		gameClient.buyHotel(tileId, false);
+		gameClient.buyHotel(tileId, sendNetMessage);
 		int accountAfter = plyr.getAccount();
 		// houses should still be 4
 		assertTrue(terrain.getHotelCount() == 1);
@@ -159,14 +542,14 @@ public class GameControllerTests {
 		Tile t = board.getTileById(1);
 		Terrain terrain = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		gameClient.buyHotel(tileId, false);
+		gameClient.buyHotel(tileId, sendNetMessage);
 		int accountAfter = plyr.getAccount();
 		// houses should still be 4
 		assertTrue(terrain.getHotelCount() == 0);
@@ -184,17 +567,19 @@ public class GameControllerTests {
 		Tile t = board.getTileById(1);
 		Terrain terrain = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		gameClient.sellHotel(tileId, false);
+		gameClient.sellHotel(tileId, sendNetMessage);
 		int accountAfter = plyr.getAccount();
 		// houses should still be 0
 		assertTrue(terrain.getHotelCount() == 0);
 		// no money should have changed hands
 		assertTrue(accountBefore == accountAfter);
 	}
+	
+	
 
 	/**
 	 * tests that the sale of a house cannot be completed if there are no houses
@@ -206,11 +591,11 @@ public class GameControllerTests {
 		Tile t = board.getTileById(1);
 		Terrain terrain = board.castTileToTerrain(t);
 		Player plyr = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		gameClient.sellHouse(tileId, false);
+		gameClient.sellHouse(tileId, sendNetMessage);
 		int accountAfter = plyr.getAccount();
 		// houses should still be 0
 		assertTrue(terrain.getHotelCount() == 0);
@@ -227,13 +612,15 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gameClient.buyCurrentPropertyForPlayer("Justin", false);
-		gameClient.buyHouse(tileId, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
 		int accountBefore = plyr.getAccount();
 		int houseCost = terrain.getHouseCost();
-		gameClient.sellHouse(tileId, false);
+		gameClient.sellHouse(tileId, sendNetMessage);
 		assertTrue(plyr.getAccount() == accountBefore + houseCost);
 	}
 
@@ -246,17 +633,19 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gameClient.buyCurrentPropertyForPlayer("Justin", false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHouse(tileId, false);
-		gameClient.buyHotel(tileId, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHouse(tileId, sendNetMessage);
+		gameClient.buyHotel(tileId, sendNetMessage);
 		int accountBefore = plyr.getAccount();
 		int houseCost = terrain.getHotelCost();
-		gameClient.sellHotel(tileId, false);
+		gameClient.sellHotel(tileId, sendNetMessage);
 		assertTrue(plyr.getAccount() == accountBefore + houseCost);
 	}
 
@@ -269,14 +658,14 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
-		// is false after creation, will be set to true
-		gameClient.toggleMortgageStatus(tileId, false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		// issendNetMessage after creation, will be set to true
+		gameClient.toggleMortgageStatus(tileId, sendNetMessage);
 		assertTrue(terrain.isMortgageActive());
 		// And once more, just for fun
-		gameClient.toggleMortgageStatus(tileId,false);
+		gameClient.toggleMortgageStatus(tileId, sendNetMessage);
 		assertTrue(!terrain.isMortgageActive());
 	}
 
@@ -289,12 +678,12 @@ public class GameControllerTests {
 		int tileId = 1;
 		Player plyr = board.getPlayerByName("Justin");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int accountBefore = plyr.getAccount();
-		// is false after creation, will be set to true
-		gameClient.toggleMortgageStatus(tileId,false);
+		// issendNetMessage after creation, will be set to true
+		gameClient.toggleMortgageStatus(tileId, sendNetMessage);
 		int accountNow = plyr.getAccount();
 		assertTrue(accountNow == (accountBefore + terrain.getMortgageValue()));
 	}
@@ -309,11 +698,12 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gameClient.buyCurrentPropertyForPlayer("Justin",false);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		assertTrue(terrain.getOwner().getName().equals(plyr1.getName()));
-		gameClient.transferProperty(plyr1.getName(), plyr2.getName(),tileId,0,false);
+		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
+				0, sendNetMessage);
 		assertTrue(terrain.getOwner().getName().equals(plyr2.getName()));
 	}
 
@@ -328,13 +718,13 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
 		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
-				price, false);
+				price, sendNetMessage);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore + price);
 	}
 
@@ -349,13 +739,13 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
 		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
-				price, false);
+				price, sendNetMessage);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore - price);
 	}
 
@@ -370,11 +760,11 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(1);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gameClient.buyCurrentPropertyForPlayer(player1name, false);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
 		gameClient.transferProperty(plyr1.getName(), plyr2.getName(), tileId,
-				price, false);
+				price, sendNetMessage);
 		assertTrue(plyr2.ownsProperty(terrain));
 	}
 
@@ -389,12 +779,12 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
 		Terrain terrain = (Terrain) board.getTileById(tileId);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
-		gc.buyCurrentPropertyForPlayer("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		assertTrue(plyr1.ownsProperty(terrain));
 		gameClient.transferProperty("curReNTPlayeR", plyr2.getName(), tileId,
-				price, false);
+				price, sendNetMessage);
 		assertTrue(plyr2.ownsProperty(terrain));
 	}
 
@@ -407,9 +797,10 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName("Justin");
 		Player plyr2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(plyr1, false);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
 		plyr1.setJailCard(1);
-		gc.transferJailCards(player1name, player2name, 1);
+		gameClient.transferJailCards(player1name, player2name, 1, 0,
+				sendNetMessage);
 		assertTrue(plyr1.getJailCard() == 0 && plyr2.getJailCard() == 1);
 	}
 
@@ -426,7 +817,8 @@ public class GameControllerTests {
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
 		plyr1.setJailCard(1);
-		gc.transferJailCardsForPrice(player1name, player2name, 1, price);
+		gameClient.transferJailCards(player1name, player2name, 1, price,
+				sendNetMessage);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore + price);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore - price);
 	}
@@ -444,7 +836,8 @@ public class GameControllerTests {
 		assertTrue(plyr1.getJailCard() == 0);
 		int jailsCardsBeforePlyr1 = plyr1.getJailCard();
 		int jailsCardsBeforePlyr2 = plyr2.getJailCard();
-		gc.transferJailCardsForPrice(player1name, player2name, 1, price);
+		gameClient.transferJailCards(player1name, player2name, 1, price,
+				sendNetMessage);
 		int jailsCardsAfterPlyr1 = plyr1.getJailCard();
 		int jailsCardsAfterPlyr2 = plyr2.getJailCard();
 		assertTrue(jailsCardsAfterPlyr1 == jailsCardsBeforePlyr1);
@@ -463,7 +856,8 @@ public class GameControllerTests {
 		Player plyr2 = board.getPlayerByName(player2name);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
-		gc.transferMoney(player1name, player2name, amount);
+		gameClient.transferMoney(player1name, player2name, amount,
+				sendNetMessage);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore - amount);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore + amount);
 	}
@@ -479,10 +873,11 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName(player2name);
-		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
-		gc.transferMoney("CurRenTPlaYEr", player2name, amount);
+		gameClient.transferMoney("CurRenTPlaYEr", player2name, amount,
+				sendNetMessage);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore - amount);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore + amount);
 	}
@@ -498,10 +893,11 @@ public class GameControllerTests {
 		String player2name = "Giuseppe";
 		Player plyr1 = board.getPlayerByName(player1name);
 		Player plyr2 = board.getPlayerByName(player2name);
-		gameClient.setCurrentPlayer(plyr1, true);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
 		int plyr1AccountBefore = plyr1.getAccount();
 		int plyr2AccountBefore = plyr2.getAccount();
-		gc.transferMoney(player2name, "CurRenTPlaYEr", amount);
+		gameClient.transferMoney(player2name, "CurRenTPlaYEr", amount,
+				sendNetMessage);
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore + amount);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore - amount);
 	}
@@ -514,19 +910,18 @@ public class GameControllerTests {
 	public void canAdvancedPlayerNSpaces() {
 		String player1name = "Justin";
 		Player plyr1 = board.getPlayerByName(player1name);
-		gameClient.setCurrentPlayer(plyr1, false);
-		gameClient.advancePlayerNSpaces(3,false);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(3, sendNetMessage);
 		assertTrue(gameClient.getCurrentPlayer().getPosition() == 3);
 		// check that modulo is working
-		gameClient.advancePlayerNSpaces(40,false);
+		gameClient.advancePlayerNSpaces(40, sendNetMessage);
 		assertTrue(gameClient.getCurrentPlayer().getPosition() == 3);
 
 	}
 
-	
 	/**
-	 * test gc.playerHasSufficientFunds returns true if a player has more than a
-	 * given amount of money
+	 * test gameClient.playerHasSufficientFunds returns true if a player has
+	 * more than a given amount of money
 	 */
 	@Test
 	public void playerHasSufficientFunds() {
@@ -536,8 +931,8 @@ public class GameControllerTests {
 	}
 
 	/**
-	 * test gc.playerHasSufficientFunds returns false if a player has less than
-	 * a given amount of money
+	 * test gameClient.playerHasSufficientFunds returnssendNetMessage if a
+	 * player has less than a given amount of money
 	 */
 	@Test
 	public void playerDoesNotHaveSufficientFunds() {
@@ -545,75 +940,76 @@ public class GameControllerTests {
 		int amount = 16000;
 		assertTrue(!gameClient.playerHasSufficientFunds(player1name, amount));
 	}
-	
-	
+
 	/**
-	 *  check that the method gameClient.buyCurrentPropertyForPlayer deducts the money from the players account correctly
+	 * check that the method gameClient.buyCurrentPropertyForPlayer deducts the
+	 * money from the players account correctly
 	 */
 	@Test
 	public void buyPropertyFromBankWithdrawsCorrectly() {
 		int tileId = 39;
 		Player p = board.getPlayerByName("Justin");
 		int previousBalance = p.getAccount();
-		gameClient.setCurrentPlayer(p,false);
-		gameClient.advancePlayerNSpaces(39,false);
-		gameClient.buyCurrentPropertyForPlayer(p.getName(),false);
+		gameClient.setCurrentPlayer(p, sendNetMessage);
+		gameClient.advancePlayerNSpaces(39, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(p.getName(), sendNetMessage);
 		Tile t = board.getTileById(tileId);
-		Property prop =(Property)t;
+		Property prop = (Property) t;
 		int priceOfProperty = prop.getPrice();
 		int newBalance = p.getAccount();
-		assertTrue(newBalance==(previousBalance-priceOfProperty));
+		assertTrue(newBalance == (previousBalance - priceOfProperty));
 	}
-	
-	
-	
+
 	/**
-	 *  check that a player cannot buy a property from the bank, unless he has enough money
-	 * @throws TransactionException 
+	 * check that a player cannot buy a property from the bank, unless he has
+	 * enough money
+	 * 
+	 * @throws TransactionException
 	 */
 	@Test
 	public void propertyFromBankInsufficientFunds() throws TransactionException {
 		int tileId = 39;
 		Player plyr = board.getPlayerByName("Justin");
-		plyr.withdawMoney(plyr.getAccount()-1);
-		gameClient.setCurrentPlayer(plyr,false);
-		gameClient.advancePlayerNSpaces(tileId,false);
-		int plyrAccountBefore=plyr.getAccount();
-		gameClient.buyCurrentPropertyForPlayer(plyr.getName(),false);
-		int plyrAccountAfter=plyr.getAccount();
-		assertTrue(plyrAccountAfter==plyrAccountBefore);
+		plyr.withdawMoney(plyr.getAccount() - 1);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		int plyrAccountBefore = plyr.getAccount();
+		gameClient.buyCurrentPropertyForPlayer(plyr.getName(), sendNetMessage);
+		int plyrAccountAfter = plyr.getAccount();
+		assertTrue(plyrAccountAfter == plyrAccountBefore);
 
 	}
-	
+
 	/**
-	 * the method payFee deducts the correct amount from the current player's account
+	 * the method payFee deducts the correct amount from the current player's
+	 * account
 	 */
-	@Test 
-	public void payFeeDeductsMoneyFromCurrentPlayer(){
+	@Test
+	public void payFeeDeductsMoneyFromCurrentPlayer() {
 		String playerName = "Justin";
 		Player plyr = board.getPlayerByName(playerName);
 		int playerAccountBefore = plyr.getAccount();
-		gameClient.setCurrentPlayer(plyr,false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
 		int fee = 100;
-		gameClient.payFee(fee,false);
-		assertTrue(plyr.getAccount()==playerAccountBefore-fee);
+		gameClient.payFee(fee, sendNetMessage);
+		assertTrue(plyr.getAccount() == playerAccountBefore - fee);
 	}
-	
+
 	/**
-	 * the method payFee() credits the amount of the fee to the variable freeParking
+	 * the method payFee() credits the amount of the fee to the variable
+	 * freeParking
 	 */
-	@Test 
-	public void payFeeCreditsFeeToFreeParking(){
+	@Test
+	public void payFeeCreditsFeeToFreeParking() {
 		String playerName = "Justin";
 		Player plyr = board.getPlayerByName(playerName);
-		gameClient.setCurrentPlayer(plyr,false);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
 		int fee = 100;
 		int freeParkingAmount = gameClient.getFreeParking();
-		gameClient.payFee(fee,false);
-		assertTrue(gameClient.getFreeParking()==freeParkingAmount+fee);	
+		gameClient.payFee(fee, sendNetMessage);
+		assertTrue(gameClient.getFreeParking() == freeParkingAmount + fee);
 	}
-	
-	
+
 	/**
 	 * check that a player cannot buy a property from the bank, unless he has
 	 * enough money
@@ -622,17 +1018,17 @@ public class GameControllerTests {
 	 *             if there isn't enough money in the account, this is thrown
 	 */
 	@Test
-	public void cantBuyPropertyWithInsufficientFunds() throws TransactionException {
+	public void cantBuyPropertyWithInsufficientFunds()
+			throws TransactionException {
 		int tileId = 39;
 		Player p = board.getPlayerByName("Justin");
 		p.withdawMoney(p.getAccount() - 1);
-		gameClient.setCurrentPlayer(p, false);
-		gameClient.advancePlayerNSpaces(tileId, false);
+		gameClient.setCurrentPlayer(p, sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 		int plyrAccountBefore = p.getAccount();
-		gameClient.buyCurrentPropertyForPlayer(p.getName(), false);
+		gameClient.buyCurrentPropertyForPlayer(p.getName(), sendNetMessage);
 		int plyrAccountAfter = p.getAccount();
 		assertTrue(plyrAccountAfter == plyrAccountBefore);
 	}
-
 
 }
