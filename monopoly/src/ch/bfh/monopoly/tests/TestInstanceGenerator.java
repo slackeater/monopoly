@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.BoardController;
+import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.event.EventManager;
@@ -16,6 +17,7 @@ public class TestInstanceGenerator {
 	Board board;
 	BoardController bc;
 	EventManager em;
+	Dice dice;
 	public TestInstanceGenerator(String localeName) {
 		String myName = "Justin";
 		ArrayList<String> playerNames = new ArrayList<String>();
@@ -25,14 +27,14 @@ public class TestInstanceGenerator {
 		playerNames.add("Cyril");
 		playerNames.add("Elie");
 
-		gameClient = new GameClient();
+		gameClient = new GameClient(false);
 		gameClient.createBoard(new Locale(localeName), playerNames, myName);
 		gc = new GameController(gameClient);
 		board = gameClient.getBoard();
 		bc = new BoardController(board);
 		em = ((AbstractTile)board.getTileById(1)).getEventManager();
-		
 		em.setupForTesting();
+		dice = gameClient.getDice();
 		setTileSendNetMessage(false);
 	}
 

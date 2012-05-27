@@ -154,6 +154,8 @@ public class Board {
 		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
+
+	
 	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile

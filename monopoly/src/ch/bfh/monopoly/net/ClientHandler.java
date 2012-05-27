@@ -127,6 +127,9 @@ public class ClientHandler implements IoHandler {
 			String username = n.getText();
 			gameClient.updateTurnTokens(username);
 			break;
+		case START_TURN_PANEL:
+			//what can we put here that other clients see the start window?
+			break;
 		case QUIT_GAME:
 			// TODO quit gamed
 		}

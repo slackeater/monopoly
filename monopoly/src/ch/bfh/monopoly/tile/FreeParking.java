@@ -32,17 +32,11 @@ public class FreeParking extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				
-				System.out.println("The current player is at tile :"
-						+ gameClient.getCurrentPlayer().getPosition());
-				System.out.println("The current player jail status is :"
-						+ gameClient.getCurrentPlayer().isInJail());
-
+				gameClient.freeParking(true);
 			}
 		});
 		buttonRight.setText("ok");
-		eventInfoLabel.setText(description);
+		eventInfoLabel.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
 
 		jpanel.add(eventInfoLabel);
 		jpanel.add(buttonRight);

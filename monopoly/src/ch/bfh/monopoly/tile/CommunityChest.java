@@ -1,9 +1,5 @@
 package ch.bfh.monopoly.tile;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -19,16 +15,8 @@ public class CommunityChest extends AbstractTile {
 
 	@Override
 	public JPanel getTileEventPanel() {
-		// TODO Auto-generated method stub
-
-		List<ActionListener> actionList = new ArrayList<ActionListener>();
-		ActionListener al = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		actionList.add(al);
-		return null;
+		
+		return em.getTileEventPanelCommChest();
 	}
 
 }

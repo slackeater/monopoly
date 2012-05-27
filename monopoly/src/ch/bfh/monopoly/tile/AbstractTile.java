@@ -103,13 +103,5 @@ public abstract class AbstractTile implements Tile {
 	public void setSendNetMessage(boolean sendNetMessage) {
 		this.sendNetMessage = sendNetMessage;
 	}
-	
-	public void shuffleChanceCards() {
-		em.shuffleChanceCards();
-	}
-
-	public void shuffleCommChestCards() {
-		em.shuffleCommChestCards();
-	}
 
 }

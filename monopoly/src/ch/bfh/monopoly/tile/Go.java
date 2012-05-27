@@ -32,15 +32,8 @@ public class Go extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("The current player account was now at:"
-						+ gameClient.getCurrentPlayer().getAccount());
-				
-				gameClient.passGo();
+				//the sum is already addded to the player account by advancePlayerNSpaces()
 				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				
-				System.out.println("The current player account is now at:"
-						+ gameClient.getCurrentPlayer().getAccount());
-
 			}
 		});
 		buttonRight.setText("ok");
