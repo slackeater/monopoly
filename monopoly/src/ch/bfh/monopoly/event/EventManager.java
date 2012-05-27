@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-
 import javax.swing.JPanel;
-
 import ch.bfh.monopoly.common.GameClient;
 
 public class EventManager {
@@ -26,44 +24,38 @@ public class EventManager {
 	int chanceDrawIndex;
 	int commChestDrawIndex;
 
-	private boolean testsOff = true;
-	// if false: allows tests to run with out send a netmessage
-	private boolean sendNetMessage = testsOff;
-	// if false, the tests can take the cards in a known order
-	private boolean shuffle = testsOff;
+	private boolean testOff;
 
 	// set when GUI calls getEventDescription so program then knows which
 	// chance / Comm chest card to execute when GUI calls performEVent()
 	BoardEvent currentEvent;
 
-	public EventManager(GameClient gameClient) {
+	public EventManager(GameClient gameClient,boolean testOff) {
+		this.testOff = testOff;
 		integersTo16 = makeIntegerList();
 		this.gameClient = gameClient;
 		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
 				gameClient.getLoc());
 		createChanceEvents();
 		createCommChestEvents();
-		
-		shuffleChanceCards();
-		shuffleCommChestCards();
 	}
 
 	private void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
 		chanceDrawIndex = 10;
-		if (sendNetMessage)
-			gameClient.updateChanceDrawOrder(chanceEventsShuffled, sendNetMessage);
+		if (testOff)
+			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testOff);
 	}
 
 	private void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
 		commChestDrawIndex = 10;
-		if (sendNetMessage)
-			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, sendNetMessage);
+		if (testOff)
+			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, testOff);
 	}
 
 	private int[] shuffleDeck() {
-		if (!shuffle) {
+		if (!testOff) {
 			int[] notShuffled = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
 					14, 15 };
 			return notShuffled;
@@ -267,11 +259,11 @@ public class EventManager {
 	 * used for testing. If it is set to false, no net messages will be sent
 	 * 
 	 * 
-	 * @param sendNetMessage
+	 * @param testOff
 	 *            the truth value to set to
 	 */
 	public void setupForTesting() {
-		this.sendNetMessage = false;
+		this.testOff = false;
 
 		for (BoardEvent be : chanceEvents) {
 			AbstractTileEvent ate = (AbstractTileEvent) be;

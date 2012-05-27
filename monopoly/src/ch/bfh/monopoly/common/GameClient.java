@@ -25,6 +25,7 @@ public class GameClient {
 	private Board board;
 	private ClientNetworkController nc;
 	private WindowSubject ws;
+	private boolean testOff;
 
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
@@ -55,9 +56,15 @@ public class GameClient {
 		}
 	}
 
-	public GameClient() {
+	public GameClient(boolean testOff){
+		this.testOff=testOff;
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
+		
+	}
+	public GameClient() {
+		this(true);
+
 	}
 
 	/**
@@ -70,7 +77,7 @@ public class GameClient {
 	public void createBoard(Locale loc, List<String> names,
 			String localPlayerName) {
 		this.loc = loc;
-		this.board = new Board(this);
+		this.board = new Board(this,testOff);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
 	}

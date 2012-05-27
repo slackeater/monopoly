@@ -32,7 +32,7 @@ public class TestInstanceGenerator {
 		bc = new BoardController(board);
 		em = ((AbstractTile)board.getTileById(1)).getEventManager();
 		
-		em.setSendNetMessage(false);
+		em.setupForTesting();
 		setTileSendNetMessage(false);
 	}
 

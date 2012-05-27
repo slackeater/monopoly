@@ -27,6 +27,7 @@ public class Board {
 	private int freeParking = 500;
 	private PlayerSubject playerSubject;
 	private final int goMoney;
+	private boolean testOff;
 
 	/**
 	 * this inner class is connected to the GUI through an observer pattern. The
@@ -128,12 +129,13 @@ public class Board {
 		}
 	}
 
-	public Board(GameClient gameClient) {
+	public Board(GameClient gameClient, boolean testOff) {
+		this.testOff = testOff;
 		goMoney = Integer.parseInt(ResourceBundle.getBundle(
 				"ch.bfh.monopoly.resources.tile", gameClient.getLoc())
 				.getString("goMoney"));
 		// create tiles, cards, and events and tokens
-		TileCreator tc = new TileCreator(gameClient);
+		TileCreator tc = new TileCreator(gameClient, testOff);
 		tiles = tc.getTilesArray();
 		availableHouses = 32;
 		availableHotels = 12;
