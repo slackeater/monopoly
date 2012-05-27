@@ -34,6 +34,7 @@ public class EventTests {
 		board = tig.getBoard();
 		gc = tig.getGc();
 		em = tig.em;
+		tig.em.setupForTesting();
 	}
 
 	/**
@@ -51,7 +52,7 @@ public class EventTests {
 		int balance4before = board.getPlayerByName("Elie").getAccount();
 		ArrayList<BoardEvent> commChestEvents =(ArrayList<BoardEvent>)em.getCommChestEvents();
 		em.setCurrentEvent(commChestEvents.get(3));
-		em.performEventCommChest();
+		em.getTileEventPanelCommChest();
 		int balanceJustinAfter = board.getPlayerByName("Justin").getAccount();
 		int balance1after = board.getPlayerByName("Giuseppe").getAccount();
 		int balance2after = board.getPlayerByName("Damien").getAccount();
@@ -65,6 +66,16 @@ public class EventTests {
 	}
 	
 
+	@Test
+	public void cardDrawing() {
+		int playerCount = board.getPlayers().size();
+		Player plyr = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr, true);
+	
+		em.drawNextChanceCard();
+		em.drawNextChanceCard();
+		em.drawNextChanceCard();
+	}
 	/**
 	 * Test that once the cards are used up, the list is repopulated in a
 	 * different order this is done just by checking that the first card changes
@@ -229,7 +240,7 @@ public class EventTests {
 		gameClient.setCurrentPlayer(plyr2,false);
 		gameClient.advancePlayerNSpaces(tileId,false);
 		int previousBalance = plyr2.getAccount();
-		gc.performEvent();
+		gameClient.
 		assertTrue(plyr2.getAccount() == previousBalance + fee);
 	}
 

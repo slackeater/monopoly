@@ -43,6 +43,7 @@ public enum Messages {
 	END_TURN(520),
 	PAY_FEE(530),
 	PAY_UTILITY_FEE(535),
+	FREE_PARKING(550),
 
 
 	

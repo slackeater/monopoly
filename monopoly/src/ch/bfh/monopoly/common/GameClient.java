@@ -13,6 +13,8 @@ import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Terrain;
+import ch.bfh.monopoly.tile.Tile;
 
 public class GameClient {
 
@@ -185,21 +187,25 @@ public class GameClient {
 	 */
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
 		String playerName = currentPlayer.getName();
-
-		int previousPosition = currentPlayer.getPosition();
-		board.advanceCurrentPlayerNSpaces(playerName, n);
-		int newPosition = currentPlayer.getPosition();
-
-		// if passes go
-		if (newPosition < previousPosition)
-			passGo();
-
+		board.advancePlayerNSpaces(playerName, n);
+		
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
 					Messages.DICE_ROLL);
 			nc.sendMessage(netMsg);
 		}
+	}
+	
+	/**
+	 * advance current player to tile n
+	 */
+	public void advancePlayerToTile(int tileId, boolean sendNetMessage) {
+		int currentPosition = currentPlayer.getPosition();
+		int	rollEquivalent = tileId - currentPosition;
+		if (rollEquivalent<0)
+			rollEquivalent += 40;
+		advancePlayerNSpaces(tileId,sendNetMessage);
 	}
 
 	/**
@@ -666,7 +672,9 @@ public class GameClient {
 	 * sends the currentPlayer to jail
 	 */
 	public void goToJail(boolean sendNetMessage) {
-		board.goToJail(currentPlayer.getName());
+		int jail = 10;
+		advancePlayerToTile(jail, false);
+		board.setPlayerJailStatus(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
@@ -674,15 +682,19 @@ public class GameClient {
 		}
 	}
 
-	/**
-	 * pass go, get money
-	 */
-	public void passGo() {
-		board.passGo(currentPlayer);
-	}
 
-	public int getFreeParking() {
-		return board.getFreeParking();
+
+	/**
+	 * the current player gets all the money in the free parking account
+	 * @return
+	 */
+	public void freeParking(boolean sendNetMessage) {
+		board.freeParking(currentPlayer.getName());
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.FREE_PARKING);
+			sendNetMessageToGUI(msg);
+		}
 	}
 
 	/**
@@ -850,6 +862,14 @@ public class GameClient {
 		return localPlayer;
 	}
 
+	/**
+	 * return the amount of money that is in free parking
+	 * used to display the amount to the player when the event occurs
+	 */
+	public int getFreeParkingAccount(){
+		return board.getFreeParkingAccount();
+	}
+	
 	/**
 	 * Get the number of available houses used by events to calculate the price
 	 * a player must pay for REPAIRS EVENT

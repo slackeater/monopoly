@@ -23,16 +23,13 @@ public class MovementEvent extends AbstractTileEvent {
 	public void performEvent() {
 		Player currentPlayer = gameClient.getCurrentPlayer();
 		if (newPosition > 0) {
-			//set player's position to the new position
-			currentPlayer.setPosition(newPosition);
+			gameClient.advancePlayerToTile(newPosition, false);
 		}
 		else if (newPosition == 0 ){
-			//go to jail
-			currentPlayer.setPosition(currentPlayer.getPosition()-3);
+			gameClient.goToJail(false);
 			}
 		else {
-			//set player's position back three spaces
-			currentPlayer.setPosition(currentPlayer.getPosition()-3);
+			gameClient.advancePlayerNSpaces(newPosition, sendNetMessage)
 		}
 		
 	}

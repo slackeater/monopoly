@@ -5,24 +5,32 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.common.GameClient;
 
 public class EventManager {
 
-	BoardEvent[] tileEvents = new BoardEvent[40];
+	public GameClient gameClient;
+	ResourceBundle res;
 	// length of 16 for each deck of chance-type cards
 	List<BoardEvent> chanceEvents = new ArrayList<BoardEvent>();
 	List<BoardEvent> commChestEvents = new ArrayList<BoardEvent>();
-	// holds the order that the cards will be drawn, these lists are shuffled
-	// when used once
+
+	// these lists have numbers from 0-15 shuffled up, used to index into real
+	// card lists
 	int[] chanceEventsShuffled = new int[16];
 	int[] commChestEventsShuffled = new int[16];
 	ArrayList<Integer> integersTo16;
-	public GameClient gameClient;
-	ResourceBundle res;
-	int chanceDrawIndex = 16;
-	int commChestDrawIndex = 16;
-	private boolean sendNetMessage = true;
+
+	int chanceDrawIndex;
+	int commChestDrawIndex;
+
+	private boolean testsOff = true;
+	// if false: allows tests to run with out send a netmessage
+	private boolean sendNetMessage = testsOff;
+	// if false, the tests can take the cards in a known order
+	private boolean shuffle = testsOff;
 
 	// set when GUI calls getEventDescription so program then knows which
 	// chance / Comm chest card to execute when GUI calls performEVent()
@@ -33,26 +41,33 @@ public class EventManager {
 		this.gameClient = gameClient;
 		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
 				gameClient.getLoc());
-		createTileEvents();
 		createChanceEvents();
 		createCommChestEvents();
+		
+		shuffleChanceCards();
+		shuffleCommChestCards();
 	}
 
-	public void shuffleChanceCards() {
+	private void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
-		chanceDrawIndex = 0;
+		chanceDrawIndex = 10;
 		if (sendNetMessage)
-			gameClient.updateChanceDrawOrder(chanceEventsShuffled, true);
+			gameClient.updateChanceDrawOrder(chanceEventsShuffled, sendNetMessage);
 	}
 
-	public void shuffleCommChestCards() {
+	private void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
-		commChestDrawIndex = 0;
+		commChestDrawIndex = 10;
 		if (sendNetMessage)
-			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, true);
+			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, sendNetMessage);
 	}
 
-	public int[] shuffleDeck() {
+	private int[] shuffleDeck() {
+		if (!shuffle) {
+			int[] notShuffled = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+					14, 15 };
+			return notShuffled;
+		}
 		int[] newOrder = new int[16];
 		for (int i = 0; i < newOrder.length; i++) {
 			Random r = new Random();
@@ -65,47 +80,36 @@ public class EventManager {
 		return newOrder;
 	}
 
-	public String getEventDescriptionById(int tileId) {
-		return tileEvents[tileId].getEventDescription();
-	}
-
-	public void performEventForTileAtId(int tileId) {
-		tileEvents[tileId].performEvent();
-	}
-
-	public void performEventChance() {
-		currentEvent.performEvent();
-	}
-
-	public String getEventDescriptionChance() {
+	public JPanel getTileEventPanelChance() {
 		drawNextChanceCard();
-		return currentEvent.getEventDescription();
+		return currentEvent.getTileEventPanel();
 	}
 
-	public void performEventCommChest() {
-		currentEvent.performEvent();
-	}
-
-	public String getEventDescriptionCommChest() {
+	public JPanel getTileEventPanelCommChest() {
 		drawNextCommChestCard();
-		return currentEvent.getEventDescription();
+		return currentEvent.getTileEventPanel();
 	}
 
-	public void drawNextChanceCard() {
-		// if there are no more cards left in the deck, then reshuffle
+	public void drawNextChanceCard() {;
+		// if there are "no more cards left" in the deck, then reshuffle
+	System.out.println("START: chanceDrawIndex: "+ chanceDrawIndex);
+	
 		if (chanceDrawIndex > 15)
 			shuffleChanceCards();
-		// remove the last card in the shuffled deck
-		currentEvent = chanceEvents.get(chanceDrawIndex);
+		int cardToDraw = chanceEventsShuffled[chanceDrawIndex];
+		System.out.println("cardToDraw: "+ cardToDraw);
+		currentEvent = chanceEvents.get(cardToDraw);
 		chanceDrawIndex++;
+		System.out.println("END: chanceDrawIndex: "+ chanceDrawIndex);
 	}
 
 	public void drawNextCommChestCard() {
 		// if there are no more cards left in the deck, then reshuffle
 		if (commChestDrawIndex > 15)
 			shuffleCommChestCards();
-		// remove the last card in the shuffled deck
-		currentEvent = commChestEvents.get(commChestDrawIndex);
+		int cardToDraw = commChestEventsShuffled[commChestDrawIndex];
+		currentEvent = commChestEvents.get(cardToDraw);
+		
 		commChestDrawIndex++;
 	}
 
@@ -210,91 +214,6 @@ public class EventManager {
 
 	}
 
-	private void createTileEvents() {
-		// CREATE TERRAIN AND RAILROAD EVENTS
-		int[] terrainAndRRSpaces = { 1, 3, 5, 6, 8, 9, 11, 13, 14, 15, 16, 18,
-				19, 21, 23, 24, 25, 26, 27, 29, 31, 32, 34, 35, 37, 39 };
-		PayRentEvent pre = new PayRentEvent("Pay Rent", gameClient);
-		for (int i = 0; i < terrainAndRRSpaces.length; i++) {
-			int boardPosition = terrainAndRRSpaces[i];
-			tileEvents[boardPosition] = pre;
-		}
-
-		// CREATE GO EVENT
-		String name = res.getString("go-name");
-		name = name.trim();
-		String cardText = res.getString("go-cardText");
-		cardText = cardText.trim();
-		String toParse = res.getString("go-amount");
-		int amount = Integer.parseInt(toParse);
-		BoardEvent te = new GetFixedSumEvent(name, cardText, amount, gameClient);
-		tileEvents[0] = te;
-
-		// CREATE COMMUNITY CHEST DEFAULT EVENT 
-		name = res.getString("commChest-name");
-		name = name.trim();
-//		cardText = res.getString("commChest-cardText");
-//		cardText = cardText.trim();
-		//TODO do we want to have some description of this event?
-		te = new ChanceEvent(name, "", gameClient);
-		tileEvents[2] = te;
-		tileEvents[17] = te;
-		tileEvents[33] = te;
-		
-		// CREATE CHANCE DEFAULT EVENT 
-		name = res.getString("chance-name");
-		name = name.trim();
-//		cardText = res.getString("chance-cardText");
-//		cardText = cardText.trim();
-		//TODO do we want to have some description of this event?
-		te = new ChanceEvent(name, "", gameClient);
-		tileEvents[7] = te;
-		tileEvents[22] = te;
-		tileEvents[36] = te;
-		
-		
-		// CREATE INCOME TAX EVENT
-		name = res.getString("incomeTax-name");
-		name = name.trim();
-		cardText = res.getString("incomeTax-cardText");
-		cardText = cardText.trim();
-		// 4 is the variable sum code, used to tell the program to perform the
-		// FREE PARKING EVENT
-		te = new GetVariableSumEvent(name, cardText, 4, gameClient);
-		tileEvents[4] = te;
-
-		// CREATE FREE PARKING EVENT
-		name = res.getString("freeParking-name");
-		name = name.trim();
-		cardText = res.getString("freeParking-cardText");
-		cardText = cardText.trim();
-		// 20 is the variable sum code, used to tell the program to perform the
-		// FREE PARKING EVENT
-		te = new GetVariableSumEvent(name, cardText, 0, gameClient);
-		tileEvents[20] = te;
-
-		// GO TO JAIL TILE EVENT
-		name = res.getString("goToJail-name");
-		name = name.trim();
-		cardText = res.getString("goToJail-cardText");
-		name = name.trim();
-		toParse = res.getString("goToJail-newPosition");
-		int newPosition = Integer.parseInt(toParse);
-		te = new GoToJailEvent(name, cardText, newPosition, gameClient);
-		tileEvents[30] = te;
-
-		// CREATE LUXURY TAX EVENT
-		name = res.getString("luxuryTax-name");
-		name = name.trim();
-		cardText = res.getString("luxuryTax-cardText");
-		cardText = cardText.trim();
-		toParse = res.getString("luxuryTax-amount");
-		toParse = toParse.trim();
-		amount = Integer.parseInt(toParse);
-		te = new GetFixedSumEvent(name, cardText, amount, gameClient);
-		tileEvents[38] = te;
-	}
-
 	// TODO Methods Needed to Test a Specific Event : COMMENT OUT FOR FINAL
 	// PRODUCT
 	public BoardEvent getCurrentEvent() {
@@ -303,10 +222,6 @@ public class EventManager {
 
 	public void setCurrentEvent(BoardEvent currentEvent) {
 		this.currentEvent = currentEvent;
-	}
-
-	public BoardEvent[] getTileEvents() {
-		return tileEvents;
 	}
 
 	public List<BoardEvent> getChanceEvents() {
@@ -331,7 +246,7 @@ public class EventManager {
 		commChestEventsShuffled = shuffleOrder;
 	}
 
-	public ArrayList<Integer> makeIntegerList() {
+	private ArrayList<Integer> makeIntegerList() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < 16; i++) {
 			list.add(new Integer(i));
@@ -344,30 +259,27 @@ public class EventManager {
 		return chanceEventsShuffled.length;
 	}
 
-	public int getCommChestEventsShuffled() {
+	public int getCommChestEventsShuffledSize() {
 		return commChestEventsShuffled.length;
 	}
 
 	/**
 	 * used for testing. If it is set to false, no net messages will be sent
 	 * 
+	 * 
 	 * @param sendNetMessage
 	 *            the truth value to set to
 	 */
-	public void setSendNetMessage(boolean sendNetMessage) {
-		this.sendNetMessage = sendNetMessage;
-		
-//		for (BoardEvent be : tileEvents){
-//			AbstractTileEvent ate = (AbstractTileEvent)be;
-//			ate.setSendNetMessage(sendNetMessage);
-//		}
-		for (BoardEvent be : chanceEvents){
-			AbstractTileEvent ate = (AbstractTileEvent)be;
-			ate.setSendNetMessage(sendNetMessage);
+	public void setupForTesting() {
+		this.sendNetMessage = false;
+
+		for (BoardEvent be : chanceEvents) {
+			AbstractTileEvent ate = (AbstractTileEvent) be;
+			ate.setSendNetMessage(false);
 		}
-		for (BoardEvent be : commChestEvents){
-			AbstractTileEvent ate = (AbstractTileEvent)be;
-			ate.setSendNetMessage(sendNetMessage);
+		for (BoardEvent be : commChestEvents) {
+			AbstractTileEvent ate = (AbstractTileEvent) be;
+			ate.setSendNetMessage(false);
 		}
 	}
 }

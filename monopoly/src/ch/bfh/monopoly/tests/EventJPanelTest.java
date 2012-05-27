@@ -1,20 +1,9 @@
 package ch.bfh.monopoly.tests;
 
-import java.awt.HeadlessException;
+
 import java.util.Locale;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.Color;
-import java.util.Locale;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
-import org.junit.Before;
-
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;

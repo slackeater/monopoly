@@ -1047,13 +1047,18 @@ public class GameControllerTests {
 	 */
 	@Test
 	public void payFeeCreditsFeeToFreeParking() {
-		String playerName = "Justin";
-		Player plyr = board.getPlayerByName(playerName);
-		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		String playerName1 = "Justin";
+		Player plyr1 = board.getPlayerByName(playerName1);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
 		int fee = 100;
-		int freeParkingAmount = gameClient.getFreeParking();
 		gameClient.payFee(fee, sendNetMessage);
-		assertTrue(gameClient.getFreeParking() == freeParkingAmount + fee);
+		String playerName2 = "Giuseppe";
+		Player plyr2 = board.getPlayerByName(playerName2);
+		gameClient.setCurrentPlayer(plyr2, sendNetMessage);
+		int plyr2accountBefore = plyr2.getAccount();
+		gameClient.freeParking(sendNetMessage);
+		int plyr2accountAfter = plyr2.getAccount();
+		assertTrue(plyr2accountAfter == plyr2accountBefore + fee);
 	}
 
 	/**

@@ -119,6 +119,10 @@ public class ClientHandler implements IoHandler {
 			break;
 		case PAY_UTILITY_FEE:
 			gameClient.payUtilityFee(n.getInt(), false);
+			break;
+		case FREE_PARKING:
+			gameClient.freeParking(false);
+			break;
 		case TURN_TOKEN:
 			String username = n.getText();
 			gameClient.updateTurnTokens(username);
