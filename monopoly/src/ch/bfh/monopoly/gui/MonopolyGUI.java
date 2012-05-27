@@ -92,7 +92,7 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	
 	/**
-	 * Construct a MonopolyGUI
+	 * Construct a MonopolyGUI 
 	 * @param bc the board controller used to query the board
 	 */
 	public MonopolyGUI(BoardController bc, GameController gc){
