@@ -14,12 +14,13 @@ public class TileCreator {
 	private Locale loc;
 	private EventManager em;
 	GameClient gameClient;
-
-	public TileCreator(GameClient gameClient) {
+	boolean testOff;
+	public TileCreator(GameClient gameClient, boolean testOff) {
+		this.testOff= testOff;
 		// create tiles, cards, and events
 		this.loc = gameClient.getLoc();
 		tiles = new Tile[40];
-		em = new EventManager(gameClient);
+		em = new EventManager(gameClient, testOff);
 		createTiles(gameClient);
 		this.gameClient = gameClient;
 	}
@@ -29,6 +30,7 @@ public class TileCreator {
 	}
 
 	public void createTiles(GameClient gameClient) {
+
 		Tile t = null;
 		ResourceBundle rbTile = ResourceBundle.getBundle(
 				"ch.bfh.monopoly.resources.tile", loc);
