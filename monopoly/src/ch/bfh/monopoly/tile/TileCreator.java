@@ -16,7 +16,7 @@ public class TileCreator {
 	GameClient gameClient;
 	boolean testOff;
 	public TileCreator(GameClient gameClient, boolean testOff) {
-		this.testOff= testOff;
+		this.testOff=testOff;
 		// create tiles, cards, and events
 		this.loc = gameClient.getLoc();
 		tiles = new Tile[40];
@@ -30,7 +30,6 @@ public class TileCreator {
 	}
 
 	public void createTiles(GameClient gameClient) {
-
 		Tile t = null;
 		ResourceBundle rbTile = ResourceBundle.getBundle(
 				"ch.bfh.monopoly.resources.tile", loc);
