@@ -7,6 +7,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
@@ -22,7 +24,7 @@ public class Board {
 	private int availableHotels = 12;
 	private TileSubject[] tileSubjects;
 	private Token[] tokens = new Token[8];
-	private int freeParking;
+	private int freeParking = 500;
 	private PlayerSubject playerSubject;
 	private final int goMoney;
 
@@ -94,6 +96,7 @@ public class Board {
 		public ConcreteSubject(int tileId) {
 			this.tileListenerId = tileId;
 		}
+		
 
 		ArrayList<TileListener> listeners = new ArrayList<TileListener>();
 
@@ -207,6 +210,7 @@ public class Board {
 	 */
 	public void passGo(Player currentPlayer) {
 		currentPlayer.depositMoney(goMoney);
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -686,7 +690,18 @@ public class Board {
 	public void payFee(String playerName, int fee) throws TransactionException {
 		Player plyr = getPlayerByName(playerName);
 		plyr.withdawMoney(fee);
-		setFreeParking(freeParking + fee);
+		freeParking += fee;
+	}
+	
+	/**
+	 * the current player gets all the money in the free parking account
+	 * @return
+	 */
+	public void freeParking(String playerName) {
+		Player plyr = getPlayerByName(playerName);
+		plyr.depositMoney(freeParking);
+		freeParking=0;
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -816,32 +831,41 @@ public class Board {
 	/**
 	 * advance the current player a given number n spaces forward
 	 */
-	public void advanceCurrentPlayerNSpaces(String playerName, int n) {
+	public void advancePlayerNSpaces(String playerName, int n) {
 		Player plyr = getPlayerByName(playerName);
+		
+		int previousPosition = plyr.getPosition();
+		
 		int currentPos = plyr.getPosition();
 		plyr.setPosition((currentPos + n) % 40);
 		plyr.setRollValue(n);
+		
+		int newPosition = plyr.getPosition();
+
+		// if passes go
+		if (newPosition < previousPosition)
+			passGo(plyr);
+		
+		
 		playerSubject.notifyListeners();
 		plyr.resetRollValue();
 	}
 
-	/**
-	 * advance current player to tile n
-	 */
-	public void advancePlayerToTile(String playerName, int tileId) {
-		Player plyr = getPlayerByName(playerName);
-		plyr.setPosition(tileId);
-		playerSubject.notifyListeners();
-	}
+//	/**
+//	 * advance current player to tile n
+//	 */
+//	public void advancePlayerToTile(String playerName, int tileId) {
+//		Player plyr = getPlayerByName(playerName);
+//		plyr.setPosition(tileId);
+//		playerSubject.notifyListeners();
+//	}
 
 	/**
 	 * sends a given player to jail
 	 * @param the name of the player to send to jail
 	 */
-	public void goToJail(String playerName) {
+	public void setPlayerJailStatus(String playerName) {
 		Player plyr = getPlayerByName(playerName);
-		int jail = 10;
-		advancePlayerToTile(playerName, jail);
 		plyr.setInJail(true);
 		playerSubject.notifyListeners();
 	}
@@ -921,25 +945,21 @@ public class Board {
 		return tileInfo;
 	}
 
-	public int getFreeParking() {
+
+	public int getFreeParkingAccount(){
 		return freeParking;
 	}
-
-	public void setFreeParking(int amount) {
-		this.freeParking = amount;
-	}
-
+	
 	public int getAvailableHouses() {
 		return availableHouses;
+	}
+	
+	public int getAvailableHotels() {
+		return availableHotels;
 	}
 
 	public List<Player> getPlayers() {
 		return players;
-	}
-
-	public int getAvailableHotels() {
-		return availableHotels;
-
 	}
 
 	public void initGUI() {
