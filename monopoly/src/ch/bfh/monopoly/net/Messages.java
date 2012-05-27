@@ -40,6 +40,7 @@ public enum Messages {
 	
 	PAY_RENT(500),
 	TURN_TOKEN(510),
+	START_TURN_PANEL(525),
 	END_TURN(520),
 	PAY_FEE(530),
 	PAY_UTILITY_FEE(535),

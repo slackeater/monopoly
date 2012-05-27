@@ -1,8 +1,13 @@
 package ch.bfh.monopoly.common;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.net.Messages;
@@ -26,7 +31,7 @@ public class GameClient {
 	private ClientNetworkController nc;
 	private WindowSubject ws;
 	private boolean testOff;
-
+	private Dice dice;
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
 	 * that must be displayer in the chat message window and in the game history
@@ -56,12 +61,14 @@ public class GameClient {
 		}
 	}
 
-	public GameClient(boolean testOff){
-		this.testOff=testOff;
+	public GameClient(boolean testOff) {
+		this.testOff = testOff;
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
-		
+		dice = new Dice(6,6,this, testOff);
+
 	}
+
 	public GameClient() {
 		this(true);
 
@@ -77,7 +84,7 @@ public class GameClient {
 	public void createBoard(Locale loc, List<String> names,
 			String localPlayerName) {
 		this.loc = loc;
-		this.board = new Board(this,testOff);
+		this.board = new Board(this, testOff);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
 	}
@@ -121,6 +128,9 @@ public class GameClient {
 
 	public Player getCurrentPlayer() {
 		return currentPlayer;
+	}
+	public Dice getDice(){
+		return this.dice;
 	}
 
 	/**
@@ -195,7 +205,7 @@ public class GameClient {
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpaces(playerName, n);
-		
+
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
@@ -203,16 +213,16 @@ public class GameClient {
 			nc.sendMessage(netMsg);
 		}
 	}
-	
+
 	/**
 	 * advance current player to tile n
 	 */
 	public void advancePlayerToTile(int tileId, boolean sendNetMessage) {
 		int currentPosition = currentPlayer.getPosition();
-		int	rollEquivalent = tileId - currentPosition;
-		if (rollEquivalent<0)
+		int rollEquivalent = tileId - currentPosition;
+		if (rollEquivalent < 0)
 			rollEquivalent += 40;
-		advancePlayerNSpaces(tileId,sendNetMessage);
+		advancePlayerNSpaces(tileId, sendNetMessage);
 	}
 
 	/**
@@ -501,6 +511,27 @@ public class GameClient {
 	}
 
 	/**
+	 * Get the JPanel to start the turn
+	 * 
+	 * @return the JPanel that the GUI will display
+	 */
+	public JPanel getStartTurnPanel(boolean sendNetMessage) {
+		JPanel jp;
+		if (currentPlayer.isInJail())
+			jp =dice.getJailStartTurnPanel();
+		else 
+			jp = dice.getNormalStartTurnPanel();
+		if (sendNetMessage) {
+			NetMessage netMsg = new NetMessage(Messages.START_TURN_PANEL);
+			sendNetMessageToGUI(netMsg);
+		}
+		return jp;
+	}
+	
+	
+	
+	
+	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
 	 * 
@@ -518,6 +549,7 @@ public class GameClient {
 		return jpanel;
 	}
 
+	// TODO This method might never be used?
 	// /**
 	// * checks if a given player is the owner of a given tile
 	// *
@@ -689,10 +721,9 @@ public class GameClient {
 		}
 	}
 
-
-
 	/**
 	 * the current player gets all the money in the free parking account
+	 * 
 	 * @return
 	 */
 	public void freeParking(boolean sendNetMessage) {
@@ -870,13 +901,13 @@ public class GameClient {
 	}
 
 	/**
-	 * return the amount of money that is in free parking
-	 * used to display the amount to the player when the event occurs
+	 * return the amount of money that is in free parking used to display the
+	 * amount to the player when the event occurs
 	 */
-	public int getFreeParkingAccount(){
+	public int getFreeParkingAccount() {
 		return board.getFreeParkingAccount();
 	}
-	
+
 	/**
 	 * Get the number of available houses used by events to calculate the price
 	 * a player must pay for REPAIRS EVENT

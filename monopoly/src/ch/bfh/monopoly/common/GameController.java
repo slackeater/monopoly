@@ -13,11 +13,19 @@ public class GameController {
 	}
 
 	/**
+	 * Get the JPanel to start the turn
+	 * 
+	 * @return the JPanel that the GUI will display
+	 */
+	public JPanel getStartTurnPanel() {
+		return gameClient.getStartTurnPanel(true);
+	}
+	
+
+	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
-	 * 
-	 * @param the
-	 *            id of the tile of which to get the JPanel
+
 	 * @return the JPanel that the GUI will display
 	 */
 	public JPanel getTileEventPanel() {
