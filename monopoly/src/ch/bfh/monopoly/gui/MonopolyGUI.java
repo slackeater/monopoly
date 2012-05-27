@@ -64,7 +64,7 @@ public class MonopolyGUI extends JFrame {
 	/**
 	 * Graphical elements
 	 */
-	private JTextArea eventTextArea,chat, history;
+	private JTextArea eventTextArea,chat;
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
@@ -91,6 +91,11 @@ public class MonopolyGUI extends JFrame {
 	private List<PlayerStateEvent> pse;
 	private boolean tokenPlaced = false;
 	
+	private enum Direction{
+		FORWARDS,
+		BACKWARDS;
+	}
+	
 	/**
 	 * Construct a MonopolyGUI 
 	 * @param bc the board controller used to query the board
@@ -116,7 +121,6 @@ public class MonopolyGUI extends JFrame {
 		wrapperInit();
 
 		pack();
-		
 	}
 
 	
@@ -143,6 +147,116 @@ public class MonopolyGUI extends JFrame {
         }
 	}
 
+	/**
+	 * Move the token
+	 * @param diceButton
+	 * 			the JButton to enable/disable when we throw the dice
+	 * 			set this value to null if you don't need the button but only the movement
+	 * 			this because we don't know when the timer will stops outside this method
+	 * @param t
+	 * 			the Token to move on the board
+	 * @param val
+	 * 			the value of the throw
+	 * @return Action
+	 * 				the abstract action used to move the token
+	 */
+	private Action moveToken(final JButton diceButton, final Token t, final int val, final int startPosition, final Direction dir){
+		Action moveToken = new AbstractAction() {
+
+			private static final long serialVersionUID = 9219941791909195711L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {		
+				if(diceButton != null){
+					throwDice.setEnabled(false);
+					trade.setEnabled(false);
+					useCard.setEnabled(false);
+				}
+
+				System.out.println("==== MOVE TOKEN VALUES ====");
+
+				//move the token for "step" times
+				if(step < val){
+					
+					int numberTile = 0;
+								
+					if(dir == Direction.FORWARDS)
+						numberTile = startPosition+step;
+					else if(dir == Direction.BACKWARDS)
+						numberTile = startPosition-step;
+						
+					//removing the token at the previous tile
+					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+					tiles.get((numberTile+40)%TILE_NUMBER).removeToken(t);
+					
+					step++;
+				
+					//compute the new position where to add the token, step has been incremented
+					if(dir == Direction.FORWARDS)
+						numberTile = startPosition+step;
+					else if(dir == Direction.BACKWARDS)
+						numberTile = startPosition-step;
+
+					//add the token to the tile we are on
+					tiles.get((numberTile+40)%TILE_NUMBER).addToken(t);
+					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+
+					repaint();
+				}
+				else if(step == val){
+					((Timer)e.getSource()).stop();
+
+					//position 30 is go to jail
+					if((startPosition+val) == 30){
+						//removing the token at go to jail
+						tiles.get(30).removeToken(t);
+						
+						//add token to jail 
+						tiles.get(10).addToken(t);	
+						
+						repaint();
+					}
+					
+					//show tile's information in the card box
+					tiles.get((startPosition+val+40)%TILE_NUMBER).showCard();
+					
+					//TODO REMOVE ONLY FOR TEST
+					if(dir == Direction.FORWARDS)
+						System.out.println("LANDED ON TILE : " + (startPosition+val+40)%TILE_NUMBER);
+					else if(dir == Direction.BACKWARDS)
+						System.out.println("LANDED ON TILE : " + (startPosition-val+40)%TILE_NUMBER);
+
+					step = 0;	
+
+					if(diceButton != null){
+						//TODO only for test diceButton
+						//diceButton.setEnabled(true);
+						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
+						
+							
+						//TODO decomment to disable tabs
+//						for(int j = 0 ; j < tabPane.getTabCount()-1 ; j++){
+//							tabPane.setEnabledAt(j, false);
+//						}
+//						
+//						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
+//								
+						trade.setEnabled(true);
+						useCard.setEnabled(true);
+						endTurn.setEnabled(true);
+					}
+					
+					JPanel eventPanel = gc.getTileEventPanel();
+					tabPane.addTab("EVENT!",  eventPanel);	
+				}
+
+			}
+		};
+
+		return moveToken;
+
+	}
+	
 
 	/**
 	 * Initialize the list of tiles, tokens and player listener
@@ -195,13 +309,13 @@ public class MonopolyGUI extends JFrame {
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, Direction.BACKWARDS));
 
 
 								}
 								else{
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition, Direction.BACKWARDS));
 								}
 
 								timerAnimation.start();
@@ -327,7 +441,6 @@ public class MonopolyGUI extends JFrame {
 
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 			
-
 			info.add(plInfo);
 		}
 
@@ -353,17 +466,6 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JTabbedPane historyChatPanel(){
 		JTabbedPane pane = new JTabbedPane();
-
-		//create history text area
-		history = new JTextArea(5,20);
-		history.setWrapStyleWord(true);
-		history.setLineWrap(true);
-		history.setEditable(false);
-
-		//add to the history text area a scroll pane
-		JScrollPane historyScroll = new JScrollPane(history);
-		historyScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		historyScroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		//create chat text area
 		chat = new JTextArea(7,20);
@@ -434,7 +536,6 @@ public class MonopolyGUI extends JFrame {
 
 		//create the two tab
 		pane.addTab(res.getString("tab-chat"), chatArea);
-		pane.addTab(res.getString("tab-history"), historyScroll);
 		return pane;
 	}
 
@@ -461,97 +562,11 @@ public class MonopolyGUI extends JFrame {
 		return board;
 	}
 
-	/**
-	 * Move the token
-	 * @param diceButton
-	 * 			the JButton to enable/disable when we throw the dice
-	 * 			set this value to null if you don't need the button but only the movement
-	 * 			this because we don't know when the timer will stops outside this method
-	 * @param t
-	 * 			the Token to move on the board
-	 * @param val
-	 * 			the value of the throw
-	 * @return Action
-	 * 				the abstract action used to move the token
-	 */
-	private Action moveToken(final JButton diceButton, final Token t, final int val, final int startPosition){
-		Action moveToken = new AbstractAction() {
-
-			private static final long serialVersionUID = 9219941791909195711L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {		
-				if(diceButton != null){
-					throwDice.setEnabled(false);
-					trade.setEnabled(false);
-					useCard.setEnabled(false);
-				}
-
-				System.out.println("==== MOVE TOKEN VALUES ====");
-
-				//move the token for "step" times
-				if(step < val){
-					step++;
-
-					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (startPosition+step-1)%TILE_NUMBER);
-					System.out.println("GET TOKEN TO ADD ON POSITION: " + (startPosition+step)%TILE_NUMBER);
-
-					//removing the token at the previous tile
-					tiles.get((startPosition+step-1)%TILE_NUMBER).removeToken(t);
-
-					//add the token to the tile we are on
-					tiles.get((startPosition+step)%TILE_NUMBER).addToken(t);
-
-					repaint();
-
-				}
-				else if(step == val){
-					((Timer)e.getSource()).stop();
-
-					//position 30 is go to jail
-					if((startPosition+val) == 30){
-						//removing the token at go to jail
-						tiles.get(30).removeToken(t);
-						
-						//add token to jail 
-						tiles.get(10).addToken(t);	
-						
-						repaint();
-						
-					}
-					
-					//show tile's information in the card box
-					tiles.get((startPosition+val)%TILE_NUMBER).showCard();
-					System.out.println("LANDED ON TILE: " + (startPosition+val)%TILE_NUMBER);
-
-					step = 0;	
-
-					if(diceButton != null){
-						//TODO only for test diceButton
-						//diceButton.setEnabled(true);
-						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
-						trade.setEnabled(true);
-						useCard.setEnabled(true);
-						endTurn.setEnabled(true);
-					}
-
-					JPanel eventPanel = gc.getTileEventPanel();
-					tabPane.addTab("EVENT!",  eventPanel);
-				}
-
-			}
-		};
-
-		return moveToken;
-
-	}
+	
 
 	private void initializeButtons(){
 		this.useCard = new JButton(res.getString("button-jailcard"));
-		//		useCard.setEnabled(false);
-
 		this.throwDice = new JButton(res.getString("button-throwdice"));
-		//		throwDice.setEnabled(false);
 
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
@@ -567,6 +582,7 @@ public class MonopolyGUI extends JFrame {
 
 				//TODO only for test
 				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+				tabPane.addTab("Kick", kickPlayer());
 
 				eventTextArea.append(res.getString("text-throwindice") + "\n");
 				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
@@ -715,6 +731,47 @@ public class MonopolyGUI extends JFrame {
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return scrollInput;
+	}
+	
+	//TODO ONLY FOR TEST SHOULD ME MOVED AWAY
+	private JPanel kickPlayer(){
+		JPanel kick = new JPanel();
+		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
+	
+		JLabel title = new JLabel("Kick a player by selecting its user name");
+		
+		JPanel userSelContainer = new JPanel();
+		userSelContainer.setLayout(new BoxLayout(userSelContainer, BoxLayout.LINE_AXIS));
+		
+		JLabel sel = new JLabel("Select a user");
+		JComboBox username = new JComboBox();
+		
+		userSelContainer.add(sel);
+		userSelContainer.add(username);
+
+		//build the array with the user name
+		for(int i = 0 ; i < playerNumber ; i++){
+			username.addItem(pse.get(i).getName());
+		}
+		
+		JPanel btnCtr = new JPanel();
+		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
+		
+		JButton sendKick = new JButton("Send kick");
+				
+		btnCtr.add(Box.createHorizontalGlue());
+		btnCtr.add(sendKick);
+		
+		kick.add(title);
+		kick.add(Box.createVerticalGlue());
+		kick.add(userSelContainer);
+		kick.add(Box.createVerticalGlue());
+		kick.add(Box.createVerticalGlue());
+		kick.add(btnCtr);
+
+		
+		
+		return kick;
 	}
 	
 }
