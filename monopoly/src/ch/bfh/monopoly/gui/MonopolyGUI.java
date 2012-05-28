@@ -87,7 +87,6 @@ public class MonopolyGUI extends JFrame {
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
-	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
@@ -573,13 +572,6 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				int localPlayerthrowValue = dice.throwDice();
-				//TODO remove this 
-				//				int localPlayerthrowValue = 10;		
-
-				//move the player of throwValue positions, and communicate to the other player the new position
-				//				gc.advancePlayerNSpaces(localPlayerthrowValue);
-
 				throwDice.setEnabled(false);
 				beginTurnClicked = true;
 
@@ -590,9 +582,6 @@ public class MonopolyGUI extends JFrame {
 				//TODO only for test
 				//				tabPane.addTab(res.getString("tab-trade"), tradeTab());
 				//				tabPane.addTab("Kick", kickPlayer());
-
-				//				eventTextArea.append(res.getString("text-throwindice") + "\n");
-				//				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
 
 
 			}
