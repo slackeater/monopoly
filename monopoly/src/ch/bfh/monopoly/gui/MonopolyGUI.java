@@ -246,8 +246,7 @@ public class MonopolyGUI extends JFrame {
 						endTurn.setEnabled(true);
 					}
 					
-					JPanel eventPanel = gc.getTileEventPanel();
-					tabPane.addTab("EVENT!",  eventPanel);	
+					tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
 				}
 
 			}
@@ -309,13 +308,13 @@ public class MonopolyGUI extends JFrame {
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, Direction.BACKWARDS));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, Direction.FORWARDS));
 
 
 								}
 								else{
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition, Direction.BACKWARDS));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition, Direction.FORWARDS));
 								}
 
 								timerAnimation.start();
@@ -581,8 +580,8 @@ public class MonopolyGUI extends JFrame {
 				gc.advancePlayerNSpaces(localPlayerthrowValue);
 
 				//TODO only for test
-				tabPane.addTab(res.getString("tab-trade"), tradeTab());
-				tabPane.addTab("Kick", kickPlayer());
+//				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+//				tabPane.addTab("Kick", kickPlayer());
 
 				eventTextArea.append(res.getString("text-throwindice") + "\n");
 				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
@@ -769,9 +768,6 @@ public class MonopolyGUI extends JFrame {
 		kick.add(Box.createVerticalGlue());
 		kick.add(btnCtr);
 
-		
-		
 		return kick;
 	}
-	
 }
