@@ -18,7 +18,10 @@ public class Dice {
 	JButton buttonLeft = new JButton();
 	JLabel descriptionLabel = new JLabel();
 	GameClient gameClient;
+	ActionListener al;
 	boolean testOff;
+	int attemptedRolls=0;
+	
 	/**
 	 * Construct a dice object
 	 * 
@@ -90,7 +93,7 @@ public class Dice {
 				normalRollSecondStep();
 			}
 		});
-		buttonLeft.setText("Roll");
+		buttonRight.setText("Roll");
 		descriptionLabel.setText("Click Roll to roll the dice to your turn. \n");
 
 		jp.add(descriptionLabel);
@@ -127,16 +130,20 @@ public class Dice {
 	
 	
 	public JPanel getJailStartTurnPanel() {
-
-		buttonRight.addActionListener(new ActionListener() {
+		attemptedRolls=0;
+		al=new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				normalRollSecondStep();
+				attemptedRolls++;
+				jailRollSecondStep();
+				System.out.println("attempted Rolls: "+attemptedRolls);
 			}
-		});
-		buttonLeft.setText("Roll");
-		descriptionLabel.setText("You are in Jail, you have 3 options to get out: \n Roll\n Pay\n Use a Jail Card");
+		};
+		
+		buttonRight.addActionListener(al);
+		buttonRight.setText("Roll");
+		descriptionLabel.setText("You are in Jail, you have 3 options to get out:");
 
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
@@ -145,28 +152,38 @@ public class Dice {
 	}
 
 	public void jailRollSecondStep() {
-		jp.remove(buttonRight);
+		buttonRight.setText("ok");
 		final int roll = throwDice();
-		buttonRight = new JButton("Continue");
-		buttonRight.addActionListener(new ActionListener() {
-		
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int prevPos = gameClient.getCurrentPlayer().getPosition();
-				gameClient.advancePlayerNSpaces(roll, testOff);
-//				gameClient.sendTransactionSuccesToGUI(true);
-				int curPos = gameClient.getCurrentPlayer().getPosition();
-				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
-			}
-		});
 		if (isDoubles()){
-			// change description
-			// event get out of jail
+			descriptionLabel.setText("You rolled a " + getDiceValues() + "you are out of jail!");
+			buttonRight.removeActionListener(al);
+			al=new ActionListener() {
 			
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
+					gameClient.getOutOfJail(testOff);
+					gameClient.sendTransactionSuccesToGUI(testOff);
+					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
+					buttonRight.removeActionListener(al);
+					jp=gameClient.getStartTurnPanel(testOff);
+				}
+			};
+			buttonRight.addActionListener(al);
 		}
-			
-		descriptionLabel.setText("You rolled a " + getDiceValues() + ", advance " + roll +" spaces");
-		jp.add(buttonRight);
+		else {
+			if (attemptedRolls>2)
+				rolledUnsuccessfully();
+			descriptionLabel.setText("You rolled a " + getDiceValues() + ", roll again or choose another option");
+
+		}	
+	}
+	
+	public void rolledUnsuccessfully(){
+		jp.remove(buttonRight);
+		jp.add(new JLabel("rolledUnsuccessfully"));
+		descriptionLabel.setText("You rolled a " + getDiceValues() + " " + (3-attemptedRolls) +"tries remaining.  Sorry, you must stay in jail another round");
+		gameClient.sendTransactionSuccesToGUI(testOff);
 	}
 
 }

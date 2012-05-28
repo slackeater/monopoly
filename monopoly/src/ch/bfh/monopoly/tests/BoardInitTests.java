@@ -51,7 +51,6 @@ public class BoardInitTests {
 	 */
 	@Test
 	public void boardTilesHaveNames(){
-		Board board= new Board(gameClient);
 		Tile t = board.getTileById(1);
 		assertTrue((t.getName() != null));
 	}
@@ -61,7 +60,6 @@ public class BoardInitTests {
 	 */
 	@Test
 	public void boardTilesHaveXYCoord(){
-		Board board= new Board(gameClient);
 		for (int i = 0; i<TILES_LENGTH; i++){
 			Tile t = board.getTileById(i);
 			if (t instanceof Terrain){
@@ -75,7 +73,6 @@ public class BoardInitTests {
 	 */
 	@Test
 	public void boardControllerGetsTileInformation(){
-		Board board= new Board(gameClient);
 		BoardController bc = new BoardController(board);
 		TileInfo ti = bc.getTileInfoById(1);
 		assertTrue(ti.getName().equals("Mediterranean Avenue"));
@@ -89,7 +86,6 @@ public class BoardInitTests {
 	 */
 	@Test
 	public void chanceCardsCreated() {
-		Board board= new Board(gameClient);
 		assertTrue(((Chance)board.getTileById(7)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileById(22)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileById(36)).getName().equals("Chance"));
@@ -98,7 +94,6 @@ public class BoardInitTests {
 	
 	@Test
 	public void printNameOfTile(){
-		Board board= new Board(gameClient);
 //		for (int i = 0; i < board.tiles.length; i++) {
 //			System.out.println("Tile" + i + ":  " + board.tiles[i].getName()
 //					+ "  :  " + board.tiles[i].getId() + " xyCoord: "
@@ -115,7 +110,6 @@ public class BoardInitTests {
 	@Test
 	public void tilesCreatedWithCorrectInfo() {
 
-		Board board= new Board(gameClient);
 		int tileNumber;
 		//Tests some Terrains
 		//System.out.println(sm.tiles[1]);

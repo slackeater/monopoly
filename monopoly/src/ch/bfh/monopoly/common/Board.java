@@ -868,9 +868,9 @@ public class Board {
 	 * sends a given player to jail
 	 * @param the name of the player to send to jail
 	 */
-	public void setPlayerJailStatus(String playerName) {
+	public void setPlayerJailStatus(String playerName, boolean newStatus) {
 		Player plyr = getPlayerByName(playerName);
-		plyr.setInJail(true);
+		plyr.setInJail(newStatus);
 		playerSubject.notifyListeners();
 	}
 

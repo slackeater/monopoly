@@ -14,7 +14,7 @@ public class Jail extends AbstractTile {
 
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
-			"ch.bfh.monopoly.resources.events", gameClient.getLoc());;
+			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
 
 	public Jail(String name, int coordX, int coordY, int tileId,
