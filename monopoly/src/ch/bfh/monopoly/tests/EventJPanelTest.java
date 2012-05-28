@@ -20,7 +20,7 @@ public class EventJPanelTest extends JFrame {
 	GameController gc;
 	JPanel jpanel;
 	Locale loc;
-	TestInstanceGenerator tig = new TestInstanceGenerator("en");
+	TestInstanceGenerator tig = new TestInstanceGenerator("fr");
 
 	public EventJPanelTest() {
 		gameClient = tig.getGameClient();
@@ -40,7 +40,7 @@ public class EventJPanelTest extends JFrame {
 //		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 		
 		// true for in jail
-		testRollStartPanel(false);
+		testRollStartPanel(true);
 		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 

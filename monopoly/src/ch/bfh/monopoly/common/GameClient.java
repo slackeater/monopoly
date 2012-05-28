@@ -65,7 +65,7 @@ public class GameClient {
 		this.testOff = testOff;
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
-		dice = new Dice(6,6,this, testOff);
+
 
 	}
 
@@ -87,6 +87,7 @@ public class GameClient {
 		this.board = new Board(this, testOff);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
+		dice = new Dice(6,6,this, testOff);
 	}
 
 	/**
