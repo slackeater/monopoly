@@ -29,7 +29,7 @@ public class MovementEvent extends AbstractTileEvent {
 			gameClient.goToJail(false);
 			}
 		else {
-			gameClient.advancePlayerNSpaces(newPosition, sendNetMessage)
+			gameClient.advancePlayerToTile(newPosition, sendNetMessage);
 		}
 		
 	}

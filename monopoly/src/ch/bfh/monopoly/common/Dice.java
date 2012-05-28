@@ -94,7 +94,7 @@ public class Dice {
 			}
 		});
 		buttonRight.setText("Roll");
-		descriptionLabel.setText("Click Roll to roll the dice to your turn. \n");
+		descriptionLabel.setText("Click Roll to start your turn. \n");
 
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
