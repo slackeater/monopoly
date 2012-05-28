@@ -236,13 +236,8 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
 						
 							
-						//TODO decomment to disable tabs
-//						for(int j = 0 ; j < tabPane.getTabCount()-1 ; j++){
-//							tabPane.setEnabledAt(j, false);
-//						}
-//						
-//						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
-//								
+						
+								
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
@@ -250,7 +245,16 @@ public class MonopolyGUI extends JFrame {
 					
 					tabPane.add("EVENT!", gc.getTileEventPanel());
 					
+					//TODO decomment to disable tabs
+					for(int j = 0 ; j < tabPane.getTabCount()-1 ; j++){
+						tabPane.setEnabledAt(j, false);
+					}
 					
+					tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
+					
+					
+					tabPane.setSelectedIndex(tabPane.getTabCount()-1);
+				
 				}
 
 			}
@@ -584,6 +588,11 @@ public class MonopolyGUI extends JFrame {
 //				gc.advancePlayerNSpaces(localPlayerthrowValue);
 				
 				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
+				
+				tabPane.setEnabledAt(0, false);
+		
+				tabPane.setEnabledAt(1, true);
+				tabPane.setSelectedIndex(1);
 
 				//TODO only for test
 //				tabPane.addTab(res.getString("tab-trade"), tradeTab());
