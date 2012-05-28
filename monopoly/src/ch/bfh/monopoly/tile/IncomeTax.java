@@ -16,11 +16,12 @@ public class IncomeTax extends AbstractTile {
 	ResourceBundle rb = ResourceBundle.getBundle(
 			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
-
-	public IncomeTax(String name, int coordX, int coordY, int tileId,
+	int fee;
+	public IncomeTax(String name, int fee, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("freeParking-cardText");
+		this.fee=fee;
 	}
 
 	/**
@@ -39,7 +40,7 @@ public class IncomeTax extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//pay 200
+				gameClient.payFee(4000, sendNetMessage);
 			}
 		});
 		buttonLeft.setText("pay1");

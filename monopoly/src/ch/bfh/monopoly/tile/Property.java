@@ -27,35 +27,8 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected String buttonTextPay;
 	protected String buttonTextContinue;
 	private String group;
-
-
-	private ActionListener actionBuy = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			gameClient.buyCurrentPropertyForPlayer("currentPlayer",
-					sendNetMessage);
-			System.out.println(gameClient.getCurrentPlayer().getAccount());
-			System.out.println(gameClient.getCurrentPlayer().ownsProperty(
-					(Tile) Property.this));
-			buttonRight.removeAll();
-			buttonRight.setText(buttonTextContinue);
-			buttonRight.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					jpanel.removeAll();
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					System.out
-							.println("The GUI should receive a message to hide this JPanel");
-				}
-			});
-//			buttonRight.setEnabled(false);
-			eventInfoLabel.setText(msgYouBought +" "+ name);
-			
-
-		}
-	};
+	private ActionListener al;
+	
 
 	public Property(String name, int price, String group, int mortgageValue,
 			int coordX, int coordY, int tileId, EventManager em, Player bank,
@@ -80,7 +53,39 @@ public abstract class Property extends AbstractTile implements IProperty {
 		eventInfoLabel.setText(name +" "+msgIsNotOwned);
 		jpanel.add(eventInfoLabel);
 		buttonRight = new JButton(buttonTextBuy);
-		buttonRight.addActionListener(actionBuy);
+		
+		
+		al =new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				gameClient.buyCurrentPropertyForPlayer("currentPlayer",
+						sendNetMessage);
+				System.out.println(gameClient.getCurrentPlayer().getAccount());
+				System.out.println(gameClient.getCurrentPlayer().ownsProperty(
+						(Tile) Property.this));
+				buttonRight.removeActionListener(al);
+				buttonRight.setText(buttonTextContinue);
+				al =new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						jpanel.removeAll();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+						System.out
+								.println("The GUI should receive a message to hide this JPanel");
+					}
+				};
+				buttonRight.addActionListener(al);
+//				buttonRight.setEnabled(false);
+				eventInfoLabel.setText(msgYouBought +" "+ name);
+				
+
+			}
+		};
+		
+		
+		buttonRight.addActionListener(al);
 		jpanel.add(buttonRight);
 		return jpanel;
 	}
