@@ -98,7 +98,7 @@ public class TileCreator {
 			else if (i==0)
 				t = new Go(name, coordX, coordY, i, em, gameClient);
 			else if (i==4)
-				t = new IncomeTax(name, coordX, coordY, i, em, gameClient);
+				t = new IncomeTax(name, price, coordX, coordY, i, em, gameClient);
 			else if (i==10)
 				t = new Jail(name, coordX, coordY, i, em, gameClient);
 			else if (i==20)
@@ -106,7 +106,7 @@ public class TileCreator {
 			else if (i==30)
 				t = new GoToJail(name, coordX, coordY, i, em, gameClient);
 			else if (i==38)
-				t = new LuxuryTax(name, coordX, coordY, i, em, gameClient);
+				t = new LuxuryTax(name, price, coordX, coordY, i, em, gameClient);
 			else
 				t = new Terrain(name, price, houseCost, hotelCost, rent,
 						rent1house, rent2house, rent3house, rent4house,

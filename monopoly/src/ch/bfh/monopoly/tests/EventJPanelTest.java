@@ -27,22 +27,23 @@ public class EventJPanelTest extends JFrame {
 		board = tig.getBoard();
 		gc = tig.getGc();
 
-		// testElectricCompanyOwned();
-		// testElectricCompanyNotOwned();
-		// testMediterraneanOwned();
-		// testMediterraneanNotOwned();
-		// testFirstRailRoadOwned();
-		// testFirstRailRoadNotOwned();
-		// testLandOnGo();
-		// testJustVisiting();
-		// testFreeParking();
-		// testGoToJail();
-
+//		 testElectricCompanyOwned();
+//		 testElectricCompanyNotOwned();
+//		 testMediterraneanOwned();
+//		 testMediterraneanNotOwned();
+//		 testFirstRailRoadOwned();
+//		 testFirstRailRoadNotOwned();
+//		 testLandOnGo();
+//		 testJustVisiting();
+//		 testFreeParking();
+//		 testGoToJail();
+//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
+		
 		// true for in jail
 		testRollStartPanel(false);
-
-		// jpanel= gameClient.getTileEventPanel(sendNetMessage);
 		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+
+
 		setSize(300, 300);
 		add(jpanel);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -16,11 +16,13 @@ public class LuxuryTax extends AbstractTile {
 	ResourceBundle rb = ResourceBundle.getBundle(
 			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
-
-	public LuxuryTax(String name, int coordX, int coordY, int tileId,
+	int fee;
+	
+	public LuxuryTax(String name, int fee, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("freeParking-cardText");
+		this.fee = fee;
 	}
 
 	/**

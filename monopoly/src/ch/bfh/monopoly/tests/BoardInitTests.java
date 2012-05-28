@@ -22,11 +22,13 @@ public class BoardInitTests {
 	GameClient gameClient ;
 	int[] terrainPositions = { 1, 3, 6, 8, 9, 11, 13, 14, 16, 18, 19, 21, 23, 24, 26, 27, 29, 31, 32, 34, 37, 39 };
 	Board board;
-
+	String localeName="en";
+	
 	
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator("fr");
+		localeName="fr";
+		TestInstanceGenerator tig = new TestInstanceGenerator(localeName);
 		gameClient= tig.getGameClient();
 		board=tig.getBoard();
 		
@@ -42,8 +44,11 @@ public class BoardInitTests {
 	public void playersStartWithCorrectBalance() {
 		Player jus = board.getPlayerByName("Justin");
 		Player giu = board.getPlayerByName("Giuseppe");
-		assertTrue(jus.getAccount() == 15000);
-		assertTrue(giu.getAccount() == 15000);
+		int startMoney = 15000;
+		if (localeName.equals("fr"))
+			startMoney=30000;
+		assertTrue(jus.getAccount() == startMoney);
+		assertTrue(giu.getAccount() == startMoney);
 	}
 	
 	/**
@@ -89,18 +94,6 @@ public class BoardInitTests {
 		assertTrue(((Chance)board.getTileById(7)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileById(22)).getName().equals("Chance"));
 		assertTrue(((Chance)board.getTileById(36)).getName().equals("Chance"));
-	}
-	
-	
-	@Test
-	public void printNameOfTile(){
-//		for (int i = 0; i < board.tiles.length; i++) {
-//			System.out.println("Tile" + i + ":  " + board.tiles[i].getName()
-//					+ "  :  " + board.tiles[i].getId() + " xyCoord: "
-//					+ board.tiles[i].getCoordX() + ","
-//					+ board.tiles[i].getCoordY());
-//		}
-		assertTrue(((Terrain)board.getTileById(1)).getName().equals("Mediterranean Avenue"));
 	}
 	
 	

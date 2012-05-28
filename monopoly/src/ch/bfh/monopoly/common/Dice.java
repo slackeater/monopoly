@@ -110,6 +110,7 @@ public class Dice {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				buttonRight.setEnabled(false);
 				int prevPos = gameClient.getCurrentPlayer().getPosition();
 				gameClient.advancePlayerNSpaces(roll, testOff);
 //				gameClient.sendTransactionSuccesToGUI(true);
