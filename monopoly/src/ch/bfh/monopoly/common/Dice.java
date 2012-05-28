@@ -97,14 +97,11 @@ public class Dice {
 		java.net.URL urlImg = Monopoly.class.getResource("/ch/bfh/monopoly/resources/" + name);
 		ImageIcon logo = new ImageIcon(urlImg);
 		JLabel imgLab = new JLabel(logo);
-//		img.setMaximumSize(new Dimension(250,280));
 		img.add(imgLab);
 		return img;
 	}
 	
 	public JPanel getNormalStartTurnPanel() {
-		
-	
 		buttonRight.addActionListener(new ActionListener() {
 
 			@Override
@@ -140,14 +137,9 @@ public class Dice {
 		});
 
 		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("advance") + roll +rb.getString("spaces"));
+		jp.add(imageLogo("roll.png"));
 		jp.add(buttonRight);
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 	public JPanel getJailStartTurnPanel() {
@@ -166,7 +158,7 @@ public class Dice {
 		buttonRight.setText("Roll");
 		descriptionLabel.setText(rb.getString("inJail"));
 
-
+		jp.add(imageLogo("mrjail.png"));
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
 
