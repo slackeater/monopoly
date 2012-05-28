@@ -2,6 +2,8 @@ package ch.bfh.monopoly.common;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,6 +23,7 @@ public class Dice {
 	ActionListener al;
 	boolean testOff;
 	int attemptedRolls=0;
+	ResourceBundle rb;
 	
 	/**
 	 * Construct a dice object
@@ -48,6 +51,8 @@ public class Dice {
 		this.gameClient=gameClient;
 		this.maxValDiceOne = maxValDiceOne;
 		this.maxValDiceTwo = maxValDiceTwo;
+		rb= ResourceBundle.getBundle(
+				"ch.bfh.monopoly.resources.tile",gameClient.getLoc());
 	}
 
 	/**
@@ -93,8 +98,8 @@ public class Dice {
 				normalRollSecondStep();
 			}
 		});
-		buttonRight.setText("Roll");
-		descriptionLabel.setText("Click Roll to start your turn. \n");
+		buttonRight.setText(rb.getString("roll"));
+		descriptionLabel.setText(rb.getString("rollDescription"));
 
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
@@ -105,7 +110,7 @@ public class Dice {
 	public void normalRollSecondStep() {
 		jp.remove(buttonRight);
 		final int roll = throwDice();
-		buttonRight = new JButton("Continue");
+		buttonRight = new JButton(rb.getString("continueButton"));
 		buttonRight.addActionListener(new ActionListener() {
 		
 			@Override
@@ -119,7 +124,7 @@ public class Dice {
 			}
 		});
 
-		descriptionLabel.setText("You rolled a " + getDiceValues() + ", advance " + roll +" spaces");
+		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("advance") + roll +rb.getString("spaces"));
 		jp.add(buttonRight);
 	}
 	
@@ -144,7 +149,8 @@ public class Dice {
 		
 		buttonRight.addActionListener(al);
 		buttonRight.setText("Roll");
-		descriptionLabel.setText("You are in Jail, you have 3 options to get out:");
+		descriptionLabel.setText(rb.getString("inJail"));
+
 
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
@@ -156,7 +162,7 @@ public class Dice {
 		buttonRight.setText("ok");
 		final int roll = throwDice();
 		if (isDoubles()){
-			descriptionLabel.setText("You rolled a " + getDiceValues() + "you are out of jail!");
+			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("outOfJail"));
 			buttonRight.removeActionListener(al);
 			al=new ActionListener() {
 			
@@ -175,7 +181,7 @@ public class Dice {
 		else {
 			if (attemptedRolls>2)
 				rolledUnsuccessfully();
-			descriptionLabel.setText("You rolled a " + getDiceValues() + ", roll again or choose another option");
+			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()+ " " + rb.getString("rollAgain") +" "+ (3-attemptedRolls)+rb.getString("triesRemaining"));
 
 		}	
 	}
@@ -183,7 +189,7 @@ public class Dice {
 	public void rolledUnsuccessfully(){
 		jp.remove(buttonRight);
 		jp.add(new JLabel("rolledUnsuccessfully"));
-		descriptionLabel.setText("You rolled a " + getDiceValues() + " " + (3-attemptedRolls) +"tries remaining.  Sorry, you must stay in jail another round");
+		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + " " + (3-attemptedRolls) +rb.getString("triesRemaining")+ rb.getString("stayJail"));
 		gameClient.sendTransactionSuccesToGUI(testOff);
 	}
 
