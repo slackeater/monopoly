@@ -90,6 +90,7 @@ public class MonopolyGUI extends JFrame {
 	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
 	private boolean tokenPlaced = false;
+	private boolean beginTurnClicked = false;
 	
 	private enum Direction{
 		FORWARDS,
@@ -246,7 +247,7 @@ public class MonopolyGUI extends JFrame {
 					tabPane.add("EVENT!", gc.getTileEventPanel());
 					
 					//TODO decomment to disable tabs
-					for(int j = 0 ; j < tabPane.getTabCount()-1 ; j++){
+					for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++){
 						tabPane.setEnabledAt(j, false);
 					}
 					
@@ -377,7 +378,6 @@ public class MonopolyGUI extends JFrame {
 			BoardTile bt = new BoardTile(t, tab1, this.bc,this.gc, this.res);
 
 			//System.out.println("AFTER BOARD TILE CREATION " + j);
-
 
 			TileSubject s = this.bc.getTileSubjectAtIndex(j);
 			this.tiles.add(bt);
@@ -587,11 +587,11 @@ public class MonopolyGUI extends JFrame {
 				//move the player of throwValue positions, and communicate to the other player the new position
 //				gc.advancePlayerNSpaces(localPlayerthrowValue);
 				
-				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
+				throwDice.setEnabled(false);
+				beginTurnClicked = true;
 				
-				tabPane.setEnabledAt(0, false);
-		
-				tabPane.setEnabledAt(1, true);
+				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
+
 				tabPane.setSelectedIndex(1);
 
 				//TODO only for test
@@ -636,7 +636,7 @@ public class MonopolyGUI extends JFrame {
 				for(PlayerStateEvent playerState : playerStates){
 					//if the localplayer has the token enable buttons
 					if(playerState.getName().equals(gc.getLocalPlayerName()))
-						if(playerState.hasTurnToken()){
+						if(playerState.hasTurnToken() && !beginTurnClicked){
 							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
 
 							throwDice.setEnabled(true);
