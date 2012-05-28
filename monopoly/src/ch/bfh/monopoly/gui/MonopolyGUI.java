@@ -119,6 +119,8 @@ public class MonopolyGUI extends JFrame {
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
+		
+
 
 		pack();
 	}
@@ -246,7 +248,9 @@ public class MonopolyGUI extends JFrame {
 						endTurn.setEnabled(true);
 					}
 					
-					tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
+					tabPane.add("EVENT!", gc.getTileEventPanel());
+					
+					
 				}
 
 			}
@@ -577,14 +581,16 @@ public class MonopolyGUI extends JFrame {
 //				int localPlayerthrowValue = 10;		
 				
 				//move the player of throwValue positions, and communicate to the other player the new position
-				gc.advancePlayerNSpaces(localPlayerthrowValue);
+//				gc.advancePlayerNSpaces(localPlayerthrowValue);
+				
+				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
 
 				//TODO only for test
 //				tabPane.addTab(res.getString("tab-trade"), tradeTab());
 //				tabPane.addTab("Kick", kickPlayer());
 
-				eventTextArea.append(res.getString("text-throwindice") + "\n");
-				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
+//				eventTextArea.append(res.getString("text-throwindice") + "\n");
+//				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
 
 
 			}
