@@ -1,10 +1,14 @@
 package ch.bfh.monopoly.common;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -88,9 +92,19 @@ public class Dice {
 	}
 
 
+	private JPanel imageLogo(String name){
+		JPanel img = new JPanel();
+		java.net.URL urlImg = Monopoly.class.getResource("/ch/bfh/monopoly/resources/" + name);
+		ImageIcon logo = new ImageIcon(urlImg);
+		JLabel imgLab = new JLabel(logo);
+//		img.setMaximumSize(new Dimension(250,280));
+		img.add(imgLab);
+		return img;
+	}
 	
 	public JPanel getNormalStartTurnPanel() {
 		
+	
 		buttonRight.addActionListener(new ActionListener() {
 
 			@Override
@@ -101,6 +115,7 @@ public class Dice {
 		buttonRight.setText(rb.getString("roll"));
 		descriptionLabel.setText(rb.getString("rollDescription"));
 
+		jp.add(imageLogo("roll.png"));
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
 

@@ -83,6 +83,7 @@ public class WelcomePanel extends JFrame{
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(){
+
 		this.strIP = "IP";
 		this.strPort = "Port";
 
