@@ -10,17 +10,17 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.BoardEvent;
 import ch.bfh.monopoly.event.EventManager;
 
-public class Go extends AbstractTile {
+public class LuxuryTax extends AbstractTile {
 
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
 			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
 
-	public Go(String name, int coordX, int coordY, int tileId,
+	public LuxuryTax(String name, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
-		this.description = rb.getString("go-cardText");
+		this.description = rb.getString("freeParking-cardText");
 	}
 
 	/**
@@ -32,12 +32,11 @@ public class Go extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//the sum is already addded to the player account by advancePlayerNSpaces()
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				gameClient.freeParking(true);
 			}
 		});
 		buttonRight.setText("ok");
-		eventInfoLabel.setText(description);
+		eventInfoLabel.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
 
 		jpanel.add(eventInfoLabel);
 		jpanel.add(buttonRight);

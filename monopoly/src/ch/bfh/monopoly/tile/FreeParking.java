@@ -14,7 +14,7 @@ public class FreeParking extends AbstractTile {
 
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
-			"ch.bfh.monopoly.resources.events", gameClient.getLoc());;
+			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
 
 	public FreeParking(String name, int coordX, int coordY, int tileId,

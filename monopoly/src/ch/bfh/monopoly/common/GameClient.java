@@ -713,10 +713,22 @@ public class GameClient {
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		advancePlayerToTile(jail, false);
-		board.setPlayerJailStatus(currentPlayer.getName());
+		board.setPlayerJailStatus(currentPlayer.getName(),true);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
+			sendNetMessageToGUI(msg);
+		}
+	}
+	
+	/**
+	 * gets the currentPlayer out of jail
+	 */
+	public void getOutOfJail(boolean sendNetMessage) {
+		board.setPlayerJailStatus(currentPlayer.getName(),false);
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.GET_OUT_OF_JAIL);
 			sendNetMessageToGUI(msg);
 		}
 	}

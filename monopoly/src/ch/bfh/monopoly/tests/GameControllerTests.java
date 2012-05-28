@@ -1058,7 +1058,8 @@ public class GameControllerTests {
 		int plyr2accountBefore = plyr2.getAccount();
 		gameClient.freeParking(sendNetMessage);
 		int plyr2accountAfter = plyr2.getAccount();
-		assertTrue(plyr2accountAfter == plyr2accountBefore + fee);
+		//we start with 500 in the free parking account
+		assertTrue(plyr2accountAfter == plyr2accountBefore + fee + 500);
 	}
 
 	/**

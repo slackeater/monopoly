@@ -54,6 +54,7 @@ public enum Messages {
 	//WHEN GUI CALLS FOR THE EVENT WINDOW
 	GET_EVENT_WINDOW(620),
 	GO_TO_JAIL(666),
+	GET_OUT_OF_JAIL(667),
 	//probably only for test
 	ACKNOWLEDGE(999)
 	
