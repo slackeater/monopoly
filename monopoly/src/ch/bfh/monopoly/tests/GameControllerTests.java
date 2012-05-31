@@ -968,6 +968,27 @@ public class GameControllerTests {
 		assertTrue(plyr1.getAccount() == plyr1AccountBefore + amount);
 		assertTrue(plyr2.getAccount() == plyr2AccountBefore - amount);
 	}
+	
+	
+	/**
+	 * tests the method in gameController.transferMoney(...) using the bank
+	 * and the currentPlayer
+	 */
+	@Test
+	public void transferMoneyFromBank() {
+		int amount = 100;
+		String player1name = "Justin";
+		String playerBank = "Bank";
+		Player plyr1 = board.getPlayerByName(player1name);
+		Player plyrBank = board.getPlayerByName(playerBank);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		int plyr1AccountBefore = plyr1.getAccount();
+		int plyr2AccountBefore = plyrBank.getAccount();
+		gameClient.transferMoney(playerBank, "CurRenTPlaYEr", amount,
+				sendNetMessage);
+		assertTrue(plyr1.getAccount() == plyr1AccountBefore + amount);
+		assertTrue(plyrBank.getAccount() == plyr2AccountBefore - amount);
+	}
 
 	/**
 	 * test that the game controller can advance the current player a given
@@ -983,9 +1004,46 @@ public class GameControllerTests {
 		// check that modulo is working
 		gameClient.advancePlayerNSpaces(40, sendNetMessage);
 		assertTrue(gameClient.getCurrentPlayer().getPosition() == 3);
-
 	}
 
+	/**
+	 * win jail card adds jail card to player
+	 */
+	@Test
+	public void winJailCardAddsCard() {
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName(player1name);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.addJailCardToPlayer(player1name, sendNetMessage);
+		int jailCardCount = plyr1.getJailCard();
+		assertTrue(jailCardCount == 1);
+	}
+	
+	/**
+	 * win jail card adds jail card to player
+	 */
+	@Test
+	public void getOutOfJailUsesCards() {
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName(player1name);
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.addJailCardToPlayer(player1name, sendNetMessage);
+		int jailCard
+	}
+	
+	/**
+	 * test that landing on GO TO JAIL send the player to jail and changes
+	 * inJail boolean status
+	 */
+	@Test
+	public void goToJailSendsPlayerToJail() {
+		Player plyr = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr,sendNetMessage);
+		gameClient.advancePlayerNSpaces(8, sendNetMessage);
+		gameClient.goToJail(sendNetMessage);
+		assertTrue(plyr.isInJail());
+		assertTrue(plyr.getPosition() == 10);
+	}
 
 	/**
 	 * check that the method gameClient.buyCurrentPropertyForPlayer deducts the

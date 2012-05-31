@@ -27,22 +27,22 @@ public class EventJPanelTest extends JFrame {
 		board = tig.getBoard();
 		gc = tig.getGc();
 
-//		 testElectricCompanyOwned();
-//		 testElectricCompanyNotOwned();
-//		 testMediterraneanOwned();
-//		 testMediterraneanNotOwned();
-//		 testFirstRailRoadOwned();
-//		 testFirstRailRoadNotOwned();
-//		 testLandOnGo();
-//		 testJustVisiting();
-//		 testFreeParking();
-//		 testGoToJail();
-//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
-		
-		// true for in jail
-		testRollStartPanel(true);
-		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+		// testElectricCompanyOwned();
+		// testElectricCompanyNotOwned();
+		// testMediterraneanOwned();
+		// testMediterraneanNotOwned();
+		// testFirstRailRoadOwned();
+		// testFirstRailRoadNotOwned();
+		// testLandOnGo();
+		testLandOnJail();
+		// testJustVisiting();
+		// testFreeParking();
+		// testGoToJail();
+		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
+		// true for in jail
+//		testRollStartPanel(true);
+//		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
 		add(jpanel);
@@ -123,6 +123,13 @@ public class EventJPanelTest extends JFrame {
 	public void testLandOnGo() {
 		// goToJail tile
 		int tileId = 0;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
+	public void testLandOnJail() {
+		// goToJail tile
+		int tileId =30;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 	}

@@ -92,7 +92,7 @@ public class Utility extends Property {
 				// CHANGE THE BUTTOM TEXT AND LISTENE
 				gameClient.payUtilityFee(fee,true);
 				System.out.println(gameClient.getCurrentPlayer().getAccount());
-//				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
 		});
 		descriptionLabel.setText("You rolled a " + roll + ", so the fee to pay is "
