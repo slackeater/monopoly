@@ -176,7 +176,7 @@ public class Dice {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
-					gameClient.getOutOfJail(testOff);
+					gameClient.getOutOfJailByRoll(testOff);
 					gameClient.sendTransactionSuccesToGUI(testOff);
 					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
 					buttonRight.removeActionListener(al);
