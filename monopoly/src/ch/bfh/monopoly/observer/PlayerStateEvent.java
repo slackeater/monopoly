@@ -1,6 +1,7 @@
 package ch.bfh.monopoly.observer;
 
 import ch.bfh.monopoly.common.Token;
+import ch.bfh.monopoly.gui.MonopolyGUI;
 
 public class PlayerStateEvent {
 
@@ -14,11 +15,15 @@ public class PlayerStateEvent {
 	private Token t;
 	int rollValue;
 	int previousPosition;
+	private MonopolyGUI.Direction dir;
 
+	public MonopolyGUI.Direction getDir() {
+		return dir;
+	}
 
 	//TODO this class must also carry information Property List... but we don't want to copy the entire list, oder?
 	public PlayerStateEvent(int position, int previousPosition, int rollValue, String name, boolean isInJail,
-			int account, boolean turnToken, int jailCard, boolean[] terrains, Token t) {
+			int account, boolean turnToken, int jailCard, boolean[] terrains, Token t, MonopolyGUI.Direction dir) {
 		super();
 		this.position = position;
 		this.previousPosition = previousPosition;
@@ -30,6 +35,7 @@ public class PlayerStateEvent {
 		this.jailCard=jailCard;
 		this.terrains=terrains;
 		this.t = t;
+		this.dir = dir;
 	}
 
 	public int getPosition() {

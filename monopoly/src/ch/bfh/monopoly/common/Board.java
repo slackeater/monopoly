@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
+import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.PlayerListener;
@@ -67,7 +68,7 @@ public class Board {
 						plyr.getPreviousPosition(), plyr.getRollValue(),
 						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
-						plyr.getToken());
+						plyr.getToken(),plyr.getDir());
 				playerStates.add(pse);
 			}
 			for (PlayerListener pl : listeners) {
@@ -856,6 +857,13 @@ public class Board {
 	 * advance the current player a given number n spaces forward
 	 */
 	public void advancePlayerNSpaces(String playerName, int n) {
+		advancePlayerNSpacesInDirection(playerName, n, MonopolyGUI.Direction.FORWARDS);
+	}
+	
+	/**
+	 * advance the current player a given number n spaces forward
+	 */
+	public void advancePlayerNSpacesInDirection(String playerName, int n, MonopolyGUI.Direction dir) {
 		Player plyr = getPlayerByName(playerName);
 
 		int previousPosition = plyr.getPosition();
@@ -863,16 +871,17 @@ public class Board {
 		int currentPos = plyr.getPosition();
 		plyr.setPosition((currentPos + n) % 40);
 		plyr.setRollValue(n);
-
+		plyr.setDir(dir);
 		int newPosition = plyr.getPosition();
 
 		// if passes go
 		if (newPosition < previousPosition)
 			passGo(plyr);
-
+		
 		playerSubject.notifyListeners();
 		plyr.resetRollValue();
 	}
+	
 
 	// /**
 	// * advance current player to tile n

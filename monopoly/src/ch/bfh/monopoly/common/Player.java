@@ -3,6 +3,7 @@ package ch.bfh.monopoly.common;
 
 import java.util.ArrayList;
 import ch.bfh.monopoly.exception.TransactionException;
+import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.tile.Railroad;
 import ch.bfh.monopoly.tile.Tile;
 
@@ -18,6 +19,7 @@ public class Player {
 	private boolean isInJail;
 	private boolean turnToken;
 	private Token t;
+	private MonopolyGUI.Direction dir;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
 	public Player (String name, int account, Token t){
@@ -277,6 +279,14 @@ public class Player {
 		rollValue=0;
 	}
 
+	public MonopolyGUI.Direction getDir() {
+		return dir;
+	}
 
+	public void setDir(MonopolyGUI.Direction dir) {
+		this.dir = dir;
+	}
+
+	
 
 }

@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
+import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.WindowListener;
@@ -198,6 +199,35 @@ public class GameClient {
 		}
 	}
 
+	
+	/**
+	 * advance the current player a given number n spaces forward in a given direction
+	 * 
+	 * @param the direction to move the player
+	 * @param n
+	 *            is the number of spaces to advance the player
+	 * @param sendNetMessage
+	 *            true if a net message should be sent to the server
+	 */
+	public void advancePlayerNSpacesInDirection(int n, MonopolyGUI.Direction dir, boolean sendNetMessage) {
+		// used to force the roll values to test certain tiles
+		int[] desiredRolls = { 7, 15, 14, 11 };
+		// int modifiedN = n;
+		int modifiedN = desiredRolls[rollCount];
+		rollCount++;
+
+		String playerName = currentPlayer.getName();
+		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
+
+		if (sendNetMessage) {
+			// send a netmessage with the roll value of this player
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
+					Messages.DICE_ROLL);
+			nc.sendMessage(netMsg);
+		}
+	}
+
+	
 	/**
 	 * advance the current player a given number n spaces forward
 	 * 
@@ -207,21 +237,7 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
-		// used to force the roll values to test certain tiles
-		int[] desiredRolls = { 7, 15, 14, 11 };
-		// int modifiedN = n;
-		int modifiedN = desiredRolls[rollCount];
-		rollCount++;
-
-		String playerName = currentPlayer.getName();
-		board.advancePlayerNSpaces(playerName, modifiedN);
-
-		if (sendNetMessage) {
-			// send a netmessage with the roll value of this player
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
-					Messages.DICE_ROLL);
-			nc.sendMessage(netMsg);
-		}
+		advancePlayerNSpacesInDirection(n, MonopolyGUI.Direction.FORWARDS, sendNetMessage);
 	}
 
 	/**

@@ -91,7 +91,7 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
 
-	private enum Direction{
+	public enum Direction{
 		FORWARDS,
 		BACKWARDS;
 	}
