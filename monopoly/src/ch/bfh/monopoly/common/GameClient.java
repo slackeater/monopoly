@@ -211,17 +211,17 @@ public class GameClient {
 	 */
 	public void advancePlayerNSpacesInDirection(int n, MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		// used to force the roll values to test certain tiles
-		int[] desiredRolls = { 7, 15, 14, 11 };
-		// int modifiedN = n;
-		int modifiedN = desiredRolls[rollCount];
-		rollCount++;
+//		int[] desiredRolls = { 7, 15, 14, 11 };
+		 int modifiedN = n;
+//		int modifiedN = desiredRolls[rollCount];
+//		rollCount++;
 
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
 
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n,
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir
 					Messages.DICE_ROLL);
 			nc.sendMessage(netMsg);
 		}
@@ -736,20 +736,24 @@ public class GameClient {
 	 * gets the currentPlayer out of jail
 	 */
 	public void getOutOfJailByPayment(boolean sendNetMessage) {
-		
-
-		if (sendNetMessage) {
-			NetMessage msg = new NetMessage(currentPlayer.getName(),
-					Messages.GET_OUT_OF_JAIL_PAY);
-			sendNetMessageToGUI(msg);
+		try {
+			board.getOutOfJailByPayment(currentPlayer.getName());
+			if (sendNetMessage) {
+				NetMessage msg = new NetMessage(currentPlayer.getName(),
+						Messages.GET_OUT_OF_JAIL_PAY);
+				sendNetMessageToGUI(msg);
+			}
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
+
 	}
 
 	/**
 	 * gets the currentPlayer out of jail
 	 */
 	public void getOutOfJailByCard(boolean sendNetMessage) {
-	
+		board.getOutOfJailByCard(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GET_OUT_OF_JAIL_USECARD);
@@ -761,8 +765,7 @@ public class GameClient {
 	 * gets the currentPlayer out of jail by means of rolling
 	 */
 	public void getOutOfJailByRoll(boolean sendNetMessage) {
-		
-
+		board.getOutOfJailByRoll(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GET_OUT_OF_JAIL_ROLL);

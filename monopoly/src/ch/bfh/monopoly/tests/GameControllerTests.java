@@ -1028,7 +1028,14 @@ public class GameControllerTests {
 		Player plyr1 = board.getPlayerByName(player1name);
 		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
 		gameClient.addJailCardToPlayer(player1name, sendNetMessage);
-		int jailCard
+		int jailCardCountBefore = plyr1.getJailCard();
+		gameClient.goToJail(sendNetMessage);
+		assertTrue(jailCardCountBefore==1);
+		System.out.println(jailCardCountBefore);
+		gameClient.getOutOfJailByCard(sendNetMessage);
+		int jailCardCounAfter = plyr1.getJailCard();
+		System.out.println(jailCardCounAfter);
+		assertTrue(jailCardCounAfter==0);
 	}
 	
 	/**

@@ -811,8 +811,8 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
-		// System.out.println("board.castTileToProperty received: tileId:"
-		// + t.getTileId() + "which is:" + t.getName() );
+		 System.out.println("board.castTileToProperty received: tileId:"
+		 + t.getTileId() + "which is:" + t.getName() );
 
 		if (!(t instanceof Property))
 			throw new RuntimeException(
@@ -918,6 +918,7 @@ public class Board {
 	 * gets the currentPlayer out of jail
 	 */
 	public void getOutOfJailByCard(String playerName) {
+		removeJailCardFromPlayer(playerName);
 		setPlayerJailStatus(playerName, false);
 	}
 

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.gui.MonopolyGUI;
 
 public class MovementEvent extends AbstractTileEvent {
 
@@ -36,9 +37,7 @@ public class MovementEvent extends AbstractTileEvent {
 			gameClient.goToJail(sendNetMessage);
 			}
 		else {
-			//LESS than 0, then it is go backwards
-			//TODO How do I tell GUI to go backwards?
-			gameClient.advancePlayerToTile(newPosition, sendNetMessage);
+			gameClient.advancePlayerNSpacesInDirection((newPosition*-1), MonopolyGUI.Direction.BACKWARDS, sendNetMessage);
 		}
 		
 	}

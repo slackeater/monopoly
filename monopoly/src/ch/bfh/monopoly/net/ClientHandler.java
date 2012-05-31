@@ -84,10 +84,9 @@ public class ClientHandler implements IoHandler {
 			gameClient.buyHotelRow(n.getInt(), false);
 			break;
 		case BUY_PROPERTY:
-			System.out.println("RECEIVED MESSAGE: "+n.getMessageCode());
+			System.out.println("RECEIVED MESSAGE: " + n.getMessageCode());
 			gameClient.buyCurrentPropertyForPlayer(n.getText(), false);
 			break;
-
 
 		case SELL_HOUSE:
 			gameClient.sellHouse(n.getInt(), false);
@@ -105,7 +104,7 @@ public class ClientHandler implements IoHandler {
 			gameClient.transferProperty(n.getFromName(), n.getToName(),
 					n.getInt(), n.getPrice(), false);
 			break;
-			
+
 		case SELL_CARD:
 			gameClient.transferProperty(n.getFromName(), n.getToName(),
 					n.getInt(), n.getPrice(), false);
@@ -113,7 +112,7 @@ public class ClientHandler implements IoHandler {
 		case TOGGLE_MORTGAGE:
 			gameClient.toggleMortgageStatus(n.getInt(), false);
 			break;
-			
+
 		case PAY_RENT:
 			gameClient.payRent(false);
 			break;
@@ -122,9 +121,9 @@ public class ClientHandler implements IoHandler {
 			gameClient.updateTurnTokens(username);
 			break;
 		case START_TURN_PANEL:
-			//what can we put here that other clients see the start window?
+			// what can we put here that other clients see the start window?
 			break;
-			
+
 		case PAY_UTILITY_FEE:
 			gameClient.payUtilityFee(n.getInt(), false);
 			break;
@@ -137,6 +136,30 @@ public class ClientHandler implements IoHandler {
 		case WIN_JAIL_CARD:
 			gameClient.winJailCard(false);
 			break;
+		case UPDATE_CHANCE_ORDER:
+			gameClient.updateChanceDrawOrder(n.getDrawOrder(), false);
+			break;
+		case UPDATE_COMMCHEST_ORDER:
+			gameClient.updateCommChestDrawOrder(n.getDrawOrder(), false);
+			break;
+		case GET_EVENT_WINDOW:
+			break;
+		case GO_TO_JAIL:
+			gameClient.goToJail(false);
+			break;
+		case GET_OUT_OF_JAIL_ROLL:
+			gameClient.getOutOfJailByRoll(false);
+			break;
+		case GET_OUT_OF_JAIL_PAY:
+			gameClient.getOutOfJailByPayment(false);
+			break;
+		case GET_OUT_OF_JAIL_USECARD:
+			gameClient.getOutOfJailByCard(false);
+			break;
+
+		case ACKNOWLEDGE:
+			break;
+
 		case QUIT_GAME:
 			// TODO quit gamed
 		}
