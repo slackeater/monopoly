@@ -123,7 +123,9 @@ public class ClientHandler implements IoHandler {
 		case START_TURN_PANEL:
 			// what can we put here that other clients see the start window?
 			break;
-
+		case PAY_FEE:
+			gameClient.payFee(n.getInt(), false);
+			break;
 		case PAY_UTILITY_FEE:
 			gameClient.payUtilityFee(n.getInt(), false);
 			break;

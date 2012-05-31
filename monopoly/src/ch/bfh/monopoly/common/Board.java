@@ -121,7 +121,7 @@ public class Board {
 				Terrain terrain = ((Terrain) t);
 				TileStateEvent tsi = new TileStateEvent(
 						terrain.getHouseCount(), terrain.getHotelCount(),
-						"bob",// terrain.getOwner().getName(),
+						terrain.getOwner().getName(),
 						terrain.isMortgageActive());
 				for (TileListener tl : listeners) {
 					tl.updateTile(tsi);

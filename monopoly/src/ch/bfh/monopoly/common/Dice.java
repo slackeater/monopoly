@@ -102,6 +102,7 @@ public class Dice {
 	}
 	
 	public JPanel getNormalStartTurnPanel() {
+		buttonRight.setEnabled(true);
 		buttonRight.addActionListener(new ActionListener() {
 
 			@Override
@@ -112,7 +113,7 @@ public class Dice {
 		buttonRight.setText(rb.getString("roll"));
 		descriptionLabel.setText(rb.getString("rollDescription"));
 
-		jp.add(imageLogo("roll.png"));
+//		jp.add(imageLogo("roll.png"));
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
 

@@ -199,22 +199,24 @@ public class GameClient {
 		}
 	}
 
-	
 	/**
-	 * advance the current player a given number n spaces forward in a given direction
+	 * advance the current player a given number n spaces forward in a given
+	 * direction
 	 * 
-	 * @param the direction to move the player
+	 * @param the
+	 *            direction to move the player
 	 * @param n
 	 *            is the number of spaces to advance the player
 	 * @param sendNetMessage
 	 *            true if a net message should be sent to the server
 	 */
-	public void advancePlayerNSpacesInDirection(int n, MonopolyGUI.Direction dir, boolean sendNetMessage) {
+	public void advancePlayerNSpacesInDirection(int n,
+			MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		// used to force the roll values to test certain tiles
-//		int[] desiredRolls = { 7, 15, 14, 11 };
-		 int modifiedN = n;
-//		int modifiedN = desiredRolls[rollCount];
-//		rollCount++;
+		// int[] desiredRolls = { 7, 15, 14, 11 };
+		int modifiedN = n;
+		// int modifiedN = desiredRolls[rollCount];
+		// rollCount++;
 
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
@@ -227,7 +229,6 @@ public class GameClient {
 		}
 	}
 
-	
 	/**
 	 * advance the current player a given number n spaces forward
 	 * 
@@ -237,7 +238,8 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
-		advancePlayerNSpacesInDirection(n, MonopolyGUI.Direction.FORWARDS, sendNetMessage);
+		advancePlayerNSpacesInDirection(n, MonopolyGUI.Direction.FORWARDS,
+				sendNetMessage);
 	}
 
 	/**
@@ -685,7 +687,7 @@ public class GameClient {
 		try {
 			board.payFee(currentPlayerName, fee);
 			if (sendNetMessage) {
-				NetMessage msg = new NetMessage(currentPlayer.getName(),
+				NetMessage msg = new NetMessage(currentPlayer.getName(), fee,
 						Messages.PAY_FEE);
 				sendNetMessageToGUI(msg);
 			}
@@ -789,6 +791,8 @@ public class GameClient {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
 	}
+
+
 
 	/**
 	 * called by the change event getJailCard increases the jailCard count of
