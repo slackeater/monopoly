@@ -138,7 +138,7 @@ public class Dice {
 		});
 
 		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("advance") + roll +rb.getString("spaces"));
-		jp.add(imageLogo("roll.png"));
+//		jp.add(imageLogo("roll.png"));
 		jp.add(buttonRight);
 	}
 	
@@ -159,7 +159,7 @@ public class Dice {
 		buttonRight.setText("Roll");
 		descriptionLabel.setText(rb.getString("inJail"));
 
-		jp.add(imageLogo("mrjail.png"));
+//		jp.add(imageLogo("mrjail.png"));
 		jp.add(descriptionLabel);
 		jp.add(buttonRight);
 

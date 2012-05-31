@@ -124,35 +124,40 @@ public class WelcomePanel extends JFrame{
 			p = Pattern.compile(IPv4_PATTERN);
 			m = p.matcher(ip);
 
-			if(throwValue > 1){
-				//if the ip doesn't match
-				if(m.matches()){
-					
-					this.gameClient = new GameClient();
-					this.gc = new GameController(this.gameClient);
-					
-					//start a server if wanted
-					if(startServer){
-						this.nSrvCtrl = new ServerNetworkController();
-						this.nSrvCtrl.startServer(ip, port);
-					}
-					
-					//if everything works connect to the server
-					this.nCliCtrl = new ClientNetworkController(gameClient, name, throwValue);
-					this.nCliCtrl.startClient(ip, port);
-					this.bc = new BoardController(gameClient.getBoard());
+			if(!name.equalsIgnoreCase("bank")){
 
-					//set the ClientNetworkControllerIoSession in the GameClient
-					gameClient.setClientNetworkController(nCliCtrl);
+				if(throwValue > 1){
+
+					//if the ip doesn't match
+					if(m.matches()){
+
+						this.gameClient = new GameClient();
+						this.gc = new GameController(this.gameClient);
+
+						//start a server if wanted
+						if(startServer){
+							this.nSrvCtrl = new ServerNetworkController();
+							this.nSrvCtrl.startServer(ip, port);
+						}
+
+						//if everything works connect to the server
+						this.nCliCtrl = new ClientNetworkController(gameClient, name, throwValue);
+						this.nCliCtrl.startClient(ip, port);
+						this.bc = new BoardController(gameClient.getBoard());
+
+						//set the ClientNetworkControllerIoSession in the GameClient
+						gameClient.setClientNetworkController(nCliCtrl);
+					}
+					else
+						throw new Exception("Please insert a valid IPv4 address");
 				}
 				else
-					throw new Exception("Please insert a valid IPv4 address");
+					throw new Exception("Please roll for order.");
 			}
-			else
-				throw new Exception("Please roll for order.");
+			else throw new Exception("Bank is a weird name.");
 		}
 		else
-			throw new Exception("Please insert a correct user name");
+			throw new Exception("Please insert a correct user name.");
 	}
 
 
@@ -238,20 +243,20 @@ public class WelcomePanel extends JFrame{
 					name = nameField.getText();
 
 					info.append("Connecting to " + ip + " and port " + port + "\n");
-					
+
 					//start only a client
 					initClient(false);
 
 					while(true){
 						Thread.sleep(750);
 						if(nCliCtrl.gameCanBegin()){
-							
+
 							//create the board
 							bc = new BoardController(gameClient.getBoard());
 							System.out.println("BEFORE FRAME");
-							
+
 							dispose();
-							
+
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
 							board.setVisible(true);
@@ -346,11 +351,11 @@ public class WelcomePanel extends JFrame{
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
 
-					
+
 					info.add(new JLabel("Starting the server on IP " + ip + 
 							" and port " + port + " with " + maxPlayers + " players...\n"));
-					
-					
+
+
 					//start the client and the server
 					initClient(true);
 
@@ -361,29 +366,29 @@ public class WelcomePanel extends JFrame{
 						if(nSrvCtrl.getServerOpenedSession() == maxPlayers){
 							//send a NetMessage GAME_START with the chosen locale
 							nSrvCtrl.sendStartGame(loc);
-						
+
 							//create the board
 							gameClient.createBoard(loc, nSrvCtrl.getServerUsernames(), name);
-							
+
 							Thread.sleep(500);
-							
+
 							bc = new BoardController(gameClient.getBoard());
 
 							System.out.println("BEFORE FRAME");
-							
+
 							dispose();
-							
+
 							//create the frame
 							board = new MonopolyGUI(bc,gc);
 							board.setVisible(true);
 							board.setExtendedState(JFrame.MAXIMIZED_BOTH);
-							
+
 							Thread.sleep(1000);
-							
+
 							//after the gui are visible send the turn token
 							//!!! leave this here !!!
 							nSrvCtrl.sendTurnToken();
-							
+
 							break;
 						}
 					}
