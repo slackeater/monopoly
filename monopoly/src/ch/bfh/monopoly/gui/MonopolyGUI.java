@@ -34,6 +34,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Dice;
+import ch.bfh.monopoly.common.Direction;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.observer.PlayerListener;
@@ -91,10 +92,6 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
 
-	private enum Direction{
-		FORWARDS,
-		BACKWARDS;
-	}
 
 	/**
 	 * Construct a MonopolyGUI 
@@ -237,8 +234,7 @@ public class MonopolyGUI extends JFrame {
 
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
-						endTurn.setEnabled(true);
-						
+
 						tabPane.add("EVENT!", gc.getTileEventPanel());
 
 						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++){
@@ -346,10 +342,16 @@ public class MonopolyGUI extends JFrame {
 		class InfoAreaUpdate implements WindowListener{
 
 			@Override
-			public void updateWindow(WindowStateEvent wse) {;
-			if (wse.getType() == WindowMessage.MSG_FOR_ERROR)
-				eventTextArea.append(wse.getEventDescription()+"\n");
+			public void updateWindow(WindowStateEvent wse) {
+				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
+					eventTextArea.append(wse.getEventDescription()+"\n");
+				}
+				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
+					eventTextArea.append(wse.getEventDescription()+"\n");
+					endTurn.setEnabled(true);
+				}
 			}
+
 
 		}
 
@@ -623,7 +625,7 @@ public class MonopolyGUI extends JFrame {
 							if(!beginTurnClicked){
 								throwDice.setEnabled(true);	
 							}
-							
+
 							useCard.setEnabled(true);
 							trade.setEnabled(true);
 						}
