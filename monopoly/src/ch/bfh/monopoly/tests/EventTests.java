@@ -116,21 +116,7 @@ public class EventTests {
 
 	}
 
-	/**
-	 * test that landing on GO TO JAIL send the player to jail and changes
-	 * inJail boolean status
-	 */
-	@Test
-	public void goToJailSendsPlayerToJail() {
-		Player p = board.getPlayerByName("Justin");
-		gameClient.setCurrentPlayer(p,false);
-		p.setPosition(26);
-		// advance player to GO TO JAIL
-		gameClient.advancePlayerNSpaces(4,false);
-		gc.performEvent();
-		assertTrue(p.isInJail());
-		assertTrue(p.getPosition() == 10);
-	}
+
 
 	/**
 	 * simpleFeeEvents create their description dynamically based on amount of

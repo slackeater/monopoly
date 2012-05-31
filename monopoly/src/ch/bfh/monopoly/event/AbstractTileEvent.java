@@ -35,18 +35,9 @@ public abstract class AbstractTileEvent implements BoardEvent{
 			return eventDescription;
 		}
 		
-		public JPanel getTileEventPanel() {
+		public JPanel getTileEventPanel(ActionListener alFromSub) {
 			
-			buttonRight.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					
-					performEvent();
-					
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			});
+			buttonRight.addActionListener(alFromSub);
 			buttonRight.setText("ok");
 			eventInfoLabel.setText(eventDescription);
 

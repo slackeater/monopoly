@@ -45,8 +45,8 @@ public enum Messages {
 	PAY_FEE(530),
 	PAY_UTILITY_FEE(535),
 	FREE_PARKING(550),
-
-
+	BIRTHDAY_EVENT(555),
+	WIN_JAIL_CARD(560),
 	
 	//when chance cards must be shuffled
 	UPDATE_CHANCE_ORDER(600),
@@ -54,7 +54,9 @@ public enum Messages {
 	//WHEN GUI CALLS FOR THE EVENT WINDOW
 	GET_EVENT_WINDOW(620),
 	GO_TO_JAIL(666),
-	GET_OUT_OF_JAIL(667),
+	GET_OUT_OF_JAIL_ROLL(667),
+	GET_OUT_OF_JAIL_PAY(668),
+	GET_OUT_OF_JAIL_USECARD(669),
 	//probably only for test
 	ACKNOWLEDGE(999)
 	

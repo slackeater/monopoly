@@ -117,18 +117,25 @@ public class ClientHandler implements IoHandler {
 		case PAY_RENT:
 			gameClient.payRent(false);
 			break;
-		case PAY_UTILITY_FEE:
-			gameClient.payUtilityFee(n.getInt(), false);
-			break;
-		case FREE_PARKING:
-			gameClient.freeParking(false);
-			break;
 		case TURN_TOKEN:
 			String username = n.getText();
 			gameClient.updateTurnTokens(username);
 			break;
 		case START_TURN_PANEL:
 			//what can we put here that other clients see the start window?
+			break;
+			
+		case PAY_UTILITY_FEE:
+			gameClient.payUtilityFee(n.getInt(), false);
+			break;
+		case FREE_PARKING:
+			gameClient.freeParking(false);
+			break;
+		case BIRTHDAY_EVENT:
+			gameClient.birthdayEvent(n.getInt(), false);
+			break;
+		case WIN_JAIL_CARD:
+			gameClient.winJailCard(false);
 			break;
 		case QUIT_GAME:
 			// TODO quit gamed

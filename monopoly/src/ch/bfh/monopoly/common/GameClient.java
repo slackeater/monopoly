@@ -32,6 +32,9 @@ public class GameClient {
 	private WindowSubject ws;
 	private boolean testOff;
 	private Dice dice;
+	// used to test / for the roll value to a certain order of values
+	private int rollCount = 0;
+
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
 	 * that must be displayer in the chat message window and in the game history
@@ -66,7 +69,6 @@ public class GameClient {
 		ws = new ConcreteSubject();
 		bank = new Player("bank", 100000000, null);
 
-
 	}
 
 	public GameClient() {
@@ -87,7 +89,7 @@ public class GameClient {
 		this.board = new Board(this, testOff);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
-		dice = new Dice(6,6,this, testOff);
+		dice = new Dice(6, 6, this, testOff);
 	}
 
 	/**
@@ -130,7 +132,8 @@ public class GameClient {
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
-	public Dice getDice(){
+
+	public Dice getDice() {
 		return this.dice;
 	}
 
@@ -204,8 +207,14 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void advancePlayerNSpaces(int n, boolean sendNetMessage) {
+		// used to force the roll values to test certain tiles
+		int[] desiredRolls = { 7, 15, 14, 11 };
+		// int modifiedN = n;
+		int modifiedN = desiredRolls[rollCount];
+		rollCount++;
+
 		String playerName = currentPlayer.getName();
-		board.advancePlayerNSpaces(playerName, n);
+		board.advancePlayerNSpaces(playerName, modifiedN);
 
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
@@ -219,11 +228,19 @@ public class GameClient {
 	 * advance current player to tile n
 	 */
 	public void advancePlayerToTile(int tileId, boolean sendNetMessage) {
+		boolean printVars = false;
 		int currentPosition = currentPlayer.getPosition();
 		int rollEquivalent = tileId - currentPosition;
+		if (printVars) {
+			System.out.println("currentpos" + currentPosition);
+			System.out.println("tileID" + tileId);
+			System.out.println("afterSubtraction" + rollEquivalent);
+		}
 		if (rollEquivalent < 0)
 			rollEquivalent += 40;
-		advancePlayerNSpaces(tileId, sendNetMessage);
+		if (printVars)
+			System.out.println("rollEquivalent" + rollEquivalent);
+		advancePlayerNSpaces(rollEquivalent, sendNetMessage);
 	}
 
 	/**
@@ -519,8 +536,8 @@ public class GameClient {
 	public JPanel getStartTurnPanel(boolean sendNetMessage) {
 		JPanel jp;
 		if (currentPlayer.isInJail())
-			jp =dice.getJailStartTurnPanel();
-		else 
+			jp = dice.getJailStartTurnPanel();
+		else
 			jp = dice.getNormalStartTurnPanel();
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(Messages.START_TURN_PANEL);
@@ -528,10 +545,7 @@ public class GameClient {
 		}
 		return jp;
 	}
-	
-	
-	
-	
+
 	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
@@ -689,55 +703,89 @@ public class GameClient {
 	}
 
 	/**
-	 * The current player is charged a given fee, which is withdrawn from his
-	 * account the amount of the fee is then credited to the toName's account
-	 * 
-	 * @param toName
-	 *            the name of hte player to give the money to
-	 * @param fee
-	 *            the amount of the fee to charge the current player
-	 * @param sendNetMessage
-	 *            true if a net message should be sent to the server
-	 */
-	public void payFeetoName(String toName, int fee, boolean sendNetMessage) {
-		try {
-			currentPlayer.withdawMoney(fee);
-		} catch (TransactionException e) {
-			sendTransactionErrorToGUI(e, sendNetMessage);
-		}
-		board.getPlayerByName(toName).depositMoney(fee);
-	}
-
-	/**
 	 * sends the currentPlayer to jail
 	 */
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		advancePlayerToTile(jail, false);
-		board.setPlayerJailStatus(currentPlayer.getName(),true);
+		board.setPlayerJailStatus(currentPlayer.getName(), true);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
 			sendNetMessageToGUI(msg);
 		}
 	}
-	
+
 	/**
 	 * gets the currentPlayer out of jail
 	 */
-	public void getOutOfJail(boolean sendNetMessage) {
-		board.setPlayerJailStatus(currentPlayer.getName(),false);
+	public void getOutOfJailByPayment(boolean sendNetMessage) {
+		
+
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
-					Messages.GET_OUT_OF_JAIL);
+					Messages.GET_OUT_OF_JAIL_PAY);
+			sendNetMessageToGUI(msg);
+		}
+	}
+
+	/**
+	 * gets the currentPlayer out of jail
+	 */
+	public void getOutOfJailByCard(boolean sendNetMessage) {
+	
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.GET_OUT_OF_JAIL_USECARD);
+			sendNetMessageToGUI(msg);
+		}
+	}
+
+	/**
+	 * gets the currentPlayer out of jail by means of rolling
+	 */
+	public void getOutOfJailByRoll(boolean sendNetMessage) {
+		
+
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.GET_OUT_OF_JAIL_ROLL);
+			sendNetMessageToGUI(msg);
+		}
+	}
+
+	/**
+	 * called by BirthdayEvent class, transfer a given amount of money from all
+	 * players but the current player to the current player's account
+	 */
+	public void birthdayEvent(int amount, boolean sendNetMessage) {
+		try {
+			board.birthdayEvent(currentPlayer.getName(), amount);
+			if (sendNetMessage) {
+				NetMessage msg = new NetMessage(currentPlayer.getName(),
+						amount, Messages.BIRTHDAY_EVENT);
+				sendNetMessageToGUI(msg);
+			}
+		} catch (TransactionException e) {
+			sendTransactionErrorToGUI(e, sendNetMessage);
+		}
+	}
+
+	/**
+	 * called by the change event getJailCard increases the jailCard count of
+	 * the current player by 1
+	 */
+	public void winJailCard(boolean sendNetMessage) {
+		board.addJailCardToPlayer(currentPlayer.getName());
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.WIN_JAIL_CARD);
 			sendNetMessageToGUI(msg);
 		}
 	}
 
 	/**
 	 * the current player gets all the money in the free parking account
-	 * 
-	 * @return
 	 */
 	public void freeParking(boolean sendNetMessage) {
 		board.freeParking(currentPlayer.getName());

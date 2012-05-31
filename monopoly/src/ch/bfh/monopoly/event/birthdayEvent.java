@@ -1,5 +1,10 @@
 package ch.bfh.monopoly.event;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.exception.TransactionException;
@@ -13,19 +18,21 @@ public class birthdayEvent extends AbstractTileEvent {
 
 	@Override
 	public void performEvent() {
-		int fee = 20;
+		int fee = 20;//TODO SET amount according to locale
+		gameClient.birthdayEvent(fee, sendNetMessage);
 
-		for (Player p : gameClient.getPlayers()) {
-			if (p != gameClient.getCurrentPlayer()) {
-				try {
-					p.withdawMoney(fee);
-				} catch (TransactionException e) {
-					gameClient.sendTransactionErrorToGUI(e,true);
-				}
-				gameClient.getCurrentPlayer().depositMoney(fee);
-			
+
+	}
+
+	@Override
+	public JPanel getTileEventPanel() {
+		ActionListener al =new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				performEvent();
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
-		}
-
+		};
+		return super.getTileEventPanel(al);
 	}
 }

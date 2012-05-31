@@ -181,7 +181,7 @@ public class Dice {
 		else {
 			if (attemptedRolls>2)
 				rolledUnsuccessfully();
-			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()+ " " + rb.getString("rollAgain") +" "+ (3-attemptedRolls)+rb.getString("triesRemaining"));
+			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()+ " " + rb.getString("rollAgain") +" "+ (3-attemptedRolls)+" "+rb.getString("triesRemaining"));
 
 		}	
 	}
@@ -189,7 +189,7 @@ public class Dice {
 	public void rolledUnsuccessfully(){
 		jp.remove(buttonRight);
 		jp.add(new JLabel("rolledUnsuccessfully"));
-		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + " " + (3-attemptedRolls) +rb.getString("triesRemaining")+ rb.getString("stayJail"));
+		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + " " + (3-attemptedRolls) +" "+rb.getString("triesRemaining")+ rb.getString("stayJail"));
 		gameClient.sendTransactionSuccesToGUI(testOff);
 	}
 

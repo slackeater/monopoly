@@ -22,13 +22,14 @@ public class Board {
 	private Tile[] tiles;
 	private int availableHouses = 32;
 	private int availableHotels = 12;
+	private Player bank;
 	private TileSubject[] tileSubjects;
 	private Token[] tokens = new Token[8];
 	private int freeParking = 500;
 	private PlayerSubject playerSubject;
-	private final int goMoney;
+	private final int goMoney,bail;
 	private boolean testOff;
-
+	private ResourceBundle rb;
 	/**
 	 * this inner class is connected to the GUI through an observer pattern. The
 	 * GUI registers its listeners with this inner class and when instance
@@ -97,7 +98,6 @@ public class Board {
 		public ConcreteSubject(int tileId) {
 			this.tileListenerId = tileId;
 		}
-		
 
 		ArrayList<TileListener> listeners = new ArrayList<TileListener>();
 
@@ -131,9 +131,11 @@ public class Board {
 
 	public Board(GameClient gameClient, boolean testOff) {
 		this.testOff = testOff;
-		goMoney = Integer.parseInt(ResourceBundle.getBundle(
-				"ch.bfh.monopoly.resources.tile", gameClient.getLoc())
-				.getString("goMoney"));
+		this.bank = gameClient.getBankPlayer();
+		rb= ResourceBundle.getBundle(
+				"ch.bfh.monopoly.resources.tile", gameClient.getLoc());
+		goMoney = Integer.parseInt(rb.getString("goMoney"));
+		bail = Integer.parseInt(rb.getString("bail"));
 		// create tiles, cards, and events and tokens
 		TileCreator tc = new TileCreator(gameClient, testOff);
 		tiles = tc.getTilesArray();
@@ -154,8 +156,6 @@ public class Board {
 		tokens[7] = new Token(Color.ORANGE, 0.7, 0.700);
 	}
 
-
-	
 	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
@@ -287,7 +287,7 @@ public class Board {
 		Player plyr = getPlayerByName(playerName);
 		Terrain terrain = castTileToTerrain(t);
 		String groupName = terrain.getGroup();
-	List<Terrain> groupMembers = getGroupMembers(groupName);
+		List<Terrain> groupMembers = getGroupMembers(groupName);
 		int costToBuild = terrain.getHouseCost() * groupMembers.size();
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
@@ -696,15 +696,33 @@ public class Board {
 		plyr.withdawMoney(fee);
 		freeParking += fee;
 	}
+
+	/**
+	 * called by BirthdayEvent class, transfer a given amount of money from all
+	 * players except for the given player to the given player's account
+	 * @throws TransactionException if there is not enough money to withdraw from an account
+	 */
+	public void birthdayEvent(String playerName, int amount) throws TransactionException {
+		Player plyr = getPlayerByName(playerName);
+		for (Player p : players) {
+			if (p != plyr) {
+				p.withdawMoney(amount);
+				plyr.depositMoney(amount);
+			}
+		}
+	}
+
+	
 	
 	/**
 	 * the current player gets all the money in the free parking account
+	 * 
 	 * @return
 	 */
 	public void freeParking(String playerName) {
 		Player plyr = getPlayerByName(playerName);
 		plyr.depositMoney(freeParking);
-		freeParking=0;
+		freeParking = 0;
 		playerSubject.notifyListeners();
 	}
 
@@ -730,9 +748,11 @@ public class Board {
 		Player p = null;
 		for (int i = 0; i < players.size(); i++) {
 			String playerName = players.get(i).getName();
-			if (playerName.equals(name))
+			if (playerName.equalsIgnoreCase(name))
 				p = players.get(i);
 		}
+		if (name.equalsIgnoreCase("bank"))
+			p = bank;
 		if (p == null)
 			throw new RuntimeException("No player with the name Ç" + name
 					+ "È could be found");
@@ -837,36 +857,37 @@ public class Board {
 	 */
 	public void advancePlayerNSpaces(String playerName, int n) {
 		Player plyr = getPlayerByName(playerName);
-		
+
 		int previousPosition = plyr.getPosition();
-		
+
 		int currentPos = plyr.getPosition();
 		plyr.setPosition((currentPos + n) % 40);
 		plyr.setRollValue(n);
-		
+
 		int newPosition = plyr.getPosition();
 
 		// if passes go
 		if (newPosition < previousPosition)
 			passGo(plyr);
-		
-		
+
 		playerSubject.notifyListeners();
 		plyr.resetRollValue();
 	}
 
-//	/**
-//	 * advance current player to tile n
-//	 */
-//	public void advancePlayerToTile(String playerName, int tileId) {
-//		Player plyr = getPlayerByName(playerName);
-//		plyr.setPosition(tileId);
-//		playerSubject.notifyListeners();
-//	}
+	// /**
+	// * advance current player to tile n
+	// */
+	// public void advancePlayerToTile(String playerName, int tileId) {
+	// Player plyr = getPlayerByName(playerName);
+	// plyr.setPosition(tileId);
+	// playerSubject.notifyListeners();
+	// }
 
 	/**
 	 * sends a given player to jail
-	 * @param the name of the player to send to jail
+	 * 
+	 * @param the
+	 *            name of the player to send to jail
 	 */
 	public void setPlayerJailStatus(String playerName, boolean newStatus) {
 		Player plyr = getPlayerByName(playerName);
@@ -874,6 +895,29 @@ public class Board {
 		playerSubject.notifyListeners();
 	}
 
+	/**
+	 * gets the currentPlayer out of jail
+	 * @throws TransactionException if the player does not have enough money
+	 */
+	public void getOutOfJailByPayment(String playerName) throws TransactionException {
+		payFee(playerName, bail);
+		setPlayerJailStatus(playerName, false);
+
+	}
+
+	/**
+	 * gets the currentPlayer out of jail
+	 */
+	public void getOutOfJailByCard(String playerName) {
+		setPlayerJailStatus(playerName, false);
+	}
+
+	/**
+	 * gets the currentPlayer out of jail by means of rolling
+	 */
+	public void getOutOfJailByRoll(String playerName) {
+		setPlayerJailStatus(playerName, false);
+	}
 	/**
 	 * creates an object with all the static tile information to be sent to the
 	 * GUI
@@ -939,8 +983,7 @@ public class Board {
 
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
-		}
-		else {
+		} else {
 			tileInfo.setName(tile.getName());
 
 			tileInfo.setCoordX(tile.getCoordX());
@@ -949,15 +992,14 @@ public class Board {
 		return tileInfo;
 	}
 
-
-	public int getFreeParkingAccount(){
+	public int getFreeParkingAccount() {
 		return freeParking;
 	}
-	
+
 	public int getAvailableHouses() {
 		return availableHouses;
 	}
-	
+
 	public int getAvailableHotels() {
 		return availableHotels;
 	}

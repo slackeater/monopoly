@@ -1,5 +1,10 @@
 package ch.bfh.monopoly.event;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+
 import ch.bfh.monopoly.common.GameClient;
 
 public class getJailCardEvent extends AbstractTileEvent{
@@ -11,9 +16,19 @@ public class getJailCardEvent extends AbstractTileEvent{
 
 	@Override
 	public void performEvent() {
-		int jailCardCount = gameClient.getCurrentPlayer().getJailCard();
-		gameClient.getCurrentPlayer().setJailCard(jailCardCount++);
-		
+		gameClient.winJailCard(sendNetMessage);
+	}
+	
+	@Override
+	public JPanel getTileEventPanel() {
+		ActionListener al =new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				performEvent();
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+			}
+		};
+		return super.getTileEventPanel(al);
 	}
 
 }
