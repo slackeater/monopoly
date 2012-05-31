@@ -87,16 +87,15 @@ public class MonopolyGUI extends JFrame {
 	private BoardController bc;
 	private GameController gc;
 	private ResourceBundle res;
-	private Dice dice = new Dice(6,6);
 	private List<PlayerStateEvent> pse;
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
-	
+
 	private enum Direction{
 		FORWARDS,
 		BACKWARDS;
 	}
-	
+
 	/**
 	 * Construct a MonopolyGUI 
 	 * @param bc the board controller used to query the board
@@ -120,34 +119,34 @@ public class MonopolyGUI extends JFrame {
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
-		
+
 
 
 		pack();
 	}
 
-	
+
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-		       
-            int exit = JOptionPane.showConfirmDialog(this, res.getString("text-quitgame"));
-            
-            if (exit == JOptionPane.YES_OPTION) {
-            	gc.sendQuitGame();
-            	            	
-            	try {
+
+			int exit = JOptionPane.showConfirmDialog(this, res.getString("text-quitgame"));
+
+			if (exit == JOptionPane.YES_OPTION) {
+				gc.sendQuitGame();
+
+				try {
 					Thread.sleep(250);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				
-                System.exit(0);
-            }
-           
-        } else {
-            super.processWindowEvent(e);
-        }
+
+				System.exit(0);
+			}
+
+		} else {
+			super.processWindowEvent(e);
+		}
 	}
 
 	/**
@@ -180,20 +179,20 @@ public class MonopolyGUI extends JFrame {
 
 				//move the token for "step" times
 				if(step < val){
-					
+
 					int numberTile = 0;
-								
+
 					if(dir == Direction.FORWARDS)
 						numberTile = startPosition+step;
 					else if(dir == Direction.BACKWARDS)
 						numberTile = startPosition-step;
-						
+
 					//removing the token at the previous tile
 					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
 					tiles.get((numberTile+40)%TILE_NUMBER).removeToken(t);
-					
+
 					step++;
-				
+
 					//compute the new position where to add the token, step has been incremented
 					if(dir == Direction.FORWARDS)
 						numberTile = startPosition+step;
@@ -213,16 +212,16 @@ public class MonopolyGUI extends JFrame {
 					if((startPosition+val) == 30){
 						//removing the token at go to jail
 						tiles.get(30).removeToken(t);
-						
+
 						//add token to jail 
 						tiles.get(10).addToken(t);	
-						
+
 						repaint();
 					}
-					
+
 					//show tile's information in the card box
 					tiles.get((startPosition+val+40)%TILE_NUMBER).showCard();
-					
+
 					//TODO REMOVE ONLY FOR TEST
 					if(dir == Direction.FORWARDS)
 						System.out.println("LANDED ON TILE : " + (startPosition+val+40)%TILE_NUMBER);
@@ -235,27 +234,20 @@ public class MonopolyGUI extends JFrame {
 						//TODO only for test diceButton
 						//diceButton.setEnabled(true);
 						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
-						
-							
-						
-								
+
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 						endTurn.setEnabled(true);
+						
+						tabPane.add("EVENT!", gc.getTileEventPanel());
+
+						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++){
+							tabPane.setEnabledAt(j, false);
+						}
+
+						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
+						tabPane.setSelectedIndex(tabPane.getTabCount()-1);
 					}
-					
-					tabPane.add("EVENT!", gc.getTileEventPanel());
-					
-					//TODO decomment to disable tabs
-					for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++){
-						tabPane.setEnabledAt(j, false);
-					}
-					
-					tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
-					
-					
-					tabPane.setSelectedIndex(tabPane.getTabCount()-1);
-				
 				}
 
 			}
@@ -264,7 +256,7 @@ public class MonopolyGUI extends JFrame {
 		return moveToken;
 
 	}
-	
+
 
 	/**
 	 * Initialize the list of tiles, tokens and player listener
@@ -447,7 +439,7 @@ public class MonopolyGUI extends JFrame {
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
 
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
-			
+
 			info.add(plInfo);
 		}
 
@@ -569,7 +561,7 @@ public class MonopolyGUI extends JFrame {
 		return board;
 	}
 
-	
+
 
 	private void initializeButtons(){
 		this.useCard = new JButton(res.getString("button-jailcard"));
@@ -580,26 +572,16 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int localPlayerthrowValue = dice.throwDice();
-				//TODO remove this 
-//				int localPlayerthrowValue = 10;		
-				
-				//move the player of throwValue positions, and communicate to the other player the new position
-//				gc.advancePlayerNSpaces(localPlayerthrowValue);
-				
 				throwDice.setEnabled(false);
 				beginTurnClicked = true;
-				
+
 				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
 
 				tabPane.setSelectedIndex(1);
 
 				//TODO only for test
-//				tabPane.addTab(res.getString("tab-trade"), tradeTab());
-//				tabPane.addTab("Kick", kickPlayer());
-
-//				eventTextArea.append(res.getString("text-throwindice") + "\n");
-//				eventTextArea.append(res.getString("text-diceresult") + " " + dice.getDiceValues() + " =>" + localPlayerthrowValue + "\n");
+				//				tabPane.addTab(res.getString("tab-trade"), tradeTab());
+				//				tabPane.addTab("Kick", kickPlayer());
 
 
 			}
@@ -615,19 +597,18 @@ public class MonopolyGUI extends JFrame {
 				endTurn.setEnabled(false);
 				trade.setEnabled(false);
 				useCard.setEnabled(false);
-				
+
 				//remove the useless tab. Only the event tab must remain
 				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--){
 					tabPane.remove(j);
 				}
-				
-				gc.endTurn();
 
+				beginTurnClicked = false;
+				gc.endTurn();
 			}
 		});
 
 		this.trade = new JButton(res.getString("button-trade"));
-		//		this.trade.setEnabled(false);
 
 		class ButtonManager implements PlayerListener{
 
@@ -636,10 +617,13 @@ public class MonopolyGUI extends JFrame {
 				for(PlayerStateEvent playerState : playerStates){
 					//if the localplayer has the token enable buttons
 					if(playerState.getName().equals(gc.getLocalPlayerName()))
-						if(playerState.hasTurnToken() && !beginTurnClicked){
+						if(playerState.hasTurnToken() ){
 							System.out.println("===== BUTTONS: ENABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
 
-							throwDice.setEnabled(true);
+							if(!beginTurnClicked){
+								throwDice.setEnabled(true);	
+							}
+							
 							useCard.setEnabled(true);
 							trade.setEnabled(true);
 						}
@@ -746,20 +730,20 @@ public class MonopolyGUI extends JFrame {
 
 		return scrollInput;
 	}
-	
+
 	//TODO ONLY FOR TEST SHOULD ME MOVED AWAY
 	private JPanel kickPlayer(){
 		JPanel kick = new JPanel();
 		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
-	
+
 		JLabel title = new JLabel("Kick a player by selecting its user name");
-		
+
 		JPanel userSelContainer = new JPanel();
 		userSelContainer.setLayout(new BoxLayout(userSelContainer, BoxLayout.LINE_AXIS));
-		
+
 		JLabel sel = new JLabel("Select a user");
 		JComboBox username = new JComboBox();
-		
+
 		userSelContainer.add(sel);
 		userSelContainer.add(username);
 
@@ -767,15 +751,15 @@ public class MonopolyGUI extends JFrame {
 		for(int i = 0 ; i < playerNumber ; i++){
 			username.addItem(pse.get(i).getName());
 		}
-		
+
 		JPanel btnCtr = new JPanel();
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
-		
+
 		JButton sendKick = new JButton("Send kick");
-				
+
 		btnCtr.add(Box.createHorizontalGlue());
 		btnCtr.add(sendKick);
-		
+
 		kick.add(title);
 		kick.add(Box.createVerticalGlue());
 		kick.add(userSelContainer);

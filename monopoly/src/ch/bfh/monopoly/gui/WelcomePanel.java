@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,6 +26,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.ClientNetworkController;
@@ -76,11 +78,12 @@ public class WelcomePanel extends JFrame{
 	private Dice dices;
 
 
+
 	/**
 	 * Construct a WelcomePanel
 	 */
 	public WelcomePanel(){
-		
+
 		this.strIP = "IP";
 		this.strPort = "Port";
 
@@ -343,8 +346,10 @@ public class WelcomePanel extends JFrame{
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
 
-					info.append("Starting the server on IP " + ip + 
-							" and port " + port + " with " + maxPlayers + " players...\n");
+					
+					info.add(new JLabel("Starting the server on IP " + ip + 
+							" and port " + port + " with " + maxPlayers + " players...\n"));
+					
 					
 					//start the client and the server
 					initClient(true);
