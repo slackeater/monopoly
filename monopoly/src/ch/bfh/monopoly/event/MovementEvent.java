@@ -27,7 +27,7 @@ public class MovementEvent extends AbstractTileEvent {
 
 	@Override
 	public void performEvent() {
-		Player currentPlayer = gameClient.getCurrentPlayer();
+		
 		if (newPosition > 0) {
 			//GREATER than 0, advance as normal
 			gameClient.advancePlayerToTile(newPosition, sendNetMessage);

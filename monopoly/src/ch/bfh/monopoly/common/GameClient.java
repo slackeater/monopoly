@@ -221,7 +221,7 @@ public class GameClient {
 
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
-			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir
+			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir,
 					Messages.DICE_ROLL);
 			nc.sendMessage(netMsg);
 		}
