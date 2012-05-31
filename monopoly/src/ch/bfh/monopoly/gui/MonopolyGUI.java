@@ -311,13 +311,13 @@ public class MonopolyGUI extends JFrame {
 								//if we are the local player enable/disable the buttons
 								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, Direction.FORWARDS));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, singlePlayer.getDir()));
 
 
 								}
 								else{
 									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition, Direction.FORWARDS));
+									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition,singlePlayer.getDir()));
 								}
 
 								timerAnimation.start();
