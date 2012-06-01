@@ -220,7 +220,7 @@ public class BoardTile extends JPanel{
 				hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
 				hotelCost.setFont(f);
 
-				owner = new JLabel(res.getString("label-owner") + ti.getOwner());
+				owner = new JLabel(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
 				owner.setAlignmentX(Component.CENTER_ALIGNMENT);
 				owner.setFont(f);
 
