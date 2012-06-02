@@ -192,11 +192,18 @@ public class Dice {
 		descriptionLabel.setText(rb.getString("inJail"));
 
 //		jp.add(imageLogo("mrjail.png"));
-		jpanel.add(descriptionLabel, BorderLayout.CENTER);
-		jpanel.add(buttonPay,BorderLayout.SOUTH);
-		jpanel.add(buttonCard,BorderLayout.SOUTH);
-		jpanel.add(buttonRight,BorderLayout.SOUTH);
-
+		JPanel buttonPanel= new JPanel();
+		
+		buttonPanel.add(buttonPay);
+		buttonPanel.add(buttonCard);
+		buttonPanel.add(buttonRight);
+		
+		
+		jpanel.add(descriptionLabel, BorderLayout.NORTH);
+//		jpanel.add(buttonPay,BorderLayout.SOUTH);
+//		jpanel.add(buttonCard,BorderLayout.SOUTH);
+//		jpanel.add(buttonRight,BorderLayout.SOUTH);
+		jpanel.add(buttonPanel,BorderLayout.SOUTH);
 		return jpanel;
 	}
 

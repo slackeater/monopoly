@@ -289,6 +289,12 @@ public class GameController {
 	}
 
 
+	/**
+	 * returns the name of the current player
+	 */
+	public String getCurrentPlayerName(){
+		return gameClient.getCurrentPlayer().getName();
+	}
 	
 	/**
 	 * send a message when the player quit the game

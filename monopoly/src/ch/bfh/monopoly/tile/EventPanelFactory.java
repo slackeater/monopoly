@@ -11,7 +11,7 @@ public class EventPanelFactory {
 	public JPanel getJPanel(){
 		JPanel jpanel = new JPanel();
 		jpanel.setSize(100, 100);
-		jpanel.setLayout(new GridLayout(2,1));
+		jpanel.setLayout(new BorderLayout());
 		jpanel.setBackground(Color.WHITE);
 		return jpanel;
 	}
