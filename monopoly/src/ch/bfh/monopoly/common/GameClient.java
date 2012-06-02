@@ -13,6 +13,7 @@ import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
+import ch.bfh.monopoly.observer.TradeInfoEvent;
 import ch.bfh.monopoly.observer.WindowListener;
 import ch.bfh.monopoly.observer.WindowMessage;
 import ch.bfh.monopoly.observer.WindowStateEvent;
@@ -213,10 +214,10 @@ public class GameClient {
 	public void advancePlayerNSpacesInDirection(int n,
 			MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		// used to force the roll values to test certain tiles
-		int[] desiredRolls = { 10, 9, 11, 10, 9, 9 };
-		//int modifiedN = n;
-		 int modifiedN = desiredRolls[rollCount];
-		 rollCount++;
+		// int[] desiredRolls = { 10, 9, 11, 10, 9, 9 };
+		int modifiedN = n;
+		// int modifiedN = desiredRolls[rollCount];
+		// rollCount++;
 
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
@@ -963,6 +964,36 @@ public class GameClient {
 	 */
 	public void sendNetMessageToGUI(NetMessage netMsg) {
 		nc.sendMessage(netMsg);
+	}
+
+	/**
+	 * send a trade request to a player
+	 */
+	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie,
+			boolean sentNetMessage) {
+		NetMessage nm = new NetMessage(playerName, tie, Messages.TRADE_REQUEST);
+		nc.sendMessage(nm);
+	}
+
+	/**
+	 * receive a trade request
+	 */
+	public void receiveTradeRequest(TradeInfoEvent tie) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_TRADE_REQUEST, tie);
+		ws.notifyListeners(wse);
+	}
+
+	/**
+	 * confirm/reject a trade request that you have received
+	 */
+	public void sendTradeRequestAnswer(boolean answer, boolean sendNetMessage) {
+		if (sendNetMessage) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_TRADE_ANSWER, answer);
+			NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
+			nc.sendMessage(nm);
+		}
 	}
 
 	/**

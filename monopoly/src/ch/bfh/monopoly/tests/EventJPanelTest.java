@@ -34,10 +34,11 @@ public class EventJPanelTest extends JFrame {
 		// testFirstRailRoadOwned();
 		// testFirstRailRoadNotOwned();
 		// testLandOnGo();
-		testLandOnJail();
+//		testLandOnJail();
 		// testJustVisiting();
 		// testFreeParking();
-		// testGoToJail();
+		 testGoToJail();
+
 		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail

@@ -157,12 +157,37 @@ public class Dice {
 			}
 		};
 		
+		
+		ActionListener pay=new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.getOutOfJailByPayment(testOff);
+				gameClient.sendTransactionSuccesToGUI(testOff);
+			}
+		};
+		
+		ActionListener card =new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.getOutOfJailByCard(testOff);
+				gameClient.sendTransactionSuccesToGUI(testOff);
+			}
+		};
+		JButton buttonPay=new JButton(rb.getString("pay"));
+		buttonPay.addActionListener(pay);
+		JButton buttonCard=new JButton(rb.getString("card"));
+		buttonCard.addActionListener(card);
+		
 		buttonRight.addActionListener(al);
 		buttonRight.setText("Roll");
 		descriptionLabel.setText(rb.getString("inJail"));
 
 //		jp.add(imageLogo("mrjail.png"));
 		jp.add(descriptionLabel);
+		jp.add(buttonPay);
+		jp.add(buttonCard);
 		jp.add(buttonRight);
 
 		return jp;

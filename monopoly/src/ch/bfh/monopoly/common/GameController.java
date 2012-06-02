@@ -1,7 +1,9 @@
-	package ch.bfh.monopoly.common;
+		package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 import javax.swing.JPanel;
+
+import ch.bfh.monopoly.observer.TradeInfoEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 
 public class GameController {
@@ -267,10 +269,26 @@ public class GameController {
 	}
 
 	/**
+	 * send a trade request to a player
+	 */
+	public void sendTradeRequestToPlayer(String playerName,TradeInfoEvent tie){
+		gameClient.sendTradeRequestToPlayer(playerName, tie, true);
+	}
+	
+	/**
+	 * confirm/reject a trade request that you have received
+	 */
+	public void answerTradeRequest(boolean answer){
+		gameClient.answerTradeRequest(answer, true);
+	}
+	
+	
+	/**
 	 * send a message when the player quit the game
 	 */
 	public void sendQuitGame() {
 		gameClient.sendQuitGame();
 	}
+	
 
 }

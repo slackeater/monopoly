@@ -35,6 +35,8 @@ public class GoToJail extends AbstractTile {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameClient.goToJail(sendNetMessage);
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				
 				System.out.println("The current player is at tile :"
 						+ gameClient.getCurrentPlayer().getPosition());
 				System.out.println("The current player jail status is :"

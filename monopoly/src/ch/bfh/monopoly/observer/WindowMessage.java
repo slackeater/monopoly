@@ -9,7 +9,9 @@ package ch.bfh.monopoly.observer;
 	
 		MSG_FOR_CHAT(0),
 		MSG_FOR_ERROR(1),
-		MSG_EVENT_COMPLETION(2)
+		MSG_EVENT_COMPLETION(2),
+		MSG_TRADE_REQUEST(3),
+		MSG_TRADE_ANSWER(4)
 
 		
 		;

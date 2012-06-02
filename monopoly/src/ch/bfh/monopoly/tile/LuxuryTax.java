@@ -21,8 +21,8 @@ public class LuxuryTax extends AbstractTile {
 	public LuxuryTax(String name, int fee, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
-		this.description = rb.getString("freeParking-cardText");
-		this.fee = fee;
+		this.description = rb.getString("luxuryTax-cardText");
+		this.fee = Integer.parseInt(rb.getString("tile38-price"));
 	}
 
 	/**
@@ -34,11 +34,12 @@ public class LuxuryTax extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.freeParking(true);
+				gameClient.payFee(fee, sendNetMessage);
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
 		});
 		buttonRight.setText("ok");
-		eventInfoLabel.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
+		eventInfoLabel.setText(description);
 
 		jpanel.add(eventInfoLabel);
 		jpanel.add(buttonRight);

@@ -5,8 +5,11 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
+import com.sun.tools.internal.ws.processor.model.Message;
+
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.gui.MonopolyGUI;
+import ch.bfh.monopoly.observer.TradeInfoEvent;
 
 public class NetMessage implements Serializable {
 
@@ -27,6 +30,7 @@ public class NetMessage implements Serializable {
 	private int propertyID;
 	private int[] cardDrawOrder;
 	private MonopolyGUI.Direction dir;
+	private TradeInfoEvent tie;
 	
 
 
@@ -66,6 +70,18 @@ public class NetMessage implements Serializable {
 	public NetMessage(String string, int integerValue, Messages m) {
 		this.string = string;
 		this.integerValue = integerValue;
+		this.m = m;
+	}
+	
+	/**
+	 * construct a netmessage that send the trade info 
+	 * @param string
+	 * @param tie
+	 * @param m
+	 */
+	public NetMessage(String string, TradeInfoEvent tie, Messages m){
+		this.string = string;
+		this.tie = tie;
 		this.m = m;
 	}
 

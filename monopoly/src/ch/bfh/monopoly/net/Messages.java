@@ -57,6 +57,11 @@ public enum Messages {
 	GET_OUT_OF_JAIL_ROLL(667),
 	GET_OUT_OF_JAIL_PAY(668),
 	GET_OUT_OF_JAIL_USECARD(669),
+	
+	TRADE_REQUEST(700),
+	TRADE_ANSWER(701),
+	
+	
 	//probably only for test
 	ACKNOWLEDGE(999)
 	
