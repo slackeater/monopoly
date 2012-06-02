@@ -162,7 +162,8 @@ public class ClientHandler implements IoHandler {
 		case TRADE_REQUEST:
 			gameClient.receiveTradeRequest(n.getTie());
 			break;
-		case TRADE_ANSWER: gameClient.receiveTradeAnswer(n.getTradeAnswer());
+		case TRADE_ANSWER: 
+			gameClient.receiveTradeAnswer(n.getTradeAnswer());
 			break;
 		case ACKNOWLEDGE:
 			// TODO probably to remove
