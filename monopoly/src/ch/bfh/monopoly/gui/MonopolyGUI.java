@@ -364,6 +364,7 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
+					tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
 					System.out.println("TRADE REQUEST");
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_ANSWER){
@@ -934,7 +935,8 @@ public class MonopolyGUI extends JFrame {
 	 * @return JPanel
 	 * 		the relative JPanel for kicking a player
 	 */
-	private JPanel kickPlayer(){
+	private JScrollPane kickPlayer(){
+		JScrollPane p = new JScrollPane();
 		JPanel kick = new JPanel();
 		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
 		kick.setBorder(BorderFactory.createTitledBorder(res.getString("label-kicktitle")));
@@ -959,7 +961,35 @@ public class MonopolyGUI extends JFrame {
 		kick.add(Box.createVerticalGlue());
 		kick.add(Box.createVerticalGlue());
 		kick.add(btnCtr);
+		
+		p.add(kick);
+		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		return kick;
+		return p;
 	}
+	
+	private JScrollPane tradeRequestArrived(TradeInfoEvent tie){
+		JScrollPane p = new JScrollPane();
+		
+		JPanel pa = new JPanel();
+		
+		JLabel offer = new JLabel("You receveid an offer:");
+		JLabel frompl = new JLabel("From: " + gc.getCurrentPlayerName());
+		JLabel moneyDemand = new JLabel("He wants this money: " + tie.getMoneyDemand());
+		JLabel moneyOffer = new JLabel("He offers this money: " + tie.getMoneyOffer());
+		
+		pa.add(offer);
+		pa.add(frompl);
+		pa.add(moneyDemand);
+		pa.add(moneyOffer);
+		
+		
+		p.add(pa);
+		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+		return p;
+	}
+	
 }
