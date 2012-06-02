@@ -792,7 +792,13 @@ public class GameClient {
 		}
 	}
 
-
+	/**
+	 * player pays 10% of his cash into free parking
+	 */
+	public void payIncome10Percent(boolean sendNetMessage) {
+		int fee = currentPlayer.getAccount()/10;
+		payFee(fee, sendNetMessage);
+	}
 
 	/**
 	 * called by the change event getJailCard increases the jailCard count of

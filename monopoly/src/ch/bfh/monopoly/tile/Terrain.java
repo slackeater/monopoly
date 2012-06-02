@@ -138,7 +138,8 @@ public class Terrain extends Property {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						jpanel.removeAll();
-						
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+						buttonRight.setEnabled(false);
 					}
 				});
 				System.out.println("The owner's bank account balance: " + owner.getAccount());

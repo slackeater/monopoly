@@ -696,6 +696,7 @@ public class Board {
 		Player plyr = getPlayerByName(playerName);
 		plyr.withdawMoney(fee);
 		freeParking += fee;
+		playerSubject.notifyListeners();
 	}
 
 	/**
@@ -865,7 +866,7 @@ public class Board {
 	 */
 	public void advancePlayerNSpacesInDirection(String playerName, int n, MonopolyGUI.Direction dir) {
 		Player plyr = getPlayerByName(playerName);
-
+		System.out.println("BOARDadvance: received advancePlayer: "+n);
 		int previousPosition = plyr.getPosition();
 
 		int currentPos = plyr.getPosition();
@@ -873,7 +874,7 @@ public class Board {
 		plyr.setRollValue(n);
 		plyr.setDir(dir);
 		int newPosition = plyr.getPosition();
-
+		System.out.println("BOARDadvance:"+playerName+"'s new position is: " + newPosition);
 		// if passes go
 		if (newPosition < previousPosition)
 			passGo(plyr);

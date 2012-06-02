@@ -123,6 +123,7 @@ public class Dice {
 	public void normalRollSecondStep() {
 		jp.remove(buttonRight);
 		final int roll = throwDice();
+		System.out.println("DICE CLASS rolled: "+roll);
 		buttonRight = new JButton(rb.getString("continueButton"));
 		buttonRight.addActionListener(new ActionListener() {
 		
@@ -137,7 +138,7 @@ public class Dice {
 			}
 		});
 
-		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("advance") + roll +rb.getString("spaces"));
+		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() +" " + rb.getString("advance") +" "+ roll +" "+rb.getString("spaces"));
 //		jp.add(imageLogo("roll.png"));
 		jp.add(buttonRight);
 	}
