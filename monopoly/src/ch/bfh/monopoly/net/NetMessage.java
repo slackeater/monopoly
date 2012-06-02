@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
-import com.sun.tools.internal.ws.processor.model.Message;
 
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.gui.MonopolyGUI;
