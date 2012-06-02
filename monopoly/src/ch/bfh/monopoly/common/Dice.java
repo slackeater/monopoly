@@ -194,8 +194,8 @@ public class Dice {
 //		jp.add(imageLogo("mrjail.png"));
 		jpanel.add(descriptionLabel, BorderLayout.CENTER);
 		jpanel.add(buttonPay,BorderLayout.SOUTH);
-		jpanel.add(buttonCard,BorderLayout.WEST);
-		jpanel.add(buttonRight,BorderLayout.EAST);
+		jpanel.add(buttonCard,BorderLayout.SOUTH);
+		jpanel.add(buttonRight,BorderLayout.SOUTH);
 
 		return jpanel;
 	}
