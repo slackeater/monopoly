@@ -35,6 +35,13 @@ public class GameControllerTests {
 		gc = tig.getGc();
 	}
 
+	
+	/**
+	 * test that you get your go money when you go around the board
+	 */
+	public void passGoDepositsMoney(){}
+	
+	
 	/**
 	 * test that buyHouseRow doesn't allow purchase if at least 1 tile has 4
 	 * houses already

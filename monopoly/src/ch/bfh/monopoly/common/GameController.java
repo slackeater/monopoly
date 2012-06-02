@@ -1,4 +1,4 @@
-package ch.bfh.monopoly.common;
+	package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 import javax.swing.JPanel;

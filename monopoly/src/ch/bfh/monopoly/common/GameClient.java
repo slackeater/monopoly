@@ -796,7 +796,7 @@ public class GameClient {
 	 * player pays 10% of his cash into free parking
 	 */
 	public void payIncome10Percent(boolean sendNetMessage) {
-		int fee = currentPlayer.getAccount()/10;
+		int fee = currentPlayer.getAccount() / 10;
 		payFee(fee, sendNetMessage);
 	}
 
@@ -885,10 +885,14 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateChanceDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
-				Messages.UPDATE_CHANCE_ORDER);
-		nm.setDrawOrder(newOrder);
-		nc.sendMessage(nm);
+		board.castTileToProperty(board.getTileById(1)).getEventManager()
+				.setChanceOrder(newOrder);
+		if (sendNetMessage) {
+			NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
+					Messages.UPDATE_CHANCE_ORDER);
+			nm.setDrawOrder(newOrder);
+			nc.sendMessage(nm);
+		}
 
 	}
 
@@ -902,11 +906,14 @@ public class GameClient {
 	 *            true if a net message should be sent to the server
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
-		NetMessage nm = new NetMessage("NoNameNeeded", 0,
-				Messages.UPDATE_COMMCHEST_ORDER);
-		nm.setDrawOrder(newOrder);
-		nc.sendMessage(nm);
-
+		board.castTileToProperty(board.getTileById(1)).getEventManager()
+				.setCommChestOrder(newOrder);
+		if (sendNetMessage) {
+			NetMessage nm = new NetMessage("NoNameNeeded", 0,
+					Messages.UPDATE_COMMCHEST_ORDER);
+			nm.setDrawOrder(newOrder);
+			nc.sendMessage(nm);
+		}
 	}
 
 	public void displayChat(String text) {

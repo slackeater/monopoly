@@ -28,14 +28,14 @@ public class MovementEvent extends AbstractTileEvent {
 	@Override
 	public void performEvent() {
 		
-		if (newPosition > 0) {
+		if (newPosition == 10 ){
+			//EQUAL to 10, then it's go to JAIL
+			gameClient.goToJail(sendNetMessage);
+			}
+		else if (newPosition >= 0) {
 			//GREATER than 0, advance as normal
 			gameClient.advancePlayerToTile(newPosition, sendNetMessage);
 		}
-		else if (newPosition == 0 ){
-			//EQUAL to 0, then it's go to JAIL
-			gameClient.goToJail(sendNetMessage);
-			}
 		else {
 			gameClient.advancePlayerNSpacesInDirection((newPosition*-1), MonopolyGUI.Direction.BACKWARDS, sendNetMessage);
 		}

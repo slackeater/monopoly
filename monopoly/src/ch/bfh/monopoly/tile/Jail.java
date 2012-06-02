@@ -41,7 +41,7 @@ public class Jail extends AbstractTile {
 
 			}
 		});
-		buttonRight.setText("ok");
+		buttonRight.setText("continue");
 		eventInfoLabel.setText(description);
 
 		jpanel.add(eventInfoLabel);

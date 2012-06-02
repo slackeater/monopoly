@@ -21,8 +21,8 @@ public class EventManager {
 	int[] commChestEventsShuffled = new int[16];
 	ArrayList<Integer> integersTo16;
 
-	int chanceDrawIndex;
-	int commChestDrawIndex;
+	int chanceDrawIndex=16;
+	int commChestDrawIndex=16;
 
 	private boolean testOff;
 
@@ -42,14 +42,16 @@ public class EventManager {
 
 	private void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
-		chanceDrawIndex = 10;
+		//set a number here to test that event in particular
+		chanceDrawIndex = 0;
 		if (testOff)
 			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testOff);
 	}
 
 	private void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
-		commChestDrawIndex = 10;
+		//set a number here to test that event in particular
+		commChestDrawIndex = 0;
 		if (testOff)
 			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, testOff);
 	}

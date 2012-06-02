@@ -68,7 +68,7 @@ public class ClientHandler implements IoHandler {
 			System.out
 					.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "
 							+ rollValue);
-			gameClient.advancePlayerNSpaces(rollValue, false);
+			gameClient.advancePlayerNSpacesInDirection(rollValue, n.getDir(), false);
 			break;
 
 		case BUY_HOUSE:
