@@ -20,7 +20,7 @@ public class IncomeTax extends AbstractTile {
 	public IncomeTax(String name, int fee, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
-		this.description = rb.getString("freeParking-cardText");
+		this.description = rb.getString("incomeTax-cardText");
 		this.fee=fee;
 	}
 
@@ -28,11 +28,14 @@ public class IncomeTax extends AbstractTile {
 	 * get the JPanel to show in the GUI for this tile's event
 	 */
 	public JPanel getTileEventPanel() {
+		final int amount = Integer.parseInt(rb.getString("tile4-rent"));
 		buttonLeft.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//pay 10%
+				gameClient.payIncome10Percent(sendNetMessage);
+				buttonLeft.setEnabled(false);
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
 		});
 
@@ -40,11 +43,13 @@ public class IncomeTax extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.payFee(4000, sendNetMessage);
+				gameClient.payFee(amount, sendNetMessage);
+				buttonRight.setEnabled(false);
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
 		});
-		buttonLeft.setText("pay1");
-		buttonRight.setText("pay2");
+		buttonLeft.setText("10%");
+		buttonRight.setText(String.valueOf(amount));
 		
 		eventInfoLabel.setText(description);
 

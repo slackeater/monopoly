@@ -15,6 +15,7 @@ public class GoToJailEvent extends MovementEvent{
 		// TODO Auto-generated method stub
 		super.performEvent();
 		gameClient.goToJail(sendNetMessage);
+		
 	}
 	
 }

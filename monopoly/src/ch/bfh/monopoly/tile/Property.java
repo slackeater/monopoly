@@ -72,12 +72,10 @@ public abstract class Property extends AbstractTile implements IProperty {
 					public void actionPerformed(ActionEvent arg0) {
 						jpanel.removeAll();
 						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-						System.out
-								.println("The GUI should receive a message to hide this JPanel");
+						buttonRight.setEnabled(false);
 					}
 				};
 				buttonRight.addActionListener(al);
-//				buttonRight.setEnabled(false);
 				eventInfoLabel.setText(msgYouBought +" "+ name);
 				
 
