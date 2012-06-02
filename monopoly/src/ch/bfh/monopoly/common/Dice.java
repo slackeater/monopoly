@@ -1,5 +1,7 @@
 package ch.bfh.monopoly.common;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -12,6 +14,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.border.Border;
+
+import ch.bfh.monopoly.tile.EventPanelFactory;
 
 public class Dice {
 
@@ -19,15 +25,15 @@ public class Dice {
 	int maxValDiceTwo;
 	int throwValueOne = 0;
 	int throwValueTwo = 0;
-	JPanel jp = new JPanel();
+	JPanel jpanel;
 	JButton buttonRight = new JButton();
-	JLabel descriptionLabel = new JLabel();
+	JTextArea descriptionLabel = new JTextArea();
 	GameClient gameClient;
 	ActionListener al;
 	boolean testOff;
 	int attemptedRolls=0;
 	ResourceBundle rb;
-	
+
 	/**
 	 * Construct a dice object
 	 * 
@@ -56,6 +62,7 @@ public class Dice {
 		this.maxValDiceTwo = maxValDiceTwo;
 		rb= ResourceBundle.getBundle(
 				"ch.bfh.monopoly.resources.tile",gameClient.getLoc());
+		jpanel=(new EventPanelFactory()).getJPanel();
 	}
 
 	/**
@@ -101,7 +108,6 @@ public class Dice {
 	}
 	
 	public JPanel getNormalStartTurnPanel() {
-		jp=new JPanel();
 		buttonRight = new JButton();
 		buttonRight.addActionListener(new ActionListener() {
 
@@ -114,14 +120,14 @@ public class Dice {
 		descriptionLabel.setText(rb.getString("rollDescription"));
 
 //		jp.add(imageLogo("roll.png"));
-		jp.add(descriptionLabel);
-		jp.add(buttonRight);
+		jpanel.add(descriptionLabel,BorderLayout.CENTER);
+		jpanel.add(buttonRight, BorderLayout.SOUTH);
 
-		return jp;
+		return jpanel;
 	}
 
 	public void normalRollSecondStep() {
-		jp.remove(buttonRight);
+		jpanel.remove(buttonRight);
 		final int roll = throwDice();
 		System.out.println("DICE CLASS rolled: "+roll);
 		buttonRight = new JButton(rb.getString("continueButton"));
@@ -140,12 +146,12 @@ public class Dice {
 
 		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() +" " + rb.getString("advance") +" "+ roll +" "+rb.getString("spaces"));
 //		jp.add(imageLogo("roll.png"));
-		jp.add(buttonRight);
+		jpanel.add(buttonRight, BorderLayout.SOUTH);
 	}
 	
 	
 	public JPanel getJailStartTurnPanel() {
-		jp=new JPanel();
+		jpanel=new JPanel();
 		attemptedRolls=0;
 		al=new ActionListener() {
 
@@ -185,12 +191,12 @@ public class Dice {
 		descriptionLabel.setText(rb.getString("inJail"));
 
 //		jp.add(imageLogo("mrjail.png"));
-		jp.add(descriptionLabel);
-		jp.add(buttonPay);
-		jp.add(buttonCard);
-		jp.add(buttonRight);
+		jpanel.add(descriptionLabel, BorderLayout.CENTER);
+		jpanel.add(buttonPay,BorderLayout.SOUTH);
+		jpanel.add(buttonCard,BorderLayout.SOUTH);
+		jpanel.add(buttonRight,BorderLayout.SOUTH);
 
-		return jp;
+		return jpanel;
 	}
 
 	public void jailRollSecondStep() {
@@ -208,7 +214,7 @@ public class Dice {
 					gameClient.sendTransactionSuccesToGUI(testOff);
 					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
 					buttonRight.removeActionListener(al);
-					jp=gameClient.getStartTurnPanel(testOff);
+					jpanel=gameClient.getStartTurnPanel(testOff);
 				}
 			};
 			buttonRight.addActionListener(al);
@@ -222,8 +228,8 @@ public class Dice {
 	}
 	
 	public void rolledUnsuccessfully(){
-		jp.remove(buttonRight);
-		jp.add(new JLabel("rolledUnsuccessfully"));
+		jpanel.remove(buttonRight);
+		jpanel.add(new JLabel("rolledUnsuccessfully"),BorderLayout.CENTER);
 		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + " " + (3-attemptedRolls) +" "+rb.getString("triesRemaining")+ rb.getString("stayJail"));
 		gameClient.sendTransactionSuccesToGUI(testOff);
 	}

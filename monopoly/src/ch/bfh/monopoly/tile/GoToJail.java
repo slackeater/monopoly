@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -47,8 +48,8 @@ public class GoToJail extends AbstractTile {
 		buttonRight.setText("ok");
 		eventInfoLabel.setText(description);
 
-		jpanel.add(eventInfoLabel);
-		jpanel.add(buttonRight);
+		jpanel.add(eventInfoLabel, BorderLayout.CENTER);
+		jpanel.add(buttonRight, BorderLayout.SOUTH);
 
 		return jpanel;
 	}
