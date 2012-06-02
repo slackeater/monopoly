@@ -33,7 +33,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.Timer;
 import ch.bfh.monopoly.common.BoardController;
-import ch.bfh.monopoly.common.Dice;
 import ch.bfh.monopoly.common.Direction;
 import ch.bfh.monopoly.common.GameController;
 import ch.bfh.monopoly.common.Token;
@@ -94,7 +93,7 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
 
-
+	//TODO TO BE MOVED AWAY
 	public enum Direction{
 		FORWARDS,
 		BACKWARDS;
@@ -124,8 +123,6 @@ public class MonopolyGUI extends JFrame {
 		System.out.println("BEFORE WRAPPER INIT");
 		//initialize the element of the GUI
 		wrapperInit();
-
-
 
 		pack();
 	}
@@ -969,6 +966,13 @@ public class MonopolyGUI extends JFrame {
 		return p;
 	}
 	
+	/**
+	 * Get the panel with the trade proposal
+	 * @param tie TradeInfoEvent
+	 * 				the box with trade's information
+	 * @return JScrollPane
+	 * 			the panel containing the stuff
+	 */
 	private JScrollPane tradeRequestArrived(TradeInfoEvent tie){
 		JScrollPane p = new JScrollPane();
 		
