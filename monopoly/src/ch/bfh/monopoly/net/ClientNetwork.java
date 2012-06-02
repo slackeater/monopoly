@@ -46,6 +46,7 @@ public class ClientNetwork {
 	 */
 	public void sendMessage(NetMessage nm) {
 		try {
+			System.out.println("SENT MESSAGW FROM CLIENT NETWORK");
 			this.clientSession.write(nm).await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();

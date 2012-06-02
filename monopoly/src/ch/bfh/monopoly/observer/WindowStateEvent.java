@@ -7,6 +7,7 @@ public class WindowStateEvent {
 	int amount;
 	private WindowMessage type;
 	TradeInfoEvent tei;
+	boolean answer;
 	
 	public WindowStateEvent(WindowMessage type, String eventDescription, int amount){
 		this.type = type;
@@ -21,9 +22,14 @@ public class WindowStateEvent {
 	
 	public WindowStateEvent(WindowMessage type, boolean answer){
 		this.type = type;
+		this.answer = answer;
 	}
 	
-
+	public boolean getAnswer(){
+		return  answer;
+	}
+	
+	
 	public String getEventDescription() {
 		return eventDescription;
 	}

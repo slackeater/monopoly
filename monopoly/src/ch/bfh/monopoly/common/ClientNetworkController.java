@@ -61,6 +61,7 @@ public class ClientNetworkController {
 	 * 		the Netmessage to send to the server
 	 */
 	public void sendMessage(NetMessage nm){
+		System.out.println("SEND MESSAGE FROM NET CONTROLLER");
 		net.sendMessage(nm);
 	}
 	

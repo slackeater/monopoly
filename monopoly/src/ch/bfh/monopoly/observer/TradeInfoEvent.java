@@ -1,9 +1,11 @@
 package ch.bfh.monopoly.observer;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TradeInfoEvent {
+public class TradeInfoEvent implements Serializable{
 
+	private static final long serialVersionUID = 7318239032321368562L;
 	int moneyDemand;
 	int moneyOffer;
 	int jailcardDemand;

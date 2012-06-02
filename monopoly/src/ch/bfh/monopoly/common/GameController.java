@@ -276,7 +276,9 @@ public class GameController {
 	 * send a trade request to a player
 	 */
 	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
+		System.out.println("SEND TRADE GController");
 		gameClient.sendTradeRequestToPlayer(playerName, tie);
+		
 	}
 
 

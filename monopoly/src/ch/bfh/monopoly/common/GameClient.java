@@ -970,8 +970,10 @@ public class GameClient {
 	 * send a trade request to a player
 	 */
 	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
+		System.out.println("SEND TRADE FROM GAME CLIENT");
 		NetMessage nm = new NetMessage(playerName, tie, Messages.TRADE_REQUEST);
 		nc.sendMessage(nm);
+		
 	}
 
 	/**

@@ -68,6 +68,10 @@ public class BoardBuilder extends JPanel {
 
 		JPanel btnPanel = new JPanel();
 		
+		JScrollPane scrollBtn = new JScrollPane(btnPanel);
+		scrollBtn.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollBtn.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
 		//add the buttons to the central panel
 		for(JButton btn : btns){
 			btnPanel.add(btn);
@@ -78,7 +82,7 @@ public class BoardBuilder extends JPanel {
 		scrollEventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		p.add(scrollEventPane);
-		p.add(btnPanel);
+		p.add(scrollBtn);
 		
 		this.eventPane.addTab("Events", p);
 		
