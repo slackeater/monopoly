@@ -36,6 +36,7 @@ public class ServerHandler implements IoHandler{
 		private String username;
 		private int rollValue;
 		private IoSession session;
+		private boolean turnToken = false;
 
 		public PlayerWrapper(String username, int rollValue, IoSession session){
 			this.username = username;
@@ -54,6 +55,14 @@ public class ServerHandler implements IoHandler{
 
 		public int getRollValue() {
 			return rollValue;
+		}
+		
+		public void setTurnToken(boolean t){
+			turnToken = t;
+		}
+		
+		public boolean hasTurnToken(){
+			return turnToken;
 		}
 
 	}
@@ -98,7 +107,13 @@ public class ServerHandler implements IoHandler{
 	 * Send the turn token to the next player
 	 */
 	public void sendTurnToken(){
+		//reset turn token
+		for(PlayerWrapper p : plWrap){
+			p.setTurnToken(false);
+		}
+		
 		NetMessage nm = new NetMessage(plWrap.get(userTokenIndex).getUsername(), Messages.TURN_TOKEN);
+		plWrap.get(userTokenIndex).setTurnToken(true);
 
 		System.out.println("===  USER TOKEN INDEX : " + userTokenIndex + " TURN TO PLAYER " + plWrap.get(userTokenIndex).getUsername());
 
@@ -119,7 +134,6 @@ public class ServerHandler implements IoHandler{
 	 */
 	public void sendStartGame(Locale loc){
 		NetMessage nm = new NetMessage(this.usernames, loc, Messages.GAME_START);
-
 		sendBroadcast(nm, null);	
 	}
 
@@ -193,28 +207,20 @@ public class ServerHandler implements IoHandler{
 					e.printStackTrace();
 				}
 
-				int check;
-				
 				//if the user who quit has the turn token update it and send a new turn token
 				System.out.println("THE TOKEN IS: " + userTokenIndex);
 				System.out.println("THE J COUNTER IS: " + j);
-				
-				if(userTokenIndex-1 < 0)
-					check = plWrap.size()-1;
-				else
-					check = userTokenIndex-1;
 						
-				System.out.println("THE CHECK IS: " + check);
-				
-				if(j == check){
+				if(plWrap.get(j).hasTurnToken()){
 					System.out.println("THE USER HAS THE TOKEN");
-					System.out.println(usernames.get(check));
+					System.out.println(plWrap.get(j).getUsername());
 					
 					System.out.println("WE HAVE TO SEND THE TURN TOKEN TO: ");
 					System.out.println(usernames.get(userTokenIndex));
 
 					//send new turn token
 					sendTurnToken();
+					userTokenIndex--;
 				}
 
 				usernames.remove(j);
