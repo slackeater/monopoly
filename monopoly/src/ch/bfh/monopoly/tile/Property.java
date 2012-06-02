@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
@@ -51,7 +52,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 
 	public JPanel getBuyTileWindow() {
 		eventInfoLabel.setText(name +" "+msgIsNotOwned);
-		jpanel.add(eventInfoLabel);
+		jpanel.add(eventInfoLabel, BorderLayout.CENTER);
 		buttonRight = new JButton(buttonTextBuy);
 		
 		
@@ -84,7 +85,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 		
 		
 		buttonRight.addActionListener(al);
-		jpanel.add(buttonRight);
+		jpanel.add(buttonRight,BorderLayout.SOUTH);
 		return jpanel;
 	}
 

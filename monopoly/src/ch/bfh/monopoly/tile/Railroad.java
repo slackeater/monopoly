@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
@@ -64,8 +65,8 @@ public class Railroad extends Property {
 		eventInfoLabel
 				.setText(name+" "+msgIsOwned+" "+ owner.getName() + ".  \n" + msgIsOwnedRent +" "+ feeToCharge());
 	
-		jpanel.add(eventInfoLabel);
-		jpanel.add(buttonRight);
+		jpanel.add(eventInfoLabel,BorderLayout.CENTER);
+		jpanel.add(buttonRight,BorderLayout.SOUTH);
 
 		return jpanel;
 	}

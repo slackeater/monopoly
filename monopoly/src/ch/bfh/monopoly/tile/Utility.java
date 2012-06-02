@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.tile;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -13,10 +14,10 @@ import ch.bfh.monopoly.event.EventManager;
 
 public class Utility extends Property {
 
-	JPanel jp = new JPanel();
+	JPanel jpanel;
 	JButton buttonRight;
 	JButton buttonLeft;
-	JLabel descriptionLabel;
+
 
 	public Utility(String name, int price, String group, int mortgageValue,
 			int coordX, int coordY, int id, EventManager em, Player bank, GameClient gameClient, ResourceBundle rb) {
@@ -26,7 +27,7 @@ public class Utility extends Property {
 		this.mortgageValue = mortgageValue;
 		buttonLeft = new JButton();
 		buttonRight = new JButton();
-		descriptionLabel=new JLabel();
+		jpanel=new EventPanelFactory().getJPanel();
 	}
 
 
@@ -59,14 +60,14 @@ public class Utility extends Property {
 				ownedSecondStep();
 			}
 		});
-		buttonLeft.setText("Roll");
-		descriptionLabel
+		buttonRight.setText("Roll");
+		eventInfoLabel
 				.setText("This is the event description of UtilityEvent");
 	
-		jp.add(descriptionLabel);
-		jp.add(buttonRight);
+		jpanel.add(eventInfoLabel,BorderLayout.CENTER);
+		jpanel.add(buttonRight,BorderLayout.SOUTH);
 
-		return jp;
+		return jpanel;
 	}
 	
 	public JPanel tileNotOwnedEvent(){
@@ -81,7 +82,7 @@ public class Utility extends Property {
 			multiplier = 10;
 		final int fee = roll * multiplier;
 
-		jp.remove(buttonRight);
+		jpanel.remove(buttonRight);
 
 		buttonRight = new JButton("Pay");
 		buttonRight.addActionListener(new ActionListener() {
@@ -95,9 +96,9 @@ public class Utility extends Property {
 				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 			}
 		});
-		descriptionLabel.setText("You rolled a " + roll + ", so the fee to pay is "
+		eventInfoLabel.setText("You rolled a " + roll + ", so the fee to pay is "
 				+ fee);
-		jp.add(buttonRight);
+		jpanel.add(buttonRight);
 		
 		
 	}
