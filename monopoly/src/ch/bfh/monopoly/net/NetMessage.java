@@ -73,6 +73,18 @@ public class NetMessage implements Serializable {
 		this.m = m;
 	}
 	
+	public boolean isKickAnswer() {
+		return kickAnswer;
+	}
+	
+	public boolean getTradeAnswer() {
+		return kickAnswer;
+	}
+
+	public TradeInfoEvent getTie() {
+		return tie;
+	}
+
 	/**
 	 * construct a netmessage that send the trade info 
 	 * @param string

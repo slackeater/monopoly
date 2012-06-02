@@ -3,7 +3,11 @@
 import java.util.Locale;
 import javax.swing.JPanel;
 
+import ch.bfh.monopoly.net.Messages;
+import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.TradeInfoEvent;
+import ch.bfh.monopoly.observer.WindowMessage;
+import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
 
 public class GameController {
@@ -271,17 +275,20 @@ public class GameController {
 	/**
 	 * send a trade request to a player
 	 */
-	public void sendTradeRequestToPlayer(String playerName,TradeInfoEvent tie){
-		gameClient.sendTradeRequestToPlayer(playerName, tie, true);
+	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
+		gameClient.sendTradeRequestToPlayer(playerName, tie);
 	}
-	
+
+
 	/**
 	 * confirm/reject a trade request that you have received
 	 */
-	public void answerTradeRequest(boolean answer){
-		gameClient.answerTradeRequest(answer, true);
+	public void sendTradeAnswer(boolean answer) {
+		gameClient.sendTradeAnswer(answer);
+
 	}
-	
+
+
 	
 	/**
 	 * send a message when the player quit the game

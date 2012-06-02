@@ -68,7 +68,8 @@ public class ClientHandler implements IoHandler {
 			System.out
 					.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "
 							+ rollValue);
-			gameClient.advancePlayerNSpacesInDirection(rollValue, n.getDir(), false);
+			gameClient.advancePlayerNSpacesInDirection(rollValue, n.getDir(),
+					false);
 			break;
 
 		case BUY_HOUSE:
@@ -158,11 +159,16 @@ public class ClientHandler implements IoHandler {
 		case GET_OUT_OF_JAIL_USECARD:
 			gameClient.getOutOfJailByCard(false);
 			break;
+		case TRADE_REQUEST:
+			gameClient.receiveTradeRequest(n.getTie());
+			break;
+		case TRADE_ANSWER: gameClient.receiveTradeAnswer(n.getTradeAnswer());
+			break;
 		case ACKNOWLEDGE:
-			//TODO probably to remove
+			// TODO probably to remove
 			break;
 		case QUIT_GAME:
-			//TODO quit gamed
+			// TODO quit gamed
 			System.out.println("The player quit the game: " + n.getText());
 			break;
 		default:

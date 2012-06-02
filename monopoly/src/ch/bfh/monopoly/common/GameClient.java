@@ -969,8 +969,7 @@ public class GameClient {
 	/**
 	 * send a trade request to a player
 	 */
-	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie,
-			boolean sentNetMessage) {
+	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
 		NetMessage nm = new NetMessage(playerName, tie, Messages.TRADE_REQUEST);
 		nc.sendMessage(nm);
 	}
@@ -987,13 +986,18 @@ public class GameClient {
 	/**
 	 * confirm/reject a trade request that you have received
 	 */
-	public void sendTradeRequestAnswer(boolean answer, boolean sendNetMessage) {
-		if (sendNetMessage) {
-			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_TRADE_ANSWER, answer);
-			NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
-			nc.sendMessage(nm);
-		}
+	public void sendTradeAnswer(boolean answer) {
+		NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
+		nc.sendMessage(nm);
+	}
+
+	/**
+	 * receive the response from a trade request
+	 */
+	public void receiveTradeAnswer(boolean answer) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_TRADE_ANSWER, answer);
+		ws.notifyListeners(wse);
 	}
 
 	/**
