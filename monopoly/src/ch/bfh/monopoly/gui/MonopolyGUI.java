@@ -354,6 +354,7 @@ public class MonopolyGUI extends JFrame {
 				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
 					eventTextArea.append(wse.getEventDescription()+"\n");
+					tabPane.setSelectedIndex(0);
 					endTurn.setEnabled(true);
 				}
 			}
@@ -617,6 +618,13 @@ public class MonopolyGUI extends JFrame {
 		});
 
 		this.trade = new JButton(res.getString("button-trade"));
+		this.trade.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabPane.add("Trade", tradeTab());
+			}
+		});
 
 		class ButtonManager implements PlayerListener{
 
@@ -659,14 +667,90 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JScrollPane tradeTab(){
 		JPanel yourOffer = new JPanel();
-		yourOffer.setLayout(new GridLayout(9, 2));
+		yourOffer.setLayout(new GridLayout(3, 3));
+		yourOffer.setBorder(BorderFactory.createTitledBorder(res.getString("label-youroffer")));
 
+		JPanel youWant = new JPanel(new GridLayout(5,3));
+		youWant.setBorder(BorderFactory.createTitledBorder(res.getString("label-requestfrompl")));
+			
+		
 		this.terrainCheck = new JCheckBox();
+		this.terrainCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(terrainCheck.isSelected()){
+					myTerrainBox.setEnabled(true);
+				}
+				else{
+					myTerrainBox.setEnabled(false);
+				}
+			}
+		});
+		
 		this.cardCheck = new JCheckBox();
+		this.cardCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(cardCheck.isSelected()){
+					jailCardLbl.setEnabled(true);
+				}
+				else{
+					jailCardLbl.setEnabled(false);
+				}
+			}
+		});
+			
 		this.moneyCheck = new JCheckBox();
+		this.moneyCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(moneyCheck.isSelected()){
+					moneySpinner.setEnabled(true);
+				}
+				else{
+					moneySpinner.setEnabled(false);
+				}
+			}
+		});
+		
 		this.rcvrTerrainCheck = new JCheckBox();
+		this.rcvrTerrainCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(rcvrTerrainCheck.isSelected()){
+					hisTerrainBox.setEnabled(true);
+				}
+				else{
+					hisTerrainBox.setEnabled(false);
+				}
+			}
+		});
+		
 		this.rcvrCardCheck = new JCheckBox();
+		this.rcvrCardCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(rcvrCardCheck.isSelected()){
+					rcvrJailCardLbl.setEnabled(true);
+				}
+				else{
+					rcvrJailCardLbl.setEnabled(false);
+				}
+			}
+		});
+		
 		this.rcvrMoneyCheck = new JCheckBox();
+		this.rcvrMoneyCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(rcvrMoneyCheck.isSelected()){
+					rcvrMoneySpinner.setEnabled(true);
+				}
+				else{
+					rcvrMoneySpinner.setEnabled(false);
+				}
+			}
+		});
 
 		this.sendTradeRequest = new JButton(res.getString("button-sendoffer"));
 
@@ -675,36 +759,86 @@ public class MonopolyGUI extends JFrame {
 		this.rcvrMoneySpinner = new JSpinner();
 		this.jailCardLbl = new JLabel(res.getString("label-jailcard"));
 		this.rcvrJailCardLbl = new JLabel(res.getString("label-jailcard"));
-
+		this.hisTerrainBox = new JComboBox();
+		
+		final JLabel rcvrTerrainLab = new JLabel(res.getString("label-tradeTerrain"));
+		final JLabel rcvrJailCardLab = new JLabel(res.getString("label-tradeJailCard"));		
+		final JLabel rcvrMoneyLab = new JLabel(res.getString("label-tradeMoney"));
+		
 		this.usersBox = new JComboBox();
+		this.usersBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				rcvrTerrainLab.setVisible(true);
+				rcvrJailCardLab.setVisible(true);
+				rcvrMoneyLab.setVisible(true);	
+				rcvrCardCheck.setVisible(true);
+				rcvrMoneyCheck.setVisible(true);
+				rcvrTerrainCheck.setVisible(true);
+				hisTerrainBox.setVisible(true);
+				rcvrMoneySpinner.setVisible(true);
+				rcvrJailCardLbl.setVisible(true);
 
+				int player = usersBox.getSelectedIndex();
+				boolean terrain[] = pse.get(player).getTerrains();	
+				
+				//change 10 to selectedPlayer.getTerrain.size
+				for(int i = 0 ; i < 40 ; i++){
+					if(terrain[i]){
+						TileInfo ti = bc.getTileInfoById(i);
+						hisTerrainBox.addItem(ti.getName());
+					}
+				}
+				
+				sendTradeRequest.setVisible(true);
+			}
+		});
+			
+		
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
-			this.usersBox.addItem(pse.get(i).getName());
-		}
-
-		this.hisTerrainBox = new JComboBox();
-
-		//change 10 to selectedPlayer.getTerrain.size
-		for(int i = 0 ; i < 10 ; i++){
-			this.hisTerrainBox.addItem(i);
+			if(!pse.get(i).getName().equals(gc.getLocalPlayerName())){
+				this.usersBox.addItem(pse.get(i).getName());
+			}
 		}
 
 		myTerrainBox.setEnabled(false);
 		moneySpinner.setEnabled(false);
 		jailCardLbl.setEnabled(false);
-
 		hisTerrainBox.setEnabled(false);
+		
 		rcvrMoneySpinner.setEnabled(false);
 		rcvrJailCardLbl.setEnabled(false);
-
-		JLabel offerLbl = new JLabel(res.getString("label-youroffer"));
-		JLabel wantedRes = new JLabel(res.getString("label-requestfrompl"));
-
-		//change 10 to localPlayer.getTerrains
-		for(int i = 0 ; i < 10 ; i++){
-			myTerrainBox.addItem(i);
+		
+		rcvrCardCheck.setVisible(false);
+		rcvrMoneyCheck.setVisible(false);
+		rcvrTerrainCheck.setVisible(false);
+		hisTerrainBox.setVisible(false);
+		rcvrMoneySpinner.setVisible(false);
+		rcvrJailCardLbl.setVisible(false);
+		sendTradeRequest.setVisible(false);
+		rcvrTerrainLab.setVisible(false);
+		rcvrJailCardLab.setVisible(false);
+		rcvrMoneyLab.setVisible(false);
+		
+		for(int j = 0; j < playerNumber ; j++){
+			if(pse.get(j).getName().equals(gc.getLocalPlayerName())){
+				
+				for(int i = 0 ; i < 40 ; i++){
+					boolean terrain[] = pse.get(j).getTerrains();
+					
+					if(terrain[i]){
+						TileInfo ti = bc.getTileInfoById(i);
+						myTerrainBox.addItem(ti.getName());
+					}
+				}
+				
+				break;
+			}
 		}
+		
 
 		//money spinner
 		int startMoney = 0;
@@ -713,31 +847,53 @@ public class MonopolyGUI extends JFrame {
 		rcvrMoneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
 
 		//add the panels to the container
-		yourOffer.add(offerLbl,0);
-		yourOffer.add(new JLabel(" "), 1);
-		yourOffer.add(terrainCheck, 2);
-		yourOffer.add(myTerrainBox, 3);
-		yourOffer.add(cardCheck, 4);
+		yourOffer.add(terrainCheck, 0);
+		yourOffer.add(new JLabel(res.getString("label-tradeTerrain")),1);
+		yourOffer.add(myTerrainBox, 2);
+		
+		yourOffer.add(cardCheck, 3);
+		yourOffer.add(new JLabel(res.getString("label-tradeJailCard")),4);
 		yourOffer.add(jailCardLbl, 5);
+		
 		yourOffer.add(moneyCheck, 6);
-		yourOffer.add(moneySpinner, 7);
-		yourOffer.add(wantedRes, 8);
-		yourOffer.add(usersBox, 9);
-		yourOffer.add(rcvrTerrainCheck, 10);
-		yourOffer.add(hisTerrainBox, 11);
-		yourOffer.add(rcvrCardCheck, 12);
-		yourOffer.add(rcvrJailCardLbl, 13);
-		yourOffer.add(rcvrMoneyCheck, 14);
-		yourOffer.add(rcvrMoneySpinner, 15);
-		yourOffer.add(new JLabel(" "), 16);
-		yourOffer.add(sendTradeRequest, 17);
+		yourOffer.add(new JLabel(res.getString("label-tradeMoney")),7);
+		yourOffer.add(moneySpinner, 8);
+		
+		//receiver panel
+		
+		youWant.add(new JLabel(" "), 0);
+		youWant.add(new JLabel(res.getString("label-tradePl")), 1);
+		youWant.add(usersBox, 2);
+		
+		youWant.add(rcvrTerrainCheck, 3);
+		youWant.add(rcvrTerrainLab,4);
+		youWant.add(hisTerrainBox, 5);
+		
+		youWant.add(rcvrCardCheck, 6);
+		youWant.add(rcvrJailCardLab,7);
+		youWant.add(rcvrJailCardLbl, 8);
+		
+		youWant.add(rcvrMoneyCheck, 9);
+		youWant.add(rcvrMoneyLab,10);
+		youWant.add(rcvrMoneySpinner, 11);
+		
+		youWant.add(new JLabel(" "), 12);
+		youWant.add(new JLabel(" "), 13);
+		youWant.add(sendTradeRequest, 14);
 
-		JScrollPane scrollInput = new JScrollPane(yourOffer);
+		JPanel cont = new JPanel(new GridLayout(2,1));
+		cont.add(yourOffer);
+		cont.add(youWant);
+		
+		JScrollPane scrollInput = new JScrollPane(cont);
 		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return scrollInput;
 	}
+	
+	
+	
 
 	//TODO ONLY FOR TEST SHOULD ME MOVED AWAY
 	private JPanel kickPlayer(){

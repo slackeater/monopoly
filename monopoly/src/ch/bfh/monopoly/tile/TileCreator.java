@@ -94,7 +94,6 @@ public class TileCreator {
 				t = new Chance(name, coordX, coordY, i, gameClient, em);
 			else if (group.equalsIgnoreCase("Community Chest"))
 				t = new CommunityChest(name, coordX, coordY, i, gameClient, em);
-			
 			else if (i==0)
 				t = new Go(name, coordX, coordY, i, em, gameClient);
 			else if (i==4)

@@ -213,10 +213,10 @@ public class GameClient {
 	public void advancePlayerNSpacesInDirection(int n,
 			MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		// used to force the roll values to test certain tiles
-		// int[] desiredRolls = { 7, 15, 14, 11 };
-		int modifiedN = n;
-		// int modifiedN = desiredRolls[rollCount];
-		// rollCount++;
+		int[] desiredRolls = { 10, 9, 11, 10, 9, 9 };
+		//int modifiedN = n;
+		 int modifiedN = desiredRolls[rollCount];
+		 rollCount++;
 
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
