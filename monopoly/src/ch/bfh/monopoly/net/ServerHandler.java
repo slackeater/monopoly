@@ -36,6 +36,7 @@ public class ServerHandler implements IoHandler{
 		private String username;
 		private int rollValue;
 		private IoSession session;
+		private boolean turnToken = false;
 
 		public PlayerWrapper(String username, int rollValue, IoSession session){
 			this.username = username;
@@ -54,6 +55,14 @@ public class ServerHandler implements IoHandler{
 
 		public int getRollValue() {
 			return rollValue;
+		}
+		
+		public void setTurnToken(boolean t){
+			turnToken = t;
+		}
+		
+		public boolean hasTurnToken(){
+			return turnToken;
 		}
 
 	}
@@ -98,7 +107,13 @@ public class ServerHandler implements IoHandler{
 	 * Send the turn token to the next player
 	 */
 	public void sendTurnToken(){
+		//reset turn token
+		for(PlayerWrapper p : plWrap){
+			p.setTurnToken(false);
+		}
+		
 		NetMessage nm = new NetMessage(plWrap.get(userTokenIndex).getUsername(), Messages.TURN_TOKEN);
+		plWrap.get(userTokenIndex).setTurnToken(true);
 
 		System.out.println("===  USER TOKEN INDEX : " + userTokenIndex + " TURN TO PLAYER " + plWrap.get(userTokenIndex).getUsername());
 
@@ -107,6 +122,8 @@ public class ServerHandler implements IoHandler{
 			userTokenIndex = 0;
 		else if(userTokenIndex < plWrap.size()-1)
 			userTokenIndex++;
+		else if(userTokenIndex > plWrap.size()-1)
+			userTokenIndex--;
 
 		//broadcast the message to the other players
 		sendBroadcast(nm, null);	
@@ -117,7 +134,6 @@ public class ServerHandler implements IoHandler{
 	 */
 	public void sendStartGame(Locale loc){
 		NetMessage nm = new NetMessage(this.usernames, loc, Messages.GAME_START);
-
 		sendBroadcast(nm, null);	
 	}
 
@@ -175,58 +191,48 @@ public class ServerHandler implements IoHandler{
 	 * @param session
 	 */
 	private void playerQuit(IoSession session){
-		int usernameCounter = 0;
+		//find the user
+		for(int j = 0 ; j < usernames.size() ; j++){
+			if(plWrap.get(j).getSession() == session){
+				System.out.println("USER QUIT: " + plWrap.get(j).getUsername());
 
-		//if the user who sent quit has the token
-		if(plWrap.get(userTokenIndex).getSession() == session){
-			String quitPlayer = plWrap.get(userTokenIndex).getUsername();
-			plWrap.remove(plWrap.get(userTokenIndex));
-			usernames.remove(userTokenIndex);
+				//send token the quit game message
+				NetMessage turn = new NetMessage(usernames.get(j), Messages.QUIT_GAME);
+				sendBroadcast(turn, null);
 
-			
-
-			//send quit game, so the other client can remove user resorces
-			NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
-			sendBroadcast(playerDown, null);
-
-			//to avoid overlapping
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			//send new turn token
-			sendTurnToken();
-
-		}
-		//else if the user who sent quit has no turn token
-		else{
-			for(PlayerWrapper pl : this.plWrap){
-				if(session == pl.getSession()){
-
-
-					this.usernames.remove(usernameCounter);
-					String quitPlayer = plWrap.get(usernameCounter).getUsername();
-					plWrap.remove(pl);
-					
-					
-					System.out.println("PL WRAP SIZE : " +plWrap.size());
-					System.out.println("USERNAMES SIZE: " + usernames.size());
-					System.out.println("TURN TOKEN INDEX : " + userTokenIndex);
-
-					//send the message to the other user in the list
-					//this is why the second parameter is null
-					NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
-
-					sendBroadcast(playerDown, null);
-
-					break;
+				//wait before sending turn token
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				usernameCounter++;
+
+				//if the user who quit has the turn token update it and send a new turn token
+				System.out.println("THE TOKEN IS: " + userTokenIndex);
+				System.out.println("THE J COUNTER IS: " + j);
+						
+				if(plWrap.get(j).hasTurnToken()){
+					System.out.println("THE USER HAS THE TOKEN");
+					System.out.println(plWrap.get(j).getUsername());
+					
+					System.out.println("WE HAVE TO SEND THE TURN TOKEN TO: ");
+					System.out.println(usernames.get(userTokenIndex));
+
+					//send new turn token
+					sendTurnToken();
+					userTokenIndex--;
+				}
+
+				usernames.remove(j);
+				plWrap.remove(j);
 			}
 		}
+				
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
 	}
 
 	@Override

@@ -158,12 +158,15 @@ public class ClientHandler implements IoHandler {
 		case GET_OUT_OF_JAIL_USECARD:
 			gameClient.getOutOfJailByCard(false);
 			break;
-
 		case ACKNOWLEDGE:
+			//TODO probably to remove
 			break;
-
 		case QUIT_GAME:
-			// TODO quit gamed
+			//TODO quit gamed
+			System.out.println("The player quit the game: " + n.getText());
+			break;
+		default:
+			break;
 		}
 	}
 

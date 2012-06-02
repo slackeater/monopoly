@@ -69,7 +69,7 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
-	private JButton throwDice, useCard, endTurn, trade, sendTradeRequest;
+	private JButton throwDice, useCard, endTurn, trade, sendTradeRequest, kickPlayer;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
 	private JSpinner moneySpinner, rcvrMoneySpinner;
@@ -358,8 +358,6 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 			}
-
-
 		}
 
 		InfoAreaUpdate iau = new InfoAreaUpdate();
@@ -556,7 +554,9 @@ public class MonopolyGUI extends JFrame {
 		guiButtons.add(throwDice);
 		guiButtons.add(useCard);
 		guiButtons.add(trade);
+		guiButtons.add(kickPlayer);
 		guiButtons.add(endTurn);
+		
 
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);
@@ -575,6 +575,15 @@ public class MonopolyGUI extends JFrame {
 	private void initializeButtons(){
 		this.useCard = new JButton(res.getString("button-jailcard"));
 		this.throwDice = new JButton(res.getString("button-throwdice"));
+		this.kickPlayer = new JButton(res.getString("button-kick"));
+		
+		this.kickPlayer.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tabPane.add(res.getString("label-kick"), kickPlayer());
+			}
+		});
 
 		//action listeners
 		throwDice.addActionListener(new ActionListener() {
@@ -588,16 +597,13 @@ public class MonopolyGUI extends JFrame {
 
 				tabPane.setSelectedIndex(1);
 
-				//TODO only for test
-				//				tabPane.addTab(res.getString("tab-trade"), tradeTab());
-				//				tabPane.addTab("Kick", kickPlayer());
-
-
 			}
 		});
 
 		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
+	
+		
 
 		endTurn.addActionListener(new ActionListener() {
 
@@ -622,7 +628,7 @@ public class MonopolyGUI extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				tabPane.add("Trade", tradeTab());
+				tabPane.add(res.getString("tab-trade"), tradeTab());
 			}
 		});
 
@@ -667,12 +673,11 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JScrollPane tradeTab(){
 		JPanel yourOffer = new JPanel();
-		yourOffer.setLayout(new GridLayout(3, 3));
+		yourOffer.setLayout(new GridLayout(4, 3));
 		yourOffer.setBorder(BorderFactory.createTitledBorder(res.getString("label-youroffer")));
 
 		JPanel youWant = new JPanel(new GridLayout(5,3));
 		youWant.setBorder(BorderFactory.createTitledBorder(res.getString("label-requestfrompl")));
-			
 		
 		this.terrainCheck = new JCheckBox();
 		this.terrainCheck.addActionListener(new ActionListener() {
@@ -793,10 +798,17 @@ public class MonopolyGUI extends JFrame {
 				}
 				
 				sendTradeRequest.setVisible(true);
+				
+				sendTradeRequest.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						
+					}
+				});
 			}
 		});
 			
-		
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++){
 			if(!pse.get(i).getName().equals(gc.getLocalPlayerName())){
@@ -839,13 +851,12 @@ public class MonopolyGUI extends JFrame {
 			}
 		}
 		
-
 		//money spinner
 		int startMoney = 0;
 		//TODO adjust JSpinner money range
 		moneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
 		rcvrMoneySpinner.setModel(new SpinnerNumberModel(startMoney, startMoney,startMoney + 15000, 1));
-
+		
 		//add the panels to the container
 		yourOffer.add(terrainCheck, 0);
 		yourOffer.add(new JLabel(res.getString("label-tradeTerrain")),1);
@@ -894,39 +905,33 @@ public class MonopolyGUI extends JFrame {
 	
 	
 	
-
-	//TODO ONLY FOR TEST SHOULD ME MOVED AWAY
+	/**
+	 * Kick a player
+	 * @return JPanel
+	 * 		the relative JPanel for kicking a player
+	 */
 	private JPanel kickPlayer(){
 		JPanel kick = new JPanel();
 		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
+		kick.setBorder(BorderFactory.createTitledBorder(res.getString("label-kicktitle")));
 
-		JLabel title = new JLabel("Kick a player by selecting its user name");
-
-		JPanel userSelContainer = new JPanel();
-		userSelContainer.setLayout(new BoxLayout(userSelContainer, BoxLayout.LINE_AXIS));
-
-		JLabel sel = new JLabel("Select a user");
 		JComboBox username = new JComboBox();
 
-		userSelContainer.add(sel);
-		userSelContainer.add(username);
-
 		//build the array with the user name
-		for(int i = 0 ; i < playerNumber ; i++){
-			username.addItem(pse.get(i).getName());
-		}
-
+		for(int i = 0 ; i < playerNumber ; i++)
+			if(!pse.get(i).equals(gc.getLocalPlayerName()))
+				username.addItem(pse.get(i).getName());
+	
 		JPanel btnCtr = new JPanel();
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
 
-		JButton sendKick = new JButton("Send kick");
+		JButton sendKick = new JButton(res.getString("button-kickvote"));
 
 		btnCtr.add(Box.createHorizontalGlue());
 		btnCtr.add(sendKick);
 
-		kick.add(title);
 		kick.add(Box.createVerticalGlue());
-		kick.add(userSelContainer);
+		kick.add(username);
 		kick.add(Box.createVerticalGlue());
 		kick.add(Box.createVerticalGlue());
 		kick.add(btnCtr);
