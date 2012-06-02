@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
+import ch.bfh.monopoly.tests.EventJPanelTest;
 import ch.bfh.monopoly.tile.EventPanelFactory;
 
 public class Dice {
@@ -151,7 +152,7 @@ public class Dice {
 	
 	
 	public JPanel getJailStartTurnPanel() {
-		jpanel=new JPanel();
+		jpanel=new EventPanelFactory().getJPanel();
 		attemptedRolls=0;
 		al=new ActionListener() {
 
@@ -193,8 +194,8 @@ public class Dice {
 //		jp.add(imageLogo("mrjail.png"));
 		jpanel.add(descriptionLabel, BorderLayout.CENTER);
 		jpanel.add(buttonPay,BorderLayout.SOUTH);
-		jpanel.add(buttonCard,BorderLayout.SOUTH);
-		jpanel.add(buttonRight,BorderLayout.SOUTH);
+		jpanel.add(buttonCard,BorderLayout.WEST);
+		jpanel.add(buttonRight,BorderLayout.EAST);
 
 		return jpanel;
 	}

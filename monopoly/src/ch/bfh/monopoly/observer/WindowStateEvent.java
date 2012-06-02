@@ -37,4 +37,9 @@ public class WindowStateEvent {
 	public WindowMessage getType() {
 		return type;
 	}
+
+	public TradeInfoEvent getTei() {
+		return tei;
+	}
+	
 }
