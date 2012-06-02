@@ -1,5 +1,6 @@
 package ch.bfh.monopoly.event;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.tile.EventPanelFactory;
 
 public abstract class AbstractTileEvent implements BoardEvent{
 
@@ -15,7 +17,7 @@ public abstract class AbstractTileEvent implements BoardEvent{
 		protected String eventDescription;
 		protected GameClient gameClient;
 		protected boolean sendNetMessage=true;
-		protected JPanel jpanel = new JPanel();
+		protected JPanel jpanel;
 		protected JButton buttonRight = new JButton();
 		protected JButton buttonLeft = new JButton();
 		protected JLabel eventInfoLabel = new JLabel();
@@ -24,6 +26,7 @@ public abstract class AbstractTileEvent implements BoardEvent{
 			this.name=name;
 			this.eventDescription = eventDescription;
 			this.gameClient = gameClient;
+			jpanel=new EventPanelFactory().getJPanel();
 		}
 		
 		public String getName() {
@@ -40,9 +43,10 @@ public abstract class AbstractTileEvent implements BoardEvent{
 			buttonRight.addActionListener(alFromSub);
 			buttonRight.setText("ok");
 			eventInfoLabel.setText(eventDescription);
-
-			jpanel.add(eventInfoLabel);
-			jpanel.add(buttonRight);
+			JPanel buttonPanel= new JPanel();
+			buttonPanel.add(buttonRight);
+			jpanel.add(eventInfoLabel, BorderLayout.CENTER);
+			jpanel.add(buttonPanel, BorderLayout.SOUTH);
 
 			return jpanel;
 		}

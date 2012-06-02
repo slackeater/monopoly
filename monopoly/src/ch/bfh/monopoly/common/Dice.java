@@ -186,23 +186,18 @@ public class Dice {
 		buttonPay.addActionListener(pay);
 		JButton buttonCard=new JButton(rb.getString("card"));
 		buttonCard.addActionListener(card);
-		
-		buttonRight.addActionListener(al);
 		buttonRight.setText("Roll");
+		buttonRight.addActionListener(al);
+
 		descriptionLabel.setText(rb.getString("inJail"));
 
-//		jp.add(imageLogo("mrjail.png"));
 		JPanel buttonPanel= new JPanel();
 		
 		buttonPanel.add(buttonPay);
 		buttonPanel.add(buttonCard);
 		buttonPanel.add(buttonRight);
 		
-		
 		jpanel.add(descriptionLabel, BorderLayout.NORTH);
-//		jpanel.add(buttonPay,BorderLayout.SOUTH);
-//		jpanel.add(buttonCard,BorderLayout.SOUTH);
-//		jpanel.add(buttonRight,BorderLayout.SOUTH);
 		jpanel.add(buttonPanel,BorderLayout.SOUTH);
 		return jpanel;
 	}
