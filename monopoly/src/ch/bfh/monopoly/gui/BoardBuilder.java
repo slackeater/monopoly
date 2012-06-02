@@ -74,7 +74,7 @@ public class BoardBuilder extends JPanel {
 		}
 	
 		JScrollPane scrollEventPane = new JScrollPane(this.txt);
-		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollEventPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		p.add(scrollEventPane);
