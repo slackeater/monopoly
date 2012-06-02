@@ -29,11 +29,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
@@ -97,6 +99,7 @@ public class MonopolyGUI extends JFrame {
 	private PlayerStateEvent localPse;
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
+	private JFrame thisFrame;
 
 	//TODO TO BE MOVED AWAY
 	public enum Direction{
@@ -112,6 +115,7 @@ public class MonopolyGUI extends JFrame {
 	public MonopolyGUI(BoardController bc, GameController gc){
 		this.bc = bc;
 		this.gc = gc;
+		this.thisFrame = this;
 
 		this.res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.gui", gc.getLocale());
 		System.out.println(this.res);
@@ -366,7 +370,7 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
-					
+
 					tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("TRADE REQUEST");
@@ -376,6 +380,11 @@ public class MonopolyGUI extends JFrame {
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("TRADE ANSWER");
 				}
+//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
+//					tabPane.add(res.getString("label-kickrequest"), kickAnswer(wse.getAnswer()));
+//					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+//					System.out.println("TRADE ANSWER");
+//				}
 			}
 		}
 
@@ -831,31 +840,52 @@ public class MonopolyGUI extends JFrame {
 						int hisJailCard = 0;
 						int hisMoneyCheckValue = -1;
 						String to = pse.get(player).getName();
-						
+						boolean errorCheck = false;
+
 						moneySpinner.repaint();
 						rcvrMoneySpinner.repaint();
 
-						if(terrainCheck.isSelected() && myTerrainBox.getItemCount() > 1){
-							offer = new ArrayList<String>();
-							offer.add((String)myTerrainBox.getSelectedItem());
-						}
+						if(terrainCheck.isSelected())
+							if(myTerrainBox.getItemCount() > 0){
+								offer = new ArrayList<String>();
+								offer.add((String)myTerrainBox.getSelectedItem());
+							}
+							else
+								errorCheck = true;
 
-						if(cardCheck.isSelected() && localPse.getJailCard() >= 1)
-							myJailCard = 1;
 
-						if(moneyCheck.isSelected() && ((Integer) moneySpinner.getValue()) <= localPse.getAccount())
-							moneyCheckValue = (Integer) moneySpinner.getValue();
 
-						if(rcvrTerrainCheck.isSelected() && hisTerrainBox.getItemCount() > 1){
-							demand = new ArrayList<String>();
-							demand.add((String)hisTerrainBox.getSelectedItem());
-						}
+						if(cardCheck.isSelected())
+							if(localPse.getJailCard() >= 1)
+								myJailCard = 1;
+							else
+								errorCheck = true;
 
-						if(rcvrCardCheck.isSelected() && pse.get(player).getJailCard() >= 1)
-							hisJailCard = 1;
+						if(moneyCheck.isSelected())
+							if(((Integer) moneySpinner.getValue()) <= localPse.getAccount())
+								moneyCheckValue = (Integer) moneySpinner.getValue();
+							else
+								errorCheck = true;
 
-						if(rcvrMoneyCheck.isSelected() && ((Integer) rcvrMoneySpinner.getValue()) <= pse.get(player).getAccount())
-							hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
+						if(rcvrTerrainCheck.isSelected())
+							if(hisTerrainBox.getItemCount() > 0){
+								demand = new ArrayList<String>();
+								demand.add((String)hisTerrainBox.getSelectedItem());
+							}
+							else
+								errorCheck = true;
+
+						if(rcvrCardCheck.isSelected())
+							if(pse.get(player).getJailCard() >= 1)
+								hisJailCard = 1;
+							else
+								errorCheck = true;
+
+						if(rcvrMoneyCheck.isSelected())
+							if(((Integer) rcvrMoneySpinner.getValue()) <= pse.get(player).getAccount())
+								hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
+							else
+								errorCheck = true;
 
 
 						//TODO show error
@@ -867,13 +897,18 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("OFFER TERRAIN: " + offer);
 						System.out.println("OFFER MONEY: " + moneyCheckValue);
 
+						if(!errorCheck){
+							tie = new TradeInfoEvent(hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
+							gc.sendTradeRequestToPlayer(to, tie);
 
-
-						tie = new TradeInfoEvent(hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
-						gc.sendTradeRequestToPlayer(to, tie);
-						
-						//TODO disable button
-						sendTradeRequest.setEnabled(false);
+							//TODO disable button
+							sendTradeRequest.setEnabled(false);
+						}
+						else{
+							//TODO i18n
+							JOptionPane.showMessageDialog(thisFrame,
+							"Check the parameters of the request.");
+						}
 					}
 
 					@Override
@@ -948,8 +983,6 @@ public class MonopolyGUI extends JFrame {
 			}
 		}
 
-
-
 		//add the panels to the container
 		yourOffer.add(terrainCheck, 0);
 		yourOffer.add(new JLabel(res.getString("label-tradeTerrain")),1);
@@ -1003,7 +1036,7 @@ public class MonopolyGUI extends JFrame {
 	 * @return JPanel
 	 * 		the relative JPanel for kicking a player
 	 */
-	private JScrollPane kickPlayer(){
+	private JPanel kickPlayer(){
 		JScrollPane p = new JScrollPane();
 		JPanel kick = new JPanel();
 		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
@@ -1012,9 +1045,9 @@ public class MonopolyGUI extends JFrame {
 		JComboBox username = new JComboBox();
 
 		//build the array with the user name
-		for(int i = 0 ; i < playerNumber ; i++)
-			if(!pse.get(i).equals(gc.getLocalPlayerName()))
-				username.addItem(pse.get(i).getName());
+		for(PlayerStateEvent ps : pse)
+			if(!ps.equals(gc.getLocalPlayerName()))
+				username.addItem(ps.getName());
 
 		JPanel btnCtr = new JPanel();
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
@@ -1034,7 +1067,7 @@ public class MonopolyGUI extends JFrame {
 		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-		return p;
+		return kick;
 	}
 
 	/**
@@ -1047,21 +1080,40 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tradeRequestArrived(TradeInfoEvent tie){
 		//with a jscrollpane we don't see nothing
 		JScrollPane p = new JScrollPane();
-		
 
-		final JPanel pa = new JPanel();
-		pa.setBorder(BorderFactory.createTitledBorder("Request parameters: "));
-		pa.setLayout(new BoxLayout(pa, BoxLayout.PAGE_AXIS));
 
-		JLabel frompl = new JLabel("From: " + gc.getCurrentPlayerName());
+		System.out.println("INSIDE PANEL");
+
+		final JPanel pa = new JPanel(new GridLayout(3,1));
+		//TODO i18n
+
+		JPanel demandCtr = new JPanel();
+		demandCtr.setBorder(BorderFactory.createTitledBorder("Demand"));
+		demandCtr.setLayout(new BoxLayout(demandCtr, BoxLayout.PAGE_AXIS));
+
+		JPanel offerCtr = new JPanel();
+		offerCtr.setBorder(BorderFactory.createTitledBorder("Offer"));
+		offerCtr.setLayout(new BoxLayout(offerCtr, BoxLayout.PAGE_AXIS));
+
 		JLabel moneyDemand = new JLabel("He wants this money: " + tie.getMoneyDemand());
 		JLabel moneyOffer = new JLabel("He offers this money: " + tie.getMoneyOffer());
-		JLabel cardDemand = new JLabel("He want the card:" + tie.getJailcardDemand());
-		JLabel cardOffer = new JLabel("He offer the card:" + tie.getJailcardOffer());
+		JLabel cardDemand = new JLabel("He wants the card:" + tie.getJailcardDemand());
+		JLabel cardOffer = new JLabel("He offers the card:" + tie.getJailcardOffer());
+		JLabel terrainDemand = new JLabel("He wants the terrain: -" );
+		JLabel terrainOffer = new JLabel("He offers the terrain: -");
 
+		if(tie.getPropertiesDemand() != null)
+			terrainDemand.setText("He offers the terrain: " + tie.getPropertiesDemand().get(0));
+
+		if(tie.getPropertiesOffer() != null)
+			terrainOffer.setText("He offers the terrain: " + tie.getPropertiesOffer().get(0));
+
+		pa.setBorder(BorderFactory.createTitledBorder("You received a trade request from " + gc.getCurrentPlayerName()));
+
+		//TODO i18n
 		final JButton yes = new JButton("Accept");
 		final JButton no = new JButton("Refuse");
-		
+
 		yes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1083,13 +1135,24 @@ public class MonopolyGUI extends JFrame {
 			}
 		});
 
-		pa.add(frompl);
-		pa.add(moneyDemand);
-		pa.add(moneyOffer);
-		pa.add(cardDemand);
-		pa.add(cardOffer);
-		pa.add(yes);
-		pa.add(no);
+		JPanel buttonCont = new JPanel();
+		buttonCont.setLayout(new BoxLayout(buttonCont, BoxLayout.LINE_AXIS));
+		buttonCont.add(yes);
+		buttonCont.add(no);
+
+		System.out.println("AFTER PANEL CONTAINER");
+
+		demandCtr.add(moneyDemand);
+		demandCtr.add(cardDemand);
+		demandCtr.add(terrainDemand);
+
+		offerCtr.add(moneyOffer);
+		offerCtr.add(cardOffer);
+		offerCtr.add(terrainOffer);
+
+		pa.add(demandCtr);
+		pa.add(offerCtr);
+		pa.add(buttonCont);
 
 		p.add(pa);
 		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -1097,7 +1160,7 @@ public class MonopolyGUI extends JFrame {
 
 		return pa;
 	}
-	
+
 	/**
 	 * Get the answer for the trade
 	 * @param answer boolean
@@ -1107,19 +1170,19 @@ public class MonopolyGUI extends JFrame {
 	 */
 	private JPanel tradeAnswer(boolean answer){
 		JPanel ans = new JPanel();
-		
+
 		String t;
-		
+
 		if(answer)
-			 t = "The trade has been accepted";
+			t = "The trade has been accepted";
 		else
 			t = "The trade has been refused";
-		
+
 		ans.add(new JLabel(t));
-				
+
 		return ans;
 	}
-	
+
 	/**
 	 * Get the panel for sending the kick answer
 	 * @return JPanel
@@ -1128,13 +1191,13 @@ public class MonopolyGUI extends JFrame {
 	private JPanel kickRequest(){
 		JPanel kickp = new JPanel();
 		kickp.setLayout(new BoxLayout(kickp, BoxLayout.PAGE_AXIS));
-		
+
 		JLabel text = new JLabel("Player PPP wants to kick player XXX.");
 		JLabel acc = new JLabel("Do you accept that?");
-		
+
 		final JButton yes = new JButton("Accept");
 		final JButton no = new JButton("Refuse");
-		
+
 		yes.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -1155,12 +1218,16 @@ public class MonopolyGUI extends JFrame {
 				yes.setEnabled(false);
 			}
 		});
-		
+
+		JPanel buttonCont = new JPanel();
+		buttonCont.setLayout(new BoxLayout(buttonCont, BoxLayout.LINE_AXIS));
+		buttonCont.add(yes);
+		buttonCont.add(no);
+
 		kickp.add(text);
 		kickp.add(acc);
-		kickp.add(yes);
-		kickp.add(no);
-		
+		kickp.add(buttonCont);
+
 		return kickp;
 	}
 
