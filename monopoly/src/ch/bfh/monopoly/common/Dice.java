@@ -21,7 +21,6 @@ public class Dice {
 	int throwValueTwo = 0;
 	JPanel jp = new JPanel();
 	JButton buttonRight = new JButton();
-	JButton buttonLeft = new JButton();
 	JLabel descriptionLabel = new JLabel();
 	GameClient gameClient;
 	ActionListener al;
@@ -102,7 +101,8 @@ public class Dice {
 	}
 	
 	public JPanel getNormalStartTurnPanel() {
-		buttonRight.setEnabled(true);
+		jp=new JPanel();
+		buttonRight = new JButton();
 		buttonRight.addActionListener(new ActionListener() {
 
 			@Override
@@ -145,6 +145,7 @@ public class Dice {
 	
 	
 	public JPanel getJailStartTurnPanel() {
+		jp=new JPanel();
 		attemptedRolls=0;
 		al=new ActionListener() {
 
