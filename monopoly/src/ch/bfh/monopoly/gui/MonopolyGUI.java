@@ -509,7 +509,7 @@ public class MonopolyGUI extends JFrame {
 
 		//add to the chat text area a scroll pane
 		JScrollPane scrollChat = new JScrollPane(chat);
-		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		final JTextField input = new JTextField(20);
@@ -538,7 +538,7 @@ public class MonopolyGUI extends JFrame {
 
 		//add to the input text area a scroll pane
 		JScrollPane scrollInput = new JScrollPane(input);
-		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scrollInput.setMaximumSize(new Dimension(250,65));
 
@@ -922,7 +922,7 @@ public class MonopolyGUI extends JFrame {
 		cont.add(youWant);
 
 		JScrollPane scrollInput = new JScrollPane(cont);
-		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollInput.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollInput.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return scrollInput;
@@ -963,7 +963,7 @@ public class MonopolyGUI extends JFrame {
 		kick.add(btnCtr);
 		
 		p.add(kick);
-		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return p;
@@ -986,7 +986,7 @@ public class MonopolyGUI extends JFrame {
 		
 		
 		p.add(pa);
-		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		p.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		p.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 		return p;
