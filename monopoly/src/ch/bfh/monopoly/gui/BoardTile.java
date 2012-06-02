@@ -78,6 +78,7 @@ public class BoardTile extends JPanel{
 		this.bc = bc;
 		this.gc = gc;
 		this.res = res;
+		System.out.println("TILE ID " + ti.getTileId());
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -219,7 +220,7 @@ public class BoardTile extends JPanel{
 				JLabel hotelCost = new JLabel(res.getString("label-hotelprice") + Integer.toString(ti.getHotelCost()));
 				hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
 				hotelCost.setFont(f);
-
+				
 				owner = new JLabel(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
 				owner.setAlignmentX(Component.CENTER_ALIGNMENT);
 				owner.setFont(f);
@@ -233,11 +234,11 @@ public class BoardTile extends JPanel{
 				tab.add(hotelCost);
 				tab.add(owner);
 			}
-
+			
 			JLabel mortgage = new JLabel(res.getString("label-mortgagevalue") + Integer.toString(ti.getMortgageValue()));
 			mortgage.setAlignmentX(Component.CENTER_ALIGNMENT);
 			mortgage.setFont(f);
-
+			
 			tab.add(mortgage);
 
 			tab.revalidate();
