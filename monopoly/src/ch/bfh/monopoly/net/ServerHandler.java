@@ -107,6 +107,8 @@ public class ServerHandler implements IoHandler{
 			userTokenIndex = 0;
 		else if(userTokenIndex < plWrap.size()-1)
 			userTokenIndex++;
+		else if(userTokenIndex > plWrap.size()-1)
+			userTokenIndex--;
 
 		//broadcast the message to the other players
 		sendBroadcast(nm, null);	
@@ -175,58 +177,56 @@ public class ServerHandler implements IoHandler{
 	 * @param session
 	 */
 	private void playerQuit(IoSession session){
-		int usernameCounter = 0;
+		//find the user
+		for(int j = 0 ; j < usernames.size() ; j++){
+			if(plWrap.get(j).getSession() == session){
+				System.out.println("USER QUIT: " + plWrap.get(j).getUsername());
 
-		//if the user who sent quit has the token
-		if(plWrap.get(userTokenIndex).getSession() == session){
-			String quitPlayer = plWrap.get(userTokenIndex).getUsername();
-			plWrap.remove(plWrap.get(userTokenIndex));
-			usernames.remove(userTokenIndex);
+				//send token the quit game message
+				NetMessage turn = new NetMessage(usernames.get(j), Messages.QUIT_GAME);
+				sendBroadcast(turn, null);
 
-			
-
-			//send quit game, so the other client can remove user resorces
-			NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
-			sendBroadcast(playerDown, null);
-
-			//to avoid overlapping
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			//send new turn token
-			sendTurnToken();
-
-		}
-		//else if the user who sent quit has no turn token
-		else{
-			for(PlayerWrapper pl : this.plWrap){
-				if(session == pl.getSession()){
-
-
-					this.usernames.remove(usernameCounter);
-					String quitPlayer = plWrap.get(usernameCounter).getUsername();
-					plWrap.remove(pl);
-					
-					
-					System.out.println("PL WRAP SIZE : " +plWrap.size());
-					System.out.println("USERNAMES SIZE: " + usernames.size());
-					System.out.println("TURN TOKEN INDEX : " + userTokenIndex);
-
-					//send the message to the other user in the list
-					//this is why the second parameter is null
-					NetMessage playerDown = new NetMessage(quitPlayer, Messages.QUIT_GAME);
-
-					sendBroadcast(playerDown, null);
-
-					break;
+				//wait before sending turn token
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
-				usernameCounter++;
+
+				int check;
+				
+				//if the user who quit has the turn token update it and send a new turn token
+				System.out.println("THE TOKEN IS: " + userTokenIndex);
+				System.out.println("THE J COUNTER IS: " + j);
+				
+				if(userTokenIndex-1 < 0)
+					check = plWrap.size()-1;
+				else
+					check = userTokenIndex-1;
+						
+				System.out.println("THE CHECK IS: " + check);
+				
+				if(j == check){
+					System.out.println("THE USER HAS THE TOKEN");
+					System.out.println(usernames.get(check));
+					
+					System.out.println("WE HAVE TO SEND THE TURN TOKEN TO: ");
+					System.out.println(usernames.get(userTokenIndex));
+
+					//send new turn token
+					sendTurnToken();
+				}
+
+				usernames.remove(j);
+				plWrap.remove(j);
 			}
 		}
+				
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
+		System.out.println("======================================000");
 	}
 
 	@Override
