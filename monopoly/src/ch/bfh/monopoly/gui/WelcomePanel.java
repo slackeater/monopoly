@@ -149,7 +149,7 @@ public class WelcomePanel extends JFrame{
 						gameClient.setClientNetworkController(nCliCtrl);
 					}
 					else
-						throw new Exception("Please insert a valid IPv4 address");
+						throw new Exception("Please insert a valid IPv4 address.");
 				}
 				else
 					throw new Exception("Please roll for order.");
