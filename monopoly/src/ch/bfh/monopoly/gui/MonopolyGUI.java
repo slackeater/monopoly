@@ -246,8 +246,6 @@ public class MonopolyGUI extends JFrame {
 					step = 0;	
 
 					if(diceButton != null){
-						//TODO only for test diceButton
-						//diceButton.setEnabled(true);
 						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
 
 						if(endTurnState){
@@ -419,7 +417,6 @@ public class MonopolyGUI extends JFrame {
 			s.addListener(bt.getTileListener());
 		}
 
-		//TODO check if these little sleep time are useful 
 		try {
 			Thread.sleep(250);
 		} catch (InterruptedException e) {
@@ -428,7 +425,6 @@ public class MonopolyGUI extends JFrame {
 
 		System.out.println("AFTER TILE INIT");
 
-		//TODO check if these little sleep time are useful 
 		try {
 			Thread.sleep(250);
 		} catch (InterruptedException e) {
@@ -437,7 +433,6 @@ public class MonopolyGUI extends JFrame {
 
 		add(drawBoard(), BorderLayout.CENTER);
 
-		//TODO check if these little sleep time are useful 
 		try {
 			Thread.sleep(250);
 		} catch (InterruptedException e) {
@@ -687,7 +682,6 @@ public class MonopolyGUI extends JFrame {
 						}
 						else{
 							System.out.println("===== BUTTONS: DISABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
-							//TODO remove comment
 							throwDice.setEnabled(false);
 							useCard.setEnabled(false);
 							trade.setEnabled(false);
@@ -789,7 +783,6 @@ public class MonopolyGUI extends JFrame {
 		this.rcvrJailCardLbl = new JLabel(res.getString("label-jailcard"));
 		this.hisTerrainBox = new JComboBox();
 
-		//TODO adjust JSpinner money range
 		moneySpinner.setModel(new SpinnerNumberModel(0, 0,0 + 30000, 1));
 		rcvrMoneySpinner.setModel(new SpinnerNumberModel(0, 0,0 + 30000, 1));
 
@@ -801,10 +794,7 @@ public class MonopolyGUI extends JFrame {
 		this.usersBox.addMouseListener(new MouseListener() {
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseReleased(MouseEvent e) {	}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -833,10 +823,7 @@ public class MonopolyGUI extends JFrame {
 				sendTradeRequest.addMouseListener(new MouseListener() {
 
 					@Override
-					public void mousePressed(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
+					public void mousePressed(MouseEvent e) {}
 
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -896,7 +883,6 @@ public class MonopolyGUI extends JFrame {
 								errorCheck = true;
 
 
-						//TODO show error
 						System.out.println("DEMAND CARD: " + hisJailCard);
 						System.out.println("DEMAND TERRAIN" + demand);
 						System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
@@ -908,55 +894,31 @@ public class MonopolyGUI extends JFrame {
 						if(!errorCheck){
 							tie = new TradeInfoEvent(hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
 							gc.sendTradeRequestToPlayer(to, tie);
-
-							//TODO disable button
 							sendTradeRequest.setEnabled(false);
 						}
-						else{
-							//TODO i18n
-							JOptionPane.showMessageDialog(thisFrame,
-							"Check the parameters of the request.");
-						}
+						else
+							JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
 					}
 
 					@Override
-					public void mouseExited(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
+					public void mouseExited(MouseEvent e) {}
 
 					@Override
-					public void mouseEntered(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
+					public void mouseEntered(MouseEvent e) {}
 
 					@Override
-					public void mouseClicked(MouseEvent e) {
-						// TODO Auto-generated method stub
-
-					}
+					public void mouseClicked(MouseEvent e) {}
 				});
 			}
 
+			@Override
+			public void mouseExited(MouseEvent e) {}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseEntered(MouseEvent e) {}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+			public void mouseClicked(MouseEvent e) {}
 		});
 
 
@@ -1089,38 +1051,48 @@ public class MonopolyGUI extends JFrame {
 		//with a jscrollpane we don't see nothing
 		JScrollPane p = new JScrollPane();
 
-
 		System.out.println("INSIDE PANEL");
 
 		final JPanel pa = new JPanel(new GridLayout(3,1));
-		//TODO i18n
-
+		
 		JPanel demandCtr = new JPanel();
-		demandCtr.setBorder(BorderFactory.createTitledBorder("Demand"));
+		demandCtr.setBorder(BorderFactory.createTitledBorder(res.getString("label-demandcontent")));
 		demandCtr.setLayout(new BoxLayout(demandCtr, BoxLayout.PAGE_AXIS));
 
 		JPanel offerCtr = new JPanel();
-		offerCtr.setBorder(BorderFactory.createTitledBorder("Offer"));
+		offerCtr.setBorder(BorderFactory.createTitledBorder(res.getString("label-offercontent")));
 		offerCtr.setLayout(new BoxLayout(offerCtr, BoxLayout.PAGE_AXIS));
 
-		JLabel moneyDemand = new JLabel("He wants this money: " + tie.getMoneyDemand());
-		JLabel moneyOffer = new JLabel("He offers this money: " + tie.getMoneyOffer());
-		JLabel cardDemand = new JLabel("He wants the card:" + tie.getJailcardDemand());
-		JLabel cardOffer = new JLabel("He offers the card:" + tie.getJailcardOffer());
-		JLabel terrainDemand = new JLabel("He wants the terrain: -" );
-		JLabel terrainOffer = new JLabel("He offers the terrain: -");
-
+		/**
+		 * Demand
+		 */
+		
+		if(tie.getMoneyDemand() >= 0)
+			demandCtr.add(new JLabel(" - " + res.getString("label-tradeMoney") + tie.getMoneyDemand()));
+				
+		if(tie.getJailcardDemand() > 0)
+			demandCtr.add(new JLabel(" - " + res.getString("label-tradeJailCardIsHere")));
+						
 		if(tie.getPropertiesDemand() != null)
-			terrainDemand.setText("He offers the terrain: " + tie.getPropertiesDemand().get(0));
+			demandCtr.add(new JLabel(" - " + res.getString("label-tradeTerrain") + tie.getPropertiesDemand().get(0)));
 
+		/**
+		 * Offer
+		 */
+		
+		if(tie.getMoneyOffer() >= 0)
+			offerCtr.add(new JLabel(" - " + res.getString("label-tradeMoney") + tie.getMoneyOffer()));
+				
+		if(tie.getJailcardOffer() > 0)
+			offerCtr.add(new JLabel(" - " + res.getString("label-tradeJailCardIsHere")));
+						
 		if(tie.getPropertiesOffer() != null)
-			terrainOffer.setText("He offers the terrain: " + tie.getPropertiesOffer().get(0));
+			offerCtr.add(new JLabel(" - " + res.getString("label-tradeTerrain") + tie.getPropertiesOffer().get(0)));
+		
+		pa.setBorder(BorderFactory.createTitledBorder(res.getString("label-tradereceived") + gc.getCurrentPlayerName()));
 
-		pa.setBorder(BorderFactory.createTitledBorder("You received a trade request from " + gc.getCurrentPlayerName()));
-
-		//TODO i18n
-		final JButton yes = new JButton("Accept");
-		final JButton no = new JButton("Refuse");
+		final JButton yes = new JButton(res.getString("button-accept"));
+		final JButton no = new JButton(res.getString("button-refuse"));
 
 		yes.addActionListener(new ActionListener() {
 			@Override
@@ -1150,14 +1122,6 @@ public class MonopolyGUI extends JFrame {
 
 		System.out.println("AFTER PANEL CONTAINER");
 
-		demandCtr.add(moneyDemand);
-		demandCtr.add(cardDemand);
-		demandCtr.add(terrainDemand);
-
-		offerCtr.add(moneyOffer);
-		offerCtr.add(cardOffer);
-		offerCtr.add(terrainOffer);
-
 		pa.add(demandCtr);
 		pa.add(offerCtr);
 		pa.add(buttonCont);
@@ -1182,9 +1146,9 @@ public class MonopolyGUI extends JFrame {
 		String t;
 
 		if(answer)
-			t = "The trade has been accepted";
+			t = res.getString("label-tradeaccepted");
 		else
-			t = "The trade has been refused";
+			t = res.getString("label-traderefused");
 
 		ans.add(new JLabel(t));
 
