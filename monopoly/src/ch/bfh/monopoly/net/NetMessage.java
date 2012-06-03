@@ -14,7 +14,7 @@ public class NetMessage implements Serializable {
 
 	private static final long serialVersionUID = -6004188281012651357L;
 
-	private Player player;
+	private String player;
 	private String fromName;
 	private String toName;
 	private Color c;
@@ -23,7 +23,7 @@ public class NetMessage implements Serializable {
 	private String string;
 	private int integerValue;
 	private int price;
-	private Player playerToKick;
+	private String playerToKick;
 	private boolean kickAnswer;
 	private Messages m;
 	private int propertyID;
@@ -72,12 +72,19 @@ public class NetMessage implements Serializable {
 		this.m = m;
 	}
 	
-	public boolean isKickAnswer() {
+	public boolean getKickAnswer() {
 		return kickAnswer;
 	}
 	
 	public boolean getTradeAnswer() {
 		return kickAnswer;
+	}
+	
+	public String getPlayer(){
+		return player;
+	}
+	public String getPlayerToKick(){
+		return playerToKick;
 	}
 
 	public TradeInfoEvent getTie() {
@@ -151,18 +158,6 @@ public class NetMessage implements Serializable {
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param player
-	 *            the player who paused / quit / join
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(Player player, Messages m) {
-		this.player = player;
-		this.m = m;
-	}
 
 	/**
 	 * Construct a NetMessage
@@ -190,53 +185,19 @@ public class NetMessage implements Serializable {
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param player
-	 *            a player who wants to sell / buy a row of building / send a
-	 *            chat message
-	 * @param s
-	 *            the name of the group / the chat message
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(Player player, String s, Messages m) {
-		this.player = player;
-		this.string = s;
-		this.m = m;
-	}
+
 
 	/**
 	 * Construct a NetMessage
 	 * 
 	 * @param player
-	 *            the player who wants to sell a property
-	 * @param property
-	 *            the property to sell
-	 * @param basePrice
-	 *            the base price for the auction
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(Player player, int propertyID, int basePrice, Messages m) {
-		this.player = player;
-		this.propertyID = propertyID;
-		this.integerValue = basePrice;
-		this.m = m;
-	}
-
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param player
-	 *            the player who proposed the kick
+	 *            the name of the player who proposed the kick
 	 * @param playerToKick
-	 *            the player to kick
+	 *            the name of the player to kick
 	 * @param m
 	 *            the message type
 	 */
-	public NetMessage(Player player, Player playerToKick, Messages m) {
+	public NetMessage(String player, String playerToKick, Messages m) {
 		this.player = player;
 		this.playerToKick = playerToKick;
 		this.m = m;

@@ -71,7 +71,12 @@ public class ClientHandler implements IoHandler {
 			gameClient.advancePlayerNSpacesInDirection(rollValue, n.getDir(),
 					false);
 			break;
-
+		case KICK_REQUEST:
+			gameClient.receiveKickRequest(n.getPlayer(), n.getPlayerToKick());
+			break;
+		case KICK_ANSWER:
+			gameClient.receiveKickAnswer(n.getPlayer(), n.getTradeAnswer());
+			break;	
 		case BUY_HOUSE:
 			gameClient.buyHouse(n.getInt(), false);
 			break;
@@ -165,12 +170,6 @@ public class ClientHandler implements IoHandler {
 		case TRADE_ANSWER: 
 			gameClient.receiveTradeAnswer(n.getTradeAnswer());
 			break;
-		case KICK_REQUEST:
-			//TODO
-			break;
-		case KICK_ANSWER:
-			//TODO
-			break;	
 		case ACKNOWLEDGE:
 			// TODO probably to remove
 			break;

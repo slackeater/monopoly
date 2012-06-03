@@ -305,5 +305,13 @@ public class GameController {
 		gameClient.sendQuitGame();
 	}
 	
+	/**
+	 * create a motion to kick a player
+	 * @param the name of the player who might be kicked out of the game
+	 */
+	public void createKickRequest(String playerName){
+		gameClient.createKickRequest(playerName);
+	}
+	
 
 }

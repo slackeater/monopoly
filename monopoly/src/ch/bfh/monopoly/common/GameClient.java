@@ -36,6 +36,7 @@ public class GameClient {
 	private Dice dice;
 	// used to test / for the roll value to a certain order of values
 	private int rollCount = 0;
+	private int kickVotes;
 
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
@@ -1086,6 +1087,40 @@ public class GameClient {
 	 */
 	public void sendQuitGame() {
 		nc.closeConnection();
+	}
+	
+	/**
+	 * create a motion to kick a player
+	 * @param the name of the player who might be kicked out of the game
+	 */
+	public void createKickRequest(String playerName){
+		kickVotes=0;
+		NetMessage nm = new NetMessage(localPlayer, playerName, Messages.KICK_REQUEST);
+		nc.sendMessage(nm);
+	}
+	
+	/**
+	 * receive a kick request
+	 * @param the name of the player who might be kicked out of the game
+	 */
+	public void receiveKickRequest(String playerName, String playerToKick){
+		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK_REQUEST, playerName, playerToKick);
+		ws.notifyListeners(wse);
+	}
+	
+	/**
+	 * receive an answer to a kick request
+	 * @param the name of the player who might be kicked out of the game
+	 */
+	public void receiveKickAnswer(String playerName, boolean answer){
+		if (answer)
+			kickVotes++;
+		if (kickVotes>board.getPlayers().size()/2){
+			//sendKickSignal();
+		}
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_KICK_ANSWER, playerName,answer);
+		ws.notifyListeners(wse);
 	}
 
 }
