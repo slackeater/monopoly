@@ -33,16 +33,19 @@ public class EventJPanelTest extends JFrame {
 //		 testMediterraneanNotOwned();
 		// testFirstRailRoadOwned();
 		// testFirstRailRoadNotOwned();
+		
+		landOnChance();
+		
 		// testLandOnGo();
 //		testLandOnJail();
 		// testJustVisiting();
 //		 testFreeParking();
 //		 testGoToJail();
-//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
+		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
-		testRollStartPanel(true);
-		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+//		testRollStartPanel(true);
+//		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
 		add(jpanel);
@@ -95,6 +98,13 @@ public class EventJPanelTest extends JFrame {
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 	}
 
+	public void landOnChance() {
+		// first railroad
+		int tileId = 7;
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
 	public void testFirstRailRoadOwned() {
 		// first railroad
 		int tileId = 5;

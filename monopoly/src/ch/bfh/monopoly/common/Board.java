@@ -28,9 +28,10 @@ public class Board {
 	private Token[] tokens = new Token[8];
 	private int freeParking = 500;
 	private PlayerSubject playerSubject;
-	private final int goMoney,bail;
+	private final int goMoney, bail;
 	private boolean testOff;
 	private ResourceBundle rb;
+
 	/**
 	 * this inner class is connected to the GUI through an observer pattern. The
 	 * GUI registers its listeners with this inner class and when instance
@@ -68,7 +69,7 @@ public class Board {
 						plyr.getPreviousPosition(), plyr.getRollValue(),
 						plyr.getName(), plyr.isInJail(), plyr.getAccount(),
 						plyr.hasTurnToken(), plyr.getJailCard(), terrains,
-						plyr.getToken(),plyr.getDir());
+						plyr.getToken(), plyr.getDir());
 				playerStates.add(pse);
 			}
 			for (PlayerListener pl : listeners) {
@@ -133,8 +134,8 @@ public class Board {
 	public Board(GameClient gameClient, boolean testOff) {
 		this.testOff = testOff;
 		this.bank = gameClient.getBankPlayer();
-		rb= ResourceBundle.getBundle(
-				"ch.bfh.monopoly.resources.tile", gameClient.getLoc());
+		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
+				gameClient.getLoc());
 		goMoney = Integer.parseInt(rb.getString("goMoney"));
 		bail = Integer.parseInt(rb.getString("bail"));
 		// create tiles, cards, and events and tokens
@@ -702,9 +703,12 @@ public class Board {
 	/**
 	 * called by BirthdayEvent class, transfer a given amount of money from all
 	 * players except for the given player to the given player's account
-	 * @throws TransactionException if there is not enough money to withdraw from an account
+	 * 
+	 * @throws TransactionException
+	 *             if there is not enough money to withdraw from an account
 	 */
-	public void birthdayEvent(String playerName, int amount) throws TransactionException {
+	public void birthdayEvent(String playerName, int amount)
+			throws TransactionException {
 		Player plyr = getPlayerByName(playerName);
 		for (Player p : players) {
 			if (p != plyr) {
@@ -714,8 +718,6 @@ public class Board {
 		}
 	}
 
-	
-	
 	/**
 	 * the current player gets all the money in the free parking account
 	 * 
@@ -812,8 +814,8 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
-		 System.out.println("board.castTileToProperty received: tileId:"
-		 + t.getTileId() + "which is:" + t.getName() );
+		System.out.println("board.castTileToProperty received: tileId:"
+				+ t.getTileId() + "which is:" + t.getName());
 
 		if (!(t instanceof Property))
 			throw new RuntimeException(
@@ -858,31 +860,40 @@ public class Board {
 	 * advance the current player a given number n spaces forward
 	 */
 	public void advancePlayerNSpaces(String playerName, int n) {
-		advancePlayerNSpacesInDirection(playerName, n, MonopolyGUI.Direction.FORWARDS);
+		advancePlayerNSpacesInDirection(playerName, n,
+				MonopolyGUI.Direction.FORWARDS);
 	}
-	
+
 	/**
 	 * advance the current player a given number n spaces forward
 	 */
-	public void advancePlayerNSpacesInDirection(String playerName, int n, MonopolyGUI.Direction dir) {
+	public void advancePlayerNSpacesInDirection(String playerName, int n,
+			MonopolyGUI.Direction dir) {
 		Player plyr = getPlayerByName(playerName);
-		System.out.println("BOARDadvance: received advancePlayer: "+n);
+		String direction = "forwards";
+		if (dir == MonopolyGUI.Direction.BACKWARDS)
+			direction = "backwards";
+		System.out.println("BOARDadvance: received advancePlayer: " + n
+				+ "in direction " + direction);
 		int previousPosition = plyr.getPosition();
 
 		int currentPos = plyr.getPosition();
-		plyr.setPosition((currentPos + n) % 40);
+		if (dir == MonopolyGUI.Direction.BACKWARDS)
+			plyr.setPosition((currentPos - n) % 40);
+		else
+			plyr.setPosition((currentPos + n) % 40);
 		plyr.setRollValue(n);
 		plyr.setDir(dir);
 		int newPosition = plyr.getPosition();
-		System.out.println("BOARDadvance:"+playerName+"'s new position is: " + newPosition);
+		System.out.println("BOARDadvance:" + playerName
+				+ "'s new position is: " + newPosition);
 		// if passes go
 		if (newPosition < previousPosition)
 			passGo(plyr);
-		
+
 		playerSubject.notifyListeners();
 		plyr.resetRollValue();
 	}
-	
 
 	// /**
 	// * advance current player to tile n
@@ -907,9 +918,12 @@ public class Board {
 
 	/**
 	 * gets the currentPlayer out of jail
-	 * @throws TransactionException if the player does not have enough money
+	 * 
+	 * @throws TransactionException
+	 *             if the player does not have enough money
 	 */
-	public void getOutOfJailByPayment(String playerName) throws TransactionException {
+	public void getOutOfJailByPayment(String playerName)
+			throws TransactionException {
 		payFee(playerName, bail);
 		setPlayerJailStatus(playerName, false);
 
@@ -929,6 +943,7 @@ public class Board {
 	public void getOutOfJailByRoll(String playerName) {
 		setPlayerJailStatus(playerName, false);
 	}
+
 	/**
 	 * creates an object with all the static tile information to be sent to the
 	 * GUI
@@ -943,7 +958,7 @@ public class Board {
 			Terrain t = (Terrain) tile;
 			tileInfo.setName(t.getName());
 			tileInfo.setOwner(t.getOwner().getName());
-			System.out.println("sent tilinfo: owner "+t.getOwner().getName());
+			System.out.println("sent tilinfo: owner " + t.getOwner().getName());
 			tileInfo.setPrice(t.getPrice());
 			tileInfo.setHouseCost(t.getHouseCost());
 			tileInfo.setHotelCost(t.getHotelCost());

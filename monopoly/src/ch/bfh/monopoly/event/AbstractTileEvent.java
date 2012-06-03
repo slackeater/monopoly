@@ -26,7 +26,7 @@ public abstract class AbstractTileEvent implements BoardEvent{
 			this.name=name;
 			this.eventDescription = eventDescription;
 			this.gameClient = gameClient;
-			jpanel=new EventPanelFactory().getJPanel();
+			jpanel=new EventPanelFactory().getOldJPanel();
 		}
 		
 		public String getName() {
