@@ -19,8 +19,11 @@ import javax.swing.border.Border;
 
 import ch.bfh.monopoly.tests.EventJPanelTest;
 import ch.bfh.monopoly.tile.EventPanelFactory;
+import ch.bfh.monopoly.tile.EventPanelInfo;
+import ch.bfh.monopoly.tile.EventPanelSource;
+import ch.bfh.monopoly.tile.Step;
 
-public class Dice {
+public class Dice implements EventPanelSource {
 
 	int maxValDiceOne;
 	int maxValDiceTwo;
@@ -32,8 +35,9 @@ public class Dice {
 	GameClient gameClient;
 	ActionListener al;
 	boolean testOff;
-	int attemptedRolls=0;
+	int attemptedRolls = 0;
 	ResourceBundle rb;
+	EventPanelFactory epf = new EventPanelFactory(this);
 
 	/**
 	 * Construct a dice object
@@ -47,7 +51,7 @@ public class Dice {
 		this.maxValDiceOne = maxValDiceOne;
 		this.maxValDiceTwo = maxValDiceTwo;
 	}
-	
+
 	/**
 	 * Construct a dice object
 	 * 
@@ -56,14 +60,15 @@ public class Dice {
 	 * @param maxValDiceTwo
 	 *            the maximal value for the die two
 	 */
-	public Dice(int maxValDiceOne, int maxValDiceTwo, GameClient gameClient, boolean testOff) {
+	public Dice(int maxValDiceOne, int maxValDiceTwo, GameClient gameClient,
+			boolean testOff) {
 		this.testOff = testOff;
-		this.gameClient=gameClient;
+		this.gameClient = gameClient;
 		this.maxValDiceOne = maxValDiceOne;
 		this.maxValDiceTwo = maxValDiceTwo;
-		rb= ResourceBundle.getBundle(
-				"ch.bfh.monopoly.resources.tile",gameClient.getLoc());
-		jpanel=(new EventPanelFactory()).getJPanel();
+		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
+				gameClient.getLoc());
+		jpanel = (new EventPanelFactory()).getJPanel();
 	}
 
 	/**
@@ -84,7 +89,6 @@ public class Dice {
 		return throwValueOne + throwValueTwo;
 	}
 
-	
 	/**
 	 * Get the single value of both dice
 	 * 
@@ -93,79 +97,243 @@ public class Dice {
 	public String getDiceValues() {
 		return throwValueOne + ", " + throwValueTwo;
 	}
-	
-	public boolean isDoubles(){
-		return throwValueOne==throwValueTwo;
+
+	public boolean isDoubles() {
+		return throwValueOne == throwValueTwo;
 	}
 
-
-	private JPanel imageLogo(String name){
+	private JPanel imageLogo(String name) {
 		JPanel img = new JPanel();
-		java.net.URL urlImg = Monopoly.class.getResource("/ch/bfh/monopoly/resources/" + name);
+		java.net.URL urlImg = Monopoly.class
+				.getResource("/ch/bfh/monopoly/resources/" + name);
 		ImageIcon logo = new ImageIcon(urlImg);
 		JLabel imgLab = new JLabel(logo);
 		img.add(imgLab);
 		return img;
 	}
-	
-	public JPanel getNormalStartTurnPanel() {
-		buttonRight = new JButton();
-		buttonRight.addActionListener(new ActionListener() {
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				normalRollSecondStep();
-			}
-		});
-		buttonRight.setText(rb.getString("roll"));
-		descriptionLabel.setText(rb.getString("rollDescription"));
-
-//		jp.add(imageLogo("roll.png"));
-		jpanel.add(descriptionLabel,BorderLayout.CENTER);
-		jpanel.add(buttonRight, BorderLayout.SOUTH);
-
-		return jpanel;
+	public JPanel getNewStartRoll() {
+		epf.changePanel(Step.ROLL_NORMAL);
+		return epf.getJPanel();
 	}
 
-	public void normalRollSecondStep() {
-		jpanel.remove(buttonRight);
-		final int roll = throwDice();
-		System.out.println("DICE CLASS rolled: "+roll);
-		buttonRight = new JButton(rb.getString("continueButton"));
-		buttonRight.addActionListener(new ActionListener() {
+	public JPanel getNewJailStart() {
+		attemptedRolls = 0;
+		epf.changePanel(Step.JAIL_START);
+		return epf.getJPanel();
+	}
+
+	public EventPanelInfo getEventPanelInfoForStep(Step step) {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+
+		EventPanelInfo epi;
+
+		switch (step) {
+		case ROLL_NORMAL:
+			epi = getRollStartEPI(false);
+			break;
+		case ROLL_NORMAL2:
+			epi = new EventPanelInfo();
+			final int roll = throwDice();
+			System.out.println("DICE CLASS rolled: " + roll);
+			buttonRight = new JButton();
+
+			labelText = rb.getString("youRolled") + getDiceValues() + " "
+					+ rb.getString("advance") + " " + roll + " "
+					+ rb.getString("spaces");
+			buttonText = rb.getString("continueButton");
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					buttonRight.setEnabled(false);
+					int prevPos = gameClient.getCurrentPlayer().getPosition();
+					gameClient.advancePlayerNSpaces(roll, testOff);
+					// gameClient.sendTransactionSuccesToGUI(true);
+					int curPos = gameClient.getCurrentPlayer().getPosition();
+					System.out.println("PrevPos" + prevPos + "  CurPos"
+							+ curPos);
+					epf.disableAfterClick();
+				}
+			};
+			epi.setText(labelText);
+			epi.addActionListener(al);
+			epi.addButtonText(buttonText);
+			break;
+		case JAIL_START:
+			epi = getJailStartEPI();
+			break;
+		case JAIL_PAY:
+			gameClient.getOutOfJailByPayment(testOff);
+			epi = getRollStartEPI(true);
+			break;
+		case JAIL_CARD:
+			gameClient.getOutOfJailByCard(testOff);
+			epi = getRollStartEPI(true);
+			break;
+		case JAIL_ROLL:
+			epi = new EventPanelInfo();
+
+			final int rollValue = throwDice();
+			if (isDoubles()) {
+				labelText = rb.getString("youRolled") + " " + getDiceValues()
+						+ " " + rb.getString("outOfJail");
+				buttonText = "ok";
+				al = new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						System.out.println("JailStatus:"
+								+ gameClient.getCurrentPlayer().isInJail());
+						gameClient.getOutOfJailByRoll(testOff);
+						System.out.println("JailStatus:"
+								+ gameClient.getCurrentPlayer().isInJail());
+						epf.changePanel(Step.ROLL_NORMAL);
+					}
+				};
+				epi.setText(labelText);
+				epi.addActionListener(al);
+				epi.addButtonText(buttonText);
+			} else {
+				if (attemptedRolls > 2)
+					epi = rollFailureEPI();
+				else {
+					epi = getJailStartEPI();
+				}
+			}
+			break;
+		default:
+			epi = new EventPanelInfo();
+			labelText = "No case defined";
+			buttonText = "ok";
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+				}
+			};
+			epi.setText(labelText);
+			epi.addActionListener(al);
+			epi.addButtonText(buttonText);
+			break;
+		}
+		return epi;
+	}
+
+	public EventPanelInfo rollFailureEPI() {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi = new EventPanelInfo();
 		
+		epi = new EventPanelInfo();
+		labelText = rb.getString("rollFailure");
+
+		buttonText = "ok";
+		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buttonRight.setEnabled(false);
-				int prevPos = gameClient.getCurrentPlayer().getPosition();
-				gameClient.advancePlayerNSpaces(roll, testOff);
-//				gameClient.sendTransactionSuccesToGUI(true);
-				int curPos = gameClient.getCurrentPlayer().getPosition();
-				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
+				gameClient.sendTransactionSuccesToGUI(testOff);
+				epf.disableAfterClick();
 			}
-		});
-
-		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() +" " + rb.getString("advance") +" "+ roll +" "+rb.getString("spaces"));
-//		jp.add(imageLogo("roll.png"));
-		jpanel.add(buttonRight, BorderLayout.SOUTH);
+		};
+		epi.setText(labelText);
+		epi.addActionListener(al);
+		epi.addButtonText(buttonText);
+		return epi;
 	}
-	
-	
-	public JPanel getJailStartTurnPanel() {
-		jpanel=new EventPanelFactory().getJPanel();
-		attemptedRolls=0;
-		al=new ActionListener() {
+
+	public EventPanelInfo getRollStartEPI(boolean freed) {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi = new EventPanelInfo();
+
+		if (freed)
+			labelText = rb.getString("freed");
+		else
+			labelText = rb.getString("rollDescription");
+
+		buttonText = rb.getString("roll");
+		al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				epf.changePanel(Step.ROLL_NORMAL2);
+			}
+		};
+		epi.setText(labelText);
+		epi.addActionListener(al);
+		epi.addButtonText(buttonText);
+		return epi;
+	}
+
+	public EventPanelInfo getJailStartEPI() {
+		String labelText;
+
+		EventPanelInfo epi = new EventPanelInfo();
+		if (attemptedRolls > 0) {
+			labelText = rb.getString("youRolled") + getDiceValues() + " "
+					+ rb.getString("rollAgain") + " " + (3 - attemptedRolls)
+					+ " " + rb.getString("triesRemaining");
+		} else
+			labelText = rb.getString("rollDescription");
+
+		ActionListener pay = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.getOutOfJailByPayment(testOff);
+				epf.changePanel(Step.JAIL_PAY);
+				gameClient.sendTransactionSuccesToGUI(testOff);
+			}
+		};
+
+		ActionListener card = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.getOutOfJailByCard(testOff);
+				epf.changePanel(Step.JAIL_CARD);
+				gameClient.sendTransactionSuccesToGUI(testOff);
+			}
+		};
+
+		ActionListener rollJail = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				attemptedRolls++;
+				epf.changePanel(Step.JAIL_ROLL);
+				System.out.println("attempted Rolls: " + attemptedRolls);
+			}
+		};
+
+		String buttonTextPay = rb.getString("pay");
+		String buttonTextCard = rb.getString("card");
+		String buttonTextRoll = rb.getString("roll");
+
+		epi.setText(labelText);
+		epi.addActionListener(pay);
+		epi.addActionListener(card);
+		epi.addActionListener(rollJail);
+		epi.addButtonText(buttonTextPay);
+		epi.addButtonText(buttonTextCard);
+		epi.addButtonText(buttonTextRoll);
+		return epi;
+	}
+
+	public JPanel getJailStartTurnPanel(boolean freed) {
+		jpanel = new EventPanelFactory().getJPanel();
+		attemptedRolls = 0;
+		al = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				attemptedRolls++;
 				jailRollSecondStep();
-				System.out.println("attempted Rolls: "+attemptedRolls);
+				System.out.println("attempted Rolls: " + attemptedRolls);
 			}
 		};
-		
-		
-		ActionListener pay=new ActionListener() {
+
+		ActionListener pay = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -173,8 +341,8 @@ public class Dice {
 				gameClient.sendTransactionSuccesToGUI(testOff);
 			}
 		};
-		
-		ActionListener card =new ActionListener() {
+
+		ActionListener card = new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -182,58 +350,65 @@ public class Dice {
 				gameClient.sendTransactionSuccesToGUI(testOff);
 			}
 		};
-		JButton buttonPay=new JButton(rb.getString("pay"));
+		JButton buttonPay = new JButton(rb.getString("pay"));
 		buttonPay.addActionListener(pay);
-		JButton buttonCard=new JButton(rb.getString("card"));
+		JButton buttonCard = new JButton(rb.getString("card"));
 		buttonCard.addActionListener(card);
 		buttonRight.setText("Roll");
 		buttonRight.addActionListener(al);
 
 		descriptionLabel.setText(rb.getString("inJail"));
 
-		JPanel buttonPanel= new JPanel();
-		
+		JPanel buttonPanel = new JPanel();
+
 		buttonPanel.add(buttonPay);
 		buttonPanel.add(buttonCard);
 		buttonPanel.add(buttonRight);
-		
+
 		jpanel.add(descriptionLabel, BorderLayout.NORTH);
-		jpanel.add(buttonPanel,BorderLayout.SOUTH);
+		jpanel.add(buttonPanel, BorderLayout.SOUTH);
 		return jpanel;
 	}
 
 	public void jailRollSecondStep() {
 		buttonRight.setText("ok");
 		final int roll = throwDice();
-		if (isDoubles()){
-			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + rb.getString("outOfJail"));
+		if (isDoubles()) {
+			descriptionLabel.setText(rb.getString("youRolled")
+					+ getDiceValues() + rb.getString("outOfJail"));
 			buttonRight.removeActionListener(al);
-			al=new ActionListener() {
-			
+			al = new ActionListener() {
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
+					System.out.println("JailStatus:"
+							+ gameClient.getCurrentPlayer().isInJail());
 					gameClient.getOutOfJailByRoll(testOff);
 					gameClient.sendTransactionSuccesToGUI(testOff);
-					System.out.println("JailStatus:"+gameClient.getCurrentPlayer().isInJail());
+					System.out.println("JailStatus:"
+							+ gameClient.getCurrentPlayer().isInJail());
 					buttonRight.removeActionListener(al);
-					jpanel=gameClient.getStartTurnPanel(testOff);
+					jpanel = gameClient.getStartTurnPanel(testOff);
 				}
 			};
 			buttonRight.addActionListener(al);
-		}
-		else {
-			if (attemptedRolls>2)
+		} else {
+			if (attemptedRolls > 2)
 				rolledUnsuccessfully();
-			descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()+ " " + rb.getString("rollAgain") +" "+ (3-attemptedRolls)+" "+rb.getString("triesRemaining"));
+			descriptionLabel.setText(rb.getString("youRolled")
+					+ getDiceValues() + " " + rb.getString("rollAgain") + " "
+					+ (3 - attemptedRolls) + " "
+					+ rb.getString("triesRemaining"));
 
-		}	
+		}
 	}
-	
-	public void rolledUnsuccessfully(){
+
+	public void rolledUnsuccessfully() {
 		jpanel.remove(buttonRight);
-		jpanel.add(new JLabel("rolledUnsuccessfully"),BorderLayout.CENTER);
-		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues() + " " + (3-attemptedRolls) +" "+rb.getString("triesRemaining")+ rb.getString("stayJail"));
+		jpanel.add(new JLabel("rolledUnsuccessfully"), BorderLayout.CENTER);
+		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()
+				+ " " + (3 - attemptedRolls) + " "
+				+ rb.getString("triesRemaining") + rb.getString("stayJail"));
 		gameClient.sendTransactionSuccesToGUI(testOff);
 	}
 

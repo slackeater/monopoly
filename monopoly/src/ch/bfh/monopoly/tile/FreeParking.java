@@ -32,7 +32,7 @@ public class FreeParking extends AbstractTile {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.freeParking(true);
+				gameClient.freeParking(sendNetMessage);
 				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 				buttonRight.setEnabled(false);
 			}

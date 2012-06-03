@@ -37,7 +37,7 @@ public abstract class AbstractTile implements Tile {
 		this.tileId = tileId;
 		this.em = em;
 		this.gameClient = gameClient;
-		jpanel=(new EventPanelFactory()).getJPanel();
+		jpanel=(new EventPanelFactory()).getOldJPanel();
 	}
 
 	/**

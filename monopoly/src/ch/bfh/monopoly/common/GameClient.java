@@ -555,9 +555,9 @@ public class GameClient {
 	public JPanel getStartTurnPanel(boolean sendNetMessage) {
 		JPanel jp;
 		if (currentPlayer.isInJail())
-			jp = dice.getJailStartTurnPanel();
+			jp = dice.getNewJailStart();
 		else
-			jp = dice.getNormalStartTurnPanel();
+			jp = dice.getNewStartRoll();
 		if (sendNetMessage) {
 			NetMessage netMsg = new NetMessage(Messages.START_TURN_PANEL);
 			sendNetMessageToGUI(netMsg);
