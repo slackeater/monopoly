@@ -374,7 +374,7 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
-
+				//	if(wse.getTei().)
 					tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("TRADE REQUEST");
@@ -822,9 +822,6 @@ public class MonopolyGUI extends JFrame {
 							hisTerrainBox.addItem(ti.getName());
 						}
 					}
-
-				
-					
 					
 					sendTradeRequest.addMouseListener(new MouseListener() {
 
@@ -898,7 +895,7 @@ public class MonopolyGUI extends JFrame {
 							System.out.println("OFFER MONEY: " + moneyCheckValue);
 
 							if(!errorCheck){
-								tie = new TradeInfoEvent(hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
+								tie = new TradeInfoEvent(gc.getLocalPlayerName(), to, hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
 								gc.sendTradeRequestToPlayer(to, tie);
 								sendTradeRequest.setEnabled(false);
 							}
