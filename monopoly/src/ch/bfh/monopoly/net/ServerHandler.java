@@ -239,7 +239,7 @@ public class ServerHandler implements IoHandler{
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
 		
-		System.out.println("MESSAGE RECEIVED FROM TYPE: " + n.getMessageType());
+		System.out.println("ServerHandler Received Message TYPE: " + n.getMessageType());
 
 		if(n.getMessageType() == Messages.SEND_USERNAME)
 			buildUserList(n, arg0);

@@ -985,6 +985,7 @@ public class GameClient {
 	 * receive a trade request
 	 */
 	public void receiveTradeRequest(TradeInfoEvent tie) {
+		System.out.println("gameClient: trade request arrived");
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_TRADE_REQUEST, tie);
 		ws.notifyListeners(wse);
@@ -994,6 +995,7 @@ public class GameClient {
 	 * confirm/reject a trade request that you have received
 	 */
 	public void sendTradeAnswer(boolean answer) {
+		System.out.println("gameClient send TradeAnswer of "+ answer);
 		NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
 		nc.sendMessage(nm);
 	}
