@@ -374,7 +374,7 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
-				//	if(wse.getTei().)
+					//	if(wse.getTei().)
 					tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("TRADE REQUEST");
@@ -809,10 +809,14 @@ public class MonopolyGUI extends JFrame {
 				sendTradeRequest.setVisible(true);
 				sendTradeRequest.repaint();
 
-				final int player = usersBox.getSelectedIndex()-1;
-
-				if(player >= 0){
-
+				System.out.println("BEFORE LISTENER");
+				
+				if(usersBox.getSelectedIndex() > 0){
+					
+					final int player = usersBox.getSelectedIndex()-1;
+					System.out.println("PLAYER SELECTED " + player);
+					
+					
 					boolean terrain[]  = pse.get(player).getTerrains();	
 
 					//change 10 to selectedPlayer.getTerrain.size
@@ -822,7 +826,7 @@ public class MonopolyGUI extends JFrame {
 							hisTerrainBox.addItem(ti.getName());
 						}
 					}
-					
+
 					sendTradeRequest.addMouseListener(new MouseListener() {
 
 						@Override
@@ -844,14 +848,12 @@ public class MonopolyGUI extends JFrame {
 							rcvrMoneySpinner.repaint();
 
 							if(terrainCheck.isSelected())
-								if(myTerrainBox.getItemCount() > 0 && !((String)myTerrainBox.getSelectedItem()).equals("-")){
+								if(myTerrainBox.getItemCount() > 0){
 									offer = new ArrayList<String>();
 									offer.add((String)myTerrainBox.getSelectedItem());
 								}
 								else
 									errorCheck = true;
-
-
 
 							if(cardCheck.isSelected())
 								if(localPse.getJailCard() >= 1)
