@@ -374,15 +374,18 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
-					//	if(wse.getTei().)
-					tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
-					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
-					System.out.println("TRADE REQUEST");
+					if(wse.getTei().getOtherPlayer().equals(gc.getLocalPlayerName())){
+						tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
+						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+						System.out.println("TRADE REQUEST");
+					}
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_ANSWER){
-					tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
-					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
-					System.out.println("TRADE ANSWER");
+					if(wse.getTei().getSourcePlayer().equals(gc.getLocalPlayerName())){
+						tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
+						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+						System.out.println("TRADE ANSWER");
+					}
 				}
 				//TODO kick request
 				//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
@@ -810,13 +813,13 @@ public class MonopolyGUI extends JFrame {
 				sendTradeRequest.repaint();
 
 				System.out.println("BEFORE LISTENER");
-				
+
 				if(usersBox.getSelectedIndex() > 0){
-					
+
 					final int player = usersBox.getSelectedIndex()-1;
 					System.out.println("PLAYER SELECTED " + player);
-					
-					
+
+
 					boolean terrain[]  = pse.get(player).getTerrains();	
 
 					//change 10 to selectedPlayer.getTerrain.size
