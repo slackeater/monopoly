@@ -179,8 +179,12 @@ public class MonopolyGUI extends JFrame {
 			private static final long serialVersionUID = 9219941791909195711L;
 
 			@Override
-			public void actionPerformed(ActionEvent e) {		
+			public void actionPerformed(ActionEvent e) {	
+				boolean endTurnState = false;
+				
 				if(diceButton != null){
+					endTurnState = endTurn.isEnabled();
+					endTurn.setEnabled(false);
 					throwDice.setEnabled(false);
 					trade.setEnabled(false);
 					useCard.setEnabled(false);
@@ -246,6 +250,10 @@ public class MonopolyGUI extends JFrame {
 						//diceButton.setEnabled(true);
 						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
 
+						if(endTurnState){
+							endTurn.setEnabled(true);
+						}
+						
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 
@@ -381,7 +389,7 @@ public class MonopolyGUI extends JFrame {
 					System.out.println("TRADE ANSWER");
 				}
 //				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
-//					tabPane.add(res.getString("label-kickrequest"), kickAnswer(wse.getAnswer()));
+//					tabPane.add(res.getString("label-kickrequest"), kickAnsweram(wse.getAnswer()));
 //					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 //					System.out.println("TRADE ANSWER");
 //				}

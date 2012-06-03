@@ -28,7 +28,7 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void exceptionCaught(IoSession arg0, Throwable arg1)
-			throws Exception {
+	throws Exception {
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class ClientHandler implements IoHandler {
 			System.out.println("ROLL RECEIVED");
 			int rollValue = n.getInt();
 			System.out
-					.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "
-							+ rollValue);
+			.println("THIS IS THE ROLL VALUE RECEIVED IN netMessage.DICE_ROLL: "
+					+ rollValue);
 			gameClient.advancePlayerNSpacesInDirection(rollValue, n.getDir(),
 					false);
 			break;
@@ -88,7 +88,6 @@ public class ClientHandler implements IoHandler {
 			System.out.println("RECEIVED MESSAGE: " + n.getMessageCode());
 			gameClient.buyCurrentPropertyForPlayer(n.getText(), false);
 			break;
-
 		case SELL_HOUSE:
 			gameClient.sellHouse(n.getInt(), false);
 			break;
@@ -166,6 +165,12 @@ public class ClientHandler implements IoHandler {
 		case TRADE_ANSWER: 
 			gameClient.receiveTradeAnswer(n.getTradeAnswer());
 			break;
+		case KICK_REQUEST:
+			//TODO
+			break;
+		case KICK_ANSWER:
+			//TODO
+			break;	
 		case ACKNOWLEDGE:
 			// TODO probably to remove
 			break;
@@ -186,6 +191,7 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void sessionClosed(IoSession arg0) throws Exception {
+
 		// TODO Auto-generated method stub
 	}
 
