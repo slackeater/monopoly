@@ -750,8 +750,11 @@ public class Board {
 	 */
 	public Tile getTileByName(String tileName) {
 		for (int i = 0; i < tiles.length; i++) {
-			if (tiles[i].getName().equals(tileName))
+			if (tiles[i].getName().equals(tileName)) {
+				System.out.println("Board: tileByName found:"
+						+ tiles[i].getName());
 				return tiles[i];
+			}
 		}
 		return null;
 	}
@@ -765,8 +768,11 @@ public class Board {
 	 */
 	public int getTileIdByName(String tileName) {
 		for (int i = 0; i < tiles.length; i++) {
-			if (tiles[i].getName().equals(tileName))
+			if (tiles[i].getName().equals(tileName)) {
+				System.out.println("Board: tileByName found:"
+						+ tiles[i].getName());
 				return i;
+			}
 		}
 		return -1;
 	}

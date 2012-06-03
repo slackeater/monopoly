@@ -466,6 +466,9 @@ public class GameClient {
 	 */
 	public void transferProperty(String fromName, String toName, int tileId,
 			int price, boolean sendNetMessage) {
+		
+		System.out.println("gameClient: transferProperty Id: "+ tileId+ "from "+fromName+"to" +toName );
+		
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 		try {
@@ -498,6 +501,7 @@ public class GameClient {
 	 */
 	public void transferJailCards(String fromName, String toName, int quantity,
 			int price, boolean sendNetMessage) {
+		System.out.println("gameClient: transferJailCards "+ quantity+ " from "+fromName+" to" +toName );
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 		try {
@@ -528,6 +532,7 @@ public class GameClient {
 	 */
 	public void transferMoney(String fromName, String toName, int amount,
 			boolean sendNetMessage) {
+		System.out.println("gameClient: transferMoney "+ tradeEvent.getMoneyOffer()+ " from "+fromName+" to" +toName );
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 
@@ -995,7 +1000,7 @@ public class GameClient {
 	 * confirm/reject a trade request that you have received
 	 */
 	public void sendTradeAnswer(boolean answer) {
-		System.out.println("gameClient send TradeAnswer of "+ answer);
+		System.out.println("gameClient send TradeAnswer of " + answer);
 		NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
 		nc.sendMessage(nm);
 	}
@@ -1021,28 +1026,31 @@ public class GameClient {
 		System.out.println("performing trade");
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
-		if (tradeEvent.getMoneyOffer() > 0)
+		if (tradeEvent.getMoneyOffer() > 0) {
 			transferMoney(sourcePlayer, otherPlayer,
 					tradeEvent.getMoneyOffer(), true);
+		}
 		if (tradeEvent.getMoneyDemand() > 0)
 			transferMoney(otherPlayer, sourcePlayer,
 					tradeEvent.getMoneyOffer(), true);
-		if (tradeEvent.getPropertiesOffer() != null){
+		if (tradeEvent.getPropertiesOffer() != null) {
 			for (String prop : tradeEvent.getPropertiesOffer()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(sourcePlayer, otherPlayer, tileId, 0, true);
 			}
 		}
-		if (tradeEvent.getPropertiesDemand()!=null){
+		if (tradeEvent.getPropertiesDemand() != null) {
 			for (String prop : tradeEvent.getPropertiesDemand()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(otherPlayer, sourcePlayer, tileId, 0, true);
 			}
 		}
-		if (tradeEvent.getJailcardOffer()>0)
-			transferJailCards(sourcePlayer, otherPlayer, tradeEvent.getJailcardOffer(), 0, true);
-		if (tradeEvent.getJailcardDemand()>0)
-			transferJailCards(otherPlayer, sourcePlayer, tradeEvent.getJailcardOffer(), 0, true);
+		if (tradeEvent.getJailcardOffer() > 0)
+			transferJailCards(sourcePlayer, otherPlayer,
+					tradeEvent.getJailcardOffer(), 0, true);
+		if (tradeEvent.getJailcardDemand() > 0)
+			transferJailCards(otherPlayer, sourcePlayer,
+					tradeEvent.getJailcardOffer(), 0, true);
 	}
 
 	/**
