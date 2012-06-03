@@ -8,6 +8,8 @@ public class WindowStateEvent {
 	private WindowMessage type;
 	TradeInfoEvent tei;
 	boolean answer;
+	String player;
+	String playerToKick;
 	
 	public WindowStateEvent(WindowMessage type, String eventDescription, int amount){
 		this.type = type;
@@ -18,6 +20,18 @@ public class WindowStateEvent {
 	public WindowStateEvent(WindowMessage type, TradeInfoEvent tei){
 		this.type = type;
 		this.tei=tei;
+	}
+	
+	public WindowStateEvent(WindowMessage type, String player, String playerToKick){
+		this.type = type;
+		this.player=player;
+		this.playerToKick=playerToKick;
+	}
+	
+	public WindowStateEvent(WindowMessage type, String player, boolean answer){
+		this.type = type;
+		this.player=player;
+		this.answer = answer;
 	}
 	
 	public WindowStateEvent(WindowMessage type, boolean answer){

@@ -11,7 +11,10 @@ package ch.bfh.monopoly.observer;
 		MSG_FOR_ERROR(1),
 		MSG_EVENT_COMPLETION(2),
 		MSG_TRADE_REQUEST(3),
-		MSG_TRADE_ANSWER(4)
+		MSG_TRADE_ANSWER(4), 
+		MSG_KICK_REQUEST(10),
+		MSG_KICK_ANSWER(11),
+		MSG_KICK(12);
 
 		
 		;

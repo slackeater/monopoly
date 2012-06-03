@@ -2,6 +2,7 @@ package ch.bfh.monopoly.event;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 
@@ -12,7 +13,9 @@ public class RepairsEvent extends AbstractTileEvent{
 
 	int chargePerHouse;
 	int chargePerHotel;
-
+	ResourceBundle rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
+			gameClient.getLoc());
+	
 	public RepairsEvent(String name, String eventDescription, int chargePerHouse,int chargePerHotel,
 			GameClient gameClient) {
 		super(name, eventDescription, gameClient);
@@ -34,7 +37,7 @@ public class RepairsEvent extends AbstractTileEvent{
 	public JPanel getTileEventPanel() {
 		int housesOnBoard = 32 - gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
-		eventDescription="There are " + housesOnBoard + " houses on the board, and " + hotelsOnBoard +" hotels on the board.  You must pay "+chargePerHouse + "for each house, and " + chargePerHotel + " for each hotel";
+		eventDescription=rb.getString("thereAre") + housesOnBoard + rb.getString("housesOnBoard") + hotelsOnBoard +" "+rb.getString("hotelsOnBoard")+" "+chargePerHouse + " "+ rb.getString("forEachHouse")+" " + chargePerHotel + rb.getString("forEachHotel");
 		ActionListener al =new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {

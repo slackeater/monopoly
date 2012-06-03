@@ -24,14 +24,14 @@ public class EventManager {
 	int chanceDrawIndex=16;
 	int commChestDrawIndex=16;
 
-	private boolean testOff;
+	private boolean testing;
 
 	// set when GUI calls getEventDescription so program then knows which
 	// chance / Comm chest card to execute when GUI calls performEVent()
 	BoardEvent currentEvent;
 
 	public EventManager(GameClient gameClient,boolean testOff) {
-		this.testOff = testOff;
+		this.testing = testOff;
 		integersTo16 = makeIntegerList();
 		this.gameClient = gameClient;
 		res = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
@@ -44,20 +44,21 @@ public class EventManager {
 		chanceEventsShuffled = shuffleDeck();
 		//set a number here to test that event in particular
 		chanceDrawIndex = 0;
-		if (testOff)
-			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testOff);
+		if (testing)
+			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testing);
 	}
 
 	private void shuffleCommChestCards() {
 		commChestEventsShuffled = shuffleDeck();
 		//set a number here to test that event in particular
 		commChestDrawIndex = 0;
-		if (testOff)
-			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, testOff);
+		if (testing)
+			gameClient.updateCommChestDrawOrder(commChestEventsShuffled, testing);
 	}
 
 	private int[] shuffleDeck() {
-		if (!testOff) {
+		//uncomment if you wish to have a fixed order of events
+		if (!testing) {
 			int[] notShuffled = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
 					14, 15 };
 			return notShuffled;
@@ -261,11 +262,11 @@ public class EventManager {
 	 * used for testing. If it is set to false, no net messages will be sent
 	 * 
 	 * 
-	 * @param testOff
+	 * @param testing
 	 *            the truth value to set to
 	 */
 	public void setupForTesting() {
-		this.testOff = false;
+		this.testing = false;
 
 		for (BoardEvent be : chanceEvents) {
 			AbstractTileEvent ate = (AbstractTileEvent) be;
