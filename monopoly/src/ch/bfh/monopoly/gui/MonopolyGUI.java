@@ -248,19 +248,17 @@ public class MonopolyGUI extends JFrame {
 					if(diceButton != null){
 						System.out.println("=====0 INSIDE ANIMATION FUNCTION ==== ENABLING BUTTONS TRADE; USE CARD; END TURN" );
 
-						if(endTurnState){
+						if(endTurnState)
 							endTurn.setEnabled(true);
-						}
-						
+					
 						trade.setEnabled(true);
 						useCard.setEnabled(true);
 
 						tabPane.add("EVENT!", gc.getTileEventPanel());
 
-						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++){
+						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
 							tabPane.setEnabledAt(j, false);
-						}
-
+						
 						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
 						tabPane.setSelectedIndex(tabPane.getTabCount()-1);
 					}
@@ -386,6 +384,7 @@ public class MonopolyGUI extends JFrame {
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("TRADE ANSWER");
 				}
+				//TODO kick request
 //				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 //					tabPane.add(res.getString("label-kickrequest"), kickAnsweram(wse.getAnswer()));
 //					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
