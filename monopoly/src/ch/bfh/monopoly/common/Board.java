@@ -742,6 +742,36 @@ public class Board {
 	}
 
 	/**
+	 * get a tile by name
+	 * 
+	 * @param the
+	 *            name of the tile you wish to find
+	 * @return the tile with the given name
+	 */
+	public Tile getTileByName(String tileName) {
+		for (int i = 0; i < tiles.length; i++) {
+			if (tiles[i].getName().equals(tileName))
+				return tiles[i];
+		}
+		return null;
+	}
+
+	/**
+	 * get a tile id by name
+	 * 
+	 * @param the
+	 *            name of the tile you wish to find
+	 * @return the tile with the given name
+	 */
+	public int getTileIdByName(String tileName) {
+		for (int i = 0; i < tiles.length; i++) {
+			if (tiles[i].getName().equals(tileName))
+				return i;
+		}
+		return -1;
+	}
+
+	/**
 	 * get the player object whose name field corresponds to a given name
 	 * 
 	 * @param name
