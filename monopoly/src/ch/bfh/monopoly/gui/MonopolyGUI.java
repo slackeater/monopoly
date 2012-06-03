@@ -1061,6 +1061,8 @@ public class MonopolyGUI extends JFrame {
 		JPanel offerCtr = new JPanel();
 		offerCtr.setBorder(BorderFactory.createTitledBorder(res.getString("label-offercontent")));
 		offerCtr.setLayout(new BoxLayout(offerCtr, BoxLayout.PAGE_AXIS));
+		
+		System.out.println("AFTER CTR PANEL");
 
 		/**
 		 * Demand
@@ -1075,6 +1077,8 @@ public class MonopolyGUI extends JFrame {
 		if(tie.getPropertiesDemand() != null)
 			demandCtr.add(new JLabel(" - " + res.getString("label-tradeTerrain") + tie.getPropertiesDemand().get(0)));
 
+		System.out.println("DEMAND PARAM");
+		
 		/**
 		 * Offer
 		 */
@@ -1087,6 +1091,8 @@ public class MonopolyGUI extends JFrame {
 						
 		if(tie.getPropertiesOffer() != null)
 			offerCtr.add(new JLabel(" - " + res.getString("label-tradeTerrain") + tie.getPropertiesOffer().get(0)));
+		
+		System.out.println("OFFER PARAM");
 		
 		pa.setBorder(BorderFactory.createTitledBorder(res.getString("label-tradereceived") + gc.getCurrentPlayerName()));
 
@@ -1103,6 +1109,8 @@ public class MonopolyGUI extends JFrame {
 			}
 		});
 
+		System.out.println("AFTER YES BTN");
+		
 		no.addActionListener(new ActionListener() {
 
 			@Override
@@ -1113,6 +1121,8 @@ public class MonopolyGUI extends JFrame {
 				yes.setEnabled(false);
 			}
 		});
+		
+		System.out.println("AFTER NO BTN");
 
 		JPanel buttonCont = new JPanel();
 		buttonCont.setLayout(new BoxLayout(buttonCont, BoxLayout.LINE_AXIS));
