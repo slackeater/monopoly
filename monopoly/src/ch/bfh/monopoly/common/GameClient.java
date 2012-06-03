@@ -1016,6 +1016,7 @@ public class GameClient {
 	 * perform the trade in the tradeEvent
 	 */
 	public void performTrade() {
+		System.out.println("performing trade");
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
 		if (tradeEvent.getMoneyOffer() > 0)
