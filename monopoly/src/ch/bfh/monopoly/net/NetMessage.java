@@ -79,6 +79,7 @@ public class NetMessage implements Serializable {
 	public boolean getTradeAnswer() {
 		return kickAnswer;
 	}
+	
 	public String getPlayer(){
 		return player;
 	}

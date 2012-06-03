@@ -125,7 +125,6 @@ public class ClientHandler implements IoHandler {
 			gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(),0, false);
 			break;
 			
-			
 		case TOGGLE_MORTGAGE:
 			gameClient.toggleMortgageStatus(n.getInt(), false);
 			break;
