@@ -37,7 +37,9 @@ public class GameClient {
 	// used to test / for the roll value to a certain order of values
 	private int rollCount = 0;
 	private int kickVotes;
-
+	TradeInfoEvent tradeEvent;
+	boolean tradePending;
+	
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
 	 * that must be displayer in the chat message window and in the game history
@@ -971,6 +973,7 @@ public class GameClient {
 	 * send a trade request to a player
 	 */
 	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
+		tradePending = true;
 		System.out.println("SEND TRADE FROM GAME CLIENT");
 		NetMessage nm = new NetMessage(playerName, tie, Messages.TRADE_REQUEST);
 		nc.sendMessage(nm);
@@ -998,11 +1001,34 @@ public class GameClient {
 	 * receive the response from a trade request
 	 */
 	public void receiveTradeAnswer(boolean answer) {
+		if (answer){
+			performTrade();	
+		}
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_TRADE_ANSWER, answer);
 		ws.notifyListeners(wse);
+		tradePending=false;
 	}
 
+	
+	/**
+	 * perform the trade in the tradeEvent
+	 */
+	public void performTrade(){
+		String sourcePlayer = tradeEvent.getSourcePlayer();
+		String otherPlayer = tradeEvent.getOtherPlayer();
+		if (tradeEvent.getMoneyOffer()>0)
+			transferMoney(sourcePlayer, otherPlayer, tradeEvent.getMoneyOffer(), true);
+		if (tradeEvent.getMoneyDemand()>0)
+			transferMoney(otherPlayer, sourcePlayer, tradeEvent.getMoneyOffer(), true);
+//		if (tradeEvent.getPropertiesOffer()!=null)
+//			for (String prop:tradeEvent.getPropertiesOffer())
+//				board.getT
+//			transferProperty(fromName, toName, tileId, price, sendNetMessage)
+		
+	}
+	
+	
 	/**
 	 * gives the given player a jail card
 	 * 

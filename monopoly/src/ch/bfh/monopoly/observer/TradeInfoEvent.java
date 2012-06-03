@@ -6,6 +6,8 @@ import java.util.List;
 public class TradeInfoEvent implements Serializable{
 
 	private static final long serialVersionUID = 7318239032321368562L;
+	String sourcePlayer;
+	String otherPlayer;
 	int moneyDemand;
 	int moneyOffer;
 	int jailcardDemand;
@@ -14,10 +16,12 @@ public class TradeInfoEvent implements Serializable{
 	List<String> propertiesOffer;
 	
 	
-	public TradeInfoEvent(int moneyDemand, int moneyOffer, int jailcardDemand,
+	public TradeInfoEvent(String sourcePlayer, String otherPlayer, int moneyDemand, int moneyOffer, int jailcardDemand,
 			int jailcardOffer, List<String> propertiesDemand,
 			List<String> propertiesOffer) {
 		super();
+		this.sourcePlayer=sourcePlayer;
+		this.otherPlayer=otherPlayer;
 		this.moneyDemand = moneyDemand;
 		this.moneyOffer = moneyOffer;
 		this.jailcardDemand = jailcardDemand;
@@ -26,6 +30,14 @@ public class TradeInfoEvent implements Serializable{
 		this.propertiesOffer = propertiesOffer;
 	}
 	
+	public String getSourcePlayer() {
+		return sourcePlayer;
+	}
+
+	public String getOtherPlayer() {
+		return otherPlayer;
+	}
+
 	public int getMoneyDemand() {
 		return moneyDemand;
 	}
