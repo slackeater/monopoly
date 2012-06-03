@@ -39,7 +39,7 @@ public class GameClient {
 	private int kickVotes;
 	TradeInfoEvent tradeEvent;
 	boolean tradePending;
-	
+
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
 	 * that must be displayer in the chat message window and in the game history
@@ -974,10 +974,11 @@ public class GameClient {
 	 */
 	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
 		tradePending = true;
+		tradeEvent = tie;
 		System.out.println("SEND TRADE FROM GAME CLIENT");
 		NetMessage nm = new NetMessage(playerName, tie, Messages.TRADE_REQUEST);
 		nc.sendMessage(nm);
-		
+
 	}
 
 	/**
@@ -1001,34 +1002,46 @@ public class GameClient {
 	 * receive the response from a trade request
 	 */
 	public void receiveTradeAnswer(boolean answer) {
-		if (answer){
-			performTrade();	
+		if (answer) {
+			System.out.println("gameClient received TRADE ANSWER:" + answer);
+			performTrade();
 		}
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_TRADE_ANSWER, answer);
 		ws.notifyListeners(wse);
-		tradePending=false;
+		tradePending = false;
 	}
 
-	
 	/**
 	 * perform the trade in the tradeEvent
 	 */
-	public void performTrade(){
+	public void performTrade() {
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
-		if (tradeEvent.getMoneyOffer()>0)
-			transferMoney(sourcePlayer, otherPlayer, tradeEvent.getMoneyOffer(), true);
-		if (tradeEvent.getMoneyDemand()>0)
-			transferMoney(otherPlayer, sourcePlayer, tradeEvent.getMoneyOffer(), true);
-//		if (tradeEvent.getPropertiesOffer()!=null)
-//			for (String prop:tradeEvent.getPropertiesOffer())
-//				board.getT
-//			transferProperty(fromName, toName, tileId, price, sendNetMessage)
-		
+		if (tradeEvent.getMoneyOffer() > 0)
+			transferMoney(sourcePlayer, otherPlayer,
+					tradeEvent.getMoneyOffer(), true);
+		if (tradeEvent.getMoneyDemand() > 0)
+			transferMoney(otherPlayer, sourcePlayer,
+					tradeEvent.getMoneyOffer(), true);
+		if (tradeEvent.getPropertiesOffer() != null){
+			for (String prop : tradeEvent.getPropertiesOffer()) {
+				int tileId = board.getTileIdByName(prop);
+				transferProperty(sourcePlayer, otherPlayer, tileId, 0, true);
+			}
+		}
+		if (tradeEvent.getPropertiesDemand()!=null){
+			for (String prop : tradeEvent.getPropertiesDemand()) {
+				int tileId = board.getTileIdByName(prop);
+				transferProperty(otherPlayer, sourcePlayer, tileId, 0, true);
+			}
+		}
+		if (tradeEvent.getJailcardOffer()>0)
+			transferJailCards(sourcePlayer, otherPlayer, tradeEvent.getJailcardOffer(), 0, true);
+		if (tradeEvent.getJailcardDemand()>0)
+			transferJailCards(otherPlayer, sourcePlayer, tradeEvent.getJailcardOffer(), 0, true);
 	}
-	
-	
+
 	/**
 	 * gives the given player a jail card
 	 * 
@@ -1114,38 +1127,46 @@ public class GameClient {
 	public void sendQuitGame() {
 		nc.closeConnection();
 	}
-	
+
 	/**
 	 * create a motion to kick a player
-	 * @param the name of the player who might be kicked out of the game
+	 * 
+	 * @param the
+	 *            name of the player who might be kicked out of the game
 	 */
-	public void createKickRequest(String playerName){
-		kickVotes=0;
-		NetMessage nm = new NetMessage(localPlayer, playerName, Messages.KICK_REQUEST);
+	public void createKickRequest(String playerName) {
+		kickVotes = 0;
+		NetMessage nm = new NetMessage(localPlayer, playerName,
+				Messages.KICK_REQUEST);
 		nc.sendMessage(nm);
 	}
-	
+
 	/**
 	 * receive a kick request
-	 * @param the name of the player who might be kicked out of the game
+	 * 
+	 * @param the
+	 *            name of the player who might be kicked out of the game
 	 */
-	public void receiveKickRequest(String playerName, String playerToKick){
-		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK_REQUEST, playerName, playerToKick);
+	public void receiveKickRequest(String playerName, String playerToKick) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_KICK_REQUEST, playerName, playerToKick);
 		ws.notifyListeners(wse);
 	}
-	
+
 	/**
 	 * receive an answer to a kick request
-	 * @param the name of the player who might be kicked out of the game
+	 * 
+	 * @param the
+	 *            name of the player who might be kicked out of the game
 	 */
-	public void receiveKickAnswer(String playerName, boolean answer){
+	public void receiveKickAnswer(String playerName, boolean answer) {
 		if (answer)
 			kickVotes++;
-		if (kickVotes>board.getPlayers().size()/2){
-			//sendKickSignal();
+		if (kickVotes > board.getPlayers().size() / 2) {
+			// sendKickSignal();
 		}
 		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_KICK_ANSWER, playerName,answer);
+				WindowMessage.MSG_KICK_ANSWER, playerName, answer);
 		ws.notifyListeners(wse);
 	}
 

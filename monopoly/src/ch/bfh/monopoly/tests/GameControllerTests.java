@@ -43,6 +43,23 @@ public class GameControllerTests {
 	
 	
 	/**
+	 * test that a property can be found by its name
+	 */
+	@Test
+	public void getTileByName() {
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		String propName = gameClient.getCurrentPlayer().getProperties().get(0).getName();
+		Tile t = board.getTileByName(propName);
+		System.out.println(t.getName());
+		assertTrue(t.getName().equals(propName));
+	}
+
+	
+	/**
 	 * test that buyHouseRow doesn't allow purchase if at least 1 tile has 4
 	 * houses already
 	 */
