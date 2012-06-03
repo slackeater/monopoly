@@ -114,6 +114,18 @@ public class ClientHandler implements IoHandler {
 			gameClient.transferProperty(n.getFromName(), n.getToName(),
 					n.getInt(), n.getPrice(), false);
 			break;
+			
+		case TRANSFER_JAILCARD:
+			gameClient.transferJailCards(n.getFromName(), n.getToName(), n.getInt(), 0, false);
+			break;
+		case TRANSFER_MONEY:
+			gameClient.transferMoney(n.getFromName(), n.getToName(), n.getInt(), false);
+			break;
+		case TRANSFER_PROPERTY:
+			gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(),0, false);
+			break;
+			
+			
 		case TOGGLE_MORTGAGE:
 			gameClient.toggleMortgageStatus(n.getInt(), false);
 			break;
