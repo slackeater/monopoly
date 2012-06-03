@@ -807,7 +807,7 @@ public class MonopolyGUI extends JFrame {
 				rcvrMoneySpinner.setVisible(true);
 				rcvrJailCardLbl.setVisible(true);
 
-				final int player = usersBox.getSelectedIndex();
+				final int player = usersBox.getSelectedIndex()-1;
 				boolean terrain[] = pse.get(player).getTerrains();	
 
 				//change 10 to selectedPlayer.getTerrain.size
@@ -840,7 +840,7 @@ public class MonopolyGUI extends JFrame {
 						rcvrMoneySpinner.repaint();
 
 						if(terrainCheck.isSelected())
-							if(myTerrainBox.getItemCount() > 0){
+							if(myTerrainBox.getItemCount() > 0 && !((String)myTerrainBox.getSelectedItem()).equals("-")){
 								offer = new ArrayList<String>();
 								offer.add((String)myTerrainBox.getSelectedItem());
 							}
@@ -921,6 +921,8 @@ public class MonopolyGUI extends JFrame {
 		});
 
 
+		this.usersBox.addItem(new String("-"));
+		
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++)
 			if(!pse.get(i).getName().equals(gc.getLocalPlayerName()))
