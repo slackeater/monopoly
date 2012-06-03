@@ -466,9 +466,10 @@ public class GameClient {
 	 */
 	public void transferProperty(String fromName, String toName, int tileId,
 			int price, boolean sendNetMessage) {
-		
-		System.out.println("gameClient: transferProperty Id: "+ tileId+ "from "+fromName+"to" +toName );
-		
+
+		System.out.println("gameClient: transferProperty Id: " + tileId
+				+ "from " + fromName + "to" + toName);
+
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 		try {
@@ -501,7 +502,8 @@ public class GameClient {
 	 */
 	public void transferJailCards(String fromName, String toName, int quantity,
 			int price, boolean sendNetMessage) {
-		System.out.println("gameClient: transferJailCards "+ quantity+ " from "+fromName+" to" +toName );
+		System.out.println("gameClient: transferJailCards " + quantity
+				+ " from " + fromName + " to" + toName);
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 		try {
@@ -532,7 +534,9 @@ public class GameClient {
 	 */
 	public void transferMoney(String fromName, String toName, int amount,
 			boolean sendNetMessage) {
-		System.out.println("gameClient: transferMoney "+ tradeEvent.getMoneyOffer()+ " from "+fromName+" to" +toName );
+		System.out.println("gameClient: transferMoney "
+				+ tradeEvent.getMoneyOffer() + " from " + fromName + " to"
+				+ toName);
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 
@@ -1009,14 +1013,17 @@ public class GameClient {
 	 * receive the response from a trade request
 	 */
 	public void receiveTradeAnswer(boolean answer) {
-		if (answer) {
-			System.out.println("gameClient received TRADE ANSWER:" + answer);
-			performTrade();
+		if (tradePending) {
+			if (answer) {
+				System.out
+						.println("gameClient received TRADE ANSWER:" + answer);
+				performTrade();
+			}
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_TRADE_ANSWER, answer);
+			ws.notifyListeners(wse);
+			tradePending = false;
 		}
-		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_TRADE_ANSWER, answer);
-		ws.notifyListeners(wse);
-		tradePending = false;
 	}
 
 	/**
@@ -1026,28 +1033,34 @@ public class GameClient {
 		System.out.println("performing trade");
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
+		System.out.println("gameClient.performTrade() moneyOffer:"+tradeEvent.getMoneyOffer());
 		if (tradeEvent.getMoneyOffer() > 0) {
 			transferMoney(sourcePlayer, otherPlayer,
 					tradeEvent.getMoneyOffer(), true);
 		}
+		System.out.println("gameClient.performTrade() moneyDemand:"+tradeEvent.getMoneyDemand());
 		if (tradeEvent.getMoneyDemand() > 0)
 			transferMoney(otherPlayer, sourcePlayer,
 					tradeEvent.getMoneyOffer(), true);
+		System.out.println("gameClient.performTrade() PropertiesOffer:"+tradeEvent.getPropertiesOffer());
 		if (tradeEvent.getPropertiesOffer() != null) {
 			for (String prop : tradeEvent.getPropertiesOffer()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(sourcePlayer, otherPlayer, tileId, 0, true);
 			}
 		}
+		System.out.println("gameClient.performTrade() PropertiesDemand:"+tradeEvent.getPropertiesDemand());
 		if (tradeEvent.getPropertiesDemand() != null) {
 			for (String prop : tradeEvent.getPropertiesDemand()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(otherPlayer, sourcePlayer, tileId, 0, true);
 			}
 		}
+		System.out.println("gameClient.performTrade() JailcardOffer:"+tradeEvent.getJailcardOffer());
 		if (tradeEvent.getJailcardOffer() > 0)
 			transferJailCards(sourcePlayer, otherPlayer,
 					tradeEvent.getJailcardOffer(), 0, true);
+		System.out.println("gameClient.performTrade() JailcardDemand:"+tradeEvent.getJailcardDemand());
 		if (tradeEvent.getJailcardDemand() > 0)
 			transferJailCards(otherPlayer, sourcePlayer,
 					tradeEvent.getJailcardOffer(), 0, true);
