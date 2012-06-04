@@ -236,12 +236,6 @@ public class MonopolyGUI extends JFrame {
 					//show tile's information in the card box
 					tiles.get((startPosition+val+40)%TILE_NUMBER).showCard();
 
-					//TODO REMOVE ONLY FOR TEST
-					if(dir == Direction.FORWARDS)
-						System.out.println("LANDED ON TILE : " + (startPosition+val+40)%TILE_NUMBER);
-					else if(dir == Direction.BACKWARDS)
-						System.out.println("LANDED ON TILE : " + (startPosition-val+40)%TILE_NUMBER);
-
 					step = 0;	
 
 					if(diceButton != null){
