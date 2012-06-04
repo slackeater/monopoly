@@ -76,7 +76,7 @@ public class MonopolyGUI extends JFrame {
 	private JPanel tab1;
 	private List<BoardTile> tiles = new ArrayList<BoardTile>();
 	private JTabbedPane tabPane = new JTabbedPane();
-	private JButton throwDice, useCard, endTurn, trade, sendTradeRequest, kickPlayer;
+	private JButton throwDice, endTurn, trade, sendTradeRequest, kickPlayer;
 	private JCheckBox terrainCheck, cardCheck, moneyCheck, rcvrTerrainCheck, rcvrCardCheck, rcvrMoneyCheck;
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
 	private JSpinner moneySpinner, rcvrMoneySpinner;
@@ -187,7 +187,6 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(false);
 					throwDice.setEnabled(false);
 					trade.setEnabled(false);
-					useCard.setEnabled(false);
 				}
 
 				System.out.println("==== MOVE TOKEN VALUES ====");
@@ -252,7 +251,6 @@ public class MonopolyGUI extends JFrame {
 							endTurn.setEnabled(true);
 
 						trade.setEnabled(true);
-						useCard.setEnabled(true);
 
 						tabPane.add("EVENT!", gc.getTileEventPanel());
 
@@ -374,6 +372,9 @@ public class MonopolyGUI extends JFrame {
 					endTurn.setEnabled(true);
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
+					System.out.println("TRADE REQUEST NAME OTHER : " + wse.getTei().getOtherPlayer());
+					System.out.println("TRADE REQUEST NAME SOURCE : " + wse.getTei().getSourcePlayer());
+
 					if(wse.getTei().getOtherPlayer().equals(gc.getLocalPlayerName())){
 						tabPane.add(res.getString("label-tradearrived"), tradeRequestArrived(wse.getTei()));
 						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
@@ -381,6 +382,10 @@ public class MonopolyGUI extends JFrame {
 					}
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_ANSWER){
+					System.out.println("TRADE ANSWER NAME OTHER : " + wse.getTei().getOtherPlayer());
+					System.out.println("TRADE ANSWER NAME SOURCE : " + wse.getTei().getSourcePlayer());
+
+
 					if(wse.getTei().getSourcePlayer().equals(gc.getLocalPlayerName())){
 						tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
 						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
@@ -585,7 +590,6 @@ public class MonopolyGUI extends JFrame {
 	private JPanel drawBoard(){
 		ArrayList<JButton> guiButtons = new ArrayList<JButton>();
 		guiButtons.add(throwDice);
-		guiButtons.add(useCard);
 		guiButtons.add(trade);
 		guiButtons.add(kickPlayer);
 		guiButtons.add(endTurn);
@@ -606,7 +610,6 @@ public class MonopolyGUI extends JFrame {
 
 
 	private void initializeButtons(){
-		this.useCard = new JButton(res.getString("button-jailcard"));
 		this.throwDice = new JButton(res.getString("button-throwdice"));
 		this.kickPlayer = new JButton(res.getString("button-kick"));
 
@@ -644,7 +647,6 @@ public class MonopolyGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				endTurn.setEnabled(false);
 				trade.setEnabled(false);
-				useCard.setEnabled(false);
 
 				//remove the useless tab. Only the event tab must remain
 				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--){
@@ -679,13 +681,11 @@ public class MonopolyGUI extends JFrame {
 								throwDice.setEnabled(true);	
 							}
 
-							useCard.setEnabled(true);
 							trade.setEnabled(true);
 						}
 						else{
 							System.out.println("===== BUTTONS: DISABLING BUTTONS IN THE OBSERVER PATTERN FOR PLAYER: " +playerState.getName() );
 							throwDice.setEnabled(false);
-							useCard.setEnabled(false);
 							trade.setEnabled(false);
 						}
 				}
@@ -796,29 +796,26 @@ public class MonopolyGUI extends JFrame {
 		this.usersBox.addMouseListener(new MouseListener() {
 
 			@Override
-			public void mousePressed(MouseEvent e) {	}
+			public void mouseClicked(MouseEvent e) {	}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				rcvrTerrainLab.setVisible(true);
-				rcvrJailCardLab.setVisible(true);
-				rcvrMoneyLab.setVisible(true);	
-				rcvrCardCheck.setVisible(true);
-				rcvrMoneyCheck.setVisible(true);
-				rcvrTerrainCheck.setVisible(true);
-				hisTerrainBox.setVisible(true);
-				rcvrMoneySpinner.setVisible(true);
-				rcvrJailCardLbl.setVisible(true);
-				sendTradeRequest.setVisible(true);
-				sendTradeRequest.repaint();
-
 				System.out.println("BEFORE LISTENER");
 
-				if(usersBox.getSelectedIndex() > 0){
+				if(!((String)usersBox.getSelectedItem()).equals("-")){
+					rcvrTerrainLab.setVisible(true);
+					rcvrJailCardLab.setVisible(true);
+					rcvrMoneyLab.setVisible(true);	
+					rcvrCardCheck.setVisible(true);
+					rcvrMoneyCheck.setVisible(true);
+					rcvrTerrainCheck.setVisible(true);
+					hisTerrainBox.setVisible(true);
+					rcvrMoneySpinner.setVisible(true);
+					rcvrJailCardLbl.setVisible(true);
+					sendTradeRequest.setVisible(true);
+					//sendTradeRequest.repaint();
 
-					final int player = usersBox.getSelectedIndex()-1;
-					System.out.println("PLAYER SELECTED " + player);
-
+					final int player = usersBox.getSelectedIndex();
 
 					boolean terrain[]  = pse.get(player).getTerrains();	
 
@@ -830,93 +827,99 @@ public class MonopolyGUI extends JFrame {
 						}
 					}
 
-					sendTradeRequest.addMouseListener(new MouseListener() {
+					//this if is here because:
+					//if we choose more player from the combobox, we have a quantity of MouseListener in the button equal to the number of time 
+					//we have released the mouse. !!!!! PLEASE DON'T CHANGE THIS
+					if(sendTradeRequest.getMouseListeners().length == 0){
+						sendTradeRequest.addMouseListener(new MouseListener() {
 
-						@Override
-						public void mousePressed(MouseEvent e) {}
+							@Override
+							public void mousePressed(MouseEvent e) {}
 
-						@Override
-						public void mouseReleased(MouseEvent e) {
-							TradeInfoEvent tie;
-							List<String> offer = null;
-							List<String> demand = null;
-							int myJailCard = 0;
-							int moneyCheckValue = -1; 
-							int hisJailCard = 0;
-							int hisMoneyCheckValue = -1;
-							String to = pse.get(player).getName();
-							boolean errorCheck = false;
+							@Override
+							public void mouseReleased(MouseEvent e) {
+								TradeInfoEvent tie;
+								List<String> offer = null;
+								List<String> demand = null;
+								int myJailCard = 0;
+								int moneyCheckValue = -1; 
+								int hisJailCard = 0;
+								int hisMoneyCheckValue = -1;
+								String to = pse.get(player).getName();
+								System.out.println("IM SENDING TO " + to);
+								boolean errorCheck = false;
 
-							moneySpinner.repaint();
-							rcvrMoneySpinner.repaint();
+								moneySpinner.repaint();
+								rcvrMoneySpinner.repaint();
 
-							if(terrainCheck.isSelected())
-								if(myTerrainBox.getItemCount() > 0){
-									offer = new ArrayList<String>();
-									offer.add((String)myTerrainBox.getSelectedItem());
+								if(terrainCheck.isSelected())
+									if(myTerrainBox.getItemCount() > 0){
+										offer = new ArrayList<String>();
+										offer.add((String)myTerrainBox.getSelectedItem());
+									}
+									else
+										errorCheck = true;
+
+								if(cardCheck.isSelected())
+									if(localPse.getJailCard() >= 1)
+										myJailCard = 1;
+									else
+										errorCheck = true;
+
+								if(moneyCheck.isSelected())
+									if(((Integer) moneySpinner.getValue()) <= localPse.getAccount())
+										moneyCheckValue = (Integer) moneySpinner.getValue();
+									else
+										errorCheck = true;
+
+								if(rcvrTerrainCheck.isSelected())
+									if(hisTerrainBox.getItemCount() > 0){
+										demand = new ArrayList<String>();
+										demand.add((String)hisTerrainBox.getSelectedItem());
+									}
+									else
+										errorCheck = true;
+
+								if(rcvrCardCheck.isSelected())
+									if(pse.get(player).getJailCard() >= 1)
+										hisJailCard = 1;
+									else
+										errorCheck = true;
+
+								if(rcvrMoneyCheck.isSelected())
+									if(((Integer) rcvrMoneySpinner.getValue()) <= pse.get(player).getAccount())
+										hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
+									else
+										errorCheck = true;
+
+
+								System.out.println("DEMAND CARD: " + hisJailCard);
+								System.out.println("DEMAND TERRAIN" + demand);
+								System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
+
+								System.out.println("OFFER CARDMONEY: " + myJailCard);
+								System.out.println("OFFER TERRAIN: " + offer);
+								System.out.println("OFFER MONEY: " + moneyCheckValue);
+
+								if(!errorCheck){
+									tie = new TradeInfoEvent(gc.getLocalPlayerName(), to, hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
+									gc.sendTradeRequestToPlayer(to, tie);
+									sendTradeRequest.setEnabled(false);
 								}
 								else
-									errorCheck = true;
-
-							if(cardCheck.isSelected())
-								if(localPse.getJailCard() >= 1)
-									myJailCard = 1;
-								else
-									errorCheck = true;
-
-							if(moneyCheck.isSelected())
-								if(((Integer) moneySpinner.getValue()) <= localPse.getAccount())
-									moneyCheckValue = (Integer) moneySpinner.getValue();
-								else
-									errorCheck = true;
-
-							if(rcvrTerrainCheck.isSelected())
-								if(hisTerrainBox.getItemCount() > 0){
-									demand = new ArrayList<String>();
-									demand.add((String)hisTerrainBox.getSelectedItem());
-								}
-								else
-									errorCheck = true;
-
-							if(rcvrCardCheck.isSelected())
-								if(pse.get(player).getJailCard() >= 1)
-									hisJailCard = 1;
-								else
-									errorCheck = true;
-
-							if(rcvrMoneyCheck.isSelected())
-								if(((Integer) rcvrMoneySpinner.getValue()) <= pse.get(player).getAccount())
-									hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
-								else
-									errorCheck = true;
-
-
-							System.out.println("DEMAND CARD: " + hisJailCard);
-							System.out.println("DEMAND TERRAIN" + demand);
-							System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
-
-							System.out.println("OFFER CARDMONEY: " + myJailCard);
-							System.out.println("OFFER TERRAIN: " + offer);
-							System.out.println("OFFER MONEY: " + moneyCheckValue);
-
-							if(!errorCheck){
-								tie = new TradeInfoEvent(gc.getLocalPlayerName(), to, hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
-								gc.sendTradeRequestToPlayer(to, tie);
-								sendTradeRequest.setEnabled(false);
+									JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
 							}
-							else
-								JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
-						}
 
-						@Override
-						public void mouseExited(MouseEvent e) {}
+							@Override
+							public void mouseExited(MouseEvent e) {}
 
-						@Override
-						public void mouseEntered(MouseEvent e) {}
+							@Override
+							public void mouseEntered(MouseEvent e) {}
 
-						@Override
-						public void mouseClicked(MouseEvent e) {}
-					});
+							@Override
+							public void mouseClicked(MouseEvent e) {}
+						});
+					}
 				}
 			}
 
@@ -927,7 +930,7 @@ public class MonopolyGUI extends JFrame {
 			public void mouseEntered(MouseEvent e) {}
 
 			@Override
-			public void mouseClicked(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
 		});
 
 
