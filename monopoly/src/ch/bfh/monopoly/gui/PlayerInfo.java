@@ -283,6 +283,8 @@ public class PlayerInfo extends JPanel{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 			
+				System.out.println("UPDATING PANEL BEGIN");
+			
 				String name = playerStates.get(playerIndex).getName();
 				int plAccount = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
@@ -304,21 +306,30 @@ public class PlayerInfo extends JPanel{
 					
 				}
 				
+				System.out.println("UPDATING PANEL AFTER TERRAIN BACKGROUND");
+				
 				setTurnPanelBackground(turn, c);
 				playerName.setText(name);		
 				account.setText(Integer.toString(plAccount));
 				
-				if(jailCardValue == 1){
+				if(jailCardValue == 2 || jailCardValue == 1){
 					jailCard.setText("JCard");
 				}
+				else
+					jailCard.setText("");
 				
 				if(isInJail){
 					userInJail.setText("Jail");
 				}
+				else
+					userInJail.setText("");
 				
 				if(localPlayerName.equals(name)){
 					showTerrains();
 				}
+				
+				
+				System.out.println("UPDATING PANEL AFTER JAIL CARD AND JAIL");
 				
 				repaint();
 				revalidate();
