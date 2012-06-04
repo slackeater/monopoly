@@ -40,8 +40,8 @@ public class NetMessage implements Serializable {
 	 * @param m
 	 *            the message type
 	 */
-	public NetMessage(String string2, Messages m) {
-		this.string2 = string2;
+	public NetMessage(String string1, Messages m) {
+		this.string1 = string1;
 		this.m = m;
 	}
 	
@@ -178,7 +178,7 @@ public class NetMessage implements Serializable {
 		return m;
 	}
 
-	public String getText() {
+	public String getString1() {
 		// TODO Auto-generated method stub
 		return string1;
 	}
@@ -260,9 +260,6 @@ public class NetMessage implements Serializable {
 		return tie;
 	}
 	
-	public String getString1(){
-		return string1;
-	}
 	
 	public String getString2(){
 		return string1;

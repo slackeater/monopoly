@@ -59,7 +59,7 @@ public class ClientHandler implements IoHandler {
 			gameCanBegin = true;
 			break;
 		case CHAT_MSG:
-			gameClient.displayChat(n.getText());
+			gameClient.displayChat(n.getString1());
 			break;
 		case DICE_ROLL:
 			// TODO dice roll function
@@ -91,7 +91,7 @@ public class ClientHandler implements IoHandler {
 			break;
 		case BUY_PROPERTY:
 			System.out.println("RECEIVED MESSAGE: " + n.getMessageCode());
-			gameClient.buyCurrentPropertyForPlayer(n.getText(), false);
+			gameClient.buyCurrentPropertyForPlayer(n.getString1(), false);
 			break;
 		case SELL_HOUSE:
 			gameClient.sellHouse(n.getInt(), false);
@@ -136,7 +136,7 @@ public class ClientHandler implements IoHandler {
 			gameClient.payRent(false);
 			break;
 		case TURN_TOKEN:
-			String username = n.getText();
+			String username = n.getString1();
 			gameClient.updateTurnTokens(username);
 			break;
 		case START_TURN_PANEL:
@@ -190,7 +190,7 @@ public class ClientHandler implements IoHandler {
 			break;
 		case QUIT_GAME:
 			// TODO quit gamed
-			System.out.println("The player quit the game: " + n.getText());
+			System.out.println("The player quit the game: " + n.getString1());
 			break;
 		default:
 			break;

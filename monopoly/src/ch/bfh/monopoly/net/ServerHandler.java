@@ -143,12 +143,12 @@ public class ServerHandler implements IoHandler{
 	 * @param n
 	 */
 	private void buildUserList(NetMessage n, IoSession session){
-		String checkedName = n.getText();
+		String checkedName = n.getString1();
 
 		//if the username sended is equal to one in the wrap list, add a number to it
 		for(int j = 0 ; j < plWrap.size() ; j++){
-			if(n.getText().equals(plWrap.get(j).getUsername())){
-				checkedName = n.getText().concat(Integer.toString(userindex));
+			if(n.getString1().equals(plWrap.get(j).getUsername())){
+				checkedName = n.getString1().concat(Integer.toString(userindex));
 				this.userindex++;
 			}
 		}
