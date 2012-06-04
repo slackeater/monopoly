@@ -54,7 +54,7 @@ public class NetMessage implements Serializable {
 	public NetMessage(String string1, String string2, int integerValue,
 			Messages m) {
 		this.string1 = string1;
-		this.string1 = string2;
+		this.string2 = string2;
 		this.integerValue = integerValue;
 		this.m = m;
 	}
