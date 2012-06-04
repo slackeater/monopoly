@@ -810,6 +810,10 @@ public class MonopolyGUI extends JFrame {
 				int hisJailCard = 0;
 				int hisMoneyCheckValue = -1;
 				String to = pse.get(selectedPlayerIndex).getName();
+			
+				
+				System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
+				System.out.println("== SELECTED PLAYER :" +  pse.get(selectedPlayerIndex).getName());
 
 				System.out.println("IM SENDING TO " + to);
 				boolean errorCheck = false;
@@ -911,7 +915,11 @@ public class MonopolyGUI extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
 					//-1 due to the first option "-" that takes a position
-					selectedPlayerIndex = usersBox.getSelectedIndex() -1;					
+					selectedPlayerIndex = usersBox.getSelectedIndex() -1;	
+					
+					
+					System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
+					System.out.println("== SELECTED PLAYER :" +  pse.get(selectedPlayerIndex).getName());
 				}
 			}
 
