@@ -107,7 +107,6 @@ public class MonopolyGUI extends JFrame {
 		BACKWARDS;
 	}
 
-
 	/**
 	 * Construct a MonopolyGUI 
 	 * @param bc the board controller used to query the board
@@ -602,7 +601,7 @@ public class MonopolyGUI extends JFrame {
 		eventTextArea.setEditable(false);
 
 		System.out.println("DRAWBOARD METHOD");
-		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons);
+		JPanel board = new BoardBuilder(this.eventTextArea, this.tabPane, this.tiles, guiButtons, res);
 
 		return board;
 	}

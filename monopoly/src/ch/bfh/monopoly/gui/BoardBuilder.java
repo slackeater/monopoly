@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -35,17 +36,20 @@ public class BoardBuilder extends JPanel {
 	private List<JButton> btns;
 	
 	private JTextArea txt;
+
+	private ResourceBundle res;
 	
 	/**
 	 * Construct a new board
 	 * @param eventPane the JTextArea used to draw event
 	 * @param tiles the list of tiles 
 	 */
-	public BoardBuilder(JTextArea txt, JTabbedPane tabPane, List<BoardTile> tiles, List<JButton> btns){
+	public BoardBuilder(JTextArea txt, JTabbedPane tabPane, List<BoardTile> tiles, List<JButton> btns, ResourceBundle res){
 		this.txt = txt;
 		this.btns = btns;
 		this.eventPane = tabPane;
 		this.tilesList = tiles;
+		this.res = res;
 		
 		setLayout(new GridBagLayout());
 		
@@ -84,7 +88,7 @@ public class BoardBuilder extends JPanel {
 		p.add(scrollEventPane);
 		p.add(scrollBtn);
 		
-		this.eventPane.addTab("Events", p);
+		this.eventPane.addTab(res.getString("tab-event"), p);
 		
 		add(this.eventPane, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
