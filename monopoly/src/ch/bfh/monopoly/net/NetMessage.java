@@ -30,8 +30,6 @@ public class NetMessage implements Serializable {
 	private int[] cardDrawOrder;
 	private MonopolyGUI.Direction dir;
 	private TradeInfoEvent tie;
-	
-
 
 	public NetMessage(Messages m) {
 		this.m = m;
