@@ -476,9 +476,11 @@ public class GameClient {
 			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
 					price);
 			if (sendNetMessage) {
-				System.out.println("gameClient: TransferProp created net message: from" + fromNameAdjusted + " to " + toNameAdjusted); 
-				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted, tileId,
-						Messages.TRANSFER_PROPERTY);
+				System.out
+						.println("gameClient: TransferProp created net message: from"
+								+ fromNameAdjusted + " to " + toNameAdjusted);
+				NetMessage netMsg = new NetMessage(fromNameAdjusted,
+						toNameAdjusted, tileId, Messages.TRANSFER_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -511,9 +513,11 @@ public class GameClient {
 			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
 					price);
 			if (sendNetMessage) {
-				System.out.println("gameClient: TransferJail created net message: from" + fromNameAdjusted + " to " + toNameAdjusted );
-				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted,
-						quantity, Messages.TRANSFER_JAILCARD);
+				System.out
+						.println("gameClient: TransferJail created net message: from"
+								+ fromNameAdjusted + " to " + toNameAdjusted);
+				NetMessage netMsg = new NetMessage(fromNameAdjusted,
+						toNameAdjusted, quantity, Messages.TRANSFER_JAILCARD);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -536,18 +540,19 @@ public class GameClient {
 	 */
 	public void transferMoney(String fromName, String toName, int amount,
 			boolean sendNetMessage) {
-		System.out.println("gameClient: transferMoney "
-				+ amount + " from " + fromName + " to"
-				+ toName);
+		System.out.println("gameClient: transferMoney " + amount + " from "
+				+ fromName + " to" + toName);
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
 
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
 			if (sendNetMessage) {
-				System.out.println("gameClient: TransferMoney created net message: from" + fromNameAdjusted + " to " + toNameAdjusted );
-				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted,
-						amount, Messages.TRANSFER_MONEY);
+				System.out
+						.println("gameClient: TransferMoney created net message: from"
+								+ fromNameAdjusted + " to " + toNameAdjusted);
+				NetMessage netMsg = new NetMessage(fromNameAdjusted,
+						toNameAdjusted, amount, Messages.TRANSFER_MONEY);
 				nc.sendMessage(netMsg);
 			}
 		} catch (TransactionException e) {
@@ -624,7 +629,7 @@ public class GameClient {
 	 * @throws RuntimeException
 	 */
 	public void hasSufficientFunds(int fee) throws RuntimeException,
-	TransactionException {
+			TransactionException {
 		board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
 
@@ -638,7 +643,7 @@ public class GameClient {
 	 * @throws TransactionException
 	 */
 	public void playerHasSufficientFunds(String playerName, int amount)
-	throws TransactionException {
+			throws TransactionException {
 		String playerNameAdjusted = adjustNameIfCurrentPlayer(playerName);
 		board.playerHasSufficientFunds(playerNameAdjusted, amount);
 	}
@@ -660,9 +665,9 @@ public class GameClient {
 	 */
 	public boolean hasBothUtilities() {
 		String ownerOfUtility1 = ((Property) board.getTileById(12)).getOwner()
-		.getName();
+				.getName();
 		String ownerOfUtility2 = ((Property) board.getTileById(28)).getOwner()
-		.getName();
+				.getName();
 		return ownerOfUtility1.equalsIgnoreCase(ownerOfUtility2);
 	}
 
@@ -725,8 +730,8 @@ public class GameClient {
 	public void payUtilityFee(int fee, boolean sendNetMessage) {
 		String currentPlayerName = currentPlayer.getName();
 		String owner = board
-		.castTileToProperty(
-				board.getTileById(currentPlayer.getPosition()))
+				.castTileToProperty(
+						board.getTileById(currentPlayer.getPosition()))
 				.getOwner().getName();
 		transferMoney(currentPlayerName, owner, fee, false);
 		if (sendNetMessage) {
@@ -902,7 +907,7 @@ public class GameClient {
 	 */
 	public void updateChanceDrawOrder(int[] newOrder, boolean sendNetMessage) {
 		board.castTileToProperty(board.getTileById(1)).getEventManager()
-		.setChanceOrder(newOrder);
+				.setChanceOrder(newOrder);
 		if (sendNetMessage) {
 			NetMessage nm = new NetMessage(currentPlayer.getName(), 0,
 					Messages.UPDATE_CHANCE_ORDER);
@@ -923,7 +928,7 @@ public class GameClient {
 	 */
 	public void updateCommChestDrawOrder(int[] newOrder, boolean sendNetMessage) {
 		board.castTileToProperty(board.getTileById(1)).getEventManager()
-		.setCommChestOrder(newOrder);
+				.setCommChestOrder(newOrder);
 		if (sendNetMessage) {
 			NetMessage nm = new NetMessage("NoNameNeeded", 0,
 					Messages.UPDATE_COMMCHEST_ORDER);
@@ -968,7 +973,7 @@ public class GameClient {
 	public void sendTransactionSuccesToGUI(boolean sendNetMessage) {
 		// TODO this doesn't seem like the best way to signal success to the GUI
 		TransactionException te = new TransactionException(
-		"The event was completed successfully");
+				"The event was completed successfully");
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_EVENT_COMPLETION, te.getErrorMsg(), 0);
 		ws.notifyListeners(wse);
@@ -1019,7 +1024,7 @@ public class GameClient {
 		if (tradePending) {
 			if (answer) {
 				System.out
-				.println("gameClient received TRADE ANSWER:" + answer);
+						.println("gameClient received TRADE ANSWER:" + answer);
 				performTrade();
 				System.out.println("gameClient: performTrade() completed");
 
@@ -1028,8 +1033,9 @@ public class GameClient {
 
 			WindowStateEvent wse = new WindowStateEvent(
 					WindowMessage.MSG_TRADE_ANSWER, answer);
-			System.out.println("trying to send message to GUI: type:" + wse.getType() + wse.getAnswer());
-			ws.notifyListeners(wse);	
+			System.out.println("trying to send message to GUI: type:"
+					+ wse.getType() + wse.getAnswer());
+			ws.notifyListeners(wse);
 			tradePending = false;
 		}
 	}
@@ -1038,7 +1044,8 @@ public class GameClient {
 	 * perform the trade in the tradeEvent
 	 */
 	public void performTrade() {
-		boolean sendNetMessage = false;
+		boolean sendNetMessage = true;
+		boolean sleep = true;
 		System.out.println("performing trade");
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
@@ -1047,43 +1054,56 @@ public class GameClient {
 					+ tradeEvent.getMoneyOffer());
 			transferMoney(sourcePlayer, otherPlayer,
 					tradeEvent.getMoneyOffer(), sendNetMessage);
+			if (sleep)
+				sleep();
 		}
 		if (tradeEvent.getMoneyDemand() > 0) {
 			System.out.println("gameClient.performTrade() moneyDemand:"
 					+ tradeEvent.getMoneyDemand());
 			transferMoney(otherPlayer, sourcePlayer,
 					tradeEvent.getMoneyDemand(), sendNetMessage);
+			if (sleep)
+				sleep();
 		}
 		if (tradeEvent.getPropertiesOffer() != null) {
 			System.out.println("gameClient.performTrade() PropertiesOffer:"
 					+ tradeEvent.getPropertiesOffer());
 			for (String prop : tradeEvent.getPropertiesOffer()) {
 				int tileId = board.getTileIdByName(prop);
-				transferProperty(sourcePlayer, otherPlayer, tileId, 0, sendNetMessage);
+				transferProperty(sourcePlayer, otherPlayer, tileId, 0,
+						sendNetMessage);
 			}
+			if (sleep)
+				sleep();
 		}
 		if (tradeEvent.getPropertiesDemand() != null) {
 			System.out.println("gameClient.performTrade() PropertiesDemand:"
 					+ tradeEvent.getPropertiesDemand());
 			for (String prop : tradeEvent.getPropertiesDemand()) {
 				int tileId = board.getTileIdByName(prop);
-				transferProperty(otherPlayer, sourcePlayer, tileId, 0, sendNetMessage);
+				transferProperty(otherPlayer, sourcePlayer, tileId, 0,
+						sendNetMessage);
 			}
+			if (sleep)
+				sleep();
 		}
 		if (tradeEvent.getJailcardOffer() > 0) {
 			System.out.println("gameClient.performTrade() JailcardOffer:"
 					+ tradeEvent.getJailcardOffer());
 			transferJailCards(sourcePlayer, otherPlayer,
 					tradeEvent.getJailcardOffer(), 0, sendNetMessage);
+			if (sleep)
+				sleep();
 		}
 		if (tradeEvent.getJailcardDemand() > 0) {
 			System.out.println("gameClient.performTrade() JailcardDemand:"
 					+ tradeEvent.getJailcardDemand());
 			transferJailCards(otherPlayer, sourcePlayer,
 					tradeEvent.getJailcardDemand(), 0, sendNetMessage);
+			if (sleep)
+				sleep();
 		}
 	}
-
 
 	/**
 	 * gives the given player a jail card
@@ -1211,6 +1231,15 @@ public class GameClient {
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_KICK_ANSWER, playerName, answer);
 		ws.notifyListeners(wse);
+	}
+
+	private void sleep() {
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
