@@ -812,7 +812,10 @@ public class MonopolyGUI extends JFrame {
 					rcvrMoneySpinner.setVisible(true);
 					rcvrJailCardLbl.setVisible(true);
 					sendTradeRequest.setVisible(true);
-					//sendTradeRequest.repaint();
+					sendTradeRequest.repaint();
+					
+					
+					System.out.println("USER SELECTED, SHOWING FORM");
 
 					final int player = usersBox.getSelectedIndex();
 
@@ -836,7 +839,8 @@ public class MonopolyGUI extends JFrame {
 							public void mousePressed(MouseEvent e) {}
 
 							@Override
-							public void mouseReleased(MouseEvent e) {
+							public void mouseClicked(MouseEvent e) {
+								System.out.println("MOUSE RELEASED AND BUTTON CLICKED");
 								TradeInfoEvent tie;
 								List<String> offer = null;
 								List<String> demand = null;
@@ -916,7 +920,7 @@ public class MonopolyGUI extends JFrame {
 							public void mouseEntered(MouseEvent e) {}
 
 							@Override
-							public void mouseClicked(MouseEvent e) {}
+							public void mouseReleased(MouseEvent e) {}
 						});
 					}
 				}
