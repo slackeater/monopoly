@@ -140,7 +140,7 @@ public class EventManager {
 		name = name.trim();
 		String cardText = res.getString("chance9-cardText");
 		name = name.trim();
-		BoardEvent te = new getJailCardEvent(name, cardText, gameClient);
+		BoardEvent te = new GetJailCardEvent(name, cardText, gameClient);
 		chanceEvents.add(te);
 
 		// GET FIXED SUM EVENTS
@@ -184,7 +184,7 @@ public class EventManager {
 		cardText = res.getString("commchest3-cardText");
 		name = name.trim();
 		toParse = res.getString("commchest3-fixedSum");
-		te = new birthdayEvent(name, cardText, gameClient);
+		te = new BirthdayEvent(name, cardText, gameClient);
 		commChestEvents.add(te);
 
 		// GET JAIL CARD EVENT
@@ -192,7 +192,7 @@ public class EventManager {
 		name = name.trim();
 		cardText = res.getString("commchest4-cardText");
 		name = name.trim();
-		te = new getJailCardEvent(name, cardText, gameClient);
+		te = new GetJailCardEvent(name, cardText, gameClient);
 		commChestEvents.add(te);
 
 		// GET FIXED SUM EVENTS

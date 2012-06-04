@@ -6,15 +6,17 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.tile.EventPanelFactory;
 import ch.bfh.monopoly.tile.EventPanelInfo;
 import ch.bfh.monopoly.tile.Step;
 
-public class getJailCardEvent extends AbstractTileEvent{
+public class BirthdayEvent extends AbstractTileEvent  {
 
 	EventPanelFactory epf;
 	
-	public getJailCardEvent(String name, String eventDescription,
+	public BirthdayEvent(String name, String eventDescription,
 			GameClient gameClient) {
 		super(name, eventDescription, gameClient);
 		epf = new EventPanelFactory(this);
@@ -22,10 +24,12 @@ public class getJailCardEvent extends AbstractTileEvent{
 
 	@Override
 	public void performEvent() {
-		gameClient.winJailCard(sendNetMessage);
+		int fee = 20;//TODO SET amount according to locale
+		gameClient.birthdayEvent(fee, sendNetMessage);
+
+
 	}
-	
-	
+
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
 		String buttonText;
@@ -71,5 +75,4 @@ public class getJailCardEvent extends AbstractTileEvent{
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}
-
 }

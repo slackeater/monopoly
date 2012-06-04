@@ -14,19 +14,15 @@ public class NetMessage implements Serializable {
 
 	private static final long serialVersionUID = -6004188281012651357L;
 
-	private String player;
-	private String fromName;
-	private String toName;
+	private String string1;
+	private String string2;
 	private Color c;
 	private List<String> playerNames;
 	private Locale loc;
-	private String string;
 	private int integerValue;
-	private int price;
-	private String playerToKick;
-	private boolean kickAnswer;
+	private int integerValue2;
+	private boolean bool;
 	private Messages m;
-	private int propertyID;
 	private int[] cardDrawOrder;
 	private MonopolyGUI.Direction dir;
 	private TradeInfoEvent tie;
@@ -35,126 +31,80 @@ public class NetMessage implements Serializable {
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage to transfer MONEY between two players
-	 * 
-	 * @param player
-	 *            to transfer from
-	 * @param toName
-	 *            player to transfer to
-	 * @param integerValue
-	 *            the tileID/quantity of Jail cards/amount of money to transfer
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(String fromName, String toName, int integerValue,
-			Messages m) {
-		this.toName = toName;
-		this.fromName = fromName;
-		this.integerValue = integerValue;
-		this.m = m;
-	}
 
 	/**
 	 * Construct a NetMessage
 	 * 
-	 * @param player
-	 *            name of player
-	 * @param integerValue
+	 * @param s
+	 *            the message of the chat
 	 * @param m
 	 *            the message type
 	 */
-	public NetMessage(String string, int integerValue, Messages m) {
-		this.string = string;
+	public NetMessage(String string2, Messages m) {
+		this.string2 = string2;
+		this.m = m;
+	}
+	
+	public NetMessage(String string1, int integerValue, Messages m) {
+		this.string1 = string1;
 		this.integerValue = integerValue;
 		this.m = m;
 	}
 	
-	public boolean getKickAnswer() {
-		return kickAnswer;
+	public NetMessage(String string1, String string2, int integerValue,
+			Messages m) {
+		this.string1 = string1;
+		this.string1 = string2;
+		this.integerValue = integerValue;
+		this.m = m;
 	}
 	
-	public boolean getTradeAnswer() {
-		return kickAnswer;
-	}
-	
-	public String getPlayer(){
-		return player;
-	}
-	public String getPlayerToKick(){
-		return playerToKick;
-	}
-
-	public TradeInfoEvent getTie() {
-		return tie;
-	}
-
 	/**
 	 * construct a netmessage that send the trade info 
 	 * @param string
 	 * @param tie
 	 * @param m
 	 */
-	public NetMessage(String string, TradeInfoEvent tie, Messages m){
-		this.string = string;
+	public NetMessage(String string1, TradeInfoEvent tie, Messages m){
+		this.string1 = string1;
 		this.tie = tie;
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param player
-	 *            name of player
-	 * @param integerValue
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(String string, int integerValue,
+
+	public NetMessage(String string1, int integerValue,
 			MonopolyGUI.Direction dir, Messages m) {
-		this.string = string;
+		this.string1 = string1;
 		this.integerValue = integerValue;
 		this.m = m;
 		this.dir = dir;
 	}
 
-	/**
-	 * Construct a NetMessage to transfer Properties or Jailcards between two
-	 * players
-	 * 
-	 * @param player
-	 *            to transfer from
-	 * @param toName
-	 *            player to transfer to
-	 * @param integerValue
-	 *            the amount of money to transfer
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(String fromName, String toName, int integerValue,
+
+	public NetMessage(String string1, String string2, int integerValue,
 			int price, Messages m) {
-		this.toName = toName;
-		this.fromName = fromName;
+		this.string1 = string1;
+		this.string2 = string2;
 		this.integerValue = integerValue;
-		this.price = price;
+		this.integerValue = price;
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param property
-	 *            the property to auction
-	 * @param basePrice
-	 *            the base price of the property
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(int propertyID, int basePrice, Messages m) {
-		this.propertyID = propertyID;
-		this.integerValue = basePrice;
-		this.m = m;
-	}
+//	/**
+//	 * Construct a NetMessage
+//	 * 
+//	 * @param property
+//	 *            the property to auction
+//	 * @param basePrice
+//	 *            the base price of the property
+//	 * @param m
+//	 *            the message type
+//	 */
+//	public NetMessage(int propertyID, int basePrice, Messages m) {
+//		this.propertyID = propertyID;
+//		this.integerValue = basePrice;
+//		this.m = m;
+//	}
 
 
 	/**
@@ -166,7 +116,7 @@ public class NetMessage implements Serializable {
 	 *            the message type
 	 */
 	public NetMessage(boolean kickAnswer, Messages m) {
-		this.kickAnswer = kickAnswer;
+		this.bool = kickAnswer;
 		this.m = m;
 	}
 
@@ -195,24 +145,13 @@ public class NetMessage implements Serializable {
 	 * @param m
 	 *            the message type
 	 */
-	public NetMessage(String player, String playerToKick, Messages m) {
-		this.player = player;
-		this.playerToKick = playerToKick;
+	public NetMessage(String string1, String string2, Messages m) {
+		this.string1 = string1;
+		this.string2 = string2;
 		this.m = m;
 	}
 
-	/**
-	 * Construct a NetMessage
-	 * 
-	 * @param s
-	 *            the message of the chat
-	 * @param m
-	 *            the message type
-	 */
-	public NetMessage(String s, Messages m) {
-		this.string = s;
-		this.m = m;
-	}
+
 
 	/**
 	 * Construct a NetMessage
@@ -227,6 +166,8 @@ public class NetMessage implements Serializable {
 		this.m = m;
 		this.loc = loc;
 	}
+	
+	
 
 	// only for test
 	public int getMessageCode() {
@@ -239,7 +180,7 @@ public class NetMessage implements Serializable {
 
 	public String getText() {
 		// TODO Auto-generated method stub
-		return string;
+		return string1;
 	}
 
 	/**
@@ -286,7 +227,7 @@ public class NetMessage implements Serializable {
 	}
 
 	public String getFromName() {
-		return fromName;
+		return string1;
 	}
 
 
@@ -295,11 +236,37 @@ public class NetMessage implements Serializable {
 	}
 	
 	public String getToName() {
-		return toName;
+		return string2;
 	}
 
 	public int getPrice() {
-		return price;
+		return integerValue;
 	}
+	
+
+	public boolean getKickAnswer() {
+		return bool;
+	}
+	
+	public boolean getTradeAnswer() {
+		return bool;
+	}
+	
+	public String getPlayerToKick(){
+		return string1;
+	}
+
+	public TradeInfoEvent getTie() {
+		return tie;
+	}
+	
+	public String getString1(){
+		return string1;
+	}
+	
+	public String getString2(){
+		return string1;
+	}
+
 
 }

@@ -72,10 +72,10 @@ public class ClientHandler implements IoHandler {
 					false);
 			break;
 		case KICK_REQUEST:
-			gameClient.receiveKickRequest(n.getPlayer(), n.getPlayerToKick());
+			gameClient.receiveKickRequest(n.getString1(), n.getPlayerToKick());
 			break;
 		case KICK_ANSWER:
-			gameClient.receiveKickAnswer(n.getPlayer(), n.getTradeAnswer());
+			gameClient.receiveKickAnswer(n.getString1(), n.getTradeAnswer());
 			break;	
 		case BUY_HOUSE:
 			gameClient.buyHouse(n.getInt(), false);
@@ -116,15 +116,15 @@ public class ClientHandler implements IoHandler {
 			break;
 			
 		case TRANSFER_JAILCARD:
-			System.out.println("clientHandler: received TransferJailcard");
+			System.out.println("clientHandler: received TransferJailcard: from " + n.getFromName() +" to " + n.getToName());
 			gameClient.transferJailCards(n.getFromName(), n.getToName(), n.getInt(), 0, false);
 			break;
 		case TRANSFER_MONEY:
-			System.out.println("clientHandler: received TransferMoney");
+			System.out.println("clientHandler: received TransferMoney: from " + n.getFromName() +" to " + n.getToName());
 			gameClient.transferMoney(n.getFromName(), n.getToName(), n.getInt(), false);
 			break;
 		case TRANSFER_PROPERTY:
-			System.out.println("clientHandler: received TransferProperty");
+			System.out.println("clientHandler: received TransferProperty: from " + n.getFromName() +" to " + n.getToName());
 			gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(),0, false);
 			break;
 			
