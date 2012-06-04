@@ -27,6 +27,7 @@ public class EventJPanelTest extends JFrame {
 		board = tig.getBoard();
 		gc = tig.getGc();
 
+		goToTile(4);
 		// testElectricCompanyOwned();
 		// testElectricCompanyNotOwned();
 //		 testMediterraneanOwned();
@@ -36,7 +37,7 @@ public class EventJPanelTest extends JFrame {
 		
 //		landOnChance();
 		
-		 testLandOnGo();
+//		 testLandOnGo();
 //		testLandOnJail();
 		// testJustVisiting();
 //		 testFreeParking();
@@ -60,6 +61,11 @@ public class EventJPanelTest extends JFrame {
 		EventJPanelTest ept = new EventJPanelTest();
 	}
 
+	public void goToTile(int tileId) {
+		gameClient.setCurrentPlayer("Justin", sendNetMessage);
+		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+	}
+	
 	public void testElectricCompanyNotOwned() {
 		int electricCompany = 12;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);

@@ -116,12 +116,15 @@ public class ClientHandler implements IoHandler {
 			break;
 			
 		case TRANSFER_JAILCARD:
+			System.out.println("clientHandler: received TransferJailcard");
 			gameClient.transferJailCards(n.getFromName(), n.getToName(), n.getInt(), 0, false);
 			break;
 		case TRANSFER_MONEY:
+			System.out.println("clientHandler: received TransferMoney");
 			gameClient.transferMoney(n.getFromName(), n.getToName(), n.getInt(), false);
 			break;
 		case TRANSFER_PROPERTY:
+			System.out.println("clientHandler: received TransferProperty");
 			gameClient.transferProperty(n.getFromName(), n.getToName(), n.getInt(),0, false);
 			break;
 			
