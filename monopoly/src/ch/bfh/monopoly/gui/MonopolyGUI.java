@@ -357,6 +357,9 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updateWindow(WindowStateEvent wse) {
+				
+				System.out.println(" =========================================== MESSAGE TYPE  :" + wse.getType());
+				
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
 					eventTextArea.append(wse.getEventDescription()+"\n");
 				}
