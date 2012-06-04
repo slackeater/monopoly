@@ -17,7 +17,7 @@ public class RepairsEvent extends AbstractTileEvent{
 
 	int chargePerHouse;
 	int chargePerHotel;
-	ResourceBundle rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
+	ResourceBundle rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
 			gameClient.getLoc());
 	EventPanelFactory epf;
 	

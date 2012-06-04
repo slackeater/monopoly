@@ -1021,6 +1021,7 @@ public class GameClient {
 				System.out
 						.println("gameClient received TRADE ANSWER:" + answer);
 				performTrade();
+				
 			}
 			WindowStateEvent wse = new WindowStateEvent(
 					WindowMessage.MSG_TRADE_ANSWER, answer);
