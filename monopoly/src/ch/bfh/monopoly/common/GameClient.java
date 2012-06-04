@@ -535,7 +535,7 @@ public class GameClient {
 	public void transferMoney(String fromName, String toName, int amount,
 			boolean sendNetMessage) {
 		System.out.println("gameClient: transferMoney "
-				+ tradeEvent.getMoneyOffer() + " from " + fromName + " to"
+				+ amount + " from " + fromName + " to"
 				+ toName);
 		String fromNameAdjusted = adjustNameIfCurrentPlayer(fromName);
 		String toNameAdjusted = adjustNameIfCurrentPlayer(toName);
