@@ -810,6 +810,7 @@ public class MonopolyGUI extends JFrame {
 				int moneyCheckValue = -1; 
 				int hisJailCard = 0;
 				int hisMoneyCheckValue = -1;
+								
 				String to = pse.get(selectedPlayerIndex).getName();
 
 				System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
@@ -916,6 +917,9 @@ public class MonopolyGUI extends JFrame {
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
 					//-1 due to the first option "-" that takes a position
 					selectedPlayerIndex = usersBox.getSelectedIndex() -1;					
+				}
+				else{
+					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
 				}
 			}
 
