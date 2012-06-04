@@ -100,6 +100,7 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
 	private JFrame thisFrame;
+	private int selectedPlayerIndex;
 
 	//TODO TO BE MOVED AWAY
 	public enum Direction{
@@ -703,6 +704,7 @@ public class MonopolyGUI extends JFrame {
 	 * @return
 	 */
 	private JScrollPane tradeTab(){
+
 		JPanel yourOffer = new JPanel();
 		yourOffer.setLayout(new GridLayout(4, 3));
 		yourOffer.setBorder(BorderFactory.createTitledBorder(res.getString("label-youroffer")));
@@ -744,14 +746,36 @@ public class MonopolyGUI extends JFrame {
 		});
 
 		this.rcvrTerrainCheck = new JCheckBox();
-		this.rcvrTerrainCheck.addActionListener(new ActionListener() {
+		this.rcvrTerrainCheck.addMouseListener(new MouseListener(){
+
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(rcvrTerrainCheck.isSelected())
+			public void mouseClicked(MouseEvent e) {	
+				if(rcvrTerrainCheck.isSelected() && selectedPlayerIndex > 0){
 					hisTerrainBox.setEnabled(true);
-				else
-					hisTerrainBox.setEnabled(false);
+
+					boolean terrain[] = pse.get(selectedPlayerIndex).getTerrains();
+					for(int i = 0 ; i < 40 ; i++){
+						if(terrain[i]){
+							TileInfo ti = bc.getTileInfoById(i);
+							myTerrainBox.addItem(ti.getName());
+						}
+					}
+				}
+
 			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {	}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {		}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {	}
+
+			@Override
+			public void mouseExited(MouseEvent e) {	}
+
 		});
 
 		this.rcvrCardCheck = new JCheckBox();
@@ -777,6 +801,98 @@ public class MonopolyGUI extends JFrame {
 		});
 
 		this.sendTradeRequest = new JButton(res.getString("button-sendoffer"));
+		sendTradeRequest.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				TradeInfoEvent tie;
+				List<String> offer = null;
+				List<String> demand = null;
+				int myJailCard = 0;
+				int moneyCheckValue = -1; 
+				int hisJailCard = 0;
+				int hisMoneyCheckValue = -1;
+				String to = pse.get(selectedPlayerIndex).getName();
+
+				System.out.println("IM SENDING TO " + to);
+				boolean errorCheck = false;
+
+				moneySpinner.repaint();
+				rcvrMoneySpinner.repaint();
+
+				if(terrainCheck.isSelected())
+					if(myTerrainBox.getItemCount() > 0){
+						offer = new ArrayList<String>();
+						offer.add((String)myTerrainBox.getSelectedItem());
+					}
+					else
+						errorCheck = true;
+
+				if(cardCheck.isSelected())
+					if(localPse.getJailCard() >= 1)
+						myJailCard = 1;
+					else
+						errorCheck = true;
+
+				if(moneyCheck.isSelected())
+					if(((Integer) moneySpinner.getValue()) <= localPse.getAccount())
+						moneyCheckValue = (Integer) moneySpinner.getValue();
+					else
+						errorCheck = true;
+
+				if(rcvrTerrainCheck.isSelected())
+					if(hisTerrainBox.getItemCount() > 0){
+						demand = new ArrayList<String>();
+						demand.add((String)hisTerrainBox.getSelectedItem());
+					}
+					else
+						errorCheck = true;
+
+				if(rcvrCardCheck.isSelected())
+					if(pse.get(selectedPlayerIndex).getJailCard() >= 1)
+						hisJailCard = 1;
+					else
+						errorCheck = true;
+
+				if(rcvrMoneyCheck.isSelected())
+					if(((Integer) rcvrMoneySpinner.getValue()) <= pse.get(selectedPlayerIndex).getAccount())
+						hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
+					else
+						errorCheck = true;
+				
+				if(gc.getLocalPlayerName().equals(to))
+					errorCheck = true;
+			
+				System.out.println("DEMAND CARD: " + hisJailCard);
+				System.out.println("DEMAND TERRAIN" + demand);
+				System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
+
+				System.out.println("OFFER CARDMONEY: " + myJailCard);
+				System.out.println("OFFER TERRAIN: " + offer);
+				System.out.println("OFFER MONEY: " + moneyCheckValue);
+
+				if(!errorCheck){
+					tie = new TradeInfoEvent(gc.getLocalPlayerName(), to, hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
+					gc.sendTradeRequestToPlayer(to, tie);
+					sendTradeRequest.setEnabled(false);
+				}
+				else
+					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+		});
+
 		this.myTerrainBox = new JComboBox();
 		this.moneySpinner = new JSpinner();
 		this.rcvrMoneySpinner = new JSpinner();
@@ -799,135 +915,9 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				System.out.println("BEFORE LISTENER");
-
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
-					rcvrTerrainLab.setVisible(true);
-					rcvrJailCardLab.setVisible(true);
-					rcvrMoneyLab.setVisible(true);	
-					rcvrCardCheck.setVisible(true);
-					rcvrMoneyCheck.setVisible(true);
-					rcvrTerrainCheck.setVisible(true);
-					hisTerrainBox.setVisible(true);
-					rcvrMoneySpinner.setVisible(true);
-					rcvrJailCardLbl.setVisible(true);
-					sendTradeRequest.setVisible(true);
-					sendTradeRequest.repaint();
-
-
-					System.out.println("USER SELECTED, SHOWING FORM");
-
-					final int player = usersBox.getSelectedIndex();
-
-					boolean terrain[]  = pse.get(player).getTerrains();	
-
-					//change 10 to selectedPlayer.getTerrain.size
-					for(int i = 0 ; i < 40 ; i++){
-						if(terrain[i]){
-							TileInfo ti = bc.getTileInfoById(i);
-							hisTerrainBox.addItem(ti.getName());
-						}
-					}
-
-
-
-					//this if is here because:
-					//if we choose more player from the combobox, we have a quantity of MouseListener in the button equal to the number of time 
-					//we have released the mouse. !!!!! PLEASE DON'T CHANGE THIS
-					System.out.println("THERE ARE MOUSE LISTENER # " + sendTradeRequest.getMouseListeners().length);
-					System.out.println("THERE ARE MOUSE LISTENER # " + sendTradeRequest.getActionListeners().length);
-
-					if(sendTradeRequest.getMouseListeners().length == 1){
-						sendTradeRequest.addMouseListener(new MouseListener() {
-
-							@Override
-							public void mousePressed(MouseEvent e) {}
-
-							@Override
-							public void mouseClicked(MouseEvent e) {
-								System.out.println("MOUSE RELEASED AND BUTTON CLICKED");
-								TradeInfoEvent tie;
-								List<String> offer = null;
-								List<String> demand = null;
-								int myJailCard = 0;
-								int moneyCheckValue = -1; 
-								int hisJailCard = 0;
-								int hisMoneyCheckValue = -1;
-								String to = pse.get(player).getName();
-								System.out.println("IM SENDING TO " + to);
-								boolean errorCheck = false;
-
-								moneySpinner.repaint();
-								rcvrMoneySpinner.repaint();
-
-								if(terrainCheck.isSelected())
-									if(myTerrainBox.getItemCount() > 0){
-										offer = new ArrayList<String>();
-										offer.add((String)myTerrainBox.getSelectedItem());
-									}
-									else
-										errorCheck = true;
-
-								if(cardCheck.isSelected())
-									if(localPse.getJailCard() >= 1)
-										myJailCard = 1;
-									else
-										errorCheck = true;
-
-								if(moneyCheck.isSelected())
-									if(((Integer) moneySpinner.getValue()) <= localPse.getAccount())
-										moneyCheckValue = (Integer) moneySpinner.getValue();
-									else
-										errorCheck = true;
-
-								if(rcvrTerrainCheck.isSelected())
-									if(hisTerrainBox.getItemCount() > 0){
-										demand = new ArrayList<String>();
-										demand.add((String)hisTerrainBox.getSelectedItem());
-									}
-									else
-										errorCheck = true;
-
-								if(rcvrCardCheck.isSelected())
-									if(pse.get(player).getJailCard() >= 1)
-										hisJailCard = 1;
-									else
-										errorCheck = true;
-
-								if(rcvrMoneyCheck.isSelected())
-									if(((Integer) rcvrMoneySpinner.getValue()) <= pse.get(player).getAccount())
-										hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
-									else
-										errorCheck = true;
-
-
-								System.out.println("DEMAND CARD: " + hisJailCard);
-								System.out.println("DEMAND TERRAIN" + demand);
-								System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
-
-								System.out.println("OFFER CARDMONEY: " + myJailCard);
-								System.out.println("OFFER TERRAIN: " + offer);
-								System.out.println("OFFER MONEY: " + moneyCheckValue);
-
-								if(!errorCheck){
-									tie = new TradeInfoEvent(gc.getLocalPlayerName(), to, hisMoneyCheckValue, moneyCheckValue, hisJailCard, myJailCard, demand, offer);
-									gc.sendTradeRequestToPlayer(to, tie);
-									sendTradeRequest.setEnabled(false);
-								}
-								else
-									JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
-							}
-
-							@Override
-							public void mouseExited(MouseEvent e) {}
-
-							@Override
-							public void mouseEntered(MouseEvent e) {}
-
-							@Override
-							public void mouseReleased(MouseEvent e) {}
-						});
-					}
+					//-1 due to the first option "-" that takes a position
+					selectedPlayerIndex = usersBox.getSelectedIndex() -1;					
 				}
 			}
 
@@ -946,7 +936,6 @@ public class MonopolyGUI extends JFrame {
 
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++)
-			if(!pse.get(i).getName().equals(gc.getLocalPlayerName()))
 				this.usersBox.addItem(pse.get(i).getName());
 
 		myTerrainBox.setEnabled(false);
@@ -955,17 +944,6 @@ public class MonopolyGUI extends JFrame {
 		hisTerrainBox.setEnabled(false);
 		rcvrMoneySpinner.setEnabled(false);
 		rcvrJailCardLbl.setEnabled(false);
-
-		rcvrCardCheck.setVisible(false);
-		rcvrMoneyCheck.setVisible(false);
-		rcvrTerrainCheck.setVisible(false);
-		hisTerrainBox.setVisible(false);
-		rcvrMoneySpinner.setVisible(false);
-		rcvrJailCardLbl.setVisible(false);
-		sendTradeRequest.setVisible(false);
-		rcvrTerrainLab.setVisible(false);
-		rcvrJailCardLab.setVisible(false);
-		rcvrMoneyLab.setVisible(false);
 
 		boolean terrain[] = localPse.getTerrains();
 		for(int i = 0 ; i < 40 ; i++){
