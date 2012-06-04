@@ -812,7 +812,7 @@ public class MonopolyGUI extends JFrame {
 					rcvrMoneySpinner.setVisible(true);
 					rcvrJailCardLbl.setVisible(true);
 					sendTradeRequest.setVisible(true);
-					//sendTradeRequest.repaint();
+					sendTradeRequest.repaint();
 
 					final int player = usersBox.getSelectedIndex();
 
