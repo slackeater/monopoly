@@ -476,7 +476,7 @@ public class GameClient {
 			board.transferProperty(fromNameAdjusted, toNameAdjusted, tileId,
 					price);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(fromName, toName, tileId,
+				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted, tileId,
 						Messages.TRANSFER_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
@@ -510,7 +510,7 @@ public class GameClient {
 			board.transferJailCards(fromNameAdjusted, toNameAdjusted, quantity,
 					price);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted,
 						quantity, Messages.TRANSFER_JAILCARD);
 				nc.sendMessage(netMsg);
 			}
@@ -543,7 +543,7 @@ public class GameClient {
 		try {
 			board.transferMoney(fromNameAdjusted, toNameAdjusted, amount);
 			if (sendNetMessage) {
-				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
+				NetMessage netMsg = new NetMessage(fromNameAdjusted, toNameAdjusted,
 						amount, Messages.TRANSFER_MONEY);
 				nc.sendMessage(netMsg);
 			}

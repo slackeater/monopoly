@@ -21,13 +21,14 @@ public class EventJPanelTest extends JFrame {
 	JPanel jpanel;
 	Locale loc;
 	TestInstanceGenerator tig = new TestInstanceGenerator("fr");
-
+	boolean owned= true;
+	
 	public EventJPanelTest() {
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();
 
-		goToTile(4);
+		goToTile(1, owned);
 		// testElectricCompanyOwned();
 		// testElectricCompanyNotOwned();
 //		 testMediterraneanOwned();
@@ -61,9 +62,11 @@ public class EventJPanelTest extends JFrame {
 		EventJPanelTest ept = new EventJPanelTest();
 	}
 
-	public void goToTile(int tileId) {
+	public void goToTile(int tileId, boolean owned) {
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
+		if (owned)
+			gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
 	}
 	
 	public void testElectricCompanyNotOwned() {
@@ -76,7 +79,7 @@ public class EventJPanelTest extends JFrame {
 		int electricCompany = 12;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(electricCompany, sendNetMessage);
-		gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
+		
 	}
 
 	public void testMediterraneanNotOwned() {

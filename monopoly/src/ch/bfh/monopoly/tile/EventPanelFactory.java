@@ -57,7 +57,7 @@ public class EventPanelFactory {
 
 	public void changePanel(Step step) {
 		JPanel newButtonPanel = new JPanel();
-		;
+
 		EventPanelInfo epi = eps.getEventPanelInfoForStep(step);
 		label.setText("\n\n"+epi.getText());
 
