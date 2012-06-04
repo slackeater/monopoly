@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
-import com.sun.jdi.event.EventSet;
-
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.exception.TransactionException;
