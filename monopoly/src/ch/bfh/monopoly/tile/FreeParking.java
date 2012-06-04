@@ -10,39 +10,67 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.BoardEvent;
 import ch.bfh.monopoly.event.EventManager;
 
-public class FreeParking extends AbstractTile {
+public class FreeParking extends AbstractTile implements EventPanelSource{
 
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
 			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
 	String description;
+	EventPanelFactory epf;
 
 	public FreeParking(String name, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("freeParking-cardText");
+		epf = new EventPanelFactory(this);
 	}
+	
+	
+	public EventPanelInfo getEventPanelInfoForStep(Step step) {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi;
 
-	/**
-	 * get the JPanel to show in the GUI for this tile's event
-	 */
+		switch (step) {
+		case GET_EVENT:	
+			epi = new EventPanelInfo();
+			al =new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.freeParking(sendNetMessage);
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
+				}
+			};
+			
+			epi.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
+			epi.addButtonText("ok");
+			epi.addActionListener(al);
+			break;
+
+		default:
+			epi = new EventPanelInfo();
+			labelText = "No case defined";
+			buttonText = "ok";
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				}
+			};
+			epi.setText(labelText);
+			epi.addActionListener(al);
+			epi.addButtonText(buttonText);
+			break;
+		}
+		return epi;
+	}
+	
+	
+	@Override
 	public JPanel getTileEventPanel() {
-
-		buttonRight.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameClient.freeParking(sendNetMessage);
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				buttonRight.setEnabled(false);
-			}
-		});
-		buttonRight.setText("ok");
-		eventInfoLabel.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
-
-		jpanel.add(eventInfoLabel);
-		jpanel.add(buttonRight);
-
-		return jpanel;
+		epf.changePanel(Step.GET_EVENT);
+		return epf.getJPanel();
 	}
 }

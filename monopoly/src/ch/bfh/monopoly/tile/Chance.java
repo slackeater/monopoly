@@ -23,4 +23,5 @@ public class Chance extends AbstractTile {
 		return em.getTileEventPanelChance();
 	}
 
+	
 }

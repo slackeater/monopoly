@@ -140,7 +140,7 @@ public class Dice implements EventPanelSource {
 			System.out.println("DICE CLASS rolled: " + roll);
 			buttonRight = new JButton();
 
-			labelText = rb.getString("youRolled") + getDiceValues() + " "
+			labelText = rb.getString("youRolled") + getDiceValues() + "\n\n "
 					+ rb.getString("advance") + " " + roll + " "
 					+ rb.getString("spaces");
 			buttonText = rb.getString("continueButton");

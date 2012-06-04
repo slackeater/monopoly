@@ -13,7 +13,7 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.EventManager;
 import ch.bfh.monopoly.event.BoardEvent;
 
-public abstract class AbstractTile implements Tile {
+public abstract class AbstractTile implements Tile{
 
 	protected int tileId;
 	private int coordX;

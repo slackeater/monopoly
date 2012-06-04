@@ -34,9 +34,9 @@ public class EventJPanelTest extends JFrame {
 		// testFirstRailRoadOwned();
 		// testFirstRailRoadNotOwned();
 		
-		landOnChance();
+//		landOnChance();
 		
-		// testLandOnGo();
+		 testLandOnGo();
 //		testLandOnJail();
 		// testJustVisiting();
 //		 testFreeParking();
