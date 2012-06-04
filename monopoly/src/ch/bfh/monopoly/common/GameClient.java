@@ -1021,11 +1021,15 @@ public class GameClient {
 				System.out
 						.println("gameClient received TRADE ANSWER:" + answer);
 				performTrade();
+				System.out.println("gameClient: performTrade() completed");
 				
 			}
+System.out.println("sending WindowStateEvent to GUI");
+			
 			WindowStateEvent wse = new WindowStateEvent(
 					WindowMessage.MSG_TRADE_ANSWER, answer);
-			ws.notifyListeners(wse);
+			System.out.println("trying to send message to GUI: type:" + wse.getType() + wse.getAnswer());
+			ws.notifyListeners(wse);	
 			tradePending = false;
 		}
 	}
