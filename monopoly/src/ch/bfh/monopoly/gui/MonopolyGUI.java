@@ -813,8 +813,8 @@ public class MonopolyGUI extends JFrame {
 					rcvrJailCardLbl.setVisible(true);
 					sendTradeRequest.setVisible(true);
 					sendTradeRequest.repaint();
-					
-					
+
+
 					System.out.println("USER SELECTED, SHOWING FORM");
 
 					final int player = usersBox.getSelectedIndex();
@@ -829,10 +829,15 @@ public class MonopolyGUI extends JFrame {
 						}
 					}
 
+
+
 					//this if is here because:
 					//if we choose more player from the combobox, we have a quantity of MouseListener in the button equal to the number of time 
 					//we have released the mouse. !!!!! PLEASE DON'T CHANGE THIS
-					if(sendTradeRequest.getMouseListeners().length == 0){
+					System.out.println("THERE ARE MOUSE LISTENER # " + sendTradeRequest.getMouseListeners().length);
+					System.out.println("THERE ARE MOUSE LISTENER # " + sendTradeRequest.getActionListeners().length);
+
+					if(sendTradeRequest.getMouseListeners().length == 1){
 						sendTradeRequest.addMouseListener(new MouseListener() {
 
 							@Override
