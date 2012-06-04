@@ -257,7 +257,7 @@ public class Board {
 			throws TransactionException {
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You must first own all the properties in the color group before you can build");
+					rb.getString("ownAllBeforeBuild"));
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHouses < 1)
@@ -716,6 +716,7 @@ public class Board {
 				plyr.depositMoney(amount);
 			}
 		}
+		playerSubject.notifyListeners();
 	}
 
 	/**

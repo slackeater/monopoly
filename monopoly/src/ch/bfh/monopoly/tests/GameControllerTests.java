@@ -39,8 +39,35 @@ public class GameControllerTests {
 	/**
 	 * test that you get your go money when you go around the board
 	 */
+	@Test
 	public void passGoDepositsMoney(){}
 	
+	/**
+	 * test that birthday event transfers money
+	 */
+	@Test
+	public void birthdayEventWorks(){
+		int amount =20;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		int plyr1AccountBefore = plyr1.getAccount();
+		int plyr2AccountBefore = board.getPlayerByName("giuseppe").getAccount();
+		int plyr3AccountBefore = board.getPlayerByName("cyril").getAccount();
+		int plyr4AccountBefore = board.getPlayerByName("damien").getAccount();
+		int plyr5AccountBefore = board.getPlayerByName("elie").getAccount();
+		gameClient.birthdayEvent(amount, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		int plyr2AccountAfter = board.getPlayerByName("giuseppe").getAccount();
+		int plyr3AccountAfter = board.getPlayerByName("cyril").getAccount();
+		int plyr4AccountAfter = board.getPlayerByName("damien").getAccount();
+		int plyr5AccountAfter = board.getPlayerByName("elie").getAccount();
+		assertTrue(plyr1AccountBefore==plyr1AccountAfter-amount*4); 
+		assertTrue(plyr2AccountBefore==plyr2AccountAfter+amount); 
+		assertTrue(plyr3AccountBefore==plyr3AccountAfter+amount); 
+		assertTrue(plyr4AccountBefore==plyr4AccountAfter+amount); 
+		assertTrue(plyr5AccountBefore==plyr5AccountAfter+amount); 
+	}
 	
 	/**
 	 * test that a property can be found by its name
