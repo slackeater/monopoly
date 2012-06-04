@@ -7,6 +7,7 @@ public enum Step {
 		JAIL_ROLL,
 		JAIL_ROLL_FAILURE,
 		ROLL_NORMAL,
-		ROLL_NORMAL2;
+		ROLL_NORMAL2,
+		GET_EVENT;
 }
 

@@ -1,22 +1,30 @@
 package ch.bfh.monopoly.event;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.gui.MonopolyGUI;
+import ch.bfh.monopoly.tile.EventPanelFactory;
+import ch.bfh.monopoly.tile.EventPanelInfo;
+import ch.bfh.monopoly.tile.EventPanelSource;
+import ch.bfh.monopoly.tile.Step;
 
 public class MovementEvent extends AbstractTileEvent {
 
 	int newPosition;
+	EventPanelFactory epf;
 	
 	public MovementEvent(String name, String eventDescription, int newPosition,
 			GameClient gameClient) {
 		super(name, eventDescription, gameClient);
 		this.newPosition = newPosition;
+		epf = new EventPanelFactory(this);
 
 	}
 
@@ -42,16 +50,51 @@ public class MovementEvent extends AbstractTileEvent {
 		
 	}
 	
+
+	
+	public EventPanelInfo getEventPanelInfoForStep(Step step) {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi;
+
+		switch (step) {
+		case GET_EVENT:	
+			epi = new EventPanelInfo();
+			al =new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					performEvent();
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				}
+			};
+			epi.setText(eventDescription);
+			epi.addButtonText("ok");
+			epi.addActionListener(al);
+			break;
+
+		default:
+			epi = new EventPanelInfo();
+			labelText = "No case defined";
+			buttonText = "ok";
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				}
+			};
+			epi.setText(labelText);
+			epi.addActionListener(al);
+			epi.addButtonText(buttonText);
+			break;
+		}
+		return epi;
+	}
+	
 	
 	@Override
 	public JPanel getTileEventPanel() {
-		ActionListener al =new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				performEvent();
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-			}
-		};
-		return super.getTileEventPanel(al);
+		epf.changePanel(Step.GET_EVENT);
+		return epf.getJPanel();
 	}
 }

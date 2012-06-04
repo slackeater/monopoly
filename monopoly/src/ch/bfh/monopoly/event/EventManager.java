@@ -43,7 +43,7 @@ public class EventManager {
 	private void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
 		//set a number here to test that event in particular
-		chanceDrawIndex = 0;
+		chanceDrawIndex = 5;
 		if (testing)
 			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testing);
 	}

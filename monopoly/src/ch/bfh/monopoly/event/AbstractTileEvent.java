@@ -10,8 +10,9 @@ import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.tile.EventPanelFactory;
+import ch.bfh.monopoly.tile.EventPanelSource;
 
-public abstract class AbstractTileEvent implements BoardEvent{
+public abstract class AbstractTileEvent implements BoardEvent, EventPanelSource{
 
 		protected String name;
 		protected String eventDescription;
