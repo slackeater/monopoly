@@ -1044,6 +1044,7 @@ public class GameClient {
 	 * perform the trade in the tradeEvent
 	 */
 	public void performTrade() {
+		boolean sendNetMessage = false;
 		System.out.println("performing trade");
 		String sourcePlayer = tradeEvent.getSourcePlayer();
 		String otherPlayer = tradeEvent.getOtherPlayer();
@@ -1052,14 +1053,14 @@ public class GameClient {
 			System.out.println("gameClient.performTrade() moneyOffer:"
 					+ tradeEvent.getMoneyOffer());
 			transferMoney(sourcePlayer, otherPlayer,
-					tradeEvent.getMoneyOffer(), true);
+					tradeEvent.getMoneyOffer(), sendNetMessage);
 		}
 
 		if (tradeEvent.getMoneyDemand() > 0) {
 			System.out.println("gameClient.performTrade() moneyDemand:"
 					+ tradeEvent.getMoneyDemand());
 			transferMoney(otherPlayer, sourcePlayer,
-					tradeEvent.getMoneyOffer(), true);
+					tradeEvent.getMoneyDemand(), sendNetMessage);
 		}
 
 		if (tradeEvent.getPropertiesOffer() != null) {
@@ -1067,7 +1068,7 @@ public class GameClient {
 					+ tradeEvent.getPropertiesOffer());
 			for (String prop : tradeEvent.getPropertiesOffer()) {
 				int tileId = board.getTileIdByName(prop);
-				transferProperty(sourcePlayer, otherPlayer, tileId, 0, true);
+				transferProperty(sourcePlayer, otherPlayer, tileId, 0, sendNetMessage);
 			}
 		}
 
@@ -1076,7 +1077,7 @@ public class GameClient {
 					+ tradeEvent.getPropertiesDemand());
 			for (String prop : tradeEvent.getPropertiesDemand()) {
 				int tileId = board.getTileIdByName(prop);
-				transferProperty(otherPlayer, sourcePlayer, tileId, 0, true);
+				transferProperty(otherPlayer, sourcePlayer, tileId, 0, sendNetMessage);
 			}
 		}
 
@@ -1084,14 +1085,14 @@ public class GameClient {
 			System.out.println("gameClient.performTrade() JailcardOffer:"
 					+ tradeEvent.getJailcardOffer());
 			transferJailCards(sourcePlayer, otherPlayer,
-					tradeEvent.getJailcardOffer(), 0, true);
+					tradeEvent.getJailcardOffer(), 0, sendNetMessage);
 		}
 
 		if (tradeEvent.getJailcardDemand() > 0) {
 			System.out.println("gameClient.performTrade() JailcardDemand:"
 					+ tradeEvent.getJailcardDemand());
 			transferJailCards(otherPlayer, sourcePlayer,
-					tradeEvent.getJailcardOffer(), 0, true);
+					tradeEvent.getJailcardDemand(), 0, sendNetMessage);
 		}
 	}
 
