@@ -751,7 +751,7 @@ public class MonopolyGUI extends JFrame {
 					for(int i = 0 ; i < 40 ; i++){
 						if(terrain[i]){
 							TileInfo ti = bc.getTileInfoById(i);
-							myTerrainBox.addItem(ti.getName());
+							hisTerrainBox.addItem(ti.getName());
 						}
 					}
 				}
@@ -916,7 +916,6 @@ public class MonopolyGUI extends JFrame {
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
 					//-1 due to the first option "-" that takes a position
 					selectedPlayerIndex = usersBox.getSelectedIndex() -1;	
-					
 					
 					System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
 					System.out.println("== SELECTED PLAYER :" +  pse.get(selectedPlayerIndex).getName());
