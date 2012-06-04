@@ -380,11 +380,9 @@ public class MonopolyGUI extends JFrame {
 					System.out.println("TRADE ANSWER NAME SOURCE : " + wse.getTei().getSourcePlayer());
 
 
-					if(wse.getTei().getSourcePlayer().equals(gc.getLocalPlayerName())){
-						tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
-						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
-						System.out.println("TRADE ANSWER");
-					}
+					tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
+					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+					System.out.println("TRADE ANSWER");
 				}
 				//TODO kick request
 				//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
@@ -751,7 +749,7 @@ public class MonopolyGUI extends JFrame {
 					for(int i = 0 ; i < 40 ; i++){
 						if(terrain[i]){
 							TileInfo ti = bc.getTileInfoById(i);
-							hisTerrainBox.addItem(ti.getName());
+							myTerrainBox.addItem(ti.getName());
 						}
 					}
 				}
@@ -810,10 +808,9 @@ public class MonopolyGUI extends JFrame {
 				int hisJailCard = 0;
 				int hisMoneyCheckValue = -1;
 				String to = pse.get(selectedPlayerIndex).getName();
-			
-				
+
 				System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
-				System.out.println("== SELECTED PLAYER :" +  pse.get(selectedPlayerIndex).getName());
+				System.out.println("== SELECTED PLAYERX :" + selectedPlayerIndex);
 
 				System.out.println("IM SENDING TO " + to);
 				boolean errorCheck = false;
@@ -860,10 +857,10 @@ public class MonopolyGUI extends JFrame {
 						hisMoneyCheckValue = (Integer) rcvrMoneySpinner.getValue();
 					else
 						errorCheck = true;
-				
+
 				if(gc.getLocalPlayerName().equals(to))
 					errorCheck = true;
-			
+
 				System.out.println("DEMAND CARD: " + hisJailCard);
 				System.out.println("DEMAND TERRAIN" + demand);
 				System.out.println("DEMAND MONEY: " + hisMoneyCheckValue);
@@ -915,10 +912,7 @@ public class MonopolyGUI extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
 					//-1 due to the first option "-" that takes a position
-					selectedPlayerIndex = usersBox.getSelectedIndex() -1;	
-					
-					System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
-					System.out.println("== SELECTED PLAYER :" +  pse.get(selectedPlayerIndex).getName());
+					selectedPlayerIndex = usersBox.getSelectedIndex() -1;					
 				}
 			}
 
@@ -937,7 +931,7 @@ public class MonopolyGUI extends JFrame {
 
 		//build the array with the user name
 		for(int i = 0 ; i < playerNumber ; i++)
-				this.usersBox.addItem(pse.get(i).getName());
+			this.usersBox.addItem(pse.get(i).getName());
 
 		myTerrainBox.setEnabled(false);
 		moneySpinner.setEnabled(false);
