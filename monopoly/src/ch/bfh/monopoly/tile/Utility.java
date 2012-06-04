@@ -41,6 +41,21 @@ public class Utility extends Property implements EventPanelSource {
 				+ "\nmortgageValue: " + mortgageValue + "\nowner: " + owner;
 	}
 
+	
+	/**
+	 * get the JPanel to show in the GUI for this tile's event
+	 */
+	public JPanel getTileEventPanel() {
+		boolean owned = !(owner.getName() == "bank");
+		if (owned) {
+			epf.changePanel(Step.TILE_OWNED);
+			return epf.getJPanel();
+		} else
+			epf.changePanel(Step.TILE_NOT_OWNED);
+		return epf.getJPanel();
+	}
+	
+	
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
 		String buttonText;
@@ -48,7 +63,13 @@ public class Utility extends Property implements EventPanelSource {
 		EventPanelInfo epi;
 
 		switch (step) {
-		case GET_EVENT:
+		case TILE_NOT_OWNED:
+			epi = super.getTileNotOwnedEPI(epf);
+			break;
+		case TILE_NOT_OWNED2:
+			epi = super.getTileNotOwnedEPI2(epf);
+			break;
+		case TILE_OWNED:
 			epi = new EventPanelInfo();
 			al = new ActionListener() {
 
@@ -108,22 +129,6 @@ public class Utility extends Property implements EventPanelSource {
 			break;
 		}
 		return epi;
-	}
-
-	@Override
-	public JPanel getTileEventPanel() {
-
-		boolean owned = !(owner.getName() == "bank");
-		if (owned) {
-			epf.changePanel(Step.GET_EVENT);
-			return epf.getJPanel();
-		} else
-			return tileNotOwnedEvent();
-
-	}
-
-	public JPanel tileNotOwnedEvent() {
-		return getBuyTileWindow();
 	}
 
 }

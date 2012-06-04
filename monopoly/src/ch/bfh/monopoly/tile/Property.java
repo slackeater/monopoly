@@ -50,44 +50,48 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.buttonTextContinue= rb.getString("continueButton");
 	}
 
-	public JPanel getBuyTileWindow() {
-		eventInfoLabel.setText(name +" "+msgIsNotOwned);
-		jpanel.add(eventInfoLabel, BorderLayout.CENTER);
-		buttonRight = new JButton(buttonTextBuy);
-		
-		
-		al =new ActionListener() {
-
+	
+	protected String getPayRentText(int fee){
+		return name + " " + msgIsOwned + " " + owner.getName() + ".  \n\n" + msgIsOwnedRent + " \n" + fee;
+	}	
+	
+	protected EventPanelInfo getTileNotOwnedEPI(EventPanelFactory epfIn){
+		final EventPanelFactory epf = epfIn;
+		EventPanelInfo epi = new EventPanelInfo();
+		al = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				gameClient.buyCurrentPropertyForPlayer("currentPlayer",
 						sendNetMessage);
 				System.out.println(gameClient.getCurrentPlayer().getAccount());
 				System.out.println(gameClient.getCurrentPlayer().ownsProperty(
-						(Tile) Property.this));
-				buttonRight.removeActionListener(al);
-				buttonRight.setText(buttonTextContinue);
-				al =new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						jpanel.removeAll();
-						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-						buttonRight.setEnabled(false);
-					}
-				};
-				buttonRight.addActionListener(al);
-				eventInfoLabel.setText(msgYouBought +" "+ name);
-				
-
+						Property.this));
+				epf.changePanel(Step.TILE_NOT_OWNED2);
+			}
+		};
+		epi.setText(name +" "+msgIsNotOwned);
+		epi.addActionListener(al);
+		epi.addButtonText(buttonTextBuy);
+		return epi;
+	}
+	
+	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn){
+		final EventPanelFactory epf = epfIn;
+		EventPanelInfo epi = new EventPanelInfo();
+		al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				epf.disableAfterClick();
 			}
 		};
 		
-		
-		buttonRight.addActionListener(al);
-		jpanel.add(buttonRight,BorderLayout.SOUTH);
-		return jpanel;
+		epi.setText(msgYouBought +" "+ name);
+		epi.addActionListener(al);
+		epi.addButtonText(buttonTextContinue);
+		return epi;
 	}
+
 
 	public boolean isMortgageActive() {
 		return mortgageActive;

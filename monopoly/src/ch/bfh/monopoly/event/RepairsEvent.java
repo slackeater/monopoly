@@ -29,21 +29,24 @@ public class RepairsEvent extends AbstractTileEvent{
 		epf = new EventPanelFactory(this);
 	}
 
-
+	public int feeToCharge(){
+		int housesOnBoard = 32 - gameClient.getAvailableHouses();
+		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
+		return housesOnBoard * chargePerHouse + hotelsOnBoard * chargePerHotel;
+	}
 
 	@Override
 	public void performEvent() {
-		int housesOnBoard = 32 - gameClient.getAvailableHouses();
-		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
-		int fee = housesOnBoard * chargePerHouse + hotelsOnBoard * chargePerHotel;
-		gameClient.payFee(fee, sendNetMessage);
+		gameClient.payFee(feeToCharge(), sendNetMessage);
 	}
 
 	@Override
 	public String getEventDescription() {
 		int housesOnBoard = 32 - gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
-		return eventDescription=rb.getString("thereAre") + housesOnBoard + rb.getString("housesOnBoard") + hotelsOnBoard +" "+rb.getString("hotelsOnBoard")+" "+chargePerHouse + " "+ rb.getString("forEachHouse")+" " + chargePerHotel + rb.getString("forEachHotel");
+		return eventDescription=name + "\n\n " + eventDescription +" \n\n"+rb.getString("thereAre")+ " "+ housesOnBoard +" "+ rb.getString("housesOnBoard") +" "+ hotelsOnBoard+"\n" +rb.getString("housesOnBoard")+" \n" + rb.getString("pay")+" feeToCharge()";       
+				//OLD DESCRIPTION
+//				" "+rb.getString("hotelsOnBoard")+" "+chargePerHouse + " "+ rb.getString("forEachHouse")+" " + chargePerHotel + " "+rb.getString("forEachHotel") +"\n\n"+ 
 
 	}
 	

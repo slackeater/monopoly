@@ -185,6 +185,9 @@ public class ClientHandler implements IoHandler {
 			System.out.println("ClientHandler: trade answer received: "+n.getTradeAnswer());
 			gameClient.receiveTradeAnswer(n.getTradeAnswer());
 			break;
+		case PERFORM_TRADE:
+			gameClient.performTrade(n.getTie());
+			break;
 		case ACKNOWLEDGE:
 			// TODO probably to remove
 			break;

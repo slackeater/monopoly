@@ -47,6 +47,7 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 				public void actionPerformed(ActionEvent e) {
 					performEvent();
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
 				}
 			};
 			epi.setText(eventDescription);

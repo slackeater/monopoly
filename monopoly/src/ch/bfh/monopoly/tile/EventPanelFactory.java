@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import ch.bfh.monopoly.common.Monopoly;
 
 public class EventPanelFactory {
 	JPanel master, buttonPanel;
@@ -73,7 +76,6 @@ public class EventPanelFactory {
 
 		int buttonCount = epi.getButtonCount();
 		for (int i = 0; i < buttonCount; i++) {
-			System.out.println("TURN" + i);
 			JButton button = new JButton();
 			button.setText(epi.getButtonTextAtIndex(i));
 			button.addActionListener(epi.getButtonActionAtIndex(i));
@@ -90,6 +92,16 @@ public class EventPanelFactory {
 		for (int i = 0; i < buttonCount; i++) {
 			buttonPanel.getComponent(i).setEnabled(false);
 		}
+	}
+	
+	private JPanel imageLogo(String name) {
+		JPanel img = new JPanel();
+		java.net.URL urlImg = Monopoly.class
+				.getResource("/ch/bfh/monopoly/resources/" + name);
+		ImageIcon logo = new ImageIcon(urlImg);
+		JLabel imgLab = new JLabel(logo);
+		img.add(imgLab);
+		return img;
 	}
 
 }

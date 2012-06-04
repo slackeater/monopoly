@@ -1025,7 +1025,10 @@ public class GameClient {
 			if (answer) {
 				System.out
 						.println("gameClient received TRADE ANSWER:" + answer);
-				performTrade();
+				performTrade(tradeEvent);
+				NetMessage nm = new NetMessage("NULLLLLL", tradeEvent, Messages.PERFORM_TRADE);
+				nc.sendMessage(nm);
+
 				System.out.println("gameClient: performTrade() completed");
 
 			}
@@ -1043,32 +1046,32 @@ public class GameClient {
 	/**
 	 * perform the trade in the tradeEvent
 	 */
-	public void performTrade() {
-		boolean sendNetMessage = true;
-		boolean sleep = true;
+	public void performTrade(TradeInfoEvent tie) {
+		boolean sendNetMessage = false;
+		boolean sleep = false;
 		System.out.println("performing trade");
-		String sourcePlayer = tradeEvent.getSourcePlayer();
-		String otherPlayer = tradeEvent.getOtherPlayer();
-		if (tradeEvent.getMoneyOffer() > 0) {
+		String sourcePlayer = tie.getSourcePlayer();
+		String otherPlayer = tie.getOtherPlayer();
+		if (tie.getMoneyOffer() > 0) {
 			System.out.println("gameClient.performTrade() moneyOffer:"
-					+ tradeEvent.getMoneyOffer());
+					+ tie.getMoneyOffer());
 			transferMoney(sourcePlayer, otherPlayer,
-					tradeEvent.getMoneyOffer(), sendNetMessage);
+					tie.getMoneyOffer(), sendNetMessage);
 			if (sleep)
 				sleep();
 		}
-		if (tradeEvent.getMoneyDemand() > 0) {
+		if (tie.getMoneyDemand() > 0) {
 			System.out.println("gameClient.performTrade() moneyDemand:"
-					+ tradeEvent.getMoneyDemand());
+					+ tie.getMoneyDemand());
 			transferMoney(otherPlayer, sourcePlayer,
-					tradeEvent.getMoneyDemand(), sendNetMessage);
+					tie.getMoneyDemand(), sendNetMessage);
 			if (sleep)
 				sleep();
 		}
-		if (tradeEvent.getPropertiesOffer() != null) {
+		if (tie.getPropertiesOffer() != null) {
 			System.out.println("gameClient.performTrade() PropertiesOffer:"
-					+ tradeEvent.getPropertiesOffer());
-			for (String prop : tradeEvent.getPropertiesOffer()) {
+					+ tie.getPropertiesOffer());
+			for (String prop : tie.getPropertiesOffer()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(sourcePlayer, otherPlayer, tileId, 0,
 						sendNetMessage);
@@ -1076,10 +1079,10 @@ public class GameClient {
 			if (sleep)
 				sleep();
 		}
-		if (tradeEvent.getPropertiesDemand() != null) {
+		if (tie.getPropertiesDemand() != null) {
 			System.out.println("gameClient.performTrade() PropertiesDemand:"
-					+ tradeEvent.getPropertiesDemand());
-			for (String prop : tradeEvent.getPropertiesDemand()) {
+					+ tie.getPropertiesDemand());
+			for (String prop : tie.getPropertiesDemand()) {
 				int tileId = board.getTileIdByName(prop);
 				transferProperty(otherPlayer, sourcePlayer, tileId, 0,
 						sendNetMessage);
@@ -1087,19 +1090,19 @@ public class GameClient {
 			if (sleep)
 				sleep();
 		}
-		if (tradeEvent.getJailcardOffer() > 0) {
+		if (tie.getJailcardOffer() > 0) {
 			System.out.println("gameClient.performTrade() JailcardOffer:"
-					+ tradeEvent.getJailcardOffer());
+					+ tie.getJailcardOffer());
 			transferJailCards(sourcePlayer, otherPlayer,
-					tradeEvent.getJailcardOffer(), 0, sendNetMessage);
+					tie.getJailcardOffer(), 0, sendNetMessage);
 			if (sleep)
 				sleep();
 		}
-		if (tradeEvent.getJailcardDemand() > 0) {
+		if (tie.getJailcardDemand() > 0) {
 			System.out.println("gameClient.performTrade() JailcardDemand:"
-					+ tradeEvent.getJailcardDemand());
+					+ tie.getJailcardDemand());
 			transferJailCards(otherPlayer, sourcePlayer,
-					tradeEvent.getJailcardDemand(), 0, sendNetMessage);
+					tie.getJailcardDemand(), 0, sendNetMessage);
 			if (sleep)
 				sleep();
 		}

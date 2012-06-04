@@ -36,6 +36,7 @@ public class Dice implements EventPanelSource {
 	ActionListener al;
 	boolean testOff;
 	int attemptedRolls = 0;
+	boolean doublesLastRoll = false;
 	ResourceBundle rb;
 	EventPanelFactory epf = new EventPanelFactory(this);
 
@@ -102,17 +103,8 @@ public class Dice implements EventPanelSource {
 		return throwValueOne == throwValueTwo;
 	}
 
-	private JPanel imageLogo(String name) {
-		JPanel img = new JPanel();
-		java.net.URL urlImg = Monopoly.class
-				.getResource("/ch/bfh/monopoly/resources/" + name);
-		ImageIcon logo = new ImageIcon(urlImg);
-		JLabel imgLab = new JLabel(logo);
-		img.add(imgLab);
-		return img;
-	}
-
 	public JPanel getNewStartRoll() {
+		attemptedRolls = 0;
 		epf.changePanel(Step.ROLL_NORMAL);
 		return epf.getJPanel();
 	}
@@ -131,46 +123,22 @@ public class Dice implements EventPanelSource {
 		EventPanelInfo epi;
 
 		switch (step) {
+		// case ROLL_NORMAL:
+		// epi = getRollStartEPI(false);
+		// break;
 		case ROLL_NORMAL:
 			epi = getRollStartEPI(false);
-			break;
-		case ROLL_NORMAL2:
-			epi = new EventPanelInfo();
-			final int roll = throwDice();
-			System.out.println("DICE CLASS rolled: " + roll);
-			buttonRight = new JButton();
-
-			labelText = rb.getString("youRolled") + getDiceValues() + "\n\n "
-					+ rb.getString("advance") + " " + roll + " "
-					+ rb.getString("spaces");
-			buttonText = rb.getString("continueButton");
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					buttonRight.setEnabled(false);
-					int prevPos = gameClient.getCurrentPlayer().getPosition();
-					gameClient.advancePlayerNSpaces(roll, testOff);
-					// gameClient.sendTransactionSuccesToGUI(true);
-					int curPos = gameClient.getCurrentPlayer().getPosition();
-					System.out.println("PrevPos" + prevPos + "  CurPos"
-							+ curPos);
-					epf.disableAfterClick();
-				}
-			};
-			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
 			break;
 		case JAIL_START:
 			epi = getJailStartEPI();
 			break;
 		case JAIL_PAY:
 			gameClient.getOutOfJailByPayment(testOff);
-			epi = getRollStartEPI(true);
+			epi = getFreedFromJailEPI();
 			break;
 		case JAIL_CARD:
 			gameClient.getOutOfJailByCard(testOff);
-			epi = getRollStartEPI(true);
+			epi = getFreedFromJailEPI();
 			break;
 		case JAIL_ROLL:
 			epi = new EventPanelInfo();
@@ -203,6 +171,9 @@ public class Dice implements EventPanelSource {
 				}
 			}
 			break;
+		case JAIL_FREED:
+			epi= getFreedFromJailEPI();
+			break;
 		default:
 			epi = new EventPanelInfo();
 			labelText = "No case defined";
@@ -225,7 +196,7 @@ public class Dice implements EventPanelSource {
 		String buttonText;
 		ActionListener al;
 		EventPanelInfo epi = new EventPanelInfo();
-		
+
 		epi = new EventPanelInfo();
 		labelText = rb.getString("rollFailure");
 
@@ -248,20 +219,46 @@ public class Dice implements EventPanelSource {
 		String buttonText;
 		ActionListener al;
 		EventPanelInfo epi = new EventPanelInfo();
+		
+		final int roll = throwDice();
+		System.out.println("DICE CLASS rolled: " + roll);
+		
+		labelText = rb.getString("youRolled") + getDiceValues() + "\n\n "
+				+ rb.getString("advance") + " " + roll + " "
+				+ rb.getString("spaces");
+		buttonText = rb.getString("continueButton");
+		al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				buttonRight.setEnabled(false);
+				int prevPos = gameClient.getCurrentPlayer().getPosition();
+				gameClient.advancePlayerNSpaces(roll, testOff);
+				// gameClient.sendTransactionSuccesToGUI(true);
+				int curPos = gameClient.getCurrentPlayer().getPosition();
+				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
+				epf.disableAfterClick();
+			}
+		};
+		epi.setText(labelText);
+		epi.addActionListener(al);
+		epi.addButtonText(buttonText);
+		return epi;
+	}
 
-		if (freed)
-			labelText = rb.getString("freed");
-		else
-			labelText = rb.getString("rollDescription");
+	public EventPanelInfo getFreedFromJailEPI() {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi = new EventPanelInfo();
 
 		buttonText = rb.getString("roll");
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				epf.changePanel(Step.ROLL_NORMAL2);
+				epf.changePanel(Step.ROLL_NORMAL);
 			}
 		};
-		epi.setText(labelText);
+		epi.setText(rb.getString("freed"));
 		epi.addActionListener(al);
 		epi.addButtonText(buttonText);
 		return epi;
@@ -276,7 +273,7 @@ public class Dice implements EventPanelSource {
 					+ rb.getString("rollAgain") + " " + (3 - attemptedRolls)
 					+ " " + rb.getString("triesRemaining");
 		} else
-			labelText = rb.getString("rollDescription");
+			labelText = rb.getString("inJail");
 
 		ActionListener pay = new ActionListener() {
 			@Override

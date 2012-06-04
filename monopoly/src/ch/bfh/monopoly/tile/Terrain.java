@@ -46,6 +46,92 @@ public class Terrain extends Property implements EventPanelSource {
 		epf = new EventPanelFactory(this);
 	}
 
+	public String toString() {
+		return super.toString() + "\nname: " + name + "\nprice: " + this.price
+				+ "\nhouseCost: " + houseCost + "\nhotelCost: " + hotelCost
+				+ "\nmortgageValue: " + mortgageValue + "\nrent: "
+				+ rentRates[0] + "\nrent w/Houses" + rentRates[1] + ", "
+				+ rentRates[2] + ", " + rentRates[3] + ", " + rentRates[4]
+				+ "\nrent w/Hotel" + renthotel + "\nowner: " + owner;
+	}
+
+	/**
+	 * get the JPanel to show in the GUI for this tile's event
+	 */
+	public JPanel getTileEventPanel() {
+		boolean owned = !(owner.getName() == "bank");
+		if (owned) {
+			epf.changePanel(Step.TILE_OWNED);
+			return epf.getJPanel();
+		} else
+			epf.changePanel(Step.TILE_NOT_OWNED);
+			return epf.getJPanel();
+	}
+
+
+	public EventPanelInfo getEventPanelInfoForStep(Step step) {
+		String labelText;
+		String buttonText;
+		ActionListener al;
+		EventPanelInfo epi;
+
+		switch (step) {
+		case TILE_NOT_OWNED:
+			epi= super.getTileNotOwnedEPI(epf);
+			break;
+		case TILE_NOT_OWNED2:
+			epi =super.getTileNotOwnedEPI2(epf);
+			break;
+		case TILE_OWNED:
+			epi = new EventPanelInfo();
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.payRent(sendNetMessage);
+					// buttonRight.setEnabled(false);
+					eventInfoLabel.setText(thankYouRent);
+					System.out.println("The owner's bank account balance: "
+							+ owner.getAccount());
+					System.out.println("The buyer's bank account balance: "
+							+ gameClient.getCurrentPlayer().getAccount());
+					epf.changePanel(Step.TILE_OWNED2);
+				}
+			};
+			epi.setText(getPayRentText(feeToCharge()));
+			epi.addButtonText(buttonTextPay);
+			epi.addActionListener(al);
+			break;
+		case TILE_OWNED2:
+			epi = new EventPanelInfo();
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
+				}
+			};
+			epi.setText(this.thankYouRent);
+			epi.addButtonText(buttonTextContinue);
+			epi.addActionListener(al);
+			break;
+		default:
+			epi = new EventPanelInfo();
+			labelText = "No case defined";
+			buttonText = "ok";
+			al = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				}
+			};
+			epi.setText(labelText);
+			epi.addActionListener(al);
+			epi.addButtonText(buttonText);
+			break;
+		}
+		return epi;
+	}
+	
 	public void buildHouse() {
 		houseCount++;
 	}
@@ -100,90 +186,6 @@ public class Terrain extends Property implements EventPanelSource {
 
 	public String getRGB() {
 		return this.rgb;
-	}
-
-	public String toString() {
-		return super.toString() + "\nname: " + name + "\nprice: " + this.price
-				+ "\nhouseCost: " + houseCost + "\nhotelCost: " + hotelCost
-				+ "\nmortgageValue: " + mortgageValue + "\nrent: "
-				+ rentRates[0] + "\nrent w/Houses" + rentRates[1] + ", "
-				+ rentRates[2] + ", " + rentRates[3] + ", " + rentRates[4]
-				+ "\nrent w/Hotel" + renthotel + "\nowner: " + owner;
-	}
-
-	/**
-	 * get the JPanel to show in the GUI for this tile's event
-	 */
-	public JPanel getTileEventPanel() {
-		boolean owned = !(owner.getName() == "bank");
-		if (owned) {
-			epf.changePanel(Step.TILE_OWNED_START);
-			return epf.getJPanel();
-		} else
-			return tileNotOwnedEvent();
-	}
-
-
-	public JPanel tileNotOwnedEvent() {
-		return getBuyTileWindow();
-	}
-
-	public EventPanelInfo getEventPanelInfoForStep(Step step) {
-		String labelText;
-		String buttonText;
-		ActionListener al;
-		EventPanelInfo epi;
-
-		switch (step) {
-		case TILE_OWNED_START:
-			epi = new EventPanelInfo();
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.payRent(sendNetMessage);
-					// buttonRight.setEnabled(false);
-					eventInfoLabel.setText(thankYouRent);
-					System.out.println("The owner's bank account balance: "
-							+ owner.getAccount());
-					System.out.println("The buyer's bank account balance: "
-							+ gameClient.getCurrentPlayer().getAccount());
-					epf.changePanel(Step.TILE_OWNED_SECOND);
-				}
-			};
-			epi.setText(name + " " + msgIsOwned + " " + owner.getName()
-					+ ".  \n" + msgIsOwnedRent + " " + feeToCharge());
-			epi.addButtonText(buttonTextPay);
-			epi.addActionListener(al);
-			break;
-		case TILE_OWNED_SECOND:
-			epi = new EventPanelInfo();
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
-				}
-			};
-			epi.setText(this.thankYouRent);
-			epi.addButtonText(buttonTextContinue);
-			epi.addActionListener(al);
-			break;
-		default:
-			epi = new EventPanelInfo();
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
-			break;
-		}
-		return epi;
 	}
 
 }

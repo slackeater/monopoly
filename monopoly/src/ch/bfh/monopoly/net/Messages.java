@@ -60,6 +60,7 @@ public enum Messages {
 	
 	TRADE_REQUEST(700),
 	TRADE_ANSWER(701),
+	PERFORM_TRADE(705),
 	
 	
 	//probably only for test
