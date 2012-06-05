@@ -37,7 +37,7 @@ public class BirthdayEvent extends AbstractTileEvent  {
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			buttonText = "ok";
 			
 			al =new ActionListener(){
@@ -52,7 +52,7 @@ public class BirthdayEvent extends AbstractTileEvent  {
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {

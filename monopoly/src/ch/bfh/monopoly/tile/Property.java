@@ -52,7 +52,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 
 	protected EventPanelInfo getTileNotOwnedEPI(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		ActionListener dontBuy = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,7 +79,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 	
 	protected EventPanelInfo getTileOwnedByYouEPI(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -94,7 +94,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 
 	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

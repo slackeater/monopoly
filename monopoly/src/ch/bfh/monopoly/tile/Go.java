@@ -36,7 +36,7 @@ public class Go extends AbstractTile implements EventPanelSource {
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			buttonText="ok";
 			al =new ActionListener() {
 
@@ -52,7 +52,7 @@ public class Go extends AbstractTile implements EventPanelSource {
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {

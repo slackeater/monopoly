@@ -85,7 +85,7 @@ public class Terrain extends Property implements EventPanelSource {
 			epi = super.getTileNotOwnedEPI2(epf);
 			break;
 		case TILE_OWNED:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -101,7 +101,7 @@ public class Terrain extends Property implements EventPanelSource {
 			epi.addButton(buttonTextPay, 0, al);
 			break;
 		case TILE_OWNED2:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -116,7 +116,7 @@ public class Terrain extends Property implements EventPanelSource {
 			epi = super.getTileOwnedByYouEPI(epf);
 			break;
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {

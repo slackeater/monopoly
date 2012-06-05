@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import ch.bfh.monopoly.common.Board;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.common.Player;
+import ch.bfh.monopoly.exception.TransactionException;
 
 public class EventJPanelTest extends JFrame {
 
@@ -28,21 +30,28 @@ public class EventJPanelTest extends JFrame {
 		board = tig.getBoard();
 		gc = tig.getGc();
 
-//		goToTile(5, !owned);
+//		goToTile(1, owned);
 
 //		 testBothUtilitiesOwned();
-		 testFirstRailRoadNotOwned();
 
 		
 		 
+		 //this player does not own the properties
 //		 gameClient.setCurrentPlayer("giuseppe", sendNetMessage);
-//		 gameClient.advancePlayerToTile(12, sendNetMessage);
+//		 gameClient.advancePlayerToTile(1, sendNetMessage);
+//		 Player plyr2 = board.getPlayerByName("giuseppe");
+//		 try {
+//			plyr2.withdawMoney(plyr2.getAccount()-30);
+//		} catch (TransactionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //		 
-		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
+//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
-//		testRollStartPanel(true);
-//		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+		testRollStartPanel(true);
+		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
 		add(jpanel);
@@ -100,5 +109,7 @@ public class EventJPanelTest extends JFrame {
 		if (gotojail)
 			gameClient.goToJail(sendNetMessage);
 	}
+	
+
 
 }
