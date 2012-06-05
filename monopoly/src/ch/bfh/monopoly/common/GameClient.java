@@ -97,8 +97,7 @@ public class GameClient {
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
 		dice = new Dice(6, 6, this, testOff);
-		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
-				loc);
+		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc);
 	}
 
 	/**
@@ -196,12 +195,16 @@ public class GameClient {
 		try {
 			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
 					currentPlayer.getPosition());
-			
-			String propertyName =board.castTileToProperty(board.getTileById(currentPlayer.getPosition())).getName();
-			int price =board.castTileToProperty(board.getTileById(currentPlayer.getPosition())).getPrice();
-			String eventText = playerName +" "+ rb.getString("boughtTheProp")+" "+ propertyName+" "+ rb.getString("for")+" "+ price;
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(currentPlayer.getPosition())).getName();
+			int price = board.castTileToProperty(
+					board.getTileById(currentPlayer.getPosition())).getPrice();
+			String eventText = playerName + " " + rb.getString("boughtTheProp")
+					+ " " + propertyName + " " + rb.getString("for") + " "
+					+ price;
 			sendEventInformationToGUI(eventText);
-			
+
 			if (sendNetMessage) {
 				// send a netmessage with the roll value of this player
 				NetMessage netMsg = new NetMessage(playerNameAdjusted,
@@ -235,11 +238,10 @@ public class GameClient {
 		String playerName = currentPlayer.getName();
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
 
-
-		String eventText = playerName +" "+ rb.getString("rolledDice")+" "+modifiedN;
+		String eventText = playerName + " " + rb.getString("rolledDice") + " "
+				+ modifiedN;
 		sendEventInformationToGUI(eventText);
-		
-		
+
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir,
@@ -296,15 +298,18 @@ public class GameClient {
 						tileId, Messages.BUY_HOUSE);
 				nc.sendMessage(netMsg);
 			}
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			int price =board.castTileToTerrain(board.getTileById(currentPlayer.getPosition())).getHouseCost();
-			String eventText = playerName +" "+ rb.getString("boughtHouseOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ price;
+			int price = board.castTileToTerrain(
+					board.getTileById(currentPlayer.getPosition()))
+					.getHouseCost();
+			String eventText = playerName + " " + rb.getString("boughtHouseOn")
+					+ " " + propertyName + " " + rb.getString("for") + " "
+					+ price;
 			sendEventInformationToGUI(eventText);
-			
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -317,22 +322,23 @@ public class GameClient {
 	 *            the id of any tile in the group to build on
 	 */
 	public void buyHouseRow(int tileId, boolean sendNetMessage) {
-		int costToBuild=0;
+		int costToBuild = 0;
 		try {
-			costToBuild=board.buyHouseRow(currentPlayer.getName(), tileId);
+			costToBuild = board.buyHouseRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOUSEROW);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("boughtHouseRowOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ costToBuild;
+			String eventText = playerName + " "
+					+ rb.getString("boughtHouseRowOn") + " " + propertyName
+					+ " " + rb.getString("for") + " " + costToBuild;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -347,20 +353,21 @@ public class GameClient {
 	public void buyHotelRow(int tileId, boolean sendNetMessage) {
 		int costToBuild;
 		try {
-			costToBuild=board.buyHotelRow(currentPlayer.getName(), tileId);
+			costToBuild = board.buyHotelRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOTELROW);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("boughtHotelRowOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ costToBuild;
+			String eventText = playerName + " "
+					+ rb.getString("boughtHotelRowOn") + " " + propertyName
+					+ " " + rb.getString("for") + " " + costToBuild;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -382,16 +389,18 @@ public class GameClient {
 						tileId, Messages.BUY_HOTEL);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			int price =board.castTileToTerrain(board.getTileById(currentPlayer.getPosition())).getHotelCost();
-			String eventText = playerName +" "+ rb.getString("boughtHotelOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ price;
+			int price = board.castTileToTerrain(
+					board.getTileById(currentPlayer.getPosition()))
+					.getHotelCost();
+			String eventText = playerName + " " + rb.getString("boughtHotelOn")
+					+ " " + propertyName + " " + rb.getString("for") + " "
+					+ price;
 			sendEventInformationToGUI(eventText);
-			
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -413,16 +422,18 @@ public class GameClient {
 						tileId, Messages.SELL_HOUSE);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			int price =board.castTileToTerrain(board.getTileById(currentPlayer.getPosition())).getHouseCost();
-			String eventText = playerName +" "+ rb.getString("soldHouseOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ price;
+			int price = board.castTileToTerrain(
+					board.getTileById(currentPlayer.getPosition()))
+					.getHouseCost();
+			String eventText = playerName + " " + rb.getString("soldHouseOn")
+					+ " " + propertyName + " " + rb.getString("for") + " "
+					+ price;
 			sendEventInformationToGUI(eventText);
-			
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -436,22 +447,23 @@ public class GameClient {
 	 * @throws TransactionException
 	 */
 	public void sellHouseRow(int tileId, boolean sendNetMessage) {
-		int amountOfSale; 
+		int amountOfSale;
 		try {
-			amountOfSale= board.sellHouseRow(currentPlayer.getName(), tileId);
+			amountOfSale = board.sellHouseRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.SELL_HOUSEROW);
 				nc.sendMessage(netMsg);
 			}
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("soldHouseRowOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ amountOfSale;
+			String eventText = playerName + " "
+					+ rb.getString("soldHouseRowOn") + " " + propertyName + " "
+					+ rb.getString("for") + " " + amountOfSale;
 			sendEventInformationToGUI(eventText);
-			
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -473,13 +485,18 @@ public class GameClient {
 						tileId, Messages.SELL_HOTEL);
 				nc.sendMessage(netMsg);
 			}
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			int price =board.castTileToTerrain(board.getTileById(currentPlayer.getPosition())).getHotelCost();
-			String eventText = playerName +" "+ rb.getString("soldHotelOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ price;
+			int price = board.castTileToTerrain(
+					board.getTileById(currentPlayer.getPosition()))
+					.getHotelCost();
+			String eventText = playerName + " " + rb.getString("soldHotelOn")
+					+ " " + propertyName + " " + rb.getString("for") + " "
+					+ price;
 			sendEventInformationToGUI(eventText);
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -495,21 +512,21 @@ public class GameClient {
 	public void sellHotelRow(int tileId, boolean sendNetMessage) {
 		int amountOfSale;
 		try {
-			amountOfSale=board.sellHotelRow(currentPlayer.getName(), tileId);
+			amountOfSale = board.sellHotelRow(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.SELL_HOTELROW);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("soldHouseRowOn")+" "+ propertyName+" "+ rb.getString("for")+" "+ amountOfSale;
+			String eventText = playerName + " "
+					+ rb.getString("soldHouseRowOn") + " " + propertyName + " "
+					+ rb.getString("for") + " " + amountOfSale;
 			sendEventInformationToGUI(eventText);
-			
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -527,19 +544,22 @@ public class GameClient {
 	public void toggleMortgageStatus(int tileId, boolean sendNetMessage) {
 		int amount;
 		try {
-			amount= board.toggleMortgageStatus(currentPlayer.getName(), tileId);
+			amount = board
+					.toggleMortgageStatus(currentPlayer.getName(), tileId);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.TOGGLE_MORTGAGE);
 				nc.sendMessage(netMsg);
 			}
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("changedMortgageStatus")+" "+ propertyName+" "+ rb.getString("for")+" "+ amount;
+			String eventText = playerName + " "
+					+ rb.getString("changedMortgageStatus") + " "
+					+ propertyName + " " + rb.getString("for") + " " + amount;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -579,13 +599,14 @@ public class GameClient {
 						toNameAdjusted, tileId, Messages.TRANSFER_PROPERTY);
 				nc.sendMessage(netMsg);
 			}
-			
-			
-			String propertyName =board.castTileToProperty(board.getTileById(tileId)).getName();
-			String eventText = fromNameAdjusted +" "+ rb.getString("transfered")+" "+ propertyName+" "+ rb.getString("to") +" "+ toNameAdjusted;
+
+			String propertyName = board.castTileToProperty(
+					board.getTileById(tileId)).getName();
+			String eventText = fromNameAdjusted + " "
+					+ rb.getString("transfered") + " " + propertyName + " "
+					+ rb.getString("to") + " " + toNameAdjusted;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -623,12 +644,13 @@ public class GameClient {
 						toNameAdjusted, quantity, Messages.TRANSFER_JAILCARD);
 				nc.sendMessage(netMsg);
 			}
-			
-	
-			String eventText = fromNameAdjusted +" "+ rb.getString("transfered")+" "+quantity+ " "+rb.getString("jailCards")+" "+rb.getString("to")+" "+ toNameAdjusted;
+
+			String eventText = fromNameAdjusted + " "
+					+ rb.getString("transfered") + " " + quantity + " "
+					+ rb.getString("jailCards") + " " + rb.getString("to")
+					+ " " + toNameAdjusted;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -664,11 +686,12 @@ public class GameClient {
 						toNameAdjusted, amount, Messages.TRANSFER_MONEY);
 				nc.sendMessage(netMsg);
 			}
-			
-			String eventText = fromNameAdjusted +" "+ rb.getString("transfered")+" "+amount+ " "+rb.getString("to")+" "+ toNameAdjusted;
+
+			String eventText = fromNameAdjusted + " "
+					+ rb.getString("transfered") + " " + amount + " "
+					+ rb.getString("to") + " " + toNameAdjusted;
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -746,7 +769,6 @@ public class GameClient {
 		board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
 
-
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
 	 * 
@@ -805,11 +827,12 @@ public class GameClient {
 					Messages.PAY_RENT);
 			sendNetMessageToGUI(msg);
 		}
-		
-		
-		String propertyName =prop.getName();
+
+		String propertyName = prop.getName();
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("paidRentOn")+" "+ propertyName+" "+ rb.getString("to")+" "+ owner +" "+rb.getString("for")+" "+amount;
+		String eventText = playerName + " " + rb.getString("paidRentOn") + " "
+				+ propertyName + " " + rb.getString("to") + " " + owner + " "
+				+ rb.getString("for") + " " + amount;
 		sendEventInformationToGUI(eventText);
 
 	}
@@ -833,13 +856,12 @@ public class GameClient {
 						Messages.PAY_FEE);
 				sendNetMessageToGUI(msg);
 			}
-			
 
 			String playerName = currentPlayer.getName();
-			String eventText = playerName +" "+ rb.getString("paidFeeOf")+" " +fee +" "+rb.getString("intoFreeParking");
+			String eventText = playerName + " " + rb.getString("paidFeeOf")
+					+ " " + fee + " " + rb.getString("intoFreeParking");
 			sendEventInformationToGUI(eventText);
-			
-			
+
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
@@ -867,11 +889,12 @@ public class GameClient {
 					Messages.PAY_UTILITY_FEE);
 			sendNetMessageToGUI(msg);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("paidUtilityFeeOf")+" " +fee +" "+rb.getString("to") + " "+ owner;
+		String eventText = playerName + " " + rb.getString("paidUtilityFeeOf")
+				+ " " + fee + " " + rb.getString("to") + " " + owner;
 		sendEventInformationToGUI(eventText);
-		
+
 	}
 
 	/**
@@ -886,11 +909,11 @@ public class GameClient {
 					Messages.GO_TO_JAIL);
 			sendNetMessageToGUI(msg);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("wentToJail");
+		String eventText = playerName + " " + rb.getString("wentToJail");
 		sendEventInformationToGUI(eventText);
-		
+
 	}
 
 	/**
@@ -907,11 +930,12 @@ public class GameClient {
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("gotOutOfJailByPaying");
+		String eventText = playerName + " "
+				+ rb.getString("gotOutOfJailByPaying");
 		sendEventInformationToGUI(eventText);
-		
+
 	}
 
 	/**
@@ -924,11 +948,12 @@ public class GameClient {
 					Messages.GET_OUT_OF_JAIL_USECARD);
 			sendNetMessageToGUI(msg);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("gotOutOfJailByCard");
+		String eventText = playerName + " "
+				+ rb.getString("gotOutOfJailByCard");
 		sendEventInformationToGUI(eventText);
-		
+
 	}
 
 	/**
@@ -941,9 +966,10 @@ public class GameClient {
 					Messages.GET_OUT_OF_JAIL_ROLL);
 			sendNetMessageToGUI(msg);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("gotOutOfJailByRolling");
+		String eventText = playerName + " "
+				+ rb.getString("gotOutOfJailByRolling");
 		sendEventInformationToGUI(eventText);
 	}
 
@@ -962,9 +988,10 @@ public class GameClient {
 		} catch (TransactionException e) {
 			sendTransactionErrorToGUI(e, sendNetMessage);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("received")+" "+amount+" "+rb.getString("birthdayEvent");
+		String eventText = playerName + " " + rb.getString("received") + " "
+				+ amount + " " + rb.getString("birthdayEvent");
 		sendEventInformationToGUI(eventText);
 	}
 
@@ -987,9 +1014,10 @@ public class GameClient {
 					Messages.WIN_JAIL_CARD);
 			sendNetMessageToGUI(msg);
 		}
-		
+
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("received") +" "+rb.getString("aJailCard") ;
+		String eventText = playerName + " " + rb.getString("received") + " "
+				+ rb.getString("aJailCard");
 		sendEventInformationToGUI(eventText);
 	}
 
@@ -997,14 +1025,16 @@ public class GameClient {
 	 * the current player gets all the money in the free parking account
 	 */
 	public void freeParking(boolean sendNetMessage) {
-		int amount= board.freeParking(currentPlayer.getName());
+		int amount = board.freeParking(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.FREE_PARKING);
 			sendNetMessageToGUI(msg);
 		}
 		String playerName = currentPlayer.getName();
-		String eventText = playerName +" "+ rb.getString("received") +" "+amount+" "+rb.getString("from")+" "+rb.getString("freeParking") ;
+		String eventText = playerName + " " + rb.getString("received") + " "
+				+ amount + " " + rb.getString("from") + " "
+				+ rb.getString("freeParking");
 		sendEventInformationToGUI(eventText);
 	}
 
@@ -1149,13 +1179,15 @@ public class GameClient {
 	}
 
 	/**
-	 * send information about the event that was completed to the GUI to be displayed 
+	 * send information about the event that was completed to the GUI to be
+	 * displayed
 	 */
-	public void sendEventInformationToGUI(String eventInfo){
-	WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_EVENT_INFO, eventInfo, 0);
-	ws.notifyListeners(wse);
+	public void sendEventInformationToGUI(String eventInfo) {
+		WindowStateEvent wse = new WindowStateEvent(
+				WindowMessage.MSG_FOR_EVENT_INFO, eventInfo, 0);
+		ws.notifyListeners(wse);
 	}
-	
+
 	/**
 	 * send a trade request to a player
 	 */
@@ -1196,7 +1228,8 @@ public class GameClient {
 				System.out
 						.println("gameClient received TRADE ANSWER:" + answer);
 				performTrade(tradeEvent);
-				NetMessage nm = new NetMessage("NULLLLLL", tradeEvent, Messages.PERFORM_TRADE);
+				NetMessage nm = new NetMessage("NULLLLLL", tradeEvent,
+						Messages.PERFORM_TRADE);
 				nc.sendMessage(nm);
 
 				System.out.println("gameClient: performTrade() completed");
@@ -1224,14 +1257,14 @@ public class GameClient {
 		if (tie.getMoneyOffer() > 0) {
 			System.out.println("gameClient.performTrade() moneyOffer:"
 					+ tie.getMoneyOffer());
-			transferMoney(sourcePlayer, otherPlayer,
-					tie.getMoneyOffer(), sendNetMessage);
+			transferMoney(sourcePlayer, otherPlayer, tie.getMoneyOffer(),
+					sendNetMessage);
 		}
 		if (tie.getMoneyDemand() > 0) {
 			System.out.println("gameClient.performTrade() moneyDemand:"
 					+ tie.getMoneyDemand());
-			transferMoney(otherPlayer, sourcePlayer,
-					tie.getMoneyDemand(), sendNetMessage);
+			transferMoney(otherPlayer, sourcePlayer, tie.getMoneyDemand(),
+					sendNetMessage);
 		}
 		if (tie.getPropertiesOffer() != null) {
 			System.out.println("gameClient.performTrade() PropertiesOffer:"
@@ -1393,13 +1426,19 @@ public class GameClient {
 		ws.notifyListeners(wse);
 	}
 
+	public void localPlayerCanCallMethods() {
+		if (!localPlayer.equals(currentPlayer.getName())) {
+			TransactionException te = new TransactionException(
+					rb.getString("waitYourTurn"));
+			sendTransactionErrorToGUI(te, false);
+		}
+	}
 
-	public PlayerSubject getSubjectForPlayer(){
+	public PlayerSubject getSubjectForPlayer() {
 		return board.getSubjectForPlayer();
 	}
-	
-	
-	public int getBail(){
+
+	public int getBail() {
 		return board.getBail();
 	}
 

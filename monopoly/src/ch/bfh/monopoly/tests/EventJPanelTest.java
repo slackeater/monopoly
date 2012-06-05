@@ -30,7 +30,8 @@ public class EventJPanelTest extends JFrame {
 		board = tig.getBoard();
 		gc = tig.getGc();
 
-		goToTile(12, owned);
+		int tileId=19;
+		goToTile(tileId, !owned);
 
 //		 testBothUtilitiesOwned();
 
@@ -38,14 +39,14 @@ public class EventJPanelTest extends JFrame {
 		 
 //		 this player does not own the properties
 		 gameClient.setCurrentPlayer("giuseppe", sendNetMessage);
-		 gameClient.advancePlayerToTile(12, sendNetMessage);
+		 gameClient.advancePlayerToTile(tileId, sendNetMessage);
 		 Player plyr2 = board.getPlayerByName("giuseppe");
-		 try {
-			plyr2.withdawMoney(plyr2.getAccount()-30);
-		} catch (TransactionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		 try {
+//			plyr2.withdawMoney(plyr2.getAccount()-30);
+//		} catch (TransactionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 //		 
 		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
