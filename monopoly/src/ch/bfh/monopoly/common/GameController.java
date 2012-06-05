@@ -15,7 +15,6 @@ public class GameController {
 	GameClient gameClient;
 
 	public GameController(GameClient gameClient) {
-		gameClient.localPlayerCanCallMethods();
 		this.gameClient = gameClient;
 	}
 
