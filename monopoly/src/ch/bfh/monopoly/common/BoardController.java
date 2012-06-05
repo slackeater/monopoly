@@ -23,6 +23,10 @@ public class BoardController {
 		return board.getSubjectForPlayer();
 	}
 	
+	public PlayerSubject getSubjectForMovement(){
+		return board.getSubjectForMovement();
+	}
+	
 	/**
 	 * gets the number of players that are participating in this game
 	 * @return int number of players in game

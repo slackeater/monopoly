@@ -280,7 +280,6 @@ public class Dice implements EventPanelSource {
 			public void actionPerformed(ActionEvent e) {
 				gameClient.getOutOfJailByPayment(testOff);
 				epf.changePanel(Step.JAIL_PAY);
-				gameClient.sendTransactionSuccesToGUI(testOff);
 			}
 		};
 
@@ -290,7 +289,6 @@ public class Dice implements EventPanelSource {
 			public void actionPerformed(ActionEvent e) {
 				gameClient.getOutOfJailByCard(testOff);
 				epf.changePanel(Step.JAIL_CARD);
-				gameClient.sendTransactionSuccesToGUI(testOff);
 			}
 		};
 
@@ -317,96 +315,5 @@ public class Dice implements EventPanelSource {
 		return epi;
 	}
 
-	public JPanel getJailStartTurnPanel(boolean freed) {
-		jpanel = new EventPanelFactory().getJPanel();
-		attemptedRolls = 0;
-		al = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				attemptedRolls++;
-				jailRollSecondStep();
-				System.out.println("attempted Rolls: " + attemptedRolls);
-			}
-		};
-
-		ActionListener pay = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameClient.getOutOfJailByPayment(testOff);
-				gameClient.sendTransactionSuccesToGUI(testOff);
-			}
-		};
-
-		ActionListener card = new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameClient.getOutOfJailByCard(testOff);
-				gameClient.sendTransactionSuccesToGUI(testOff);
-			}
-		};
-		JButton buttonPay = new JButton(rb.getString("pay"));
-		buttonPay.addActionListener(pay);
-		JButton buttonCard = new JButton(rb.getString("card"));
-		buttonCard.addActionListener(card);
-		buttonRight.setText("Roll");
-		buttonRight.addActionListener(al);
-
-		descriptionLabel.setText(rb.getString("inJail"));
-
-		JPanel buttonPanel = new JPanel();
-
-		buttonPanel.add(buttonPay);
-		buttonPanel.add(buttonCard);
-		buttonPanel.add(buttonRight);
-
-		jpanel.add(descriptionLabel, BorderLayout.NORTH);
-		jpanel.add(buttonPanel, BorderLayout.SOUTH);
-		return jpanel;
-	}
-
-	public void jailRollSecondStep() {
-		buttonRight.setText("ok");
-		final int roll = throwDice();
-		if (isDoubles()) {
-			descriptionLabel.setText(rb.getString("youRolled")
-					+ getDiceValues() + rb.getString("outOfJail"));
-			buttonRight.removeActionListener(al);
-			al = new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					System.out.println("JailStatus:"
-							+ gameClient.getCurrentPlayer().isInJail());
-					gameClient.getOutOfJailByRoll(testOff);
-					gameClient.sendTransactionSuccesToGUI(testOff);
-					System.out.println("JailStatus:"
-							+ gameClient.getCurrentPlayer().isInJail());
-					buttonRight.removeActionListener(al);
-					jpanel = gameClient.getStartTurnPanel(testOff);
-				}
-			};
-			buttonRight.addActionListener(al);
-		} else {
-			if (attemptedRolls > 2)
-				rolledUnsuccessfully();
-			descriptionLabel.setText(rb.getString("youRolled")
-					+ getDiceValues() + " " + rb.getString("rollAgain") + " "
-					+ (3 - attemptedRolls) + " "
-					+ rb.getString("triesRemaining"));
-
-		}
-	}
-
-	public void rolledUnsuccessfully() {
-		jpanel.remove(buttonRight);
-		jpanel.add(new JLabel("rolledUnsuccessfully"), BorderLayout.CENTER);
-		descriptionLabel.setText(rb.getString("youRolled") + getDiceValues()
-				+ " " + (3 - attemptedRolls) + " "
-				+ rb.getString("triesRemaining") + rb.getString("stayJail"));
-		gameClient.sendTransactionSuccesToGUI(testOff);
-	}
 
 }

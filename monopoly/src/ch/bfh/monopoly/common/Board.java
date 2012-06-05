@@ -27,7 +27,7 @@ public class Board {
 	private TileSubject[] tileSubjects;
 	private Token[] tokens = new Token[8];
 	private int freeParking = 500;
-	private PlayerSubject playerSubject;
+	private PlayerSubject playerSubject,movementSubject;
 	private final int goMoney, bail;
 	private boolean testOff;
 	private ResourceBundle rb;
@@ -88,6 +88,10 @@ public class Board {
 	public PlayerSubject getSubjectForPlayer() {
 		return playerSubject;
 	}
+	
+	public PlayerSubject getSubjectForMovement(){
+		return movementSubject;
+	}
 
 	/**
 	 * inner class responsible for registering listeners from the GUI and
@@ -145,6 +149,7 @@ public class Board {
 		availableHotels = 12;
 		tileSubjects = new TileSubject[40];
 		playerSubject = new ConcretePlayerSubject();
+		movementSubject = new ConcretePlayerSubject();
 		createTileSubjects();
 
 		// token initialization
@@ -928,7 +933,7 @@ public class Board {
 		if (newPosition < previousPosition)
 			passGo(plyr);
 
-		playerSubject.notifyListeners();
+		movementSubject.notifyListeners();
 		plyr.resetRollValue();
 	}
 
@@ -1073,6 +1078,7 @@ public class Board {
 
 	public void initGUI() {
 		playerSubject.notifyListeners();
+		movementSubject.notifyListeners();	
 	}
 
 }

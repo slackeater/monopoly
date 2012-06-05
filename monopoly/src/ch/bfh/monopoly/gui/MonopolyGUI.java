@@ -343,7 +343,7 @@ public class MonopolyGUI extends JFrame {
 
 		//add the listener to the subject
 		TokenDraw td = new TokenDraw();
-		bc.getSubjectForPlayer().addListener(td);
+		bc.getSubjectForMovement().addListener(td);
 
 		/**
 		 * This inner class represent the implementation
