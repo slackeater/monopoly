@@ -62,6 +62,7 @@ public class BoardTile extends JPanel{
 	
 	private boolean mortgageClicked = false;
 	private boolean unmortgageClicked = false;
+	private boolean sellHotelClicked = false;
 
 	//used to update the tile
 	private InformationUpdate iu = new InformationUpdate();
@@ -485,6 +486,7 @@ public class BoardTile extends JPanel{
 
 			mortgageClicked = false;
 			unmortgageClicked = false;
+			sellHotelClicked = false;
 			
 			if(e.getSource().equals(buyHouse)){
 				gc.buyHouse(ti.getTileId());
@@ -502,6 +504,7 @@ public class BoardTile extends JPanel{
 				gc.sellHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotel)){
+				sellHotelClicked = true;
 				gc.sellHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouseRow)){
@@ -529,6 +532,8 @@ public class BoardTile extends JPanel{
 	 * @author snake, shrevek
 	 */
 	private class InformationUpdate implements TileListener{
+	
+
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 
@@ -552,14 +557,14 @@ public class BoardTile extends JPanel{
 				removeBuilding(true);
 			}
 			
-			if(!tsi.isMortgageActive() && mortgageClicked){
+			if(tsi.isMortgageActive() && mortgageClicked){
 				System.out.println("============== INSIDE INFORMATION UPDATE MORTGAGE");
 				mortgage.setEnabled(false);
 				unmortgage.setEnabled(true);
 				mortgagePanel();
 			}
 			
-			if(tsi.isMortgageActive() && unmortgageClicked){
+			if(!tsi.isMortgageActive() && unmortgageClicked){
 				System.out.println("============== INSIDE INFORMATION UPDATE UNMORTGAGE");
 				unmortgage.setEnabled(false);
 				mortgage.setEnabled(true);
