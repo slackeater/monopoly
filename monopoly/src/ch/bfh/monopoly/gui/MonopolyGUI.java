@@ -314,21 +314,17 @@ public class MonopolyGUI extends JFrame {
 						if(singlePlayer.hasTurnToken()){
 							System.out.println("-----====----- THE PLAYER WITH THE TOKEN INSIDE THE ANIMATION IS : "  + singlePlayer.getName());
 
-							if(throwValue > 1 && throwValue < 13){
-								//if we are the local player enable/disable the buttons
-								if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
-									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, singlePlayer.getDir()));
-
-
-								}
-								else{
-									System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
-									timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition,singlePlayer.getDir()));
-								}
-
-								timerAnimation.start();
+							//if we are the local player enable/disable the buttons
+							if(singlePlayer.getName().equals(gc.getLocalPlayerName())){
+								System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
+								timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(throwDice, t, throwValue, previousPosition, singlePlayer.getDir()));
 							}
+							else{
+								System.out.println("STARTING THE ANIMATION FOR PLAYER: " + singlePlayer.getName());
+								timerAnimation = new Timer(DICE_MOVEMENT_DELAY, moveToken(null, t, throwValue, previousPosition,singlePlayer.getDir()));
+							}
+
+							timerAnimation.start();
 						}
 
 					}
@@ -356,9 +352,9 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updateWindow(WindowStateEvent wse) {
-				
+
 				System.out.println(" =========================================== MESSAGE TYPE  :" + wse.getType());
-				
+
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
 					tabPane.setSelectedIndex(0);
 					eventTextArea.append(wse.getEventDescription()+"\n");
@@ -809,7 +805,7 @@ public class MonopolyGUI extends JFrame {
 				int moneyCheckValue = -1; 
 				int hisJailCard = 0;
 				int hisMoneyCheckValue = -1;
-								
+
 				String to = pse.get(selectedPlayerIndex).getName();
 
 				System.out.println("== SELECTED INDEX :" + selectedPlayerIndex);
