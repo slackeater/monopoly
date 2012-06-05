@@ -200,7 +200,7 @@ public class GameClient {
 					board.getTileById(currentPlayer.getPosition())).getName();
 			int price = board.castTileToProperty(
 					board.getTileById(currentPlayer.getPosition())).getPrice();
-			String eventText = playerName + " " + rb.getString("boughtTheProp")
+			String eventText = playerNameAdjusted + " " + rb.getString("boughtTheProp")
 					+ " " + propertyName + " " + rb.getString("for") + " "
 					+ price;
 			sendEventInformationToGUI(eventText);

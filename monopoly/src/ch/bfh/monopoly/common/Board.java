@@ -535,7 +535,7 @@ public class Board {
 		int amount;
 		if (prop.isMortgageActive()) {
 			// try to withdraw the sum required to unmortgage the property
-			amount = prop.getPrice() / 10;
+			amount = (prop.getMortgageValue() / 10) + prop.getMortgageValue();
 			playerHasSufficientFunds(playerName, amount);
 			prop.getOwner().withdawMoney(amount);
 			prop.setMortgageActive(false);
