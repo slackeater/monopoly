@@ -24,7 +24,6 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("incomeTax-cardText");
 		this.fee=fee;
-		epf = new EventPanelFactory(this);
 	}
 
 	
@@ -38,17 +37,12 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo();
-
-
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			final int amount = Integer.parseInt(rb.getString("tile4-rent"));
-			
 			ActionListener tenPercent = new ActionListener() {
-
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payIncome10Percent(sendNetMessage);
-					buttonLeft.setEnabled(false);
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					epf.disableAfterClick();
 				}
@@ -59,21 +53,19 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payFee(amount, sendNetMessage);
-					buttonRight.setEnabled(false);
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					epf.disableAfterClick();
 				}
 			};
 			
 			epi.setText(description);
-			epi.addButtonText("10%");
-			epi.addButtonText(String.valueOf(amount));
-			epi.addActionListener(tenPercent);
-			epi.addActionListener(payFlat);
+			
+			epi.addButton("10%", 0, tenPercent);
+			epi.addButton(String.valueOf(amount), 0, tenPercent);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -83,8 +75,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -93,6 +84,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 	
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

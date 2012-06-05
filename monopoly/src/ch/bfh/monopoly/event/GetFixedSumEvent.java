@@ -19,8 +19,6 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 			GameClient gameClient) {
 		super(name, eventDescription, gameClient);
 		this.fixedSum=fixedSum;
-		epf = new EventPanelFactory(this);
-		
 	}
 
 	@Override
@@ -41,7 +39,8 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			buttonText = "ok";
 			al =new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -51,12 +50,11 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 				}
 			};
 			epi.setText(eventDescription);
-			epi.addButtonText("ok");
-			epi.addActionListener(al);
+			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -66,8 +64,7 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -76,6 +73,7 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 	
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

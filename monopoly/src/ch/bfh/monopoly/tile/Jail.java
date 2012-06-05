@@ -15,14 +15,14 @@ public class Jail extends AbstractTile implements EventPanelSource {
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
 			"ch.bfh.monopoly.resources.tile", gameClient.getLoc());;
-	String description;
+	String description, description2;
 	EventPanelFactory epf;
 
 	public Jail(String name, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("jail-cardText");
-		epf = new EventPanelFactory(this);
+		this.description2= rb.getString("jail-cardText2");
 	}
 
 
@@ -35,7 +35,8 @@ public class Jail extends AbstractTile implements EventPanelSource {
 
 		switch (step) {
 		case GET_EVENT:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			buttonText="ok";
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -49,12 +50,11 @@ public class Jail extends AbstractTile implements EventPanelSource {
 				}
 			};
 			epi.setText(description);
-			epi.addButtonText("ok");
-			epi.addActionListener(al);
+			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -64,8 +64,7 @@ public class Jail extends AbstractTile implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -73,6 +72,7 @@ public class Jail extends AbstractTile implements EventPanelSource {
 
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

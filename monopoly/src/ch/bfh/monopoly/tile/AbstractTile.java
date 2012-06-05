@@ -1,14 +1,5 @@
 package ch.bfh.monopoly.tile;
 
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.EventManager;
 import ch.bfh.monopoly.event.BoardEvent;
@@ -24,10 +15,6 @@ public abstract class AbstractTile implements Tile{
 	protected EventManager em;
 	protected boolean sendNetMessage = true;
 	protected GameClient gameClient;
-	protected JPanel jpanel;
-	protected JButton buttonRight = new JButton();
-	protected JButton buttonLeft = new JButton();
-	protected JTextArea eventInfoLabel = new JTextArea();
 	
 	public AbstractTile(String name, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
@@ -37,7 +24,7 @@ public abstract class AbstractTile implements Tile{
 		this.tileId = tileId;
 		this.em = em;
 		this.gameClient = gameClient;
-		jpanel=(new EventPanelFactory()).getOldJPanel();
+
 	}
 
 	/**

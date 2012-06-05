@@ -25,7 +25,6 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("goToJail-cardText");
-		epf = new EventPanelFactory(this);
 	}
 
 	/**
@@ -41,7 +40,8 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			buttonText="ok";
 			al =new ActionListener() {
 
 				@Override
@@ -57,12 +57,11 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 				}
 			};
 			epi.setText(description);
-			epi.addButtonText("ok");
-			epi.addActionListener(al);
+			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -72,8 +71,7 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -82,6 +80,7 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 	
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

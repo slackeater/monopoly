@@ -43,7 +43,6 @@ public class Terrain extends Property implements EventPanelSource {
 		mortgageActive = false;
 		hotelCount = 0;
 		houseCount = 0;
-		epf = new EventPanelFactory(this);
 	}
 
 	public String toString() {
@@ -59,15 +58,18 @@ public class Terrain extends Property implements EventPanelSource {
 	 * get the JPanel to show in the GUI for this tile's event
 	 */
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		boolean owned = !(owner.getName() == "bank");
 		if (owned) {
-			epf.changePanel(Step.TILE_OWNED);
+			if (gameClient.getCurrentPlayer().getName().equals(owner.getName()))
+				epf.changePanel(Step.TILE_OWNED_BY_YOU);
+			else
+				epf.changePanel(Step.TILE_OWNED);
 			return epf.getJPanel();
 		} else
 			epf.changePanel(Step.TILE_NOT_OWNED);
-			return epf.getJPanel();
+		return epf.getJPanel();
 	}
-
 
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
@@ -77,19 +79,17 @@ public class Terrain extends Property implements EventPanelSource {
 
 		switch (step) {
 		case TILE_NOT_OWNED:
-			epi= super.getTileNotOwnedEPI(epf);
+			epi = super.getTileNotOwnedEPI(epf);
 			break;
 		case TILE_NOT_OWNED2:
-			epi =super.getTileNotOwnedEPI2(epf);
+			epi = super.getTileNotOwnedEPI2(epf);
 			break;
 		case TILE_OWNED:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payRent(sendNetMessage);
-					// buttonRight.setEnabled(false);
-					eventInfoLabel.setText(thankYouRent);
 					System.out.println("The owner's bank account balance: "
 							+ owner.getAccount());
 					System.out.println("The buyer's bank account balance: "
@@ -98,11 +98,10 @@ public class Terrain extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(getPayRentText(feeToCharge()));
-			epi.addButtonText(buttonTextPay);
-			epi.addActionListener(al);
+			epi.addButton(buttonTextPay, 0, al);
 			break;
 		case TILE_OWNED2:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -110,12 +109,14 @@ public class Terrain extends Property implements EventPanelSource {
 					epf.disableAfterClick();
 				}
 			};
-			epi.setText(this.thankYouRent);
-			epi.addButtonText(buttonTextContinue);
-			epi.addActionListener(al);
+			epi.setText(thankYouRent);
+			epi.addButton(buttonTextContinue, 0, al);
+			break;
+		case TILE_OWNED_BY_YOU:
+			epi = super.getTileOwnedByYouEPI(epf);
 			break;
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -125,13 +126,12 @@ public class Terrain extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
 	}
-	
+
 	public void buildHouse() {
 		houseCount++;
 	}

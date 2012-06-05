@@ -29,16 +29,13 @@ public class Dice implements EventPanelSource {
 	int maxValDiceTwo;
 	int throwValueOne = 0;
 	int throwValueTwo = 0;
-	JPanel jpanel;
-	JButton buttonRight = new JButton();
-	JTextArea descriptionLabel = new JTextArea();
 	GameClient gameClient;
 	ActionListener al;
 	boolean testOff;
 	int attemptedRolls = 0;
 	boolean doublesLastRoll = false;
 	ResourceBundle rb;
-	EventPanelFactory epf = new EventPanelFactory(this);
+	EventPanelFactory epf;
 
 	/**
 	 * Construct a dice object
@@ -69,7 +66,6 @@ public class Dice implements EventPanelSource {
 		this.maxValDiceTwo = maxValDiceTwo;
 		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
 				gameClient.getLoc());
-		jpanel = (new EventPanelFactory()).getJPanel();
 	}
 
 	/**
@@ -104,12 +100,14 @@ public class Dice implements EventPanelSource {
 	}
 
 	public JPanel getNewStartRoll() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		attemptedRolls = 0;
 		epf.changePanel(Step.ROLL_NORMAL);
 		return epf.getJPanel();
 	}
 
 	public JPanel getNewJailStart() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		attemptedRolls = 0;
 		epf.changePanel(Step.JAIL_START);
 		return epf.getJPanel();
@@ -141,13 +139,13 @@ public class Dice implements EventPanelSource {
 			epi = getFreedFromJailEPI();
 			break;
 		case JAIL_ROLL:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 
 			final int rollValue = throwDice();
 			if (isDoubles()) {
 				labelText = rb.getString("youRolled") + " " + getDiceValues()
 						+ " " + rb.getString("outOfJail");
-				buttonText = "ok";
+				buttonText = rb.getString("roll");
 				al = new ActionListener() {
 
 					@Override
@@ -160,9 +158,9 @@ public class Dice implements EventPanelSource {
 						epf.changePanel(Step.ROLL_NORMAL);
 					}
 				};
+				
 				epi.setText(labelText);
-				epi.addActionListener(al);
-				epi.addButtonText(buttonText);
+				epi.addButton(buttonText, 0, al);
 			} else {
 				if (attemptedRolls > 2)
 					epi = rollFailureEPI();
@@ -175,7 +173,7 @@ public class Dice implements EventPanelSource {
 			epi= getFreedFromJailEPI();
 			break;
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -184,8 +182,7 @@ public class Dice implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -195,9 +192,8 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo();
+		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 
-		epi = new EventPanelInfo();
 		labelText = rb.getString("rollFailure");
 
 		buttonText = "ok";
@@ -209,8 +205,7 @@ public class Dice implements EventPanelSource {
 			}
 		};
 		epi.setText(labelText);
-		epi.addActionListener(al);
-		epi.addButtonText(buttonText);
+		epi.addButton(buttonText, 0, al);
 		return epi;
 	}
 
@@ -218,7 +213,7 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo();
+		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 		
 		final int roll = throwDice();
 		System.out.println("DICE CLASS rolled: " + roll);
@@ -230,7 +225,6 @@ public class Dice implements EventPanelSource {
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buttonRight.setEnabled(false);
 				int prevPos = gameClient.getCurrentPlayer().getPosition();
 				gameClient.advancePlayerNSpaces(roll, testOff);
 				// gameClient.sendTransactionSuccesToGUI(true);
@@ -240,8 +234,7 @@ public class Dice implements EventPanelSource {
 			}
 		};
 		epi.setText(labelText);
-		epi.addActionListener(al);
-		epi.addButtonText(buttonText);
+		epi.addButton(buttonText, 0, al);
 		return epi;
 	}
 
@@ -249,7 +242,7 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo();
+		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 
 		buttonText = rb.getString("roll");
 		al = new ActionListener() {
@@ -259,15 +252,14 @@ public class Dice implements EventPanelSource {
 			}
 		};
 		epi.setText(rb.getString("freed"));
-		epi.addActionListener(al);
-		epi.addButtonText(buttonText);
+		epi.addButton(buttonText, 0, al);
 		return epi;
 	}
 
 	public EventPanelInfo getJailStartEPI() {
 		String labelText;
 
-		EventPanelInfo epi = new EventPanelInfo();
+		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 		if (attemptedRolls > 0) {
 			labelText = rb.getString("youRolled") + getDiceValues() + " "
 					+ rb.getString("rollAgain") + " " + (3 - attemptedRolls)
@@ -275,10 +267,12 @@ public class Dice implements EventPanelSource {
 		} else
 			labelText = rb.getString("inJail");
 
+		int bail = gameClient.getBail();
 		ActionListener pay = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameClient.getOutOfJailByPayment(testOff);
+				
 				epf.changePanel(Step.JAIL_PAY);
 			}
 		};
@@ -301,17 +295,14 @@ public class Dice implements EventPanelSource {
 			}
 		};
 
-		String buttonTextPay = rb.getString("pay");
+		String buttonTextPay = rb.getString("pay") + " " + bail;
 		String buttonTextCard = rb.getString("card");
 		String buttonTextRoll = rb.getString("roll");
 
 		epi.setText(labelText);
-		epi.addActionListener(pay);
-		epi.addActionListener(card);
-		epi.addActionListener(rollJail);
-		epi.addButtonText(buttonTextPay);
-		epi.addButtonText(buttonTextCard);
-		epi.addButtonText(buttonTextRoll);
+		epi.addButton(buttonTextPay, bail, pay);
+		epi.addButton(buttonTextCard, -100, card);
+		epi.addButton(buttonTextRoll, 0, rollJail);
 		return epi;
 	}
 

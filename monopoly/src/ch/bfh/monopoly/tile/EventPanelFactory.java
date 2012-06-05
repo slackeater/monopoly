@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,31 +19,38 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import ch.bfh.monopoly.common.Monopoly;
+import ch.bfh.monopoly.gui.MonopolyGUI;
+import ch.bfh.monopoly.observer.PlayerListener;
+import ch.bfh.monopoly.observer.PlayerStateEvent;
+import ch.bfh.monopoly.observer.PlayerSubject;
 
-public class EventPanelFactory {
+public class EventPanelFactory  implements PlayerListener{
 	JPanel master, buttonPanel;
 	JTextPane label;
 	EventPanelSource eps;
+	EventPanelInfo epi;
+	ArrayList<JButton> buyButtons = new ArrayList<JButton>();
+	
 
-	public EventPanelFactory() {
 
-	}
+	
 
-	public JPanel getOldJPanel() {
-		JPanel jpanel = new JPanel();
-		jpanel.setSize(100, 100);
-		jpanel.setLayout(new BorderLayout());
-		return jpanel;
-
-	}
-
-	public EventPanelFactory(EventPanelSource eps) {
+//	public EventPanelFactory(EventPanelSource eps) {
+//		master = createMasterPanel();
+//		buttonPanel = new JPanel();
+//		label = new JTextPane();
+//
+//		this.eps = eps;
+//	}
+	
+	public EventPanelFactory(EventPanelSource eps, PlayerSubject ps) {
 		master = createMasterPanel();
 		buttonPanel = new JPanel();
 		label = new JTextPane();
 		// label.setWrapStyleWord(true);
 		// label.setLineWrap(true);
 		// label.setHorizontalAlignment( SwingConstants.CENTER );
+		ps.addListener(this);
 		this.eps = eps;
 	}
 
@@ -61,7 +69,7 @@ public class EventPanelFactory {
 	public void changePanel(Step step) {
 		JPanel newButtonPanel = new JPanel();
 
-		EventPanelInfo epi = eps.getEventPanelInfoForStep(step);
+		epi = eps.getEventPanelInfoForStep(step);
 		label.setText("\n\n"+epi.getText());
 
 		// format the text
@@ -76,9 +84,7 @@ public class EventPanelFactory {
 
 		int buttonCount = epi.getButtonCount();
 		for (int i = 0; i < buttonCount; i++) {
-			JButton button = new JButton();
-			button.setText(epi.getButtonTextAtIndex(i));
-			button.addActionListener(epi.getButtonActionAtIndex(i));
+			JButton button =epi.getButtonAtIndex(i);
 			newButtonPanel.add(button);
 		}
 		master.remove(buttonPanel);
@@ -102,6 +108,16 @@ public class EventPanelFactory {
 		JLabel imgLab = new JLabel(logo);
 		img.add(imgLab);
 		return img;
+	}
+
+	
+	@Override
+	public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
+		System.out.println("EVENT PANEL FACTORY GOT OBSERVER SIGNAL");
+		for (JButton b: buyButtons){
+			b.setEnabled(false);
+		}
+		
 	}
 
 }

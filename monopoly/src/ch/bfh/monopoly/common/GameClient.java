@@ -13,6 +13,7 @@ import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.net.Messages;
 import ch.bfh.monopoly.net.NetMessage;
+import ch.bfh.monopoly.observer.PlayerSubject;
 import ch.bfh.monopoly.observer.TradeInfoEvent;
 import ch.bfh.monopoly.observer.WindowListener;
 import ch.bfh.monopoly.observer.WindowMessage;
@@ -625,12 +626,12 @@ public class GameClient {
 	 * @param fee
 	 *            the amount of the fee to be paid
 	 * @throws TransactionException
-	 * @throws RuntimeException
 	 */
-	public void hasSufficientFunds(int fee) throws RuntimeException,
+	public void hasSufficientFundsThrowsError(int fee) throws RuntimeException,
 			TransactionException {
 		board.playerHasSufficientFunds(currentPlayer.getName(), fee);
 	}
+
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
@@ -1047,7 +1048,6 @@ public class GameClient {
 	 */
 	public void performTrade(TradeInfoEvent tie) {
 		boolean sendNetMessage = false;
-		boolean sleep = false;
 		System.out.println("performing trade");
 		String sourcePlayer = tie.getSourcePlayer();
 		String otherPlayer = tie.getOtherPlayer();
@@ -1056,16 +1056,12 @@ public class GameClient {
 					+ tie.getMoneyOffer());
 			transferMoney(sourcePlayer, otherPlayer,
 					tie.getMoneyOffer(), sendNetMessage);
-			if (sleep)
-				sleep();
 		}
 		if (tie.getMoneyDemand() > 0) {
 			System.out.println("gameClient.performTrade() moneyDemand:"
 					+ tie.getMoneyDemand());
 			transferMoney(otherPlayer, sourcePlayer,
 					tie.getMoneyDemand(), sendNetMessage);
-			if (sleep)
-				sleep();
 		}
 		if (tie.getPropertiesOffer() != null) {
 			System.out.println("gameClient.performTrade() PropertiesOffer:"
@@ -1075,8 +1071,6 @@ public class GameClient {
 				transferProperty(sourcePlayer, otherPlayer, tileId, 0,
 						sendNetMessage);
 			}
-			if (sleep)
-				sleep();
 		}
 		if (tie.getPropertiesDemand() != null) {
 			System.out.println("gameClient.performTrade() PropertiesDemand:"
@@ -1086,24 +1080,18 @@ public class GameClient {
 				transferProperty(otherPlayer, sourcePlayer, tileId, 0,
 						sendNetMessage);
 			}
-			if (sleep)
-				sleep();
 		}
 		if (tie.getJailcardOffer() > 0) {
 			System.out.println("gameClient.performTrade() JailcardOffer:"
 					+ tie.getJailcardOffer());
 			transferJailCards(sourcePlayer, otherPlayer,
 					tie.getJailcardOffer(), 0, sendNetMessage);
-			if (sleep)
-				sleep();
 		}
 		if (tie.getJailcardDemand() > 0) {
 			System.out.println("gameClient.performTrade() JailcardDemand:"
 					+ tie.getJailcardDemand());
 			transferJailCards(otherPlayer, sourcePlayer,
 					tie.getJailcardDemand(), 0, sendNetMessage);
-			if (sleep)
-				sleep();
 		}
 	}
 
@@ -1235,13 +1223,13 @@ public class GameClient {
 		ws.notifyListeners(wse);
 	}
 
-	private void sleep() {
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+	public PlayerSubject getSubjectForPlayer(){
+		return board.getSubjectForPlayer();
+	}
+	
+	public int getBail(){
+		return board.getBail();
 	}
 
 }

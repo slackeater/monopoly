@@ -21,7 +21,6 @@ public class Railroad extends Property implements EventPanelSource {
 		super(name, price, group, mortgageValue, coordX, coordY, tileId, em,
 				bank, gameClient, rb);
 		this.rent = rent;
-		epf = new EventPanelFactory(this);
 	}
 
 	// calculates the fee to charge by checking how many RRs are owned by the
@@ -43,9 +42,13 @@ public class Railroad extends Property implements EventPanelSource {
 	 * get the JPanel to show in the GUI for this tile's event
 	 */
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		boolean owned = !(owner.getName() == "bank");
 		if (owned) {
-			epf.changePanel(Step.TILE_OWNED);
+			if (gameClient.getCurrentPlayer().getName().equals(owner.getName()))
+				epf.changePanel(Step.TILE_OWNED_BY_YOU);
+			else
+				epf.changePanel(Step.TILE_OWNED);
 			return epf.getJPanel();
 		} else
 			epf.changePanel(Step.TILE_NOT_OWNED);
@@ -66,7 +69,7 @@ public class Railroad extends Property implements EventPanelSource {
 			epi = super.getTileNotOwnedEPI2(epf);
 			break;
 		case TILE_OWNED:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -76,11 +79,10 @@ public class Railroad extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(getPayRentText(feeToCharge()));
-			epi.addButtonText(buttonTextPay);
-			epi.addActionListener(al);
+			epi.addButton(buttonTextPay, 0, al);
 			break;
 		case TILE_OWNED2:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -89,11 +91,13 @@ public class Railroad extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(this.thankYouRent);
-			epi.addButtonText(buttonTextContinue);
-			epi.addActionListener(al);
+			epi.addButton(buttonTextContinue, 0, al);
+			break;
+		case TILE_OWNED_BY_YOU:
+			epi = super.getTileOwnedByYouEPI(epf);
 			break;
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -103,8 +107,7 @@ public class Railroad extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
