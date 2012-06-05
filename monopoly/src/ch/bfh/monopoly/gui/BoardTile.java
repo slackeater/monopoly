@@ -533,10 +533,10 @@ public class BoardTile extends JPanel{
 			else if(tsi.getHotelsCount() == 0){
 				removeBuilding(true);
 			}
-			else if(tsi.isMortgageActive()){
+			else if(!tsi.isMortgageActive()){
 				mortgagePanel();
 			}
-			else if(!tsi.isMortgageActive()){
+			else if(tsi.isMortgageActive()){
 				unmortgagePanel();
 			}
 		}
