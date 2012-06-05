@@ -236,7 +236,7 @@ public class GameClient {
 		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
 
 
-		String eventText = playerName +" "+ rb.getString("rolledDice")+modifiedN;
+		String eventText = playerName +" "+ rb.getString("rolledDice")+" "+modifiedN;
 		sendEventInformationToGUI(eventText);
 		
 		
