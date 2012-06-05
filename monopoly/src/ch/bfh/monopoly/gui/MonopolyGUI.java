@@ -360,6 +360,7 @@ public class MonopolyGUI extends JFrame {
 				System.out.println(" =========================================== MESSAGE TYPE  :" + wse.getType());
 				
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
+					tabPane.setSelectedIndex(0);
 					eventTextArea.append(wse.getEventDescription()+"\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
@@ -380,7 +381,6 @@ public class MonopolyGUI extends JFrame {
 				else if(wse.getType() == WindowMessage.MSG_TRADE_ANSWER){
 					System.out.println("TRADE ANSWER NAME OTHER : " + wse.getTei().getOtherPlayer());
 					System.out.println("TRADE ANSWER NAME SOURCE : " + wse.getTei().getSourcePlayer());
-
 
 					tabPane.add(res.getString("label-tradeans"), tradeAnswer(wse.getAnswer()));
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
