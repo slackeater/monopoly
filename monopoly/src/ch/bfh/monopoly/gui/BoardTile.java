@@ -557,14 +557,14 @@ public class BoardTile extends JPanel{
 				removeBuilding(true);
 			}
 			
-			if(tsi.isMortgageActive() && mortgageClicked){
+			if(tsi.isMortgageActive()){
 				System.out.println("============== INSIDE INFORMATION UPDATE MORTGAGE");
 				mortgage.setEnabled(false);
 				unmortgage.setEnabled(true);
 				mortgagePanel();
 			}
 			
-			if(!tsi.isMortgageActive() && unmortgageClicked){
+			if(!tsi.isMortgageActive()){
 				System.out.println("============== INSIDE INFORMATION UPDATE UNMORTGAGE");
 				unmortgage.setEnabled(false);
 				mortgage.setEnabled(true);

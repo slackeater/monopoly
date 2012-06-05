@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -76,6 +77,8 @@ public class WelcomePanel extends JFrame{
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
 	private Dice dices;
+	
+	private JFrame f;
 
 
 
@@ -86,6 +89,7 @@ public class WelcomePanel extends JFrame{
 
 		this.strIP = "IP";
 		this.strPort = "Port";
+		this.f = this;
 
 		this.fieldSize = new Dimension(FIELD_WIDTH,FIELD_HEIGHT);
 		this.panelSize = new Dimension(PANEL_WIDTH,PANEL_HEIGHT);
@@ -196,7 +200,7 @@ public class WelcomePanel extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				throwValue = dices.throwDice();
-				info.append("The value of your throw is: " + dices.getDiceValues() + " => " + throwValue);	
+				info.append("The value of your throw is: " + dices.getDiceValues() + " => " + throwValue + "\n");	
 				generateNum.setEnabled(false);
 			}
 		});
@@ -352,15 +356,27 @@ public class WelcomePanel extends JFrame{
 					loc = new Locale(localeCode);
 
 
-					info.add(new JLabel("Starting the server on IP " + ip + 
-							" and port " + port + " with " + maxPlayers + " players...\n"));
+//					JPane jp = new JOptionPane(JOptionPane.INFORMATION_MESSAGE);
+//					JDialog container = new JDialog(f);
+//					container.setContentPane(jp);
+//					jp.add
+//					
 
 
 					//start the client and the server
 					initClient(true);
 
+					int cli = 0;
+					
 					while(true){
 						Thread.sleep(550);
+						
+						
+						
+						if((nSrvCtrl.getServerOpenedSession()-cli) == 1 && nSrvCtrl.getServerOpenedSession() > 0){
+							
+							cli++;
+						}
 
 						//when all the client are connected
 						if(nSrvCtrl.getServerOpenedSession() == maxPlayers){
