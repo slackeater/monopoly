@@ -59,6 +59,10 @@ public class BoardTile extends JPanel{
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
+	
+	private boolean mortgageClicked = false;
+	private boolean unmortgageClicked = false;
+	private boolean sellHotelClicked = false;
 
 	//used to update the tile
 	private InformationUpdate iu = new InformationUpdate();
@@ -67,6 +71,8 @@ public class BoardTile extends JPanel{
 	sellHotelRow, mortgage, unmortgage;
 
 	private JPanel color;
+
+
 
 	/**
 	 * Construct a new BoardTile
@@ -282,6 +288,7 @@ public class BoardTile extends JPanel{
 
 		unmortgage = new JMenuItem(res.getString("label-unmortgage"));
 		unmortgage.addActionListener(ac);
+		unmortgage.setEnabled(false);
 
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
@@ -423,6 +430,7 @@ public class BoardTile extends JPanel{
 	 * the initial one
 	 */
 	private void unmortgagePanel(){
+		System.out.println("UNMORTGAGIN THE PANEL");
 		color.setBackground(Color.decode(ti.getRGB()));
 
 		revalidate();
@@ -476,6 +484,10 @@ public class BoardTile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
+			mortgageClicked = false;
+			unmortgageClicked = false;
+			sellHotelClicked = false;
+			
 			if(e.getSource().equals(buyHouse)){
 				gc.buyHouse(ti.getTileId());
 			}
@@ -492,6 +504,7 @@ public class BoardTile extends JPanel{
 				gc.sellHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotel)){
+				sellHotelClicked = true;
 				gc.sellHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouseRow)){
@@ -501,10 +514,14 @@ public class BoardTile extends JPanel{
 				gc.sellHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(mortgage)){
-				System.out.println("INSIDE MORTGAGE");
+				
+				System.out.println("üüüüüüüüüüüüüüüüüüüüüüüü ==================== === === INSIDE MORTGAGE EVENT AFTER CLICK ON MENU");
+				mortgageClicked = true;
 				gc.toggleMortgageStatus(ti.getTileId());
+				
 			}
 			else if(e.getSource().equals(unmortgage)){
+				unmortgageClicked = true;
 				gc.toggleMortgageStatus(ti.getTileId());
 			}
 		}	
@@ -515,28 +532,42 @@ public class BoardTile extends JPanel{
 	 * @author snake, shrevek
 	 */
 	private class InformationUpdate implements TileListener{
+	
+
 		@Override
 		public void updateTile(TileStateEvent tsi) {
 
 			System.out.println("HOUSES : " + tsi.getHouseCount());
 			System.out.println("HOTELS : " + tsi.getHotelsCount());
+			System.out.println("MORTGAGE STATUS: " + tsi.isMortgageActive());
 
 			if(tsi.getHouseCount() > houseCount){
 				drawBuilding(false);
 			}
-			else if(tsi.getHouseCount() < houseCount){
+			
+			if(tsi.getHouseCount() < houseCount){
 				removeBuilding(false);
 			}
-			else if(tsi.getHotelsCount() == 1){
+			
+			if(tsi.getHotelsCount() == 1){
 				drawBuilding(true);
 			}
-			else if(tsi.getHotelsCount() == 0){
+			
+			if(tsi.getHotelsCount() == 0){
 				removeBuilding(true);
 			}
-			else if(!tsi.isMortgageActive()){
+			
+			if(tsi.isMortgageActive() && mortgageClicked){
+				System.out.println("============== INSIDE INFORMATION UPDATE MORTGAGE");
+				mortgage.setEnabled(false);
+				unmortgage.setEnabled(true);
 				mortgagePanel();
 			}
-			else if(tsi.isMortgageActive()){
+			
+			if(!tsi.isMortgageActive() && unmortgageClicked){
+				System.out.println("============== INSIDE INFORMATION UPDATE UNMORTGAGE");
+				unmortgage.setEnabled(false);
+				mortgage.setEnabled(true);
 				unmortgagePanel();
 			}
 		}
