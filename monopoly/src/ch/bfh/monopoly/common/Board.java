@@ -286,9 +286,10 @@ public class Board {
 	 * 
 	 * @param tileId
 	 *            the id of any tile in the group to build on
+	 * @return the cost of building
 	 * @throws TransactionException
 	 */
-	public void buyHouseRow(String playerName, int tileId)
+	public int buyHouseRow(String playerName, int tileId)
 			throws TransactionException {
 		Tile t = tiles[tileId];
 		Player plyr = getPlayerByName(playerName);
@@ -317,6 +318,7 @@ public class Board {
 		}
 		plyr.withdawMoney(costToBuild);
 		playerSubject.notifyListeners();
+		return costToBuild;
 	}
 
 	/**
@@ -326,7 +328,7 @@ public class Board {
 	 *            the id of any tile in the group to build on
 	 * @throws TransactionException
 	 */
-	public void buyHotelRow(String playerName, int tileId)
+	public int buyHotelRow(String playerName, int tileId)
 			throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
@@ -359,6 +361,7 @@ public class Board {
 		}
 		plyr.withdawMoney(costToBuild);
 		playerSubject.notifyListeners();
+		return costToBuild;
 	}
 
 	/**
@@ -425,7 +428,7 @@ public class Board {
 	 *            the id of any tile in the group to sell from
 	 * @throws TransactionException
 	 */
-	public void sellHouseRow(String playerName, int tileId)
+	public int sellHouseRow(String playerName, int tileId)
 			throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
@@ -450,6 +453,7 @@ public class Board {
 		}
 		plyr.depositMoney(amountOfSale);
 		playerSubject.notifyListeners();
+		return amountOfSale;
 	}
 
 	/**
@@ -483,7 +487,7 @@ public class Board {
 	 *            the id of any tile in the group to sell from
 	 * @throws TransactionException
 	 */
-	public void sellHotelRow(String playerName, int tileId)
+	public int  sellHotelRow(String playerName, int tileId)
 			throws TransactionException {
 		Tile t = tiles[tileId];
 		Terrain terrain = castTileToTerrain(t);
@@ -508,6 +512,7 @@ public class Board {
 		}
 		plyr.depositMoney(amountOfSale);
 		playerSubject.notifyListeners();
+		return amountOfSale;
 
 	}
 
@@ -520,7 +525,7 @@ public class Board {
 	 * @throws RuntimeException
 	 * @throws TransactionException
 	 */
-	public void toggleMortgageStatus(String playerName, int tileId)
+	public int toggleMortgageStatus(String playerName, int tileId)
 			throws RuntimeException, TransactionException {
 		Tile t = tiles[tileId];
 		checkPlayerIsOwnerOfTile(playerName, tileId);
@@ -548,6 +553,7 @@ public class Board {
 		}
 		tileSubjects[tileId].notifyListeners();
 		playerSubject.notifyListeners();
+		return amount;
 	}
 
 	/**
@@ -727,11 +733,13 @@ public class Board {
 	 * 
 	 * @return
 	 */
-	public void freeParking(String playerName) {
+	public int freeParking(String playerName) {
 		Player plyr = getPlayerByName(playerName);
 		plyr.depositMoney(freeParking);
+		int oldFreeParking=freeParking;
 		freeParking = 0;
 		playerSubject.notifyListeners();
+		return oldFreeParking;
 	}
 
 	/**
