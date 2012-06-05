@@ -359,6 +359,10 @@ public class MonopolyGUI extends JFrame {
 					tabPane.setSelectedIndex(0);
 					eventTextArea.append(wse.getEventDescription()+"\n");
 				}
+				if (wse.getType() == WindowMessage.MSG_FOR_EVENT_INFO){
+					tabPane.setSelectedIndex(0);
+					eventTextArea.append(wse.getEventDescription()+"\n");
+				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
 					eventTextArea.append(wse.getEventDescription()+"\n");
 					tabPane.setSelectedIndex(0);

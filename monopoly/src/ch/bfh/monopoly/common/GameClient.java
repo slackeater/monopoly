@@ -192,6 +192,12 @@ public class GameClient {
 		try {
 			board.buyCurrentPropertyForPlayer(playerNameAdjusted,
 					currentPlayer.getPosition());
+			
+			String propertyName =board.castTileToProperty(board.getTileById(currentPlayer.getPosition())).getName();
+			int price =board.castTileToProperty(board.getTileById(currentPlayer.getPosition())).getPrice();
+			String eventText = playerName + "bought the property "+ propertyName+ " for "+ price;
+			sendEventInformationToGUI(eventText);
+			
 			if (sendNetMessage) {
 				// send a netmessage with the roll value of this player
 				NetMessage netMsg = new NetMessage(playerNameAdjusted,
@@ -986,6 +992,14 @@ public class GameClient {
 		nc.sendMessage(netMsg);
 	}
 
+	/**
+	 * send information about the event that was completed to the GUI to be displayed 
+	 */
+	public void sendEventInformationToGUI(String eventInfo){
+	WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_FOR_EVENT_INFO, eventInfo, 0);
+	ws.notifyListeners(wse);
+	}
+	
 	/**
 	 * send a trade request to a player
 	 */

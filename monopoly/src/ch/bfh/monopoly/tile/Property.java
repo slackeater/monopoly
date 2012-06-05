@@ -79,7 +79,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 		if (price > gameClient.getCurrentPlayer().getAccount())
 			extendedDescription=youDontHaveEnough;
 		
-		epi.setText(name + " " + msgIsNotOwned + " \n\n" + thePriceIs + " " +price +" "+ extendedDescription);
+		epi.setText(name + " " + msgIsNotOwned + " \n\n" + thePriceIs + "\n\n " +price +" "+ extendedDescription);
 		epi.addButton(buttonTextDontBuy, 0, dontBuy);
 		epi.addButton(buttonTextBuy, price, al);
 		return epi;
