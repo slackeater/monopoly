@@ -33,8 +33,8 @@ public class EventJPanelTest extends JFrame {
 		// testElectricCompanyNotOwned();
 //		 testMediterraneanOwned();
 //		 testMediterraneanNotOwned();
-		// testFirstRailRoadOwned();
-		// testFirstRailRoadNotOwned();
+		 testFirstRailRoadOwned();
+//		 testFirstRailRoadNotOwned();
 		
 //		landOnChance();
 		
@@ -43,11 +43,11 @@ public class EventJPanelTest extends JFrame {
 		// testJustVisiting();
 //		 testFreeParking();
 //		 testGoToJail();
-//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
+		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
-		testRollStartPanel(true);
-		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+//		testRollStartPanel(true);
+//		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
 		add(jpanel);

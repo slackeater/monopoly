@@ -19,17 +19,10 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected Player owner;
 	protected int mortgageValue;
 	protected boolean mortgageActive;
-	protected String msgIsOwned;
-	protected String msgIsOwnedRent;
-	protected String msgIsNotOwned;
-	protected String msgYouBought;
-	protected String thankYouRent;
-	protected String buttonTextBuy;
-	protected String buttonTextPay;
-	protected String buttonTextContinue;
-	private String group;
+	protected String msgIsOwned, msgIsOwnedRent, msgIsNotOwned, msgYouBought,
+			thankYouRent, buttonTextBuy, buttonTextDontBuy, buttonTextPay,
+			buttonTextContinue, group;
 	private ActionListener al;
-	
 
 	public Property(String name, int price, String group, int mortgageValue,
 			int coordX, int coordY, int tileId, EventManager em, Player bank,
@@ -40,24 +33,32 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.owner = bank;
 		this.mortgageValue = mortgageValue;
 		this.mortgageActive = false;
-		this.msgIsNotOwned= rb.getString("isNotOwned");
-		this.msgIsOwned= rb.getString("isOwned");
-		this.msgIsOwnedRent= rb.getString("isOwnedRent");
-		this.msgYouBought= rb.getString("youBought");
-		this.thankYouRent= rb.getString("thankYouRent");
+		this.msgIsNotOwned = rb.getString("isNotOwned");
+		this.msgIsOwned = rb.getString("isOwned");
+		this.msgIsOwnedRent = rb.getString("isOwnedRent");
+		this.msgYouBought = rb.getString("youBought");
+		this.thankYouRent = rb.getString("thankYouRent");
 		this.buttonTextPay = rb.getString("payButton");
-		this.buttonTextBuy= rb.getString("buyButton");
-		this.buttonTextContinue= rb.getString("continueButton");
+		this.buttonTextBuy = rb.getString("buyButton");
+		this.buttonTextDontBuy = rb.getString("dontButButton");
+		this.buttonTextContinue = rb.getString("continueButton");
 	}
 
-	
-	protected String getPayRentText(int fee){
-		return name + " " + msgIsOwned + " " + owner.getName() + ".  \n\n" + msgIsOwnedRent + " \n" + fee;
-	}	
-	
-	protected EventPanelInfo getTileNotOwnedEPI(EventPanelFactory epfIn){
+	protected String getPayRentText(int fee) {
+		return name + " " + msgIsOwned + " " + owner.getName() + ".  \n\n"
+				+ msgIsOwnedRent + " \n" + fee;
+	}
+
+	protected EventPanelInfo getTileNotOwnedEPI(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
 		EventPanelInfo epi = new EventPanelInfo();
+		ActionListener dontBuy = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				epf.disableAfterClick();
+			}
+		};
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -69,13 +70,15 @@ public abstract class Property extends AbstractTile implements IProperty {
 				epf.changePanel(Step.TILE_NOT_OWNED2);
 			}
 		};
-		epi.setText(name +" "+msgIsNotOwned);
+		epi.setText(name + " " + msgIsNotOwned);
+		epi.addActionListener(dontBuy);
 		epi.addActionListener(al);
+		epi.addButtonText(buttonTextDontBuy);
 		epi.addButtonText(buttonTextBuy);
 		return epi;
 	}
-	
-	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn){
+
+	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
 		EventPanelInfo epi = new EventPanelInfo();
 		al = new ActionListener() {
@@ -85,13 +88,12 @@ public abstract class Property extends AbstractTile implements IProperty {
 				epf.disableAfterClick();
 			}
 		};
-		
-		epi.setText(msgYouBought +" "+ name);
+
+		epi.setText(msgYouBought + " " + name);
 		epi.addActionListener(al);
 		epi.addButtonText(buttonTextContinue);
 		return epi;
 	}
-
 
 	public boolean isMortgageActive() {
 		return mortgageActive;

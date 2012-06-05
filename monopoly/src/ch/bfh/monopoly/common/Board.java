@@ -267,10 +267,10 @@ public class Board {
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHouses < 1)
 			throw new TransactionException(
-					"No houses available to complete the transaction");
+					rb.getString("noHousesAvailable"));
 		if (terrain.getHouseCount() >= 4)
 			throw new TransactionException(
-					"The maximum number of houses that may be built on a property is 4");
+					rb.getString("maxNumberHouses"));
 		int costToBuild = terrain.getHouseCost();
 		playerHasSufficientFunds(playerName, costToBuild);
 		terrain.buildHouse();
@@ -299,16 +299,16 @@ public class Board {
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You don't own all the properties in the group.");
+					rb.getString("ownAllBeforeBuild"));
 		playerHasSufficientFunds(playerName, costToBuild);
 		if (availableHouses < groupMembers.size())
 			throw new TransactionException(
-					"Not enough houses available to complete the transaction");
+					rb.getString("notEnoughHousesAvailable"));
 		// check if on any of the tiles there are already 4 houses
 		for (Terrain groupMember : groupMembers) {
 			if (groupMember.getHouseCount() >= 4)
 				throw new TransactionException(
-						"There are already 4 houses on one of the properties");
+						rb.getString("maxNumberHouses"));
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.buildHouse();
@@ -341,16 +341,16 @@ public class Board {
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You don't own all the properties in the group.");
+					rb.getString("ownAllBeforeBuild"));
 		playerHasSufficientFunds(playerName, costToBuild);
 		if (availableHotels < groupMembers.size())
 			throw new TransactionException(
-					"Not enough hotels available to complete the transaction");
+					rb.getString("notEnoughHotelsAvailable"));
 		// check if on any of the tiles there are already 4 houses
 		for (Terrain groupMember : groupMembers) {
 			if (groupMember.getHotelCount() >= 1)
 				throw new TransactionException(
-						"There is already 1 hotel on one of the properties");
+						rb.getString("hotelAlreadyPresent"));
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.buildHotel();
@@ -376,17 +376,17 @@ public class Board {
 		Tile t = tiles[tileId];
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You don't own all the properties in the group.");
+					rb.getString("ownAllBeforeBuild"));
 		Terrain terrain = castTileToTerrain(t);
 		if (availableHotels < 1)
 			throw new TransactionException(
-					"No hotels available to complete the transaction");
+					rb.getString("noHotelsAvailable"));
 		if (terrain.getHouseCount() != 4)
 			throw new TransactionException(
-					"There must be 4 houses present on this property in order to build a hotel");
+					rb.getString("mustHave4HousesForHotel"));
 		if (terrain.getHotelCount() >= 1)
 			throw new TransactionException(
-					"You can't build more than one hotel on a tile.");
+					rb.getString("maxNumberHotels"));
 		int costToBuild = terrain.getHotelCost();
 		playerHasSufficientFunds(playerName, costToBuild);
 		terrain.buildHotel();
@@ -409,8 +409,7 @@ public class Board {
 		Terrain terrain = castTileToTerrain(t);
 		if (terrain.getHouseCount() <= 0)
 			throw new TransactionException(
-					"There are no houses present on tile with tile Id="
-							+ tileId);
+					rb.getString("noHousesPresentOnTile")+" " + getTileById(tileId).getName());
 		terrain.removeHouse();
 		availableHotels++;
 		int price = terrain.getHouseCost();
@@ -437,12 +436,12 @@ public class Board {
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You don't own all the properties in the group.");
+					rb.getString("youDontOwnAllProp"));
 		// check that all tiles in the group have a house to sell
 		for (Terrain groupMember : groupMembers) {
 			if (groupMember.getHouseCount() < 1)
 				throw new TransactionException(
-						"At least one tile does not have a house to sell");
+						rb.getString("atLeastOneTileNoHouse"));
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.removeHouse();
@@ -468,7 +467,7 @@ public class Board {
 		Terrain terrain = castTileToTerrain(t);
 		if (terrain.getHotelCount() <= 0)
 			throw new TransactionException(
-					"No hotels present on tile with tile Id=" + tileId);
+					rb.getString("noHotelsPresentOnTile")+" " + getTileById(tileId).getName());
 		terrain.removeHotel();
 		availableHotels++;
 		int price = terrain.getHotelCost();
@@ -495,12 +494,12 @@ public class Board {
 		// Check if player is owner of all the properties in the group
 		if (!playerOwnsTileGroup(playerName, tileId))
 			throw new TransactionException(
-					"You don't own all the properties in the group.");
+					rb.getString("youDontOwnAllProp"));
 		// check that all tiles in the group have a house to sell
 		for (Terrain groupMember : groupMembers) {
 			if (groupMember.getHotelCount() < 1)
 				throw new TransactionException(
-						"At least one tile does not have a hotel to sell");
+						rb.getString("atLeastOneTileNoHotele"));
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.removeHotel();
@@ -541,7 +540,7 @@ public class Board {
 			// check that there are not hotels or houses on the property
 			if (terrain.getHotelCount() != 0 || terrain.getHouseCount() != 0)
 				throw new TransactionException(
-						"In order to mortgage this property, all houses and hotels must first be sold to the bank");
+						rb.getString("inOrderToMortgage"));
 			// credit the owner with the mortgage value
 			amount = prop.getMortgageValue();
 			prop.getOwner().depositMoney(amount);
@@ -569,7 +568,7 @@ public class Board {
 		Property prop = castTileToProperty(t);
 		if (!prop.getOwner().getName().equals(fromName))
 			throw new TransactionException(
-					"Cannot transfer a property from a player who doesn't own the property");
+					rb.getString("playerDoesntOwnPropToTransfer"));
 		// toName and fromName reversed, because money goes in opposite
 		// direction than does the property.
 		transferMoney(toName, fromName, price);
@@ -596,11 +595,11 @@ public class Board {
 	public void transferMoney(String fromName, String toName, int price)
 			throws TransactionException {
 		Player fromPlayer = getPlayerByName(fromName);
-		if (!fromPlayer.hasSufficientFunds(price))
-			throw new TransactionException("Cannot complete transaction: \n\t"
-					+ fromPlayer.getName()
-					+ " has insufficient funds. \n\tReqeusted to transfer: "
-					+ price + " account balance: " + fromPlayer.getAccount());
+		if (!fromPlayer.hasSufficientFunds(price)) 		
+			throw new TransactionException(rb.getString("cantCompleteTransaction")+ " "
+						+ fromPlayer.getName()
+					+ rb.getString("hasntEnoughMoney-Requested")+" "+
+					+ price + " "+rb.getString("accountBalance")+ " " + fromPlayer.getAccount());
 		Player toPlayer = getPlayerByName(toName);
 		fromPlayer.withdawMoney(price);
 		toPlayer.depositMoney(price);
@@ -623,11 +622,10 @@ public class Board {
 			int price) throws TransactionException {
 		Player fromPlayer = getPlayerByName(fromName);
 		if (fromPlayer.getJailCard() < quantity)
-			throw new TransactionException(
-					"Cannot complete transaction: \n\t"
-							+ fromPlayer.getName()
-							+ " has insufficient jail cards. \n\tReqeusted to transfer: "
-							+ quantity + " quantity available: "
+			throw new TransactionException(rb.getString("cantCompleteTransaction")+ " "
+							+ fromPlayer.getName()+" "
+							+rb.getString("hasntEnoughJailCards")+ " "
+							+ quantity +" "+rb.getString("quantityAvailable")+" "+
 							+ fromPlayer.getJailCard());
 		// Switch order of fromName and toName because money goes in opposite
 		// direction than do jailCards
@@ -682,7 +680,7 @@ public class Board {
 		bundleData = bundleData.trim();
 		int startMoney = Integer.parseInt(bundleData);
 		for (int i = 0; i < playerNames.size(); i++) {
-			Player plyr = new Player(playerNames.get(i), startMoney, tokens[i]);
+			Player plyr = new Player(playerNames.get(i), startMoney, tokens[i], loc);
 			players.add(plyr);
 		}
 	}
@@ -810,9 +808,9 @@ public class Board {
 		Property prop = castTileToProperty(tiles[tileId]);
 		String ownerName = prop.getOwner().getName();
 		if (!playerName.equals(ownerName))
-			throw new TransactionException(playerName
-					+ "does not own the property " + prop.getName()
-					+ " It is owned by " + prop.getOwner().getName());
+			throw new TransactionException(playerName +" "+  rb.getString("doesNotOwn")
+					+ " " + prop.getName()+" "
+					+ rb.getString("ownedBy")+" " + prop.getOwner().getName());
 	}
 
 	/**
@@ -894,8 +892,7 @@ public class Board {
 			throws TransactionException {
 		Player plyr = getPlayerByName(playerName);
 		if (!plyr.hasSufficientFunds(amount))
-			throw new TransactionException(playerName
-					+ " does not have enough money to perform the action");
+			throw new TransactionException(playerName + " " + rb.getString("notEnoughMoney"));
 	}
 
 	/**

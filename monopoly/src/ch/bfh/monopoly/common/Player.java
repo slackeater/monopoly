@@ -2,6 +2,9 @@ package ch.bfh.monopoly.common;
 
 
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.tile.Railroad;
@@ -20,9 +23,10 @@ public class Player {
 	private boolean turnToken;
 	private Token t;
 	private MonopolyGUI.Direction dir;
+	ResourceBundle rb;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
-	public Player (String name, int account, Token t){
+	public Player (String name, int account, Token t, Locale loc){
 		this.name = name;
 		this.account = account;
 		this.t = t;
@@ -32,6 +36,8 @@ public class Player {
 		turnToken = false;
 		jailCard = 0;
 		properties = new ArrayList<Tile>();
+		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile",
+				loc);
 	}
 
 	/**
@@ -103,9 +109,11 @@ public class Player {
 	 * @throws TransactionException 
 	 */
 	public void withdawMoney(int value) throws TransactionException {
-		if (account < value)
+		if (account < value){
+			System.err.println(rb.getString("notEnoughMoneyForWithdrawal"));
 			throw new TransactionException(
-					"The sum cannot be withdrawn from the player's account, because the player has insufficient funds");
+					rb.getString("notEnoughMoneyForWithdrawal"));
+		}
 		this.account -= value;
 		
 	}

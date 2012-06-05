@@ -29,7 +29,7 @@ public class GameControllerTests {
 
 	@Before
 	public void setup() {
-		TestInstanceGenerator tig = new TestInstanceGenerator("en");
+		TestInstanceGenerator tig = new TestInstanceGenerator("fr");
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();
@@ -206,6 +206,7 @@ public class GameControllerTests {
 		// house cost is 50, must buy 3, so 100 is not enough, set account so
 		Tile t1 = board.getTileById(oriental);
 		Terrain terrainOriental = board.castTileToTerrain(t1);
+		int houseCost = terrainOriental.getHouseCost();
 		Tile t2 = board.getTileById(vermont);
 		Terrain terrainVermont = board.castTileToTerrain(t2);
 		Tile t3 = board.getTileById(connecticut);
@@ -213,13 +214,13 @@ public class GameControllerTests {
 		int plyr1AccountBefore = plyr1.getAccount();
 		gameClient.buyHouseRow(6, sendNetMessage);
 		int plyr1AccountAfter = plyr1.getAccount();
-		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 150);
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - houseCost*1*3);
 		assertTrue(terrainConnecticut.getHouseCount() == 1
 				&& terrainOriental.getHouseCount() == 1
 				&& terrainVermont.getHouseCount() == 1);
 		gameClient.buyHouseRow(6, sendNetMessage);
 		plyr1AccountAfter = plyr1.getAccount();
-		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 300);
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - houseCost*2*3);
 		assertTrue(terrainConnecticut.getHouseCount() == 2
 				&& terrainOriental.getHouseCount() == 2
 				&& terrainVermont.getHouseCount() == 2);
@@ -228,7 +229,7 @@ public class GameControllerTests {
 		gameClient.buyHouseRow(6, sendNetMessage);
 		gameClient.buyHouseRow(6, sendNetMessage);
 		plyr1AccountAfter = plyr1.getAccount();
-		assertTrue(plyr1AccountAfter == plyr1AccountBefore - 600);
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore - houseCost*4*3);
 		assertTrue(terrainConnecticut.getHouseCount() == 4
 				&& terrainOriental.getHouseCount() == 4
 				&& terrainVermont.getHouseCount() == 4);
@@ -318,91 +319,92 @@ public class GameControllerTests {
 				&& terrainVermont.getHouseCount() == 4);
 	}
 
-	//
-	// /**
-	// * test that buyHotelRow doesn't allow construction if the currentPlayer
-	// does not own all properties
-	// */
-	// @Test
-	// public void buyHotelRowNotDoesntOwnAllProperties() throws
-	// TransactionException {
-	// int oriental=6;
-	// int vermont=8;
-	// int connecticut=9;
-	// String player1name = "Justin";
-	// Player plyr1 = board.getPlayerByName("Justin");
-	// gameClient.setCurrentPlayer(plyr1, sendNetMessage);
-	// gameClient.advancePlayerNSpaces(6, sendNetMessage);
-	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
-	// gameClient.advancePlayerNSpaces(2, sendNetMessage);
-	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
-	// //house cost is 50, must buy 3, so 100 is not enough, set account so
-	// Tile t1 = board.getTileById(oriental);
-	// Terrain terrainOriental = board.castTileToTerrain(t1);
-	// Tile t2 = board.getTileById(vermont);
-	// Terrain terrainVermont = board.castTileToTerrain(t2);
-	// Tile t3 = board.getTileById(connecticut);
-	// Terrain terrainConnecticut = board.castTileToTerrain(t3);
-	// int plyr1AccountBefore = plyr1.getAccount();
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// int plyr1AccountAfter = plyr1.getAccount();
-	// System.out.println(plyr1AccountAfter +"  and before was:"+
-	// plyr1AccountBefore);
-	// // assertTrue(plyr1AccountAfter==plyr1AccountBefore);
-	// //check that all terrain still ahve no houses
-	// assertTrue(terrainConnecticut.getHouseCount()==0
-	// &&terrainOriental.getHouseCount()==0
-	// &&terrainVermont.getHouseCount()==0);
-	// }
-	//
-	// /**
-	// * test that buyHotelRow builds 1 house on each property when all
-	// conditions are met, and withdraws the correct amount
-	// */
-	// @Test
-	// public void buyHotelRowBuildsHotels() throws TransactionException {
-	// int oriental=6;
-	// int vermont=8;
-	// int connecticut=9;
-	// String player1name = "Justin";
-	// Player plyr1 = board.getPlayerByName("Justin");
-	// gameClient.setCurrentPlayer(plyr1, sendNetMessage);
-	// gameClient.advancePlayerNSpaces(6, sendNetMessage);
-	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
-	// gameClient.advancePlayerNSpaces(2, sendNetMessage);
-	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
-	// gameClient.advancePlayerNSpaces(1, sendNetMessage);
-	// gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
-	// //house cost is 50, must buy 3, so 100 is not enough, set account so
-	// Tile t1 = board.getTileById(oriental);
-	// Terrain terrainOriental = board.castTileToTerrain(t1);
-	// Tile t2 = board.getTileById(vermont);
-	// Terrain terrainVermont = board.castTileToTerrain(t2);
-	// Tile t3 = board.getTileById(connecticut);
-	// Terrain terrainConnecticut = board.castTileToTerrain(t3);
-	// int plyr1AccountBefore = plyr1.getAccount();
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// int plyr1AccountAfter = plyr1.getAccount();
-	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-150);
-	// assertTrue(terrainConnecticut.getHouseCount()==1
-	// &&terrainOriental.getHouseCount()==1
-	// &&terrainVermont.getHouseCount()==1);
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// plyr1AccountAfter = plyr1.getAccount();
-	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-300);
-	// assertTrue(terrainConnecticut.getHouseCount()==2
-	// &&terrainOriental.getHouseCount()==2
-	// &&terrainVermont.getHouseCount()==2);
-	// //can't build more than 4 houses
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// gameClient.buyHouseRow(6, sendNetMessage);
-	// plyr1AccountAfter = plyr1.getAccount();
-	// assertTrue(plyr1AccountAfter==plyr1AccountBefore-600);
-	// assertTrue(terrainConnecticut.getHouseCount()==4
-	// &&terrainOriental.getHouseCount()==4
-	// &&terrainVermont.getHouseCount()==4);
-	// }
+	
+	 /**
+	 * test that buyHotelRow doesn't allow construction if the currentPlayer
+	 does not own all properties
+	 */
+	 @Test
+	 public void buyHotelRowNotDoesntOwnAllProperties() throws
+	 TransactionException {
+	 int oriental=6;
+	 int vermont=8;
+	 int connecticut=9;
+	 String player1name = "Justin";
+	 Player plyr1 = board.getPlayerByName("Justin");
+	 gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+	 gameClient.advancePlayerNSpaces(6, sendNetMessage);
+	 gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	 gameClient.advancePlayerNSpaces(2, sendNetMessage);
+	 gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	 //house cost is 50, must buy 3, so 100 is not enough, set account so
+	 Tile t1 = board.getTileById(oriental);
+	 Terrain terrainOriental = board.castTileToTerrain(t1);
+	 Tile t2 = board.getTileById(vermont);
+	 Terrain terrainVermont = board.castTileToTerrain(t2);
+	 Tile t3 = board.getTileById(connecticut);
+	 Terrain terrainConnecticut = board.castTileToTerrain(t3);
+	 int plyr1AccountBefore = plyr1.getAccount();
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 int plyr1AccountAfter = plyr1.getAccount();
+	 System.out.println(plyr1AccountAfter +"  and before was:"+
+	 plyr1AccountBefore);
+	 // assertTrue(plyr1AccountAfter==plyr1AccountBefore);
+	 //check that all terrain still ahve no houses
+	 assertTrue(terrainConnecticut.getHouseCount()==0
+	 &&terrainOriental.getHouseCount()==0
+	 &&terrainVermont.getHouseCount()==0);
+	 }
+	
+	 /**
+	 * test that buyHotelRow builds 1 house on each property when all
+	 conditions are met, and withdraws the correct amount
+	 */
+	 @Test
+	 public void buyHotelRowBuildsHotels() throws TransactionException {
+	 int oriental=6;
+	 int vermont=8;
+	 int connecticut=9;
+	 String player1name = "Justin";
+	 Player plyr1 = board.getPlayerByName("Justin");
+	 gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+	 gameClient.advancePlayerNSpaces(6, sendNetMessage);
+	 gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	 gameClient.advancePlayerNSpaces(2, sendNetMessage);
+	 gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	 gameClient.advancePlayerNSpaces(1, sendNetMessage);
+	 gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+	 //house cost is 50, must buy 3, so 100 is not enough, set account so
+	 Tile t1 = board.getTileById(oriental);
+	 Terrain terrainOriental = board.castTileToTerrain(t1);
+	 int hotelCost = terrainOriental.getHotelCost();
+	 Tile t2 = board.getTileById(vermont);
+	 Terrain terrainVermont = board.castTileToTerrain(t2);
+	 Tile t3 = board.getTileById(connecticut);
+	 Terrain terrainConnecticut = board.castTileToTerrain(t3);
+	 int plyr1AccountBefore = plyr1.getAccount();
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 int plyr1AccountAfter = plyr1.getAccount();
+	 assertTrue(plyr1AccountAfter==plyr1AccountBefore-hotelCost*3);
+	 assertTrue(terrainConnecticut.getHouseCount()==1
+	 &&terrainOriental.getHouseCount()==1
+	 &&terrainVermont.getHouseCount()==1);
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 plyr1AccountAfter = plyr1.getAccount();
+	 assertTrue(plyr1AccountAfter==plyr1AccountBefore-hotelCost*3*2);
+	 assertTrue(terrainConnecticut.getHouseCount()==2
+	 &&terrainOriental.getHouseCount()==2
+	 &&terrainVermont.getHouseCount()==2);
+	 //can't build more than 4 houses
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 gameClient.buyHouseRow(6, sendNetMessage);
+	 plyr1AccountAfter = plyr1.getAccount();
+	 assertTrue(plyr1AccountAfter==plyr1AccountBefore-hotelCost*3*4);
+	 assertTrue(terrainConnecticut.getHouseCount()==4
+	 &&terrainOriental.getHouseCount()==4
+	 &&terrainVermont.getHouseCount()==4);
+	 }
 
 	/**
 	 * test that the method buyCurrentPropertyForPlayer updates the change in
@@ -511,16 +513,21 @@ public class GameControllerTests {
 		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(2, sendNetMessage);
 		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
-		// house cost for mediterranean is 50, leave enough to build 2 houses
-		plyr.withdawMoney(plyr.getAccount() - 100);
+		int houseCost = terrain.getHouseCost();
+		System.err.println("HouseCost"+houseCost);
+		plyr.withdawMoney(plyr.getAccount() -2* houseCost);
+		int accountWayBefore = plyr.getAccount();
+		System.err.println("before building" + accountWayBefore);
 		gameClient.buyHouse(1, sendNetMessage);
 		gameClient.buyHouse(1, sendNetMessage);
 		// the following houses should not be able to be built
+		
 		int accountBefore = plyr.getAccount();
+		System.err.println("acct before" + accountBefore);
 		gameClient.buyHouse(1, sendNetMessage);
 		gameClient.buyHouse(1, sendNetMessage);
 		int accountAfter = plyr.getAccount();
-		// houses should still be 4
+		System.err.println("acct after" + accountAfter);
 		assertTrue(terrain.getHouseCount() == 2);
 		// no money should have changed hands
 		assertTrue(accountBefore == accountAfter);

@@ -72,8 +72,6 @@ public class GameClient {
 	public GameClient(boolean testOff) {
 		this.testOff = testOff;
 		ws = new ConcreteSubject();
-		bank = new Player("bank", 100000000, null);
-
 	}
 
 	public GameClient() {
@@ -91,6 +89,7 @@ public class GameClient {
 	public void createBoard(Locale loc, List<String> names,
 			String localPlayerName) {
 		this.loc = loc;
+		bank = new Player("bank", 100000000, null, loc);
 		this.board = new Board(this, testOff);
 		board.createPlayers(names, loc);
 		this.localPlayer = localPlayerName;
