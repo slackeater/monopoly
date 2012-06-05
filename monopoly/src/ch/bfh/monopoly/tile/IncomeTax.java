@@ -37,7 +37,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			final int amount = Integer.parseInt(rb.getString("tile4-rent"));
 			ActionListener tenPercent = new ActionListener() {
 				@Override
@@ -65,7 +65,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {

@@ -139,7 +139,7 @@ public class Dice implements EventPanelSource {
 			epi = getFreedFromJailEPI();
 			break;
 		case JAIL_ROLL:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 
 			final int rollValue = throwDice();
 			if (isDoubles()) {
@@ -173,7 +173,7 @@ public class Dice implements EventPanelSource {
 			epi= getFreedFromJailEPI();
 			break;
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -192,7 +192,7 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 
 		labelText = rb.getString("rollFailure");
 
@@ -213,7 +213,7 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		
 		final int roll = throwDice();
 		System.out.println("DICE CLASS rolled: " + roll);
@@ -242,7 +242,7 @@ public class Dice implements EventPanelSource {
 		String labelText;
 		String buttonText;
 		ActionListener al;
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 
 		buttonText = rb.getString("roll");
 		al = new ActionListener() {
@@ -252,14 +252,14 @@ public class Dice implements EventPanelSource {
 			}
 		};
 		epi.setText(rb.getString("freed"));
-		epi.addButton(buttonText, 0, al);
+		epi.addButton(buttonText, 0, al );
 		return epi;
 	}
 
 	public EventPanelInfo getJailStartEPI() {
 		String labelText;
 
-		EventPanelInfo epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		if (attemptedRolls > 0) {
 			labelText = rb.getString("youRolled") + getDiceValues() + " "
 					+ rb.getString("rollAgain") + " " + (3 - attemptedRolls)

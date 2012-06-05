@@ -1228,6 +1228,7 @@ public class GameClient {
 		return board.getSubjectForPlayer();
 	}
 	
+	
 	public int getBail(){
 		return board.getBail();
 	}

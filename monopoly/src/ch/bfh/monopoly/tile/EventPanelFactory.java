@@ -29,9 +29,6 @@ public class EventPanelFactory  implements PlayerListener{
 	JTextPane label;
 	EventPanelSource eps;
 	EventPanelInfo epi;
-	ArrayList<JButton> buyButtons = new ArrayList<JButton>();
-	
-
 
 	
 
@@ -114,10 +111,29 @@ public class EventPanelFactory  implements PlayerListener{
 	@Override
 	public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 		System.out.println("EVENT PANEL FACTORY GOT OBSERVER SIGNAL");
-		for (JButton b: buyButtons){
-			b.setEnabled(false);
+		int currentPlayerAccount=0;
+		int jailCardCount=0;
+		for (PlayerStateEvent pse : playerStates){
+			if (pse.hasTurnToken()){
+				currentPlayerAccount = pse.getAccount();
+				jailCardCount=pse.getJailCard();
+			}
 		}
-		
+		int buttonCount = epi.getButtonCount();
+		for (int i = 0; i < buttonCount; i++) {
+			if (epi.getButtonAtIndex(i).getAmount() > currentPlayerAccount)
+				epi.getButtonAtIndex(i).setEnabled(false);
+			else
+				epi.getButtonAtIndex(i).setEnabled(true);
+			//if the amount is -100 this signals the button is for using a jail card
+			if (epi.getButtonAtIndex(i).getAmount()==-100){
+				if (jailCardCount <1 )
+					epi.getButtonAtIndex(i).setEnabled(false);
+				else
+					epi.getButtonAtIndex(i).setEnabled(true);
+			}
+				
+		}
 	}
 
 }
