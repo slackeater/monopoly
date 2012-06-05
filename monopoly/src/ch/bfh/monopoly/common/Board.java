@@ -1026,22 +1026,28 @@ public class Board {
 			tileInfo.setName(t.getName());
 			tileInfo.setPrice(t.getPrice());
 
-			// returning RENT info for Railroads rrequires changing how
-			// the rent is calculated in Railroad
+			tileInfo.setOwner(t.getOwner().getName());
+		
 			tileInfo.setGroup(t.getGroup());
 			tileInfo.setMortgageValue(t.getMortgageValue());
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
+			tileInfo.setTileId(t.getTileId());
+			//tileInfo.setRent(t.feeToCharge());
+			//tileInfo.setRGB(t.getRG)
 		}
 		if (tile instanceof Utility) {
 			Utility t = (Utility) tile;
 			tileInfo.setName(t.getName());
 			tileInfo.setPrice(t.getPrice());
 
+			tileInfo.setOwner(t.getOwner().getName());
+			tileInfo.setRent(t.feeToCharge());
 			tileInfo.setGroup(t.getGroup());
 			tileInfo.setMortgageValue(t.getMortgageValue());
 			tileInfo.setCoordX(t.getCoordX());
 			tileInfo.setCoordY(t.getCoordY());
+			tileInfo.setTileId(t.getTileId());
 		}
 		if (tile instanceof CommunityChest) {
 			CommunityChest t = (CommunityChest) tile;

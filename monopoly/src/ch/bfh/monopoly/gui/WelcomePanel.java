@@ -354,14 +354,13 @@ public class WelcomePanel extends JFrame{
 					name = nameField.getText();
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
-
-
-//					JPane jp = new JOptionPane(JOptionPane.INFORMATION_MESSAGE);
-//					JDialog container = new JDialog(f);
-//					container.setContentPane(jp);
-//					jp.add
+//
+//					JOptionPane pane = new JOptionPane("Test", JOptionPane.INFORMATION_MESSAGE);
+//					pane.setVisible(true);
+//					JDialog container = new JDialog(f, "Mah");
+//					container.setContentPane(pane);
 //					
-
+			
 
 					//start the client and the server
 					initClient(true);
@@ -374,7 +373,7 @@ public class WelcomePanel extends JFrame{
 						
 						
 						if((nSrvCtrl.getServerOpenedSession()-cli) == 1 && nSrvCtrl.getServerOpenedSession() > 0){
-							
+//							container.setVisible(true);
 							cli++;
 						}
 

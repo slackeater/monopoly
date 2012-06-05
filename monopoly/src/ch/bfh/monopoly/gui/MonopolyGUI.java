@@ -221,17 +221,7 @@ public class MonopolyGUI extends JFrame {
 				else if(step == val){
 					((Timer)e.getSource()).stop();
 
-					//position 30 is go to jail
-					if((startPosition+val) == 30){
-						//removing the token at go to jail
-						tiles.get(30).removeToken(t);
-
-						//add token to jail 
-						tiles.get(10).addToken(t);	
-
-						repaint();
-					}
-
+			
 					//show tile's information in the card box
 					tiles.get((startPosition+val+40)%TILE_NUMBER).showCard();
 
@@ -750,7 +740,7 @@ public class MonopolyGUI extends JFrame {
 					for(int i = 0 ; i < 40 ; i++){
 						if(terrain[i]){
 							TileInfo ti = bc.getTileInfoById(i);
-							myTerrainBox.addItem(ti.getName());
+							hisTerrainBox.addItem(ti.getName());
 						}
 					}
 				}

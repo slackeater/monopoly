@@ -59,10 +59,7 @@ public class BoardTile extends JPanel{
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
-	
-	private boolean mortgageClicked = false;
-	private boolean unmortgageClicked = false;
-	private boolean sellHotelClicked = false;
+
 
 	//used to update the tile
 	private InformationUpdate iu = new InformationUpdate();
@@ -84,7 +81,6 @@ public class BoardTile extends JPanel{
 		this.bc = bc;
 		this.gc = gc;
 		this.res = res;
-		System.out.println("TILE ID " + ti.getTileId());
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -94,34 +90,60 @@ public class BoardTile extends JPanel{
 		btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
 
+
 		if(ti.getGroup() != null && 
 				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
 						|| !ti.getGroup().equals("Chance"))){
-			//we want a pop-up menu only on the properties where
-			//we can build something and we are the owner
-			//TODO remove if for test
+
+			System.out.println("=============================================================== THE GROUP IS " + ti.getGroup());
+			System.out.println("=============================================================== THE ID IS " + ti.getTileId());
+			System.out.println("=============================================================== THE RENT IS " + ti.getRent());
+
 
 			this.addMouseListener(btnListener);
 			bc.getSubjectForPlayer().addListener(new OwnerUpdater());
 			displayInfo = true;
 
+			System.out.println("CUAI");
+
+			//check if there is a color and add the menu
+			if(ti.getRGB() != null)
+				color.setBackground(Color.decode(ti.getRGB()));
+			else
+				color.setBackground(Color.WHITE);
+
+			System.out.println("AFTER COL");
+
+			if(ti.getGroup().equals("railroad") || ti.getGroup().equals("utility")){
+				System.out.println("BEF");
+				btnListener.addPopUp(onlyMortgage());
+				System.out.println("GROUP IS RR OR UT");}
+			else
+				btnListener.addPopUp(popMenu());
+			//	}
 		}
 
-		//check if there is a color and add the menu
-		if(ti.getRGB() != null){
-			color.setBackground(Color.decode(ti.getRGB()));
-			btnListener.addPopUp(popMenu());
-		}
+
+
+		System.out.println("HERouoE");
 
 		add(color);
+
+
+		System.out.println("HERioiE");
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
 
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
 
+
+		System.out.println("HEREoioi");
+
 		setMaximumSize(new Dimension(75, 75));
 		add(name);
+
+		System.out.println("HERE");
 	}
 
 
@@ -199,52 +221,58 @@ public class BoardTile extends JPanel{
 
 				tab.add(rent);
 
-				JLabel rent1 = new JLabel(res.getString("label-onehouse") + Integer.toString(ti.getRent1house()));
-				rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rent1.setFont(f);
+				if(!ti.getGroup().equals("utility") && !ti.getGroup().equals("cornersAndTax") && !ti.getGroup().equals("Community Chest") 
+						&&	!ti.getGroup().equals("Chance")){
 
-				JLabel rent2 = new JLabel(res.getString("label-twohouses") + Integer.toString(ti.getRent2house()));
-				rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rent2.setFont(f);
+					JLabel rent1 = new JLabel(res.getString("label-onehouse") + Integer.toString(ti.getRent1house()));
+					rent1.setAlignmentX(Component.CENTER_ALIGNMENT);
+					rent1.setFont(f);
 
-				JLabel rent3 = new JLabel(res.getString("label-threehouses") + Integer.toString(ti.getRent3house()));
-				rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rent3.setFont(f);
+					JLabel rent2 = new JLabel(res.getString("label-twohouses") + Integer.toString(ti.getRent2house()));
+					rent2.setAlignmentX(Component.CENTER_ALIGNMENT);
+					rent2.setFont(f);
 
-				JLabel rent4 = new JLabel(res.getString("label-fourhouses") + Integer.toString(ti.getRent4house()));
-				rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
-				rent4.setFont(f);
+					JLabel rent3 = new JLabel(res.getString("label-threehouses") + Integer.toString(ti.getRent3house()));
+					rent3.setAlignmentX(Component.CENTER_ALIGNMENT);
+					rent3.setFont(f);
 
-				JLabel hotel = new JLabel(res.getString("label-hotel") + Integer.toString(ti.getRenthotel()));
-				hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
-				hotel.setFont(f);
+					JLabel rent4 = new JLabel(res.getString("label-fourhouses") + Integer.toString(ti.getRent4house()));
+					rent4.setAlignmentX(Component.CENTER_ALIGNMENT);
+					rent4.setFont(f);
 
-				JLabel houseCost = new JLabel(res.getString("label-houseprice") + Integer.toString(ti.getHouseCost()));
-				houseCost.setAlignmentX(Component.CENTER_ALIGNMENT);
-				houseCost.setFont(f);
+					JLabel hotel = new JLabel(res.getString("label-hotel") + Integer.toString(ti.getRenthotel()));
+					hotel.setAlignmentX(Component.CENTER_ALIGNMENT);
+					hotel.setFont(f);
 
-				JLabel hotelCost = new JLabel(res.getString("label-hotelprice") + Integer.toString(ti.getHotelCost()));
-				hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
-				hotelCost.setFont(f);
-				
-				owner = new JLabel(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
-				owner.setAlignmentX(Component.CENTER_ALIGNMENT);
-				owner.setFont(f);
+					JLabel houseCost = new JLabel(res.getString("label-houseprice") + Integer.toString(ti.getHouseCost()));
+					houseCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+					houseCost.setFont(f);
 
-				tab.add(rent1);
-				tab.add(rent2);
-				tab.add(rent3);
-				tab.add(rent4);
-				tab.add(hotel);
-				tab.add(houseCost);
-				tab.add(hotelCost);
-				tab.add(owner);
+					JLabel hotelCost = new JLabel(res.getString("label-hotelprice") + Integer.toString(ti.getHotelCost()));
+					hotelCost.setAlignmentX(Component.CENTER_ALIGNMENT);
+					hotelCost.setFont(f);
+
+					tab.add(rent1);
+					tab.add(rent2);
+					tab.add(rent3);
+					tab.add(rent4);
+					tab.add(hotel);
+					tab.add(houseCost);
+					tab.add(hotelCost);
+				}
+
+
 			}
-			
+
+			owner = new JLabel(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
+			owner.setAlignmentX(Component.CENTER_ALIGNMENT);
+			owner.setFont(f);
+			tab.add(owner);
+
 			JLabel mortgage = new JLabel(res.getString("label-mortgagevalue") + Integer.toString(ti.getMortgageValue()));
 			mortgage.setAlignmentX(Component.CENTER_ALIGNMENT);
 			mortgage.setFont(f);
-			
+
 			tab.add(mortgage);
 
 			tab.revalidate();
@@ -259,36 +287,52 @@ public class BoardTile extends JPanel{
 	private JPopupMenu popMenu(){
 		JPopupMenu pop = new JPopupMenu();
 
+		System.out.println("INSIDE POP MEN");
+
 		buyHouse = new JMenuItem(res.getString("label-buyhouse"));
 		buyHouse.addActionListener(ac);
+
+		System.out.println("INSIDE POP MEN 1");
 
 		buyHouseRow = new JMenuItem(res.getString("label-buyhouserow"));
 		buyHouseRow.addActionListener(ac);
 
+		System.out.println("INSIDE POP MEN 2");
 		buyHotel = new JMenuItem(res.getString("label-buyhotel"));
 		buyHotel.addActionListener(ac);
 
+		System.out.println("INSIDE POP MEN 3");
 		buyHotelRow = new JMenuItem(res.getString("label-buyhotelrow"));
 		buyHotelRow.addActionListener(ac);
+
+		System.out.println("INSIDE POP MEN 4");
 
 		sellHouse = new JMenuItem(res.getString("label-sellhouse"));
 		sellHouse.addActionListener(ac);
 
+		System.out.println("INSIDE POP MEN 5");
 		sellHotel = new JMenuItem(res.getString("label-sellhotel"));
 		sellHotel.addActionListener(ac);
 
+		System.out.println("INSIDE POP MEN 6");
 		sellHouseRow = new JMenuItem(res.getString("label-sellhouserow"));
 		sellHouseRow.addActionListener(ac);
+		System.out.println("INSIDE POP MEN 7");
 
 		sellHotelRow = new JMenuItem(res.getString("label-sellhotelrow"));
 		sellHotelRow.addActionListener(ac);
+		System.out.println("INSIDE POP MEN 8");
 
 		mortgage = new JMenuItem(res.getString("label-mortgage"));
 		mortgage.addActionListener(ac);
 
+		System.out.println("INSIDE POP MEN 9");
+
 		unmortgage = new JMenuItem(res.getString("label-unmortgage"));
 		unmortgage.addActionListener(ac);
 		unmortgage.setEnabled(false);
+
+		System.out.println("INSIDE POP MEN  10");
 
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
@@ -303,8 +347,40 @@ public class BoardTile extends JPanel{
 		pop.add(mortgage);
 		pop.add(unmortgage);
 
+		System.out.println("AFTER ALL ADD");
+
 		return pop;
 	}
+
+	/**
+	 * Return a JPopMenu only for mortgage/unmortgage
+	 * To be used for example with railroad and utility
+	 * @return JPopupMenu
+	 * 			return the JPopMenu with mortgage/unmortgage
+	 */
+	private JPopupMenu onlyMortgage(){
+		JPopupMenu pop = new JPopupMenu();
+
+		System.out.println("INSIDE MMMMMM");
+
+		mortgage = new JMenuItem(res.getString("label-mortgage"));
+		mortgage.addActionListener(ac);
+
+		System.out.println("AFTER ONE");
+
+		unmortgage = new JMenuItem(res.getString("label-unmortgage"));
+		unmortgage.addActionListener(ac);
+		unmortgage.setEnabled(false);
+
+
+		System.out.println("AFTER ONE");
+
+		pop.add(mortgage);
+		pop.add(unmortgage);
+
+		return pop;
+	}
+
 
 	/**
 	 * Show tile's information in card's box
@@ -431,7 +507,12 @@ public class BoardTile extends JPanel{
 	 */
 	private void unmortgagePanel(){
 		System.out.println("UNMORTGAGIN THE PANEL");
-		color.setBackground(Color.decode(ti.getRGB()));
+
+		if(ti.getRGB() != null){
+			color.setBackground(Color.decode(ti.getRGB()));
+		}
+		else 
+			color.setBackground(Color.WHITE);
 
 		revalidate();
 		repaint();
@@ -457,7 +538,9 @@ public class BoardTile extends JPanel{
 			}
 			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
+				System.out.println("OUTSIDE OWNER");
 				if(owner){
+					System.out.println("INSIDE OWNER");
 					showPopup(e);
 				}
 			}
@@ -484,10 +567,6 @@ public class BoardTile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			mortgageClicked = false;
-			unmortgageClicked = false;
-			sellHotelClicked = false;
-			
 			if(e.getSource().equals(buyHouse)){
 				gc.buyHouse(ti.getTileId());
 			}
@@ -504,7 +583,6 @@ public class BoardTile extends JPanel{
 				gc.sellHouse(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHotel)){
-				sellHotelClicked = true;
 				gc.sellHotel(ti.getTileId());
 			}
 			else if(e.getSource().equals(sellHouseRow)){
@@ -514,14 +592,12 @@ public class BoardTile extends JPanel{
 				gc.sellHotelRow(ti.getTileId());
 			}
 			else if(e.getSource().equals(mortgage)){
-				
+
 				System.out.println("üüüüüüüüüüüüüüüüüüüüüüüü ==================== === === INSIDE MORTGAGE EVENT AFTER CLICK ON MENU");
-				mortgageClicked = true;
 				gc.toggleMortgageStatus(ti.getTileId());
-				
+
 			}
 			else if(e.getSource().equals(unmortgage)){
-				unmortgageClicked = true;
 				gc.toggleMortgageStatus(ti.getTileId());
 			}
 		}	
@@ -532,7 +608,7 @@ public class BoardTile extends JPanel{
 	 * @author snake, shrevek
 	 */
 	private class InformationUpdate implements TileListener{
-	
+
 
 		@Override
 		public void updateTile(TileStateEvent tsi) {
@@ -544,26 +620,26 @@ public class BoardTile extends JPanel{
 			if(tsi.getHouseCount() > houseCount){
 				drawBuilding(false);
 			}
-			
+
 			if(tsi.getHouseCount() < houseCount){
 				removeBuilding(false);
 			}
-			
+
 			if(tsi.getHotelsCount() == 1){
 				drawBuilding(true);
 			}
-			
+
 			if(tsi.getHotelsCount() == 0){
 				removeBuilding(true);
 			}
-			
+
 			if(tsi.isMortgageActive()){
 				System.out.println("============== INSIDE INFORMATION UPDATE MORTGAGE");
 				mortgage.setEnabled(false);
 				unmortgage.setEnabled(true);
 				mortgagePanel();
 			}
-			
+
 			if(!tsi.isMortgageActive()){
 				System.out.println("============== INSIDE INFORMATION UPDATE UNMORTGAGE");
 				unmortgage.setEnabled(false);
