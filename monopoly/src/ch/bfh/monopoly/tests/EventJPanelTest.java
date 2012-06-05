@@ -29,20 +29,15 @@ public class EventJPanelTest extends JFrame {
 		gc = tig.getGc();
 
 //		goToTile(5, !owned);
-		// testElectricCompanyOwned();
-		// testElectricCompanyNotOwned();
-//		 testMediterraneanOwned();
-//		 testMediterraneanNotOwned();
-		 testFirstRailRoadOwned();
-//		 testFirstRailRoadNotOwned();
+
+//		 testBothUtilitiesOwned();
+		 testFirstRailRoadNotOwned();
+
 		
-//		landOnChance();
-		
-//		 testLandOnGo();
-//		testLandOnJail();
-		// testJustVisiting();
-//		 testFreeParking();
-//		 testGoToJail();
+		 
+//		 gameClient.setCurrentPlayer("giuseppe", sendNetMessage);
+//		 gameClient.advancePlayerToTile(12, sendNetMessage);
+//		 
 		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
@@ -69,57 +64,16 @@ public class EventJPanelTest extends JFrame {
 			gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
 	}
 	
-	public void testElectricCompanyNotOwned() {
+	public void testBothUtilitiesOwned() {
 		int electricCompany = 12;
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);
 		gameClient.advancePlayerNSpaces(electricCompany, sendNetMessage);
-	}
-
-	public void testElectricCompanyOwned() {
-		int electricCompany = 12;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(electricCompany, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
+		gameClient.advancePlayerToTile(28, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
 		
 	}
 
-	public void testMediterraneanNotOwned() {
-		// mediterranean avenue
-		int tileId = 1;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-
-	public void testMediterraneanOwned() {
-		// mediterranean avenue
-		int tileId = 1;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-		gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
-		// refund the money for purchase so comparison of result is clearer
-		gameClient.getCurrentPlayer().depositMoney(
-				board.castTileToTerrain(board.getTileById(tileId)).getPrice());
-		System.out.println("Rent for "
-				+ board.castTileToTerrain(board.getTileById(tileId)).getName()
-				+ " is "
-				+ board.castTileToTerrain(board.getTileById(tileId))
-						.feeToCharge());
-		gameClient.setCurrentPlayer("Giuseppe", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-
-	public void landOnChance() {
-		// first railroad
-		int tileId = 7;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-	
-	public void testFirstRailRoadOwned() {
-		// first railroad
-		int tileId = 5;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
 
 	public void testFirstRailRoadNotOwned() {
 		// first railroad
@@ -139,40 +93,7 @@ public class EventJPanelTest extends JFrame {
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 	}
 
-	public void testLandOnGo() {
-		// goToJail tile
-		int tileId = 0;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
 	
-	public void testLandOnJail() {
-		// goToJail tile
-		int tileId =30;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-
-	public void testJustVisiting() {
-		// goToJail tile
-		int tileId = 10;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-
-	public void testFreeParking() {
-		// goToJail tile
-		int tileId = 20;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
-
-	public void testGoToJail() {
-		// goToJail tile
-		int tileId = 30;
-		gameClient.setCurrentPlayer("Justin", sendNetMessage);
-		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
-	}
 
 	public void testRollStartPanel(boolean gotojail) {
 		gameClient.setCurrentPlayer("Justin", sendNetMessage);

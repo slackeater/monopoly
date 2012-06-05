@@ -1077,5 +1077,10 @@ public class Board {
 		playerSubject.notifyListeners();
 		movementSubject.notifyListeners();	
 	}
+	
+	public int getBail(){
+		return bail;
+	}
+
 
 }

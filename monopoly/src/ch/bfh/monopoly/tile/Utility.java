@@ -14,10 +14,11 @@ import ch.bfh.monopoly.event.EventManager;
 
 public class Utility extends Property implements EventPanelSource {
 
-	JPanel jpanel;
-	JButton buttonRight;
-	JButton buttonLeft;
 	EventPanelFactory epf;
+	ResourceBundle rb;
+	String description, description1Owned, description2Owned;
+	int rent1Owned;
+	int rent2Owned;
 
 	public Utility(String name, int price, String group, int mortgageValue,
 			int coordX, int coordY, int id, EventManager em, Player bank,
@@ -27,7 +28,13 @@ public class Utility extends Property implements EventPanelSource {
 		this.name = name;
 		this.price = price;
 		this.mortgageValue = mortgageValue;
-		epf = new EventPanelFactory(this);
+		this.rb = rb;
+		description = rb.getString("utility-description");
+		description1Owned = rb.getString("utility-description1");
+		description2Owned = rb.getString("utility-description2");
+		rent1Owned = Integer.parseInt(rb.getString("tile12-rent").trim());
+		rent2Owned = Integer.parseInt(rb.getString("tile12-rent1house").trim());
+
 	}
 
 	public int feeToCharge() {
@@ -41,21 +48,23 @@ public class Utility extends Property implements EventPanelSource {
 				+ "\nmortgageValue: " + mortgageValue + "\nowner: " + owner;
 	}
 
-	
 	/**
 	 * get the JPanel to show in the GUI for this tile's event
 	 */
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		boolean owned = !(owner.getName() == "bank");
 		if (owned) {
-			epf.changePanel(Step.TILE_OWNED);
+			if (gameClient.getCurrentPlayer().getName().equals(owner.getName()))
+				epf.changePanel(Step.TILE_OWNED_BY_YOU);
+			else
+				epf.changePanel(Step.TILE_OWNED);
 			return epf.getJPanel();
 		} else
 			epf.changePanel(Step.TILE_NOT_OWNED);
 		return epf.getJPanel();
 	}
-	
-	
+
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
 		String buttonText;
@@ -70,7 +79,13 @@ public class Utility extends Property implements EventPanelSource {
 			epi = super.getTileNotOwnedEPI2(epf);
 			break;
 		case TILE_OWNED:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			String extendedDescription;
+
+			extendedDescription = description + " \n\n" + description1Owned;
+			if (gameClient.hasBothUtilities())
+				extendedDescription = description + " \n\n" + description2Owned;
+
 			al = new ActionListener() {
 
 				@Override
@@ -79,29 +94,28 @@ public class Utility extends Property implements EventPanelSource {
 				}
 			};
 
-			epi.setText("This is the event description of UtilityEvent");
-			epi.addButtonText("roll");
-			epi.addActionListener(al);
+			epi.setText(extendedDescription);
+			epi.addButton(rb.getString("roll"), 0, al);
 			break;
 		case SECOND_STEP:
-
 			Random r = new Random();
 			int roll = r.nextInt(10) + 2;
-			int multiplier = 4;
-			if (gameClient.hasBothUtilities())
-				multiplier = 10;
+			int multiplier = rent1Owned;
+			if (gameClient.hasBothUtilities()) {
+				multiplier = rent2Owned;
+			}
 			final int fee = roll * multiplier;
 
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			al = new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("Player account before:" + gameClient.getCurrentPlayer()
-							.getAccount());
+					System.out.println("Player account before:"
+							+ gameClient.getCurrentPlayer().getAccount());
 					gameClient.payUtilityFee(fee, sendNetMessage);
-					System.out.println("Player account after:" + gameClient.getCurrentPlayer()
-							.getAccount());
+					System.out.println("Player account after:"
+							+ gameClient.getCurrentPlayer().getAccount());
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					epf.disableAfterClick();
 				}
@@ -109,12 +123,13 @@ public class Utility extends Property implements EventPanelSource {
 
 			epi.setText("You rolled a " + roll + ", so the fee to pay is "
 					+ fee);
-			epi.addButtonText("pay");
-			epi.addActionListener(al);
+			epi.addButton(rb.getString("pay"), 0, al);
 			break;
-
+		case TILE_OWNED_BY_YOU:
+			epi = super.getTileOwnedByYouEPI(epf);
+			break;
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -124,8 +139,7 @@ public class Utility extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;

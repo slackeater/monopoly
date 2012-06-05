@@ -13,6 +13,7 @@ public enum Step {
 		TILE_NOT_OWNED2,
 		TILE_OWNED,
 		TILE_OWNED2,
+		TILE_OWNED_BY_YOU,
 		JAIL_FREED,
 		GET_EVENT;
 		

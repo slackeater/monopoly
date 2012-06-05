@@ -17,7 +17,6 @@ public class GoToJailEvent extends MovementEvent{
 	public GoToJailEvent(String name, String eventDescription, int newPosition,
 			GameClient gameClient) {
 		super(name, eventDescription, newPosition, gameClient);
-		epf = new EventPanelFactory(this);
 	}
 	
 	@Override
@@ -36,7 +35,8 @@ public class GoToJailEvent extends MovementEvent{
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			buttonText = "ok";
 			al =new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -45,12 +45,11 @@ public class GoToJailEvent extends MovementEvent{
 				}
 			};
 			epi.setText(eventDescription);
-			epi.addButtonText("ok");
-			epi.addActionListener(al);
+			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -60,8 +59,7 @@ public class GoToJailEvent extends MovementEvent{
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -70,6 +68,7 @@ public class GoToJailEvent extends MovementEvent{
 	
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

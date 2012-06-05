@@ -26,7 +26,6 @@ public class RepairsEvent extends AbstractTileEvent{
 		super(name, eventDescription, gameClient);
 		this.chargePerHotel = chargePerHotel;
 		this.chargePerHouse=chargePerHouse;
-		epf = new EventPanelFactory(this);
 	}
 
 	public int feeToCharge(){
@@ -59,7 +58,8 @@ public class RepairsEvent extends AbstractTileEvent{
 
 		switch (step) {
 		case GET_EVENT:	
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			buttonText = "ok";
 			al =new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -68,12 +68,11 @@ public class RepairsEvent extends AbstractTileEvent{
 				}
 			};
 			epi.setText(getEventDescription());
-			epi.addButtonText("ok");
-			epi.addActionListener(al);
+			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo();
+			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
@@ -83,8 +82,7 @@ public class RepairsEvent extends AbstractTileEvent{
 				}
 			};
 			epi.setText(labelText);
-			epi.addActionListener(al);
-			epi.addButtonText(buttonText);
+			epi.addButton(buttonText, 0, al);
 			break;
 		}
 		return epi;
@@ -93,6 +91,7 @@ public class RepairsEvent extends AbstractTileEvent{
 	
 	@Override
 	public JPanel getTileEventPanel() {
+		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}

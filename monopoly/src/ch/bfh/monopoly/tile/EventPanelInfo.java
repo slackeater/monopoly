@@ -3,24 +3,33 @@ package ch.bfh.monopoly.tile;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
+
 public class EventPanelInfo {
-
+	ArrayList<PButton> buttonList; 
 	String text;
-	ArrayList<String> buttonText;
-	ArrayList<ActionListener> buttonActions;
+	String currentPlayerName;
 	
-	public EventPanelInfo() {
-		this.buttonText = new ArrayList<String>();
-		this.buttonActions = new ArrayList<ActionListener>();
+	public class PButton extends JButton{
+
+		private static final long serialVersionUID = 1L;
+		private int amount;
+		
+		public PButton(String text, int amount, ActionListener al) {
+			super();
+			setText(text);
+			addActionListener(al);
+			this.amount = amount;
+		}
+		public int getAmount() {
+			return amount;
+		}
+	}
+	public EventPanelInfo(String currentPlayerName) {
+		this.buttonList = new ArrayList<PButton>();
+		this.currentPlayerName=currentPlayerName;
 	}
 
-	public void addActionListener(ActionListener al){
-		buttonActions.add(al);
-	}
-	public void addButtonText(String text){
-		buttonText.add(text);
-	}
-	
 	public void setText(String text){
 		this.text=text;
 	}
@@ -28,14 +37,16 @@ public class EventPanelInfo {
 	public String getText() {
 		return text;
 	}
-	public String getButtonTextAtIndex(int index) {
-		return buttonText.get(index);
-	}
-	public ActionListener getButtonActionAtIndex(int index) {
-		return buttonActions.get(index);
+
+	public PButton getButtonAtIndex(int index) {
+		return buttonList.get(index);
 	}
 	public int getButtonCount(){
-		return buttonActions.size();
+		return buttonList.size();
 	}
 	
+	public void addButton(String text, int amount, ActionListener al){
+		PButton button = new PButton(text, amount, al);
+		buttonList.add(button);
+	}
 }
