@@ -41,6 +41,26 @@ public class GameControllerTests {
 	 */
 	@Test
 	public void passGoDepositsMoney(){}
+
+	
+	/**
+	 *set mortgage active on RR
+	 */
+	@Test
+	public void mortgageRailroad(){
+		
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(5, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.toggleMortgageStatus(5, sendNetMessage);
+		String propName = gameClient.getCurrentPlayer().getProperties().get(0).getName();
+//		Tile t = board.getTileByName(propName);
+//		System.out.println(t.getName());
+//		assertTrue(t.getName().equals(propName));
+	}
+	
 	
 	/**
 	 * test that birthday event transfers money
