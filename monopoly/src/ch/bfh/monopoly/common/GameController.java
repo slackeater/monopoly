@@ -15,6 +15,7 @@ public class GameController {
 	GameClient gameClient;
 
 	public GameController(GameClient gameClient) {
+		gameClient.localPlayerCanCallMethods();
 		this.gameClient = gameClient;
 	}
 
@@ -57,6 +58,7 @@ public class GameController {
 	 *            the id corresponding to the tile
 	 */
 	public void buyHouse(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.buyHouse(tileId, true);
 	}
 
@@ -65,6 +67,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to build on
 	 */
 	public void buyHouseRow(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.buyHouseRow(tileId, true);
 	}
 
@@ -83,6 +86,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to build on
 	 */
 	public void buyHotelRow(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.buyHotelRow(tileId, true);
 	}
 	
@@ -93,6 +97,7 @@ public class GameController {
 	 *            the id corresponding to the tile
 	 */
 	public void sellHouse(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.sellHouse(tileId, true);
 	}
 
@@ -111,6 +116,7 @@ public class GameController {
 	 *            the id corresponding to the tile
 	 */
 	public void sellHotel(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.sellHotel(tileId, true);
 	}
 
@@ -119,6 +125,7 @@ public class GameController {
 	 * @param tileId the id of any tile in the group to sell from
 	 */
 	public void sellHotelRow(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.sellHotelRow(tileId, true);
 	}
 	
@@ -131,6 +138,7 @@ public class GameController {
 	 *            the mortgage status.
 	 */
 	public void toggleMortgageStatus(int tileId) {
+		gameClient.localPlayerCanCallMethods();
 		gameClient.toggleMortgageStatus(tileId, true);
 	}
 
