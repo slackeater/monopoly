@@ -53,7 +53,8 @@ public class Utility extends Property implements EventPanelSource {
 	 */
 	public JPanel getTileEventPanel() {
 		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
-		boolean owned = !(owner.getName() == "bank");
+		boolean owned = (owner.getName() != "bank");
+		System.out.println("owner: " +owner.getName() + " and currentPlayerName: "+gameClient.getCurrentPlayer().getName());
 		if (owned) {
 			if (gameClient.getCurrentPlayer().getName().equals(owner.getName()))
 				epf.changePanel(Step.TILE_OWNED_BY_YOU);
@@ -70,6 +71,7 @@ public class Utility extends Property implements EventPanelSource {
 		String buttonText;
 		ActionListener al;
 		EventPanelInfo epi;
+		String extendedDescription;
 
 		switch (step) {
 		case TILE_NOT_OWNED:
@@ -79,8 +81,8 @@ public class Utility extends Property implements EventPanelSource {
 			epi = super.getTileNotOwnedEPI2(epf);
 			break;
 		case TILE_OWNED:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
-			String extendedDescription;
+			epi = new EventPanelInfo(gameClient);
+			
 
 			extendedDescription = description + " \n\n" + description1Owned;
 			if (gameClient.hasBothUtilities())
@@ -106,7 +108,7 @@ public class Utility extends Property implements EventPanelSource {
 			}
 			final int fee = roll * multiplier;
 
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			al = new ActionListener() {
 
 				@Override
@@ -120,16 +122,20 @@ public class Utility extends Property implements EventPanelSource {
 					epf.disableAfterClick();
 				}
 			};
-
+//check if player has enough money
+			extendedDescription="";
+			if (fee>gameClient.getCurrentPlayer().getAccount()){
+				extendedDescription = rb.getString("youDontHaveEnough");
+			}
 			epi.setText("You rolled a " + roll + ", so the fee to pay is "
-					+ fee);
-			epi.addButton(rb.getString("pay"), 0, al);
+					+ fee + "\n\n"+extendedDescription);
+			epi.addButton(rb.getString("pay"), fee, al);
 			break;
 		case TILE_OWNED_BY_YOU:
 			epi = super.getTileOwnedByYouEPI(epf);
 			break;
 		default:
-			epi = new EventPanelInfo(gameClient.getCurrentPlayer().getName());
+			epi = new EventPanelInfo(gameClient);
 			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {

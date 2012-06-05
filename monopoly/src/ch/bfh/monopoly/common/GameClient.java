@@ -746,8 +746,8 @@ public class GameClient {
 	 */
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
-		advancePlayerToTile(jail, false);
 		board.setPlayerJailStatus(currentPlayer.getName(), true);
+		advancePlayerToTile(jail, false);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);

@@ -21,7 +21,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected boolean mortgageActive;
 	protected String msgIsOwned, msgIsOwnedRent, msgIsNotOwned, msgYouBought,
 			thankYouRent, buttonTextBuy, buttonTextDontBuy, buttonTextPay,
-			buttonTextContinue, group,ownedByYou;
+			buttonTextContinue, group,ownedByYou,wishToBuy,thePriceIs,youDontHaveEnough;
 	private ActionListener al;
 
 	public Property(String name, int price, String group, int mortgageValue,
@@ -43,6 +43,9 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.buttonTextDontBuy = rb.getString("dontButButton");
 		this.buttonTextContinue = rb.getString("continueButton");
 		this.ownedByYou = rb.getString("ownedByYou");
+		this.wishToBuy=rb.getString("wishToBuy");
+		this.thePriceIs=rb.getString("thePriceIs");
+		this.youDontHaveEnough=rb.getString("youDontHaveEnough");
 	}
 
 	protected String getPayRentText(int fee) {
@@ -71,9 +74,31 @@ public abstract class Property extends AbstractTile implements IProperty {
 				epf.changePanel(Step.TILE_NOT_OWNED2);
 			}
 		};
-		epi.setText(name + " " + msgIsNotOwned);
+		
+		String extendedDescription = wishToBuy;
+		if (price > gameClient.getCurrentPlayer().getAccount())
+			extendedDescription=youDontHaveEnough;
+		
+		epi.setText(name + " " + msgIsNotOwned + " \n\n" + thePriceIs + " " +price +" "+ extendedDescription);
 		epi.addButton(buttonTextDontBuy, 0, dontBuy);
-		epi.addButton(buttonTextBuy, 0, al);
+		epi.addButton(buttonTextBuy, price, al);
+		return epi;
+	}
+	
+
+	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn) {
+		final EventPanelFactory epf = epfIn;
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
+		al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				epf.disableAfterClick();
+			}
+		};
+
+		epi.setText(msgYouBought + " " + name);
+		epi.addButton(buttonTextContinue, 0, al);
 		return epi;
 	}
 	
@@ -88,22 +113,6 @@ public abstract class Property extends AbstractTile implements IProperty {
 			}
 		};
 		epi.setText(ownedByYou);
-		epi.addButton(buttonTextContinue, 0, al);
-		return epi;
-	}
-
-	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn) {
-		final EventPanelFactory epf = epfIn;
-		EventPanelInfo epi = new EventPanelInfo(gameClient);
-		al = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				epf.disableAfterClick();
-			}
-		};
-
-		epi.setText(msgYouBought + " " + name);
 		epi.addButton(buttonTextContinue, 0, al);
 		return epi;
 	}

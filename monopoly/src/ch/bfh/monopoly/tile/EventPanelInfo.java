@@ -55,9 +55,11 @@ public class EventPanelInfo {
 		int account = gameClient.getCurrentPlayer().getAccount();
 		int jailCards = gameClient.getCurrentPlayer().getJailCard();
 		PButton button = new PButton(text, amount, al);
-
-		if (amount > account)
-			button.setEnabled(false);
+		System.out.println("addButton was called");
+		System.out.println("amount: "+amount +" account: "+ account );
+		if (amount > account){
+			System.out.println("amount: "+amount +" account: "+ account +" SET ENABLE FALSE");
+			button.setEnabled(false);}
 		else
 			button.setEnabled(true);
 		// if the amount is -100 this signals the button is for using a jail

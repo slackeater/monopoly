@@ -927,7 +927,7 @@ public class Board {
 		System.out.println("BOARDadvance:" + playerName
 				+ "'s new position is: " + newPosition);
 		// if passes go
-		if (newPosition < previousPosition)
+		if (newPosition < previousPosition && !plyr.isInJail())
 			passGo(plyr);
 
 		movementSubject.notifyListeners();
