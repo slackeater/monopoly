@@ -267,12 +267,13 @@ public class Dice implements EventPanelSource {
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				epf.disableAfterClick();
 				int prevPos = gameClient.getCurrentPlayer().getPosition();
 				gameClient.advancePlayerNSpaces(roll, testOff);
 				// gameClient.sendTransactionSuccesToGUI(true);
 				int curPos = gameClient.getCurrentPlayer().getPosition();
 				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
-				epf.disableAfterClick();
+				
 			}
 		};
 
