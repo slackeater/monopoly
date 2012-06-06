@@ -925,6 +925,7 @@ public class GameClient {
 	 */
 	public void getOutOfJailByPayment(boolean sendNetMessage) {
 		try {
+			attemptedRollsReset();
 			board.getOutOfJailByPayment(currentPlayer.getName());
 			if (sendNetMessage) {
 				NetMessage msg = new NetMessage(currentPlayer.getName(),
@@ -946,6 +947,7 @@ public class GameClient {
 	 * gets the currentPlayer out of jail
 	 */
 	public void getOutOfJailByCard(boolean sendNetMessage) {
+		attemptedRollsReset();
 		board.getOutOfJailByCard(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
@@ -964,6 +966,7 @@ public class GameClient {
 	 * gets the currentPlayer out of jail by means of rolling
 	 */
 	public void getOutOfJailByRoll(boolean sendNetMessage) {
+		attemptedRollsReset();
 		board.getOutOfJailByRoll(currentPlayer.getName());
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
@@ -1459,8 +1462,7 @@ public class GameClient {
 	}
 
 	public boolean isDoublesRoll() {
-		return true;
-		// return dice.isDoubles();
+		return dice.isDoubles();
 	}
 
 	public EventPanelInfo getEventPanelInfoFromDice(Step step) {
