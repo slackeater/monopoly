@@ -1476,6 +1476,7 @@ public class GameClient {
 	 */
 	public void receiveKickVote(String playerName, boolean answer) {
 		System.err.println("gameClient: receiveKickVote: from "+ playerName + "voted: "+ answer);
+
 		String vote = rb.getString("votedYes");
 		if (!answer)
 			vote = rb.getString("votedNo");
@@ -1486,7 +1487,7 @@ public class GameClient {
 			votesReceived++;
 			if (answer)
 				kickVotes++;
-			if (kickVotes > board.getPlayers().size() / 2) {
+			if (kickVotes >= board.getPlayers().size() / 2) {
 				kickThePlayer();
 				playerToKick="";
 				votesReceived=0;
@@ -1494,6 +1495,8 @@ public class GameClient {
 			}
 			
 		}
+		System.err.println("gameClient: receiveKickVote: number of votes received " + votesReceived);
+		System.err.println("gameClient: receiveKickVote: votes in favor of kicking " + kickVotes);
 	}
 	
 	private void kickThePlayer(){
