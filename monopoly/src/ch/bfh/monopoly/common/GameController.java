@@ -320,5 +320,11 @@ public class GameController {
 		gameClient.createKickRequest(playerName);
 	}
 	
+	/**
+	 * send a your vote in response to a kick request
+	 */
+	public void sendKickVote(boolean kick){
+		gameClient.sendKickVote(kick);
+	}
 
 }

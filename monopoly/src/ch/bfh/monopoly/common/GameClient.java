@@ -41,9 +41,9 @@ public class GameClient {
 	private Dice dice;
 	// used to test / for the roll value to a certain order of values
 	private int rollCount = 0;
-	private int kickVotes;
+	private int kickVotes, votesReceived;
 	TradeInfoEvent tradeEvent;
-	boolean tradePending;
+	boolean tradePending, kickVotePending;
 	private static int attemptedRolls = 0;
 	ResourceBundle rb;
 
@@ -271,13 +271,15 @@ public class GameClient {
 	 * advance current player to tile n
 	 */
 	public void advancePlayerToTile(int tileId, boolean sendNetMessage) {
-		advancePlayerToTileInDirection(tileId, MonopolyGUI.Direction.FORWARDS, sendNetMessage);
-	}	
-	
+		advancePlayerToTileInDirection(tileId, MonopolyGUI.Direction.FORWARDS,
+				sendNetMessage);
+	}
+
 	/**
 	 * advance current player to tile n
 	 */
-	public void advancePlayerToTileInDirection(int tileId, MonopolyGUI.Direction dir, boolean sendNetMessage) {
+	public void advancePlayerToTileInDirection(int tileId,
+			MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		boolean printVars = false;
 		int currentPosition = currentPlayer.getPosition();
 		int rollEquivalent = tileId - currentPosition;
@@ -292,8 +294,6 @@ public class GameClient {
 			System.out.println("rollEquivalent" + rollEquivalent);
 		advancePlayerNSpacesInDirection(rollEquivalent, dir, sendNetMessage);
 	}
-	
-	
 
 	/**
 	 * buy a house for a given property
@@ -916,7 +916,8 @@ public class GameClient {
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		board.setPlayerJailStatus(currentPlayer.getName(), true);
-		advancePlayerToTileInDirection(jail, MonopolyGUI.Direction.BACKWARDS, false);
+		advancePlayerToTileInDirection(jail, MonopolyGUI.Direction.BACKWARDS,
+				false);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
@@ -1408,9 +1409,25 @@ public class GameClient {
 	 */
 	public void createKickRequest(String playerName) {
 		kickVotes = 0;
+		kickVotePending = true;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
 		nc.sendMessage(nm);
+
+		String eventText = localPlayer + " " + rb.getString("kickOutInitiate")
+				+ " " + playerName;
+		sendEventInformationToGUI(eventText);
+
+	}
+
+	/**
+	 * send a your vote in response to a kick request
+	 */
+	public void sendKickVote(boolean kick) {
+		NetMessage nm = new NetMessage(localPlayer, kick,
+				Messages.KICK_ANSWER);
+		nc.sendMessage(nm);
+
 	}
 
 	/**
@@ -1420,6 +1437,12 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickRequest(String playerName, String playerToKick) {
+		//send message to GUI history panel
+		String eventText = playerName + " " + rb.getString("kickOutInitiate")
+				+ " " + playerToKick;
+		sendEventInformationToGUI(eventText);
+		
+		//send message to gui to display the vote window
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_KICK_REQUEST, playerName, playerToKick);
 		ws.notifyListeners(wse);
@@ -1432,14 +1455,21 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickAnswer(String playerName, boolean answer) {
-		if (answer)
-			kickVotes++;
-		if (kickVotes > board.getPlayers().size() / 2) {
-			// sendKickSignal();
+		String vote = rb.getString("votedYes");
+		if (!answer)
+			vote = rb.getString("votedNo");
+		String eventText = playerName+ " " + vote + " " + playerName;
+		sendEventInformationToGUI(eventText);
+		
+		if (kickVotePending) {
+			votesReceived++;
+			if (answer)
+				kickVotes++;
+			if (kickVotes > board.getPlayers().size() / 2) {
+				// sendKickSignal();
+			}
+			
 		}
-		WindowStateEvent wse = new WindowStateEvent(
-				WindowMessage.MSG_KICK_ANSWER, playerName, answer);
-		ws.notifyListeners(wse);
 	}
 
 	public void localPlayerCanCallMethods() {
@@ -1477,8 +1507,7 @@ public class GameClient {
 	public EventPanelInfo getEventPanelInfoFromDice(Step step) {
 		if (dice != null)
 			System.out.println("DICE IS NOT NULL");
-		EventPanelInfo epi = dice
-				.getEventPanelInfoForStep(step);
+		EventPanelInfo epi = dice.getEventPanelInfoForStep(step);
 
 		System.out.println("gameclient:getDoublesRollEPI" + epi.getText());
 

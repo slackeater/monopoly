@@ -115,7 +115,8 @@ public class NetMessage implements Serializable {
 	 * @param m
 	 *            the message type
 	 */
-	public NetMessage(boolean kickAnswer, Messages m) {
+	public NetMessage(String string1, boolean kickAnswer, Messages m) {
+		this.string1=string1;
 		this.bool = kickAnswer;
 		this.m = m;
 	}
