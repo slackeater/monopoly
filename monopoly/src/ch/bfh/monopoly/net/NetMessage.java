@@ -253,9 +253,6 @@ public class NetMessage implements Serializable {
 		return bool;
 	}
 	
-	public String getPlayerToKick(){
-		return string1;
-	}
 
 	public TradeInfoEvent getTie() {
 		return tie;
