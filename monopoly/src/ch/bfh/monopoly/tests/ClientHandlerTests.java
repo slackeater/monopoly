@@ -25,4 +25,9 @@ public class ClientHandlerTests {
 		gc = tig.getGc();
 	}
 	
+	@Test
+	public void gameClientGetsEPIfromDice(){
+		gameClient.get
+	}
+	
 }

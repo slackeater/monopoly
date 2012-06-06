@@ -43,8 +43,13 @@ public class Go extends AbstractTile implements EventPanelSource {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					//the sum is already addded to the player account by advancePlayerNSpaces()
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
+						epf.disableAfterClick();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					}
 				}
 			};
 			epi.setText(description);
@@ -52,17 +57,7 @@ public class Go extends AbstractTile implements EventPanelSource {
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;

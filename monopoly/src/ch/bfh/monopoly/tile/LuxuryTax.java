@@ -10,7 +10,7 @@ import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.BoardEvent;
 import ch.bfh.monopoly.event.EventManager;
 
-public class LuxuryTax extends AbstractTile implements EventPanelSource{
+public class LuxuryTax extends AbstractTile implements EventPanelSource {
 
 	BoardEvent be;
 	ResourceBundle rb = ResourceBundle.getBundle(
@@ -18,7 +18,7 @@ public class LuxuryTax extends AbstractTile implements EventPanelSource{
 	String description;
 	int fee;
 	EventPanelFactory epf;
-	
+
 	public LuxuryTax(String name, int fee, int coordX, int coordY, int tileId,
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
@@ -26,7 +26,6 @@ public class LuxuryTax extends AbstractTile implements EventPanelSource{
 		this.fee = Integer.parseInt(rb.getString("tile38-price"));
 	}
 
-	
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
 		String buttonText;
@@ -34,16 +33,21 @@ public class LuxuryTax extends AbstractTile implements EventPanelSource{
 		EventPanelInfo epi;
 
 		switch (step) {
-		case GET_EVENT:	
+		case GET_EVENT:
 			epi = new EventPanelInfo(gameClient);
-			buttonText="ok";
-			al =new ActionListener() {
+			buttonText = "ok";
+			al = new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payFee(fee, sendNetMessage);
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+						epf.disableAfterClick();
+					}
 				}
 			};
 			epi.setText(description);
@@ -51,23 +55,12 @@ public class LuxuryTax extends AbstractTile implements EventPanelSource{
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;
 	}
-	
-	
+
 	@Override
 	public JPanel getTileEventPanel() {
 		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());

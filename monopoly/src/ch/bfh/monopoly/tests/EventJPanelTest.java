@@ -29,8 +29,9 @@ public class EventJPanelTest extends JFrame {
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();
-
-		int tileId=19;
+		
+		
+		int tileId=30;
 		goToTile(tileId, !owned);
 
 //		 testBothUtilitiesOwned();
@@ -51,7 +52,7 @@ public class EventJPanelTest extends JFrame {
 		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
-//		testRollStartPanel(true);
+//		testRollStartPanel(false);
 //		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
@@ -72,6 +73,7 @@ public class EventJPanelTest extends JFrame {
 		gameClient.advancePlayerNSpaces(tileId, sendNetMessage);
 		if (owned)
 			gameClient.buyCurrentPropertyForPlayer("currentPlayer", sendNetMessage);
+		gameClient.getStartTurnPanel(sendNetMessage);
 	}
 	
 	public void testBothUtilitiesOwned() {

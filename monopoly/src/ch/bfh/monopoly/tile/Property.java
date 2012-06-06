@@ -21,7 +21,8 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected boolean mortgageActive;
 	protected String msgIsOwned, msgIsOwnedRent, msgIsNotOwned, msgYouBought,
 			thankYouRent, buttonTextBuy, buttonTextDontBuy, buttonTextPay,
-			buttonTextContinue, group,ownedByYou,wishToBuy,thePriceIs,youDontHaveEnough;
+			buttonTextContinue, group, ownedByYou, wishToBuy, thePriceIs,
+			youDontHaveEnough;
 	private ActionListener al;
 
 	public Property(String name, int price, String group, int mortgageValue,
@@ -43,9 +44,9 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.buttonTextDontBuy = rb.getString("dontButButton");
 		this.buttonTextContinue = rb.getString("continueButton");
 		this.ownedByYou = rb.getString("ownedByYou");
-		this.wishToBuy=rb.getString("wishToBuy");
-		this.thePriceIs=rb.getString("thePriceIs");
-		this.youDontHaveEnough=rb.getString("youDontHaveEnough");
+		this.wishToBuy = rb.getString("wishToBuy");
+		this.thePriceIs = rb.getString("thePriceIs");
+		this.youDontHaveEnough = rb.getString("youDontHaveEnough");
 	}
 
 	protected String getPayRentText(int fee) {
@@ -59,8 +60,13 @@ public abstract class Property extends AbstractTile implements IProperty {
 		ActionListener dontBuy = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				epf.disableAfterClick();
+				if (gameClient.isDoublesRoll()) {
+					epf.setEventPanelSource(gameClient.getDice());
+					epf.changePanel(Step.DOUBLES_TRANSITION);
+				} else {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
+				}
 			}
 		};
 		al = new ActionListener() {
@@ -74,17 +80,17 @@ public abstract class Property extends AbstractTile implements IProperty {
 				epf.changePanel(Step.TILE_NOT_OWNED2);
 			}
 		};
-		
+
 		String extendedDescription = wishToBuy;
 		if (price > gameClient.getCurrentPlayer().getAccount())
-			extendedDescription=youDontHaveEnough;
-		
-		epi.setText(name + " " + msgIsNotOwned + " \n\n" + thePriceIs + "\n\n " +price +" "+ extendedDescription);
+			extendedDescription = youDontHaveEnough;
+
+		epi.setText(name + " " + msgIsNotOwned + " \n\n" + thePriceIs + "\n\n "
+				+ price + " " + extendedDescription);
 		epi.addButton(buttonTextDontBuy, 0, dontBuy);
 		epi.addButton(buttonTextBuy, price, al);
 		return epi;
 	}
-	
 
 	protected EventPanelInfo getTileNotOwnedEPI2(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
@@ -92,8 +98,14 @@ public abstract class Property extends AbstractTile implements IProperty {
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				epf.disableAfterClick();
+				
+				if (gameClient.isDoublesRoll()) {
+					epf.setEventPanelSource(gameClient.getDice());
+					epf.changePanel(Step.DOUBLES_TRANSITION);
+				} else {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
+				}
 			}
 		};
 
@@ -101,15 +113,20 @@ public abstract class Property extends AbstractTile implements IProperty {
 		epi.addButton(buttonTextContinue, 0, al);
 		return epi;
 	}
-	
+
 	protected EventPanelInfo getTileOwnedByYouEPI(EventPanelFactory epfIn) {
 		final EventPanelFactory epf = epfIn;
 		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		ActionListener al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				epf.disableAfterClick();
+				if (gameClient.isDoublesRoll()) {
+					epf.setEventPanelSource(gameClient.getDice());
+					epf.changePanel(Step.DOUBLES_TRANSITION);
+				} else {
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					epf.disableAfterClick();
+				}
 			}
 		};
 		epi.setText(ownedByYou);

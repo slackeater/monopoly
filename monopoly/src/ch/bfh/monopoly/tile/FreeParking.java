@@ -40,27 +40,35 @@ public class FreeParking extends AbstractTile implements EventPanelSource{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.freeParking(sendNetMessage);
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
+					epf.changePanel(Step.LEAVE_FREEPARKING);
 				}
 			};
 			
 			epi.setText(description + "\n\n " + gameClient.getFreeParkingAccount());
 			epi.addButton(buttonText, 0, al);
 			break;
-
-		default:
+		case LEAVE_FREEPARKING:
 			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
+						epf.disableAfterClick();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					}
 				}
 			};
-			epi.setText(labelText);
+			epi.setText(description);
 			epi.addButton(buttonText, 0, al);
+			break;
+		default:
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;

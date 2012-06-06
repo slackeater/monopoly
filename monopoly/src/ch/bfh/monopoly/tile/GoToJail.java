@@ -46,6 +46,7 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					epf.disableAfterClick();
 					gameClient.goToJail(sendNetMessage);
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					
@@ -53,7 +54,6 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 							+ gameClient.getCurrentPlayer().getPosition());
 					System.out.println("The current player jail status is :"
 							+ gameClient.getCurrentPlayer().isInJail());
-
 				}
 			};
 			epi.setText(description);
@@ -61,17 +61,7 @@ public class GoToJail extends AbstractTile implements EventPanelSource {
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;

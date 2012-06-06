@@ -64,7 +64,13 @@ public class RepairsEvent extends AbstractTileEvent{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					performEvent();
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
+						epf.disableAfterClick();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					}
 				}
 			};
 			epi.setText(getEventDescription());
@@ -72,17 +78,7 @@ public class RepairsEvent extends AbstractTileEvent{
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;
