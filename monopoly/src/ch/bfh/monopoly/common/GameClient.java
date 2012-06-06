@@ -1488,7 +1488,7 @@ public class GameClient {
 			if (answer)
 				kickVotes++;
 			if (kickVotes >= board.getPlayers().size() / 2) {
-				kickThePlayer();
+				kickThePlayer(playerToKick);
 				playerToKick="";
 				votesReceived=0;
 				kickVotePending=false;
@@ -1499,11 +1499,20 @@ public class GameClient {
 		System.err.println("gameClient: receiveKickVote: votes in favor of kicking " + kickVotes);
 	}
 	
-	private void kickThePlayer(){
-		System.err.println("PLAYER KICKED!" + playerToKick);
+	public void kickThePlayer(String playerVotedToBeKicked){
+		System.err.println("gameClient: kickThePlayer:  enough votes were made to KICK " + playerVotedToBeKicked);
+		NetMessage nm = new NetMessage(playerVotedToBeKicked,
+				Messages.KICK_PLAYER);
+		nc.sendMessage(nm);
 		
+		dividePlayerAssets(playerVotedToBeKicked);
 	}
 
+	public void dividePlayerAssets(String playerName){
+		System.out.println("\t======= "+localPlayer+"'s CONSOLE =======");
+		board.dividePlayerAssets(playerName);
+	}
+	
 	public void localPlayerCanCallMethods() {
 		if (!localPlayer.equals(currentPlayer.getName())) {
 			TransactionException te = new TransactionException(

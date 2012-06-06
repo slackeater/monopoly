@@ -603,6 +603,9 @@ public class Board {
 							+ rb.getString("hasntEnoughMoney-Requested") + " "
 							+ +price + " " + rb.getString("accountBalance")
 							+ " " + fromPlayer.getAccount());
+		System.out.println("Board: transferMoney: to "+ toName + " from " + fromPlayer.getName()
+				+ " " + +price + " " + rb.getString("accountBalance") + " "
+				+ fromPlayer.getAccount());
 		Player toPlayer = getPlayerByName(toName);
 		fromPlayer.withdawMoney(price);
 		toPlayer.depositMoney(price);
@@ -862,8 +865,8 @@ public class Board {
 	 * @throws RuntimeException
 	 */
 	public Property castTileToProperty(Tile t) throws RuntimeException {
-		System.out.println("board.castTileToProperty received: tileId:"
-				+ t.getTileId() + "which is:" + t.getName());
+		// System.out.println("board.castTileToProperty received: tileId:"
+		// + t.getTileId() + "which is:" + t.getName());
 
 		if (!(t instanceof Property))
 			throw new RuntimeException(
@@ -921,8 +924,8 @@ public class Board {
 		String direction = "forwards";
 		if (dir == MonopolyGUI.Direction.BACKWARDS)
 			direction = "backwards";
-		System.out.println("BOARDadvance: received advancePlayer: " + n
-				+ "in direction " + direction);
+		// System.out.println("BOARDadvance: received advancePlayer: " + n
+		// + "in direction " + direction);
 		int previousPosition = plyr.getPosition();
 
 		int currentPos = plyr.getPosition();
@@ -933,8 +936,8 @@ public class Board {
 		plyr.setRollValue(n);
 		plyr.setDir(dir);
 		int newPosition = plyr.getPosition();
-		System.out.println("BOARDadvance:" + playerName
-				+ "'s new position is: " + newPosition);
+		// System.out.println("BOARDadvance:" + playerName
+		// + "'s new position is: " + newPosition);
 		// if passes go
 		if (newPosition < previousPosition && !plyr.isInJail())
 			passGo(plyr);
@@ -990,6 +993,65 @@ public class Board {
 	 */
 	public void getOutOfJailByRoll(String playerName) {
 		setPlayerJailStatus(playerName, false);
+	}
+
+	public void dividePlayerAssets(String playerWhoLeft) {
+		System.err.println("board: dividePlayerAssets:  here we are!");
+		// put in a new list all the players except the one who is leaving
+		ArrayList<Player> playersMinusOne = new ArrayList<Player>();
+		for (Player p : players) {
+			if (!p.getName().equals(playerWhoLeft))
+				playersMinusOne.add(p);
+		}
+		Player plyrGone = getPlayerByName(playerWhoLeft);
+
+		// divide up properties
+		ArrayList<Tile> propToDivide = plyrGone.getProperties();
+		int playerListIndex = 0;
+		int playerListSize = playersMinusOne.size();
+		int moneyChunks = plyrGone.getAccount() / playersMinusOne.size();
+		// make a list of the properties with the tileIds in order to avoir the
+		// concurrentModificationException
+		int[] listOfTileIds = new int[propToDivide.size()];
+		for (int i = 0; i < propToDivide.size(); i++) {
+			listOfTileIds[i] = propToDivide.get(i).getTileId();
+		}
+		for (int i = 0; i < listOfTileIds.length; i++) {
+			int modularIndex = i % playersMinusOne.size();
+			Player plyrToGetProperty = playersMinusOne.get(modularIndex);
+			try {
+				transferProperty(playerWhoLeft, plyrToGetProperty.getName(),
+						listOfTileIds[i], 0);
+			} catch (TransactionException e) {
+				// this error is if the to player doesn't have enough money...
+				// which isn't the case with price 0
+				e.printStackTrace();
+			}
+			playerListIndex = playerListIndex++ % playerListSize;
+		}
+		// divide money
+		for (Player p : playersMinusOne) {
+			try {
+				transferMoney(playerWhoLeft, p.getName(), moneyChunks);
+			} catch (TransactionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		// divide jail cards
+		int jailCards = plyrGone.getJailCard();
+		for (int i = 0; i < jailCards; i++) {
+			try {
+				transferJailCards(playerWhoLeft, playersMinusOne.get(i)
+						.getName(), 1, 0);
+			} catch (TransactionException e) {
+				// this error is if the to player doesn't have enough money...
+				// which isn't the case with price 0
+				e.printStackTrace();
+			}
+		}
+		players.remove(plyrGone);
 	}
 
 	/**

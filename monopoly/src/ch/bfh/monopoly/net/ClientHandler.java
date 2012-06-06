@@ -78,6 +78,9 @@ public class ClientHandler implements IoHandler {
 		case KICK_ANSWER:
 			gameClient.receiveKickVote(n.getString1(), n.getTradeAnswer());
 			break;	
+		case KICK_PLAYER:
+			gameClient.kickThePlayer(n.getString1());
+			break;
 		case BUY_HOUSE:
 			gameClient.buyHouse(n.getInt(), false);
 			break;
@@ -196,8 +199,8 @@ public class ClientHandler implements IoHandler {
 			// TODO probably to remove
 			break;
 		case QUIT_GAME:
-			// TODO quit gamed
 			System.out.println("The player quit the game: " + n.getString1());
+			gameClient.dividePlayerAssets(n.getString1());
 			break;
 		case GAME_WINNER:
 			System.out.println("THERE IS A WINNER AND IS: " + n.getString1());
