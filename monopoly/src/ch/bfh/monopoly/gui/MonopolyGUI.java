@@ -267,7 +267,7 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 				System.out.println("MOETHOD FOR THE ANIMATION OBSERVER");
-				
+
 
 				for(PlayerStateEvent singlePlayer : playerStates){
 					//used to place the token on the first tile for the first time
@@ -356,9 +356,11 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("TRADE REQUEST");
 					}
 				}
-				
-				eventTextArea.append(wse.getEventDescription() + "\n");
-				eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
+
+				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
+					eventTextArea.append(wse.getEventDescription() + "\n");
+					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
+				}
 				//TODO kick request
 				//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 				//					tabPane.add(res.getString("label-kickrequest"), kickAnsweram(wse.getAnswer()));
@@ -412,8 +414,8 @@ public class MonopolyGUI extends JFrame {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		
+
+
 		class PlayerData implements PlayerListener{
 
 			@Override
@@ -424,12 +426,12 @@ public class MonopolyGUI extends JFrame {
 					if(p.getName().equals(gc.getLocalPlayerName()))
 						localPse = p;
 			}
-			
+
 		}
-		
+
 		PlayerData plData = new PlayerData();
 		bc.getSubjectForPlayer().addListener(plData);
-		
+
 		//!!! leave this here !!!
 		this.bc.initGUI();
 	}
@@ -467,8 +469,8 @@ public class MonopolyGUI extends JFrame {
 
 			//TODO remove bc
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
-						
-			
+
+
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
 			info.add(plInfo);
@@ -635,7 +637,7 @@ public class MonopolyGUI extends JFrame {
 				//remove the useless tab. Only the event tab must remain
 				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--)
 					tabPane.remove(j);
-				
+
 				beginTurnClicked = false;
 				gc.endTurn();
 			}
@@ -654,8 +656,8 @@ public class MonopolyGUI extends JFrame {
 
 			@Override
 			public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-				
-			
+
+
 				for(PlayerStateEvent playerState : playerStates){
 					//if the localplayer has the token enable buttons
 					if(playerState.getName().equals(gc.getLocalPlayerName()))
@@ -740,7 +742,7 @@ public class MonopolyGUI extends JFrame {
 					hisTerrainBox.setEnabled(false);
 			}
 		});
-	
+
 
 		this.rcvrCardCheck = new JCheckBox();
 		this.rcvrCardCheck.addActionListener(new ActionListener() {
@@ -885,12 +887,12 @@ public class MonopolyGUI extends JFrame {
 		this.usersBox = new JComboBox();
 		this.usersBox.addItem(new String("-"));
 		this.usersBox.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(!((String)usersBox.getSelectedItem()).equals("-")){
 					hisTerrainBox.removeAllItems();
-					
+
 					System.out.println("INDEX USER: "+ usersBox.getSelectedIndex());
 
 					boolean terrain[] = pse.get(usersBox.getSelectedIndex()-1).getTerrains();
