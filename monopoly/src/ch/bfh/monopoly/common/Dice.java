@@ -79,11 +79,11 @@ public class Dice implements EventPanelSource {
 		// so in the case where:
 		// maxValDice = 6 ; Math.random = 0.99
 		// 6*0.99 = 5.94 rounded => 5 + 1 = 6
-		 throwValueOne = (int) (maxValDiceOne * Math.random()) + 1;
-		 throwValueTwo = (int) (maxValDiceTwo * Math.random()) + 1;
+		throwValueOne = (int) (maxValDiceOne * Math.random()) + 1;
+		throwValueTwo = (int) (maxValDiceTwo * Math.random()) + 1;
 
-//		throwValueOne = 4;
-//		throwValueTwo = 4;
+		// throwValueOne = 4;
+		// throwValueTwo = 4;
 		return throwValueOne + throwValueTwo;
 	}
 
@@ -260,35 +260,22 @@ public class Dice implements EventPanelSource {
 				+ rb.getString("advance") + " " + roll + " "
 				+ rb.getString("spaces");
 		buttonText = rb.getString("continueButton");
-		if (isDoubles()) {
-			gameClient.attemptedRollIncrement();
+
+		gameClient.attemptedRollIncrement();
+		if (isDoubles())
 			labelText = "DOUBLES! \n" + labelText;
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					epf.disableAfterClick();
-					int prevPos = gameClient.getCurrentPlayer().getPosition();
-					gameClient.advancePlayerNSpaces(roll, testOff);
-					epf.changePanel(Step.DOUBLES_TRANSITION);
-					int curPos = gameClient.getCurrentPlayer().getPosition();
-					System.out.println("PrevPos" + prevPos + "  CurPos"
-							+ curPos);
-				}
-			};
-		} else {
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					int prevPos = gameClient.getCurrentPlayer().getPosition();
-					gameClient.advancePlayerNSpaces(roll, testOff);
-					// gameClient.sendTransactionSuccesToGUI(true);
-					int curPos = gameClient.getCurrentPlayer().getPosition();
-					System.out.println("PrevPos" + prevPos + "  CurPos"
-							+ curPos);
-					epf.disableAfterClick();
-				}
-			};
-		}
+		al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int prevPos = gameClient.getCurrentPlayer().getPosition();
+				gameClient.advancePlayerNSpaces(roll, testOff);
+				// gameClient.sendTransactionSuccesToGUI(true);
+				int curPos = gameClient.getCurrentPlayer().getPosition();
+				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
+				epf.disableAfterClick();
+			}
+		};
+
 		epi.setText(labelText);
 		epi.addButton(buttonText, 0, al);
 		return epi;
@@ -318,8 +305,9 @@ public class Dice implements EventPanelSource {
 		EventPanelInfo epi = new EventPanelInfo(gameClient);
 		if (gameClient.attempedRollsGetCount() > 0) {
 			labelText = rb.getString("youRolled") + getDiceValues() + " "
-					+ rb.getString("rollAgain") + " " + (3 - gameClient.attempedRollsGetCount())
-					+ " " + rb.getString("triesRemaining");
+					+ rb.getString("rollAgain") + " "
+					+ (3 - gameClient.attempedRollsGetCount()) + " "
+					+ rb.getString("triesRemaining");
 		} else
 			labelText = rb.getString("inJail");
 
@@ -347,7 +335,8 @@ public class Dice implements EventPanelSource {
 			public void actionPerformed(ActionEvent e) {
 				gameClient.attemptedRollIncrement();
 				epf.changePanel(Step.JAIL_ROLL);
-				System.out.println("attempted Rolls: " + gameClient.attempedRollsGetCount());
+				System.out.println("attempted Rolls: "
+						+ gameClient.attempedRollsGetCount());
 			}
 		};
 

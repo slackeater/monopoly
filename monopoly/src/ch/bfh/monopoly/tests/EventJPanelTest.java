@@ -25,14 +25,15 @@ public class EventJPanelTest extends JFrame {
 	TestInstanceGenerator tig = new TestInstanceGenerator("fr");
 	boolean owned= true;
 	
-	public EventJPanelTest() {
+	public EventJPanelTest()  {
 		gameClient = tig.getGameClient();
 		board = tig.getBoard();
 		gc = tig.getGc();
 		
 		
-		int tileId=30;
-		goToTile(tileId, !owned);
+		int tileId=1;
+		goToTile(tileId, owned);
+			gameClient.toggleMortgageStatus(1, sendNetMessage);
 
 //		 testBothUtilitiesOwned();
 

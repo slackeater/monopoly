@@ -59,6 +59,10 @@ public class Terrain extends Property implements EventPanelSource {
 	 */
 	public JPanel getTileEventPanel() {
 		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
+		if (mortgageActive){
+			epf.changePanel(getTileIsMortgagedEPI(epf));
+			return epf.getJPanel();
+		}
 		boolean owned = !(owner.getName() == "bank");
 		if (owned) {
 			if (gameClient.getCurrentPlayer().getName().equals(owner.getName()))

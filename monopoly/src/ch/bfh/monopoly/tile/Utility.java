@@ -53,6 +53,10 @@ public class Utility extends Property implements EventPanelSource {
 	 */
 	public JPanel getTileEventPanel() {
 		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
+		if (mortgageActive){
+			epf.changePanel(getTileIsMortgagedEPI(epf));
+			return epf.getJPanel();
+		}
 		boolean owned = (owner.getName() != "bank");
 		System.out.println("owner: " + owner.getName()
 				+ " and currentPlayerName: "
@@ -119,7 +123,6 @@ public class Utility extends Property implements EventPanelSource {
 					gameClient.payUtilityFee(fee, sendNetMessage);
 					System.out.println("Player account after:"
 							+ gameClient.getCurrentPlayer().getAccount());
-					
 					if (gameClient.isDoublesRoll()) {
 						epf.setEventPanelSource(gameClient.getDice());
 						epf.changePanel(Step.DOUBLES_TRANSITION);

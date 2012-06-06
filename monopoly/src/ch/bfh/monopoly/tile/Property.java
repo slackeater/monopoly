@@ -22,7 +22,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 	protected String msgIsOwned, msgIsOwnedRent, msgIsNotOwned, msgYouBought,
 			thankYouRent, buttonTextBuy, buttonTextDontBuy, buttonTextPay,
 			buttonTextContinue, group, ownedByYou, wishToBuy, thePriceIs,
-			youDontHaveEnough;
+			youDontHaveEnough,isMortgaged;
 	private ActionListener al;
 
 	public Property(String name, int price, String group, int mortgageValue,
@@ -47,6 +47,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 		this.wishToBuy = rb.getString("wishToBuy");
 		this.thePriceIs = rb.getString("thePriceIs");
 		this.youDontHaveEnough = rb.getString("youDontHaveEnough");
+		this.isMortgaged=rb.getString("isMortgaged");
 	}
 
 	protected String getPayRentText(int fee) {
@@ -98,7 +99,7 @@ public abstract class Property extends AbstractTile implements IProperty {
 		al = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (gameClient.isDoublesRoll()) {
 					epf.setEventPanelSource(gameClient.getDice());
 					epf.changePanel(Step.DOUBLES_TRANSITION);
@@ -134,6 +135,24 @@ public abstract class Property extends AbstractTile implements IProperty {
 		return epi;
 	}
 
+	protected EventPanelInfo getTileIsMortgagedEPI(EventPanelFactory epfIn) {
+		final EventPanelFactory epf = epfIn;
+		EventPanelInfo epi = new EventPanelInfo(gameClient);
+		ActionListener al = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+				epf.disableAfterClick();
+			}
+
+		};
+		epi.setText(isMortgaged);
+		epi.addButton(buttonTextContinue, 0, al);
+		return epi;
+	}
+
+	
+	
 	public boolean isMortgageActive() {
 		return mortgageActive;
 	}

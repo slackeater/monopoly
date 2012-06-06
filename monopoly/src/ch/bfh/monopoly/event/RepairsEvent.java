@@ -43,7 +43,7 @@ public class RepairsEvent extends AbstractTileEvent{
 	public String getEventDescription() {
 		int housesOnBoard = 32 - gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
-		return eventDescription=name + "\n\n " + eventDescription +" \n\n"+rb.getString("thereAre")+ " "+ housesOnBoard +" "+ rb.getString("housesOnBoard") +" "+ hotelsOnBoard+"\n" +rb.getString("housesOnBoard")+" \n" + rb.getString("pay")+" feeToCharge()";       
+		return eventDescription=name + "\n\n " + eventDescription +" \n\n"+rb.getString("thereAre")+ " "+ housesOnBoard +" "+ rb.getString("housesOnBoard") +" "+ hotelsOnBoard+"\n" +rb.getString("housesOnBoard")+" \n" + rb.getString("pay")+ " "+feeToCharge();       
 				//OLD DESCRIPTION
 //				" "+rb.getString("hotelsOnBoard")+" "+chargePerHouse + " "+ rb.getString("forEachHouse")+" " + chargePerHotel + " "+rb.getString("forEachHotel") +"\n\n"+ 
 
