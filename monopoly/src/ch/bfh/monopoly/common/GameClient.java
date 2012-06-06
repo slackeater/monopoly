@@ -271,6 +271,13 @@ public class GameClient {
 	 * advance current player to tile n
 	 */
 	public void advancePlayerToTile(int tileId, boolean sendNetMessage) {
+		advancePlayerToTileInDirection(tileId, MonopolyGUI.Direction.FORWARDS, sendNetMessage);
+	}	
+	
+	/**
+	 * advance current player to tile n
+	 */
+	public void advancePlayerToTileInDirection(int tileId, MonopolyGUI.Direction dir, boolean sendNetMessage) {
 		boolean printVars = false;
 		int currentPosition = currentPlayer.getPosition();
 		int rollEquivalent = tileId - currentPosition;
@@ -283,8 +290,10 @@ public class GameClient {
 			rollEquivalent += 40;
 		if (printVars)
 			System.out.println("rollEquivalent" + rollEquivalent);
-		advancePlayerNSpaces(rollEquivalent, sendNetMessage);
+		advancePlayerNSpacesInDirection(rollEquivalent, dir, sendNetMessage);
 	}
+	
+	
 
 	/**
 	 * buy a house for a given property
@@ -907,7 +916,7 @@ public class GameClient {
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		board.setPlayerJailStatus(currentPlayer.getName(), true);
-		advancePlayerToTile(jail, false);
+		advancePlayerToTileInDirection(jail, MonopolyGUI.Direction.BACKWARDS, false);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
