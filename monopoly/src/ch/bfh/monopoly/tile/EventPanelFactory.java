@@ -114,7 +114,6 @@ public class EventPanelFactory  implements PlayerListener{
 	
 	@Override
 	public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-		System.out.println("EVENT PANEL FACTORY GOT OBSERVER SIGNAL");
 		int currentPlayerAccount=0;
 		int jailCardCount=0;
 		for (PlayerStateEvent pse : playerStates){
