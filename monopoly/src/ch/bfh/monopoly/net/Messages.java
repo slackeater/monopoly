@@ -62,6 +62,7 @@ public enum Messages {
 	TRADE_ANSWER(701),
 	PERFORM_TRADE(705),
 	
+	GAME_WINNER(1000),
 	
 	//probably only for test
 	ACKNOWLEDGE(999)

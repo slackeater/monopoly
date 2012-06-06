@@ -56,11 +56,11 @@ public class ServerHandler implements IoHandler{
 		public int getRollValue() {
 			return rollValue;
 		}
-		
+
 		public void setTurnToken(boolean t){
 			turnToken = t;
 		}
-		
+
 		public boolean hasTurnToken(){
 			return turnToken;
 		}
@@ -111,7 +111,7 @@ public class ServerHandler implements IoHandler{
 		for(PlayerWrapper p : plWrap){
 			p.setTurnToken(false);
 		}
-		
+
 		NetMessage nm = new NetMessage(plWrap.get(userTokenIndex).getUsername(), Messages.TURN_TOKEN);
 		plWrap.get(userTokenIndex).setTurnToken(true);
 
@@ -192,6 +192,8 @@ public class ServerHandler implements IoHandler{
 	 */
 	private void playerQuit(IoSession session){
 		//find the user
+
+
 		for(int j = 0 ; j < usernames.size() ; j++){
 			if(plWrap.get(j).getSession() == session){
 				System.out.println("USER QUIT: " + plWrap.get(j).getUsername());
@@ -210,11 +212,11 @@ public class ServerHandler implements IoHandler{
 				//if the user who quit has the turn token update it and send a new turn token
 				System.out.println("THE TOKEN IS: " + userTokenIndex);
 				System.out.println("THE J COUNTER IS: " + j);
-						
+
 				if(plWrap.get(j).hasTurnToken()){
 					System.out.println("THE USER HAS THE TOKEN");
 					System.out.println(plWrap.get(j).getUsername());
-					
+
 					System.out.println("WE HAVE TO SEND THE TURN TOKEN TO: ");
 					System.out.println(usernames.get(userTokenIndex));
 
@@ -225,9 +227,18 @@ public class ServerHandler implements IoHandler{
 
 				usernames.remove(j);
 				plWrap.remove(j);
-			}
-		}
 				
+				//there is only one player, so the game must ends
+				if(usernames.size() == 1){
+					NetMessage winner = new NetMessage(usernames.get(0), Messages.GAME_WINNER);
+					sendBroadcast(winner, null);
+				}
+				
+				break;
+			}
+
+		}
+
 		System.out.println("======================================000");
 		System.out.println("======================================000");
 		System.out.println("======================================000");
@@ -238,7 +249,7 @@ public class ServerHandler implements IoHandler{
 	@Override
 	public void messageReceived(IoSession arg0, Object arg1) throws Exception {
 		NetMessage n = (NetMessage)arg1;
-		
+
 		System.out.println("ServerHandler Received Message TYPE: " + n.getMessageType());
 
 		if(n.getMessageType() == Messages.SEND_USERNAME)

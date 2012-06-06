@@ -99,7 +99,6 @@ public class MonopolyGUI extends JFrame {
 	private boolean tokenPlaced = false;
 	private boolean beginTurnClicked = false;
 	private JFrame thisFrame;
-	private List<PlayerStateEvent> playersData = new ArrayList<PlayerStateEvent>();
 
 	//TODO TO BE MOVED AWAY
 	public enum Direction{
@@ -342,13 +341,8 @@ public class MonopolyGUI extends JFrame {
 
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
 					tabPane.setSelectedIndex(0);
-					eventTextArea.append(wse.getEventDescription()+"\n");
-				}
-				if (wse.getType() == WindowMessage.MSG_FOR_EVENT_INFO){
-					eventTextArea.append(wse.getEventDescription()+"\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
-					eventTextArea.append(wse.getEventDescription()+"\n");
 					tabPane.setSelectedIndex(0);
 					endTurn.setEnabled(true);
 				}
@@ -362,6 +356,9 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("TRADE REQUEST");
 					}
 				}
+				
+				eventTextArea.append(wse.getEventDescription() + "\n");
+				eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
 				//TODO kick request
 				//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 				//					tabPane.add(res.getString("label-kickrequest"), kickAnsweram(wse.getAnswer()));
@@ -628,8 +625,6 @@ public class MonopolyGUI extends JFrame {
 		this.endTurn = new JButton(res.getString("button-endturn"));
 		this.endTurn.setEnabled(false);
 
-
-
 		endTurn.addActionListener(new ActionListener() {
 
 			@Override
@@ -638,10 +633,9 @@ public class MonopolyGUI extends JFrame {
 				trade.setEnabled(false);
 
 				//remove the useless tab. Only the event tab must remain
-				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--){
+				for(int j = tabPane.getComponentCount()-1 ; j > 0 ; j--)
 					tabPane.remove(j);
-				}
-
+				
 				beginTurnClicked = false;
 				gc.endTurn();
 			}
