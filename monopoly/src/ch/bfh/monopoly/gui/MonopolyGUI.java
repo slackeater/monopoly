@@ -357,7 +357,6 @@ public class MonopolyGUI extends JFrame {
 					}
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
-					tabPane.add("TEST", new JPanel());
 					tabPane.add(res.getString("label-kickrequest"), kickRequest());
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("KICK REQUEST ");
