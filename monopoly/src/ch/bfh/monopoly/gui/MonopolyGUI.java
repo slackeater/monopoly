@@ -356,17 +356,17 @@ public class MonopolyGUI extends JFrame {
 						System.out.println("TRADE REQUEST");
 					}
 				}
+				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
+					tabPane.add(res.getString("label-kickrequest"), kickRequest());
+					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+					System.out.println("TRADE ANSWER");
+				}
 
 				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
 					eventTextArea.append(wse.getEventDescription() + "\n");
 					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
 				}
-				//TODO kick request
-				//				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
-				//					tabPane.add(res.getString("label-kickrequest"), kickAnsweram(wse.getAnswer()));
-				//					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
-				//					System.out.println("TRADE ANSWER");
-				//				}
+
 			}
 		}
 
@@ -1000,41 +1000,29 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String selectedName = ((String)username.getSelectedItem());
-				
+
 				if(!selectedName.equals("-") && !selectedName.equals(gc.getLocalPlayerName())){
 					gc.createKickRequest(selectedName);
 				}
 				else{
 					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
 				}
-					
-				
+
+
 			}
 
 			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent e) {}
 
 			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent e) {}
 
 			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent e) {}
 
 			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			public void mouseExited(MouseEvent e) {}
+
 		});
 
 		btnCtr.add(Box.createHorizontalGlue());
@@ -1175,7 +1163,7 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("PRESSED YES");
-				//TODO manage answer
+				gc.sendKickVote(true);
 				yes.setEnabled(false);
 				no.setEnabled(false);
 			}
@@ -1186,7 +1174,7 @@ public class MonopolyGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("PRESSED NO");
-				//TODO manage answer
+				gc.sendKickVote(false);
 				no.setEnabled(false);
 				yes.setEnabled(false);
 			}
