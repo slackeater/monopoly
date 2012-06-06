@@ -31,7 +31,7 @@ import ch.bfh.monopoly.tile.Tile;
 public class GameClient {
 
 	private Player currentPlayer;
-	private String localPlayer;
+	private String localPlayer,playerToKick;
 	private Player bank;
 	private Locale loc;
 	private Board board;
@@ -1232,7 +1232,7 @@ public class GameClient {
 	 */
 	public void sendTradeAnswer(boolean answer) {
 		System.out.println("gameClient send TradeAnswer of " + answer);
-		NetMessage nm = new NetMessage(answer, Messages.TRADE_ANSWER);
+		NetMessage nm = new NetMessage(localPlayer, answer, Messages.TRADE_ANSWER);
 		nc.sendMessage(nm);
 	}
 
@@ -1408,8 +1408,10 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void createKickRequest(String playerName) {
+		System.err.println("gameClient: createKickRequest: to kick " +playerName + "  created by "+ localPlayer);
 		kickVotes = 0;
 		kickVotePending = true;
+		playerToKick=playerName;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
 		nc.sendMessage(nm);
@@ -1424,6 +1426,7 @@ public class GameClient {
 	 * send a your vote in response to a kick request
 	 */
 	public void sendKickVote(boolean kick) {
+		System.err.println("gameClient: sendKickVote:  "+localPlayer+"voted:" +kick);
 		NetMessage nm = new NetMessage(localPlayer, kick,
 				Messages.KICK_ANSWER);
 		nc.sendMessage(nm);
@@ -1437,6 +1440,7 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickRequest(String playerName, String playerToKick) {
+		System.err.println("gameClient: receiveKickRequest:  from"+playerName+"to kick:" +playerToKick);
 		//send message to GUI history panel
 		String eventText = playerName + " " + rb.getString("kickOutInitiate")
 				+ " " + playerToKick;
@@ -1454,7 +1458,8 @@ public class GameClient {
 	 * @param the
 	 *            name of the player who might be kicked out of the game
 	 */
-	public void receiveKickAnswer(String playerName, boolean answer) {
+	public void receiveKickVote(String playerName, boolean answer) {
+		System.err.println("gameClient: receiveKickVote: from "+ playerName + "voted: "+ answer);
 		String vote = rb.getString("votedYes");
 		if (!answer)
 			vote = rb.getString("votedNo");
@@ -1466,10 +1471,18 @@ public class GameClient {
 			if (answer)
 				kickVotes++;
 			if (kickVotes > board.getPlayers().size() / 2) {
-				// sendKickSignal();
+				kickThePlayer();
+				playerToKick="";
+				votesReceived=0;
+				kickVotePending=false;
 			}
 			
 		}
+	}
+	
+	private void kickThePlayer(){
+		System.err.println("PLAYER KICKED!" + playerToKick);
+		
 	}
 
 	public void localPlayerCanCallMethods() {
