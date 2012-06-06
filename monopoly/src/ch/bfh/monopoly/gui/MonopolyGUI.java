@@ -983,7 +983,8 @@ public class MonopolyGUI extends JFrame {
 		kick.setLayout(new BoxLayout(kick, BoxLayout.PAGE_AXIS));
 		kick.setBorder(BorderFactory.createTitledBorder(res.getString("label-kicktitle")));
 
-		JComboBox username = new JComboBox();
+		final JComboBox username = new JComboBox();
+		username.addItem(new String("-"));
 
 		//build the array with the user name
 		for(PlayerStateEvent ps : pse)
@@ -994,6 +995,47 @@ public class MonopolyGUI extends JFrame {
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
 
 		JButton sendKick = new JButton(res.getString("button-kickvote"));
+		sendKick.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String selectedName = ((String)username.getSelectedItem());
+				
+				if(!selectedName.equals("-") && !selectedName.equals(gc.getLocalPlayerName())){
+					gc.createKickRequest(selectedName);
+				}
+				else{
+					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
+				}
+					
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
 
 		btnCtr.add(Box.createHorizontalGlue());
 		btnCtr.add(sendKick);
