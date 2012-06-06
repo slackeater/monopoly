@@ -279,7 +279,6 @@ public class PlayerInfo extends JPanel{
 	 *
 	 */
 	class PlayerUpdate implements PlayerListener{
-
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 			
