@@ -73,17 +73,7 @@ public class MovementEvent extends AbstractTileEvent {
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;

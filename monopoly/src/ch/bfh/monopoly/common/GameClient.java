@@ -20,8 +20,11 @@ import ch.bfh.monopoly.observer.WindowListener;
 import ch.bfh.monopoly.observer.WindowMessage;
 import ch.bfh.monopoly.observer.WindowStateEvent;
 import ch.bfh.monopoly.observer.WindowSubject;
+import ch.bfh.monopoly.tile.EventPanelInfo;
+import ch.bfh.monopoly.tile.EventPanelSource;
 import ch.bfh.monopoly.tile.IProperty;
 import ch.bfh.monopoly.tile.Property;
+import ch.bfh.monopoly.tile.Step;
 import ch.bfh.monopoly.tile.Terrain;
 import ch.bfh.monopoly.tile.Tile;
 
@@ -41,6 +44,7 @@ public class GameClient {
 	private int kickVotes;
 	TradeInfoEvent tradeEvent;
 	boolean tradePending;
+	private static int attemptedRolls = 0;
 	ResourceBundle rb;
 
 	/**
@@ -200,9 +204,9 @@ public class GameClient {
 					board.getTileById(currentPlayer.getPosition())).getName();
 			int price = board.castTileToProperty(
 					board.getTileById(currentPlayer.getPosition())).getPrice();
-			String eventText = playerNameAdjusted + " " + rb.getString("boughtTheProp")
-					+ " " + propertyName + " " + rb.getString("for") + " "
-					+ price;
+			String eventText = playerNameAdjusted + " "
+					+ rb.getString("boughtTheProp") + " " + propertyName + " "
+					+ rb.getString("for") + " " + price;
 			sendEventInformationToGUI(eventText);
 
 			if (sendNetMessage) {
@@ -1440,6 +1444,34 @@ public class GameClient {
 
 	public int getBail() {
 		return board.getBail();
+	}
+
+	public void attemptedRollsReset() {
+		attemptedRolls = 0;
+	}
+
+	public void attemptedRollIncrement() {
+		attemptedRolls++;
+	}
+
+	public int attempedRollsGetCount() {
+		return attemptedRolls;
+	}
+
+	public boolean isDoublesRoll() {
+		return true;
+		// return dice.isDoubles();
+	}
+
+	public EventPanelInfo getEventPanelInfoFromDice(Step step) {
+		if (dice != null)
+			System.out.println("DICE IS NOT NULL");
+		EventPanelInfo epi = dice
+				.getEventPanelInfoForStep(step);
+
+		System.out.println("gameclient:getDoublesRollEPI" + epi.getText());
+
+		return epi;
 	}
 
 }

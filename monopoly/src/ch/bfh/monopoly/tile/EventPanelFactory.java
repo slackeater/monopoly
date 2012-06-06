@@ -25,9 +25,9 @@ import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
 
 public class EventPanelFactory  implements PlayerListener{
-	JPanel master, buttonPanel;
-	JTextPane label;
-	EventPanelSource eps;
+	private static JPanel master,buttonPanel;
+	private static JTextPane label;
+	private static EventPanelSource eps;
 	EventPanelInfo epi;
 
 	
@@ -40,15 +40,16 @@ public class EventPanelFactory  implements PlayerListener{
 //		this.eps = eps;
 //	}
 	
-	public EventPanelFactory(EventPanelSource eps, PlayerSubject ps) {
+	public EventPanelFactory(EventPanelSource epsIn, PlayerSubject ps) {
 		master = createMasterPanel();
 		buttonPanel = new JPanel();
 		label = new JTextPane();
+		label.setEditable(false);
 		// label.setWrapStyleWord(true);
 		// label.setLineWrap(true);
 		// label.setHorizontalAlignment( SwingConstants.CENTER );
 		ps.addListener(this);
-		this.eps = eps;
+		eps = epsIn;
 	}
 
 	public JPanel createMasterPanel() {
@@ -63,10 +64,13 @@ public class EventPanelFactory  implements PlayerListener{
 		return master;
 	}
 
-	public void changePanel(Step step) {
-		JPanel newButtonPanel = new JPanel();
-
+	public void changePanel(Step step){
 		epi = eps.getEventPanelInfoForStep(step);
+		changePanel(epi);
+	}
+	
+	public void changePanel(EventPanelInfo epi) {
+		JPanel newButtonPanel = new JPanel();
 		label.setText("\n\n"+epi.getText());
 
 		// format the text
@@ -135,5 +139,10 @@ public class EventPanelFactory  implements PlayerListener{
 				
 		}
 	}
+	
+	public void setEventPanelSource(EventPanelSource epsIn){
+		eps=epsIn;
+	}
+	
 
 }

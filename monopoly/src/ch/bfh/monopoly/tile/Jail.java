@@ -22,10 +22,8 @@ public class Jail extends AbstractTile implements EventPanelSource {
 			EventManager em, GameClient gameClient) {
 		super(name, coordX, coordY, tileId, em, gameClient);
 		this.description = rb.getString("jail-cardText");
-		this.description2= rb.getString("jail-cardText2");
+		this.description2 = rb.getString("jail-cardText2");
 	}
-
-
 
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
@@ -36,35 +34,35 @@ public class Jail extends AbstractTile implements EventPanelSource {
 		switch (step) {
 		case GET_EVENT:
 			epi = new EventPanelInfo(gameClient);
-			buttonText="ok";
+			buttonText = "ok";
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 
-					System.out.println("The current player is at tile :"
-							+ gameClient.getCurrentPlayer().getPosition());
-					System.out.println("The current player jail status is :"
-							+ gameClient.getCurrentPlayer().isInJail());
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
 
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+
+						System.out.println("The current player is at tile :"
+								+ gameClient.getCurrentPlayer().getPosition());
+						System.out
+								.println("The current player jail status is :"
+										+ gameClient.getCurrentPlayer()
+												.isInJail());
+					}
 				}
 			};
+			if (gameClient.getCurrentPlayer().isInJail())
+				description=rb.getString("wentToJailArrivalMessage");
 			epi.setText(description);
 			epi.addButton(buttonText, 0, al);
 			break;
 
 		default:
-			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
-			buttonText = "ok";
-			al = new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-				}
-			};
-			epi.setText(labelText);
-			epi.addButton(buttonText, 0, al);
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;

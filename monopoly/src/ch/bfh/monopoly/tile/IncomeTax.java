@@ -43,8 +43,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payIncome10Percent(sendNetMessage);
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
+					epf.changePanel(Step.PAID_INCOME_TAX);
 				}
 			};
 
@@ -53,8 +52,7 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payFee(amount, sendNetMessage);
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
-					epf.disableAfterClick();
+					epf.changePanel(Step.PAID_INCOME_TAX);
 				}
 			};
 			
@@ -63,19 +61,28 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 			epi.addButton("10%", 0, tenPercent);
 			epi.addButton(String.valueOf(amount), 0, tenPercent);
 			break;
-
-		default:
+		case PAID_INCOME_TAX:
 			epi = new EventPanelInfo(gameClient);
-			labelText = "No case defined";
 			buttonText = "ok";
 			al = new ActionListener() {
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+
+					if (gameClient.isDoublesRoll()) {
+						epf.setEventPanelSource(gameClient.getDice());
+						epf.changePanel(Step.DOUBLES_TRANSITION);
+					} else {
+						epf.disableAfterClick();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
+					}
 				}
 			};
-			epi.setText(labelText);
+			epi.setText(rb.getString("thanks"));
 			epi.addButton(buttonText, 0, al);
+			break;
+		default:
+			epi = gameClient.getEventPanelInfoFromDice(step);
 			break;
 		}
 		return epi;
