@@ -238,6 +238,7 @@ public class Dice implements EventPanelSource {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				gameClient.sendTransactionSuccesToGUI(testOff);
+				gameClient.getOutOfJailFailure(testOff);
 				epf.disableAfterClick();
 			}
 		};

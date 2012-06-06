@@ -989,6 +989,20 @@ public class GameClient {
 				+ rb.getString("gotOutOfJailByRolling");
 		sendEventInformationToGUI(eventText);
 	}
+	
+	public void getOutOfJailFailure(boolean sendNetMessage){
+		if (sendNetMessage) {
+			NetMessage msg = new NetMessage(currentPlayer.getName(),
+					Messages.GET_OUT_OF_JAIL_FAILURE);
+			sendNetMessageToGUI(msg);
+		}
+
+		String playerName = currentPlayer.getName();
+		String eventText = playerName + " "
+				+ rb.getString("getOutOfJailFailure");
+		sendEventInformationToGUI(eventText);
+		
+	}
 
 	/**
 	 * called by BirthdayEvent class, transfer a given amount of money from all
@@ -1414,6 +1428,7 @@ public class GameClient {
 		playerToKick=playerName;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
+		System.err.println("gameClient: sentNetMessage: to kick " +nm.getString2() + "  created by "+ nm.getString1());
 		nc.sendMessage(nm);
 
 		String eventText = localPlayer + " " + rb.getString("kickOutInitiate")

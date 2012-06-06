@@ -260,7 +260,7 @@ public class NetMessage implements Serializable {
 	
 	
 	public String getString2(){
-		return string1;
+		return string2;
 	}
 
 

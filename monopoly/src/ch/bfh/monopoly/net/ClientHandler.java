@@ -72,6 +72,7 @@ public class ClientHandler implements IoHandler {
 					false);
 			break;
 		case KICK_REQUEST:
+			System.err.println("clientHandler: KICK_REQUEST: netMessage: string1" + n.getString1() + " string2 "+ n.getString2());
 			gameClient.receiveKickRequest(n.getString1(), n.getString2());
 			break;
 		case KICK_ANSWER:
@@ -176,6 +177,9 @@ public class ClientHandler implements IoHandler {
 			break;
 		case GET_OUT_OF_JAIL_USECARD:
 			gameClient.getOutOfJailByCard(false);
+			break;
+		case GET_OUT_OF_JAIL_FAILURE:
+			gameClient.getOutOfJailFailure(false);
 			break;
 		case TRADE_REQUEST:
 			System.out.println("clientHandler: TRADE REQUEST ARRIVED");
