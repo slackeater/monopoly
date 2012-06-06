@@ -72,6 +72,7 @@ public class ClientHandler implements IoHandler {
 					false);
 			break;
 		case KICK_REQUEST:
+			System.err.println("clientHandler: KICK_REQUEST: netMessage: string1" + n.getString1() + " string2 "+ n.getString2());
 			gameClient.receiveKickRequest(n.getString1(), n.getString2());
 			break;
 		case KICK_ANSWER:

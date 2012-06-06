@@ -1428,6 +1428,7 @@ public class GameClient {
 		playerToKick=playerName;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
+		System.err.println("gameClient: sentNetMessage: to kick " +nm.getString2() + "  created by "+ nm.getString1());
 		nc.sendMessage(nm);
 
 		String eventText = localPlayer + " " + rb.getString("kickOutInitiate")
