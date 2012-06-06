@@ -55,8 +55,10 @@ public class Jail extends AbstractTile implements EventPanelSource {
 					}
 				}
 			};
-			if (gameClient.getCurrentPlayer().isInJail())
+			if (gameClient.getCurrentPlayer().isInJail()){
+				System.err.println("currentPlayer jail status true");
 				description=rb.getString("wentToJailArrivalMessage");
+				}
 			epi.setText(description);
 			epi.addButton(buttonText, 0, al);
 			break;

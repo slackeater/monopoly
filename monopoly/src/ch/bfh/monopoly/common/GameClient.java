@@ -1000,6 +1000,7 @@ public class GameClient {
 		String playerName = currentPlayer.getName();
 		String eventText = playerName + " "
 				+ rb.getString("getOutOfJailFailure");
+		System.out.println("MESSAGE SENT TO GUI"+ eventText);
 		sendEventInformationToGUI(eventText);
 		
 	}
