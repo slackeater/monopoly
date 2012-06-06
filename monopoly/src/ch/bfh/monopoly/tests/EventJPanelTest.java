@@ -22,7 +22,7 @@ public class EventJPanelTest extends JFrame {
 	GameController gc;
 	JPanel jpanel;
 	Locale loc;
-	TestInstanceGenerator tig = new TestInstanceGenerator("fr");
+	TestInstanceGenerator tig = new TestInstanceGenerator("en");
 	boolean owned= true;
 	
 	public EventJPanelTest()  {
@@ -31,18 +31,20 @@ public class EventJPanelTest extends JFrame {
 		gc = tig.getGc();
 		
 		
-		int tileId=1;
-		goToTile(tileId, owned);
-			gameClient.toggleMortgageStatus(1, sendNetMessage);
+//		int tileId=10;
+//		goToTile(tileId, !owned);
+//		Player plyr1 = board.getPlayerByName("Justin");
+//		plyr1.setInJail(true);
+//			gameClient.toggleMortgageStatus(1, sendNetMessage);
 
 //		 testBothUtilitiesOwned();
 
 		
 		 
 //		 this player does not own the properties
-		 gameClient.setCurrentPlayer("giuseppe", sendNetMessage);
-		 gameClient.advancePlayerToTile(tileId, sendNetMessage);
-		 Player plyr2 = board.getPlayerByName("giuseppe");
+//		 gameClient.setCurrentPlayer("giuseppe", sendNetMessage);
+//		 gameClient.advancePlayerToTile(tileId, sendNetMessage);
+//		 Player plyr2 = board.getPlayerByName("giuseppe");
 //		 try {
 //			plyr2.withdawMoney(plyr2.getAccount()-30);
 //		} catch (TransactionException e) {
@@ -50,11 +52,11 @@ public class EventJPanelTest extends JFrame {
 //			e.printStackTrace();
 //		}
 //		 
-		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
+//		 jpanel= gameClient.getTileEventPanel(sendNetMessage);
 
 		// true for in jail
-//		testRollStartPanel(false);
-//		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
+		testRollStartPanel(true);
+		jpanel = gameClient.getStartTurnPanel(sendNetMessage);
 
 		setSize(300, 300);
 		add(jpanel);

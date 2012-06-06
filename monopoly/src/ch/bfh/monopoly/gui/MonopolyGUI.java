@@ -187,7 +187,7 @@ public class MonopolyGUI extends JFrame {
 					trade.setEnabled(false);
 				}
 
-				System.out.println("==== MOVE TOKEN VALUES ====");
+//				System.out.println("==== MOVE TOKEN VALUES ====");
 
 				//move the token for "step" times
 				if(step < val){
@@ -200,7 +200,7 @@ public class MonopolyGUI extends JFrame {
 						numberTile = startPosition-step;
 
 					//removing the token at the previous tile
-					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+//					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
 					tiles.get((numberTile+40)%TILE_NUMBER).removeToken(t);
 
 					step++;
@@ -213,7 +213,7 @@ public class MonopolyGUI extends JFrame {
 
 					//add the token to the tile we are on
 					tiles.get((numberTile+40)%TILE_NUMBER).addToken(t);
-					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+//					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
 
 					repaint();
 				}

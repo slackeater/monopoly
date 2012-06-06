@@ -282,7 +282,7 @@ public class PlayerInfo extends JPanel{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 			
-				System.out.println("UPDATING PANEL BEGIN");
+//				System.out.println("UPDATING PANEL BEGIN");
 			
 				String name = playerStates.get(playerIndex).getName();
 				int plAccount = playerStates.get(playerIndex).getAccount();
@@ -305,7 +305,7 @@ public class PlayerInfo extends JPanel{
 					
 				}
 				
-				System.out.println("UPDATING PANEL AFTER TERRAIN BACKGROUND");
+//				System.out.println("UPDATING PANEL AFTER TERRAIN BACKGROUND");
 				
 				setTurnPanelBackground(turn, c);
 				playerName.setText(name);		
@@ -328,7 +328,7 @@ public class PlayerInfo extends JPanel{
 				}
 				
 				
-				System.out.println("UPDATING PANEL AFTER JAIL CARD AND JAIL");
+//				System.out.println("UPDATING PANEL AFTER JAIL CARD AND JAIL");
 				
 				repaint();
 				revalidate();
