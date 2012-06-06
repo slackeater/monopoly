@@ -177,6 +177,9 @@ public class ClientHandler implements IoHandler {
 		case GET_OUT_OF_JAIL_USECARD:
 			gameClient.getOutOfJailByCard(false);
 			break;
+		case GET_OUT_OF_JAIL_FAILURE:
+			gameClient.getOutOfJailFailure(false);
+			break;
 		case TRADE_REQUEST:
 			System.out.println("clientHandler: TRADE REQUEST ARRIVED");
 			gameClient.receiveTradeRequest(n.getTie());
