@@ -7,7 +7,7 @@ import javax.sound.sampled.Clip;
 public class SoundPlayer {
 
 	public SoundPlayer(){
-//		playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
+		playSound("/ch/bfh/monopoly/resources/theme.wav");
 	}
 	
 	public void playSound(Sounds sound) {
@@ -26,6 +26,12 @@ public class SoundPlayer {
 			break;
 		case ROLL:
 			playSound("/ch/bfh/monopoly/resources/roll.wav");
+			break;
+		case SAW:
+			playSound("/ch/bfh/monopoly/resources/saw.wav");
+			break;
+		case THEME:
+			playSound("/ch/bfh/monopoly/resources/theme.wav");
 			break;
 		default:
 			break;

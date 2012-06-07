@@ -6,5 +6,7 @@ public enum Sounds {
 		MOUSE_DOWN,
 		MOUSE_UP,
 		ROLL,
-		CASH;
+		SAW,
+		CASH,
+		THEME;
 }

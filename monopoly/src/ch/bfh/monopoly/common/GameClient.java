@@ -307,6 +307,7 @@ public class GameClient {
 	public void buyHouse(int tileId, boolean sendNetMessage) {
 		try {
 			board.buyHouse(currentPlayer.getName(), tileId);
+			playSound(Sounds.SAW);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOUSE);
@@ -339,6 +340,7 @@ public class GameClient {
 		int costToBuild = 0;
 		try {
 			costToBuild = board.buyHouseRow(currentPlayer.getName(), tileId);
+			playSound(Sounds.SAW);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOUSEROW);
@@ -368,6 +370,7 @@ public class GameClient {
 		int costToBuild;
 		try {
 			costToBuild = board.buyHotelRow(currentPlayer.getName(), tileId);
+			playSound(Sounds.SAW);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOTELROW);
@@ -398,6 +401,7 @@ public class GameClient {
 	public void buyHotel(int tileId, boolean sendNetMessage) {
 		try {
 			board.buyHotel(currentPlayer.getName(), tileId);
+			playSound(Sounds.SAW);
 			if (sendNetMessage) {
 				NetMessage netMsg = new NetMessage(currentPlayer.getName(),
 						tileId, Messages.BUY_HOTEL);
