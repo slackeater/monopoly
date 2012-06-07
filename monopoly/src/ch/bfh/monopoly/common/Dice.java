@@ -81,7 +81,7 @@ public class Dice implements EventPanelSource {
 		// 6*0.99 = 5.94 rounded => 5 + 1 = 6
 		throwValueOne = (int) (maxValDiceOne * Math.random()) + 1;
 		throwValueTwo = (int) (maxValDiceTwo * Math.random()) + 1;
-
+		gameClient.playSound(Sounds.ROLL);
 		// throwValueOne = 4;
 		// throwValueTwo = 4;
 		return throwValueOne + throwValueTwo;

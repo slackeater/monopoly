@@ -247,7 +247,6 @@ public class GameClient {
 		String eventText = playerName + " " + rb.getString("rolledDice") + " "
 				+ modifiedN;
 		sendEventInformationToGUI(eventText);
-
 		if (sendNetMessage) {
 			// send a netmessage with the roll value of this player
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir,
@@ -829,6 +828,7 @@ public class GameClient {
 		String owner = prop.getOwner().getName();
 		int amount = getFeeForTileAtId(currentPosition);
 		transferMoney(currentPlayerName, owner, amount, false);
+		playSound(Sounds.CASH);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.PAY_RENT);
@@ -858,6 +858,7 @@ public class GameClient {
 		String currentPlayerName = currentPlayer.getName();
 		try {
 			board.payFee(currentPlayerName, fee);
+			playSound(Sounds.CASH);
 			if (sendNetMessage) {
 				NetMessage msg = new NetMessage(currentPlayer.getName(), fee,
 						Messages.PAY_FEE);
@@ -891,6 +892,7 @@ public class GameClient {
 						board.getTileById(currentPlayer.getPosition()))
 				.getOwner().getName();
 		transferMoney(currentPlayerName, owner, fee, false);
+		playSound(Sounds.CASH);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(), fee,
 					Messages.PAY_UTILITY_FEE);
@@ -931,6 +933,7 @@ public class GameClient {
 		try {
 			attemptedRollsReset();
 			board.getOutOfJailByPayment(currentPlayer.getName());
+			playSound(Sounds.CASH);
 			if (sendNetMessage) {
 				NetMessage msg = new NetMessage(currentPlayer.getName(),
 						Messages.GET_OUT_OF_JAIL_PAY);
@@ -1052,6 +1055,7 @@ public class GameClient {
 	 */
 	public void freeParking(boolean sendNetMessage) {
 		int amount = board.freeParking(currentPlayer.getName());
+		playSound(Sounds.CASH);
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.FREE_PARKING);

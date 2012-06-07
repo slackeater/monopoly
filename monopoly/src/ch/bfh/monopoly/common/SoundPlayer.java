@@ -7,7 +7,7 @@ import javax.sound.sampled.Clip;
 public class SoundPlayer {
 
 	public SoundPlayer(){
-		playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
+//		playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
 	}
 	
 	public void playSound(Sounds sound) {
@@ -20,6 +20,12 @@ public class SoundPlayer {
 			break;
 		case MOUSE_UP:
 			playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
+			break;
+		case CASH:
+			playSound("/ch/bfh/monopoly/resources/cash.wav");
+			break;
+		case ROLL:
+			playSound("/ch/bfh/monopoly/resources/roll.wav");
 			break;
 		default:
 			break;
@@ -42,7 +48,7 @@ public class SoundPlayer {
 							clip.open(inputStream);
 							clip.start();
 						} catch (Exception e) {
-							System.err.println(e.getMessage());
+							System.err.println(e.getMessage()+ "sound file location:" +soundFileFinal);
 						}
 					}
 				}).start();
