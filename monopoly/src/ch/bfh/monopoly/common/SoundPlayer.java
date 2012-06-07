@@ -6,12 +6,21 @@ import javax.sound.sampled.Clip;
 
 public class SoundPlayer {
 
+	public SoundPlayer(){
+		playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
+	}
+	
 	public void playSound(Sounds sound) {
 		switch (sound) {
 		case FOOT_STEP:
 			playSound("/ch/bfh/monopoly/resources/footstep.wav");
 			break;
-
+		case MOUSE_DOWN:
+			playSound("/ch/bfh/monopoly/resources/mouseDown.wav");
+			break;
+		case MOUSE_UP:
+			playSound("/ch/bfh/monopoly/resources/mouseUp.wav");
+			break;
 		default:
 			break;
 		}

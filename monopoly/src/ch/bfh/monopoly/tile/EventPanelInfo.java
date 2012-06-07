@@ -1,11 +1,14 @@
 package ch.bfh.monopoly.tile;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
 
 import ch.bfh.monopoly.common.GameClient;
+import ch.bfh.monopoly.common.Sounds;
 
 public class EventPanelInfo {
 	ArrayList<PButton> buttonList;
@@ -23,7 +26,48 @@ public class EventPanelInfo {
 			setText(text);
 			addActionListener(al);
 			this.amount = amount;
+			addMouseListener(getMouseListener());
 		}
+		
+		public MouseListener getMouseListener(){
+			
+			MouseListener ml = new MouseListener() {
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					gameClient.playSound(Sounds.MOUSE_UP);
+					
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					gameClient.playSound(Sounds.MOUSE_DOWN);
+					
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			};
+			
+			return ml;
+		}
+		
+		
 
 		public int getAmount() {
 			return amount;
