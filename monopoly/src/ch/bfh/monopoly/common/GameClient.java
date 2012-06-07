@@ -104,6 +104,7 @@ public class GameClient {
 		this.localPlayer = localPlayerName;
 		dice = new Dice(6, 6, this, testOff);
 		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc);
+		playSound(Sounds.THEME);
 	}
 
 	/**

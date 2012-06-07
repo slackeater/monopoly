@@ -7,7 +7,7 @@ import javax.sound.sampled.Clip;
 public class SoundPlayer {
 
 	public SoundPlayer(){
-		playSound("/ch/bfh/monopoly/resources/theme.wav");
+		
 	}
 	
 	public void playSound(Sounds sound) {
