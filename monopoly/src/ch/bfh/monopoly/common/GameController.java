@@ -341,5 +341,9 @@ public class GameController {
 	public void sendKickVote(boolean kick) {
 		gameClient.sendKickVote(kick);
 	}
+	
+	public void playSound(Sounds sound){
+		gameClient.playSound(sound);
+	}
 
 }

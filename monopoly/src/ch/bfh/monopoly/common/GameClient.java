@@ -31,7 +31,7 @@ import ch.bfh.monopoly.tile.Tile;
 public class GameClient {
 
 	private Player currentPlayer;
-	private String localPlayer,playerToKick;
+	private String localPlayer, playerToKick;
 	private Player bank;
 	private Locale loc;
 	private Board board;
@@ -46,6 +46,7 @@ public class GameClient {
 	boolean tradePending, kickVotePending;
 	private static int attemptedRolls = 0;
 	ResourceBundle rb;
+	SoundPlayer soundPlayer;
 
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
@@ -79,6 +80,7 @@ public class GameClient {
 	public GameClient(boolean testOff) {
 		this.testOff = testOff;
 		ws = new ConcreteSubject();
+		soundPlayer = new SoundPlayer();
 	}
 
 	public GameClient() {
@@ -752,16 +754,15 @@ public class GameClient {
 		}
 		return jpanel;
 	}
-	
 
 	/**
 	 * get the name of the event
+	 * 
 	 * @return the name of the event
 	 */
 	public String getTileEventName() {
 		return board.getTileEventName(currentPlayer.getPosition());
 	}
-
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
@@ -982,8 +983,8 @@ public class GameClient {
 				+ rb.getString("gotOutOfJailByRolling");
 		sendEventInformationToGUI(eventText);
 	}
-	
-	public void getOutOfJailFailure(boolean sendNetMessage){
+
+	public void getOutOfJailFailure(boolean sendNetMessage) {
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GET_OUT_OF_JAIL_FAILURE);
@@ -993,9 +994,9 @@ public class GameClient {
 		String playerName = currentPlayer.getName();
 		String eventText = playerName + " "
 				+ rb.getString("getOutOfJailFailure");
-		System.out.println("MESSAGE SENT TO GUI"+ eventText);
+		System.out.println("MESSAGE SENT TO GUI" + eventText);
 		sendEventInformationToGUI(eventText);
-		
+
 	}
 
 	/**
@@ -1240,7 +1241,8 @@ public class GameClient {
 	 */
 	public void sendTradeAnswer(boolean answer) {
 		System.out.println("gameClient send TradeAnswer of " + answer);
-		NetMessage nm = new NetMessage(localPlayer, answer, Messages.TRADE_ANSWER);
+		NetMessage nm = new NetMessage(localPlayer, answer,
+				Messages.TRADE_ANSWER);
 		nc.sendMessage(nm);
 	}
 
@@ -1416,13 +1418,15 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void createKickRequest(String playerName) {
-		System.err.println("gameClient: createKickRequest: to kick " +playerName + "  created by "+ localPlayer);
+		System.err.println("gameClient: createKickRequest: to kick "
+				+ playerName + "  created by " + localPlayer);
 		kickVotes = 0;
 		kickVotePending = true;
-		playerToKick=playerName;
+		playerToKick = playerName;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
-		System.err.println("gameClient: sentNetMessage: to kick " +nm.getString2() + "  created by "+ nm.getString1());
+		System.err.println("gameClient: sentNetMessage: to kick "
+				+ nm.getString2() + "  created by " + nm.getString1());
 		nc.sendMessage(nm);
 
 		String eventText = localPlayer + " " + rb.getString("kickOutInitiate")
@@ -1435,9 +1439,9 @@ public class GameClient {
 	 * send a your vote in response to a kick request
 	 */
 	public void sendKickVote(boolean kick) {
-		System.err.println("gameClient: sendKickVote:  "+localPlayer+"voted:" +kick);
-		NetMessage nm = new NetMessage(localPlayer, kick,
-				Messages.KICK_ANSWER);
+		System.err.println("gameClient: sendKickVote:  " + localPlayer
+				+ "voted:" + kick);
+		NetMessage nm = new NetMessage(localPlayer, kick, Messages.KICK_ANSWER);
 		nc.sendMessage(nm);
 
 	}
@@ -1449,13 +1453,14 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickRequest(String playerName, String playerToKick) {
-		System.err.println("gameClient: receiveKickRequest:  from"+playerName+"to kick:" +playerToKick);
-		//send message to GUI history panel
+		System.err.println("gameClient: receiveKickRequest:  from" + playerName
+				+ "to kick:" + playerToKick);
+		// send message to GUI history panel
 		String eventText = playerName + " " + rb.getString("kickOutInitiate")
 				+ " " + playerToKick;
 		sendEventInformationToGUI(eventText);
-		
-		//send message to gui to display the vote window
+
+		// send message to gui to display the vote window
 		WindowStateEvent wse = new WindowStateEvent(
 				WindowMessage.MSG_KICK_REQUEST, playerName, playerToKick);
 		ws.notifyListeners(wse);
@@ -1468,44 +1473,51 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickVote(String playerName, boolean answer) {
-		System.err.println("gameClient: receiveKickVote: from "+ playerName + "voted: "+ answer);
+		System.err.println("gameClient: receiveKickVote: from " + playerName
+				+ "voted: " + answer);
 
 		String vote = rb.getString("votedYes");
 		if (!answer)
 			vote = rb.getString("votedNo");
-		String eventText = playerName+ " " + vote + " " + playerName;
+		String eventText = playerName + " " + vote + " " + playerName;
 		sendEventInformationToGUI(eventText);
-		
+
 		if (kickVotePending) {
 			votesReceived++;
 			if (answer)
 				kickVotes++;
 			if (kickVotes >= board.getPlayers().size() / 2) {
 				kickThePlayer(playerToKick);
-				playerToKick="";
-				votesReceived=0;
-				kickVotePending=false;
+				playerToKick = "";
+				votesReceived = 0;
+				kickVotePending = false;
 			}
-			
+
 		}
-		System.err.println("gameClient: receiveKickVote: number of votes received " + votesReceived);
-		System.err.println("gameClient: receiveKickVote: votes in favor of kicking " + kickVotes);
+		System.err
+				.println("gameClient: receiveKickVote: number of votes received "
+						+ votesReceived);
+		System.err
+				.println("gameClient: receiveKickVote: votes in favor of kicking "
+						+ kickVotes);
 	}
-	
-	public void kickThePlayer(String playerVotedToBeKicked){
-		System.err.println("gameClient: kickThePlayer:  enough votes were made to KICK " + playerVotedToBeKicked);
+
+	public void kickThePlayer(String playerVotedToBeKicked) {
+		System.err
+				.println("gameClient: kickThePlayer:  enough votes were made to KICK "
+						+ playerVotedToBeKicked);
 		NetMessage nm = new NetMessage(playerVotedToBeKicked,
 				Messages.KICK_PLAYER);
 		nc.sendMessage(nm);
-		
+
 		dividePlayerAssets(playerVotedToBeKicked);
 	}
 
-	public void dividePlayerAssets(String playerName){
-		System.out.println("\t======= "+localPlayer+"'s CONSOLE =======");
+	public void dividePlayerAssets(String playerName) {
+		System.out.println("\t======= " + localPlayer + "'s CONSOLE =======");
 		board.dividePlayerAssets(playerName);
 	}
-	
+
 	public void localPlayerCanCallMethods() {
 		if (!localPlayer.equals(currentPlayer.getName())) {
 			TransactionException te = new TransactionException(
@@ -1547,5 +1559,10 @@ public class GameClient {
 
 		return epi;
 	}
+	
+	public void playSound(Sounds sound){
+		soundPlayer.playSound(sound);
+	}
+	
 
 }

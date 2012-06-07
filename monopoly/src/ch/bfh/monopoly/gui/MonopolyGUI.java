@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -44,6 +43,7 @@ import javax.swing.UIManager;
 import ch.bfh.monopoly.common.BoardController;
 import ch.bfh.monopoly.common.Direction;
 import ch.bfh.monopoly.common.GameController;
+import ch.bfh.monopoly.common.Sounds;
 import ch.bfh.monopoly.common.Token;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
@@ -215,7 +215,7 @@ public class MonopolyGUI extends JFrame {
 						numberTile = startPosition-step;
 
 					
-					playFootStep();
+					gc.playSound(Sounds.FOOT_STEP);
 					
 					
 					//add the token to the tile we are on
@@ -1200,24 +1200,6 @@ public class MonopolyGUI extends JFrame {
 		return kickp;
 	}
 	
-	public static synchronized void playFootStep() {
-		new Thread(new Runnable() { // the wrapper thread is unnecessary, unless
-									// it blocks on the Clip finishing, see
-									// comments
-					public void run() {
-						try {
-							Clip clip = AudioSystem.getClip();
-							AudioInputStream inputStream = AudioSystem
-									.getAudioInputStream(getClass()
-											.getResourceAsStream(
-													"/ch/bfh/monopoly/resources/footstep.wav"));
-							clip.open(inputStream);
-							clip.start();
-						} catch (Exception e) {
-							System.err.println(e.getMessage());
-						}
-					}
-				}).start();
-	}
+
 
 }
