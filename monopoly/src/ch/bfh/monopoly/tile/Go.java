@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.event.BoardEvent;
 import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.gui.EventPanelFactory;
 
 public class Go extends AbstractTile implements EventPanelSource {
 

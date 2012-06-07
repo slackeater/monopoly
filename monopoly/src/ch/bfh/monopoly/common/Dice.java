@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
+import ch.bfh.monopoly.gui.EventPanelFactory;
 import ch.bfh.monopoly.tests.EventJPanelTest;
-import ch.bfh.monopoly.tile.EventPanelFactory;
 import ch.bfh.monopoly.tile.EventPanelInfo;
 import ch.bfh.monopoly.tile.EventPanelSource;
 import ch.bfh.monopoly.tile.Step;

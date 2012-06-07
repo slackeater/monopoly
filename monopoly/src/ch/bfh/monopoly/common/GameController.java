@@ -1,4 +1,4 @@
-		package ch.bfh.monopoly.common;
+package ch.bfh.monopoly.common;
 
 import java.util.Locale;
 import javax.swing.JPanel;
@@ -26,16 +26,23 @@ public class GameController {
 	public JPanel getStartTurnPanel() {
 		return gameClient.getStartTurnPanel(true);
 	}
-	
 
 	/**
 	 * Get the JPanel for the tile's event. Should be called when a player rolls
 	 * and lands on a new tile
-
+	 * 
 	 * @return the JPanel that the GUI will display
 	 */
 	public JPanel getTileEventPanel() {
 		return gameClient.getTileEventPanel(true);
+	}
+
+	/**
+	 * get the name of the event
+	 * @return the name of the event
+	 */
+	public String getTileEventName() {
+		return gameClient.getTileEventName();
 	}
 
 	/**
@@ -63,7 +70,9 @@ public class GameController {
 
 	/**
 	 * buy 1 house for each property belonging to a group
-	 * @param tileId the id of any tile in the group to build on
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
 	 */
 	public void buyHouseRow(int tileId) {
 		gameClient.localPlayerCanCallMethods();
@@ -82,13 +91,15 @@ public class GameController {
 
 	/**
 	 * buy 1 hotel for each property belonging to a group
-	 * @param tileId the id of any tile in the group to build on
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to build on
 	 */
 	public void buyHotelRow(int tileId) {
 		gameClient.localPlayerCanCallMethods();
 		gameClient.buyHotelRow(tileId, true);
 	}
-	
+
 	/**
 	 * sell a house from the given tile
 	 * 
@@ -102,12 +113,14 @@ public class GameController {
 
 	/**
 	 * sell 1 house for each property belonging to a group
-	 * @param tileId the id of any tile in the group to sell from
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
 	 */
 	public void sellHouseRow(int tileId) {
 		gameClient.sellHouseRow(tileId, true);
 	}
-	
+
 	/**
 	 * sell a hotel from the given tile
 	 * 
@@ -121,13 +134,15 @@ public class GameController {
 
 	/**
 	 * sell 1 hotel for each property belonging to a group
-	 * @param tileId the id of any tile in the group to sell from
+	 * 
+	 * @param tileId
+	 *            the id of any tile in the group to sell from
 	 */
 	public void sellHotelRow(int tileId) {
 		gameClient.localPlayerCanCallMethods();
 		gameClient.sellHotelRow(tileId, true);
 	}
-	
+
 	/**
 	 * Toggles the mortgage status of a given property and credits or debits the
 	 * player's account
@@ -285,9 +300,8 @@ public class GameController {
 	public void sendTradeRequestToPlayer(String playerName, TradeInfoEvent tie) {
 		System.out.println("SEND TRADE GController");
 		gameClient.sendTradeRequestToPlayer(playerName, tie);
-		
-	}
 
+	}
 
 	/**
 	 * confirm/reject a trade request that you have received
@@ -297,33 +311,34 @@ public class GameController {
 
 	}
 
-
 	/**
 	 * returns the name of the current player
 	 */
-	public String getCurrentPlayerName(){
+	public String getCurrentPlayerName() {
 		return gameClient.getCurrentPlayer().getName();
 	}
-	
+
 	/**
 	 * send a message when the player quit the game
 	 */
 	public void sendQuitGame() {
 		gameClient.sendQuitGame();
 	}
-	
+
 	/**
 	 * create a motion to kick a player
-	 * @param the name of the player who might be kicked out of the game
+	 * 
+	 * @param the
+	 *            name of the player who might be kicked out of the game
 	 */
-	public void createKickRequest(String playerName){
+	public void createKickRequest(String playerName) {
 		gameClient.createKickRequest(playerName);
 	}
-	
+
 	/**
 	 * send a your vote in response to a kick request
 	 */
-	public void sendKickVote(boolean kick){
+	public void sendKickVote(boolean kick) {
 		gameClient.sendKickVote(kick);
 	}
 

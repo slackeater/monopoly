@@ -23,7 +23,7 @@ public class Player {
 	private boolean turnToken;
 	private Token t;
 	private MonopolyGUI.Direction dir;
-	ResourceBundle rb;
+	private ResourceBundle rb;
 	
 	//start value of money changes with the version of the game played.  US version 5000, Swiss version 200,000
 	public Player (String name, int account, Token t, Locale loc){

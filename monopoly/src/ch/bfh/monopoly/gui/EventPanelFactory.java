@@ -1,28 +1,23 @@
-package ch.bfh.monopoly.tile;
+package ch.bfh.monopoly.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-import javax.swing.SwingConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import ch.bfh.monopoly.common.Monopoly;
-import ch.bfh.monopoly.gui.MonopolyGUI;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
+import ch.bfh.monopoly.tile.EventPanelInfo;
+import ch.bfh.monopoly.tile.EventPanelSource;
+import ch.bfh.monopoly.tile.Step;
 
 public class EventPanelFactory  implements PlayerListener{
 	private static JPanel master,buttonPanel;
@@ -71,7 +66,7 @@ public class EventPanelFactory  implements PlayerListener{
 	
 	public void changePanel(EventPanelInfo epi) {
 		JPanel newButtonPanel = new JPanel();
-		label.setText("\n\n"+epi.getText());
+		label.setText("\n"+epi.getText());
 
 		// format the text
 		SimpleAttributeSet bSet = new SimpleAttributeSet();

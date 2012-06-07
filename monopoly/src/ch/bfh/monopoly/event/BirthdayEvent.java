@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.exception.TransactionException;
-import ch.bfh.monopoly.tile.EventPanelFactory;
+import ch.bfh.monopoly.gui.EventPanelFactory;
 import ch.bfh.monopoly.tile.EventPanelInfo;
 import ch.bfh.monopoly.tile.Step;
 

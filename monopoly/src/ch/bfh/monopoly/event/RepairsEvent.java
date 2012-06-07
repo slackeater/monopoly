@@ -8,27 +8,27 @@ import javax.swing.JPanel;
 
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.exception.TransactionException;
-import ch.bfh.monopoly.tile.EventPanelFactory;
+import ch.bfh.monopoly.gui.EventPanelFactory;
 import ch.bfh.monopoly.tile.EventPanelInfo;
 import ch.bfh.monopoly.tile.EventPanelSource;
 import ch.bfh.monopoly.tile.Step;
 
-public class RepairsEvent extends AbstractTileEvent{
+public class RepairsEvent extends AbstractTileEvent {
 
 	int chargePerHouse;
 	int chargePerHotel;
-	ResourceBundle rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.events",
-			gameClient.getLoc());
+	ResourceBundle rb = ResourceBundle.getBundle(
+			"ch.bfh.monopoly.resources.events", gameClient.getLoc());
 	EventPanelFactory epf;
-	
-	public RepairsEvent(String name, String eventDescription, int chargePerHouse,int chargePerHotel,
-			GameClient gameClient) {
+
+	public RepairsEvent(String name, String eventDescription,
+			int chargePerHouse, int chargePerHotel, GameClient gameClient) {
 		super(name, eventDescription, gameClient);
 		this.chargePerHotel = chargePerHotel;
-		this.chargePerHouse=chargePerHouse;
+		this.chargePerHouse = chargePerHouse;
 	}
 
-	public int feeToCharge(){
+	public int feeToCharge() {
 		int housesOnBoard = 32 - gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
 		return housesOnBoard * chargePerHouse + hotelsOnBoard * chargePerHotel;
@@ -43,13 +43,13 @@ public class RepairsEvent extends AbstractTileEvent{
 	public String getEventDescription() {
 		int housesOnBoard = 32 - gameClient.getAvailableHouses();
 		int hotelsOnBoard = 12 - gameClient.getAvailableHotels();
-		return eventDescription=name + "\n\n " + eventDescription +" \n\n"+rb.getString("thereAre")+ " "+ housesOnBoard +" "+ rb.getString("housesOnBoard") +" "+ hotelsOnBoard+"\n" +rb.getString("housesOnBoard")+" \n" + rb.getString("pay")+ " "+feeToCharge();       
-				//OLD DESCRIPTION
-//				" "+rb.getString("hotelsOnBoard")+" "+chargePerHouse + " "+ rb.getString("forEachHouse")+" " + chargePerHotel + " "+rb.getString("forEachHotel") +"\n\n"+ 
-
+		return eventDescription = name + "\n\n " + eventDescription + " \n\n"
+				+ rb.getString("thereAre") + " " + housesOnBoard + " "
+				+ rb.getString("housesOnBoard") + " " + hotelsOnBoard + "\n"
+				+ rb.getString("housesOnBoard") + " \n" + rb.getString("pay")
+				+ " " + feeToCharge();
 	}
-	
-	
+
 	public EventPanelInfo getEventPanelInfoForStep(Step step) {
 		String labelText;
 		String buttonText;
@@ -57,10 +57,10 @@ public class RepairsEvent extends AbstractTileEvent{
 		EventPanelInfo epi;
 
 		switch (step) {
-		case GET_EVENT:	
+		case GET_EVENT:
 			epi = new EventPanelInfo(gameClient);
 			buttonText = "ok";
-			al =new ActionListener(){
+			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					performEvent();
@@ -83,13 +83,12 @@ public class RepairsEvent extends AbstractTileEvent{
 		}
 		return epi;
 	}
-	
-	
+
 	@Override
 	public JPanel getTileEventPanel() {
 		epf = new EventPanelFactory(this, gameClient.getSubjectForPlayer());
 		epf.changePanel(Step.GET_EVENT);
 		return epf.getJPanel();
 	}
-	
+
 }
