@@ -15,6 +15,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -211,6 +214,10 @@ public class MonopolyGUI extends JFrame {
 					else if(dir == Direction.BACKWARDS)
 						numberTile = startPosition-step;
 
+					
+					playFootStep();
+					
+					
 					//add the token to the tile we are on
 					tiles.get((numberTile+40)%TILE_NUMBER).addToken(t);
 //					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
@@ -1192,6 +1199,26 @@ public class MonopolyGUI extends JFrame {
 		kickp.add(buttonCont);
 
 		return kickp;
+	}
+	
+	public static synchronized void playFootStep() {
+		new Thread(new Runnable() { // the wrapper thread is unnecessary, unless
+									// it blocks on the Clip finishing, see
+									// comments
+					public void run() {
+						try {
+							Clip clip = AudioSystem.getClip();
+							AudioInputStream inputStream = AudioSystem
+									.getAudioInputStream(getClass()
+											.getResourceAsStream(
+													"/ch/bfh/monopoly/resources/footstep.wav"));
+							clip.open(inputStream);
+							clip.start();
+						} catch (Exception e) {
+							System.err.println(e.getMessage());
+						}
+					}
+				}).start();
 	}
 
 }

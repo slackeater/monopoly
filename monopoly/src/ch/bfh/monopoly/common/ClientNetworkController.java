@@ -15,7 +15,7 @@ public class ClientNetworkController {
 	
 	/**
 	 * Construct a new NetworkClientController
-	 * @param gc GameClient
+	 * @param gc  
 	 * 			the game client to use when we receive a message
 	 * @param localPlayerName String
 	 * 			the name of the local player

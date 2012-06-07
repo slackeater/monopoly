@@ -3,7 +3,19 @@ package ch.bfh.monopoly.tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Locale;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +41,8 @@ public class boardTransactionTests {
 		board = tig.getBoard();
 	}
 
+
+
 	/**
 	 * check that the method addPropertyToPlayer gives a property to a given
 	 * player and updates that property's owner field
@@ -39,18 +53,18 @@ public class boardTransactionTests {
 	public void addPropertyToPlayer() throws TransactionException {
 		Player p = board.getPlayerByName("Justin");
 		Tile t = board.getTileById(1);
-		gameClient.setCurrentPlayer(p,false);
-		gameClient.advancePlayerNSpaces(1,false);
+		gameClient.setCurrentPlayer(p, false);
+		gameClient.advancePlayerNSpaces(1, false);
 		board.buyCurrentPropertyForPlayer("Justin", 1);
 		// System.out.println(((Property)t).getOwner().getName());
 		assertTrue(((Property) t).getOwner() == p);
 	}
 
-
 	/**
 	 * check that money can be sent from one player to another, and the money is
 	 * deducted from one player and added to another player's account.
-	 * @throws TransactionException 
+	 * 
+	 * @throws TransactionException
 	 */
 	@Test
 	public void moneyTransfersBetweenPlayers() throws TransactionException {
@@ -77,7 +91,7 @@ public class boardTransactionTests {
 			board.transferMoney(p1.getName(), p2.getName(), transferAmount);
 			fail("FAIL: program allows a transfer for an amount larger than that of the player's account balance");
 		} catch (Exception e) {
-			//System.out.println(e.getMessage());
+			// System.out.println(e.getMessage());
 		}
 	}
 
@@ -86,17 +100,18 @@ public class boardTransactionTests {
 	 * player and gives it to another and updates the owner field of that
 	 * property event though the method buyCurrentPropertyForPlayer is here, we
 	 * are only interested that ownership changes for the tile
-	 * @throws TransactionException 
+	 * 
+	 * @throws TransactionException
 	 */
 	@Test
 	public void transferPropertiesChangesOwners() throws TransactionException {
 		int price = 0;
 		Player p1 = board.getPlayerByName("Justin");
 		Player p2 = board.getPlayerByName("Giuseppe");
-		gameClient.setCurrentPlayer(p1,false);
-		gameClient.advancePlayerNSpaces(1,false);
+		gameClient.setCurrentPlayer(p1, false);
+		gameClient.advancePlayerNSpaces(1, false);
 		Tile t = board.getTileById(1);
-		gameClient.buyCurrentPropertyForPlayer(p1.getName(),false);
+		gameClient.buyCurrentPropertyForPlayer(p1.getName(), false);
 		assertTrue(((Property) t).getOwner() == p1);
 		board.transferProperty(p1.getName(), p2.getName(), t.getTileId(), price);
 		assertTrue(((Property) t).getOwner() == p2);
@@ -116,9 +131,8 @@ public class boardTransactionTests {
 			board.transferProperty(jus.getName(), giu.getName(), 3, price);
 			fail("FAIL: player can sell a property he does not own");
 		} catch (Exception e) {
-			//System.out.println(e.getMessage());
+			// System.out.println(e.getMessage());
 		}
 	}
-	
-	
+
 }

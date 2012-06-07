@@ -4,11 +4,11 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import ch.bfh.monopoly.gui.WelcomePanel;
 
-
 public class Monopoly {
 
 	public static void main(String[] args) throws IOException {
 		
+
 		JFrame welcome = new WelcomePanel();
 		welcome.setTitle("Welcome to Monopoly");
 		welcome.setBounds(500, 50, 300, 650);
