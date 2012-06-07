@@ -354,12 +354,12 @@ public class WelcomePanel extends JFrame{
 					name = nameField.getText();
 					String localeCode = langs.getSelectedItem().toString().substring(0, 2);
 					loc = new Locale(localeCode);
-//
-//					JOptionPane pane = new JOptionPane("Test", JOptionPane.INFORMATION_MESSAGE);
-//					pane.setVisible(true);
-//					JDialog container = new JDialog(f, "Mah");
-//					container.setContentPane(pane);
-//					
+
+					JOptionPane pane = new JOptionPane("Test", JOptionPane.INFORMATION_MESSAGE);
+					pane.setVisible(true);
+					JDialog container = new JDialog(f, "Mah");
+					container.setContentPane(pane);
+					
 			
 
 					//start the client and the server
@@ -373,8 +373,11 @@ public class WelcomePanel extends JFrame{
 						
 						
 						if((nSrvCtrl.getServerOpenedSession()-cli) == 1 && nSrvCtrl.getServerOpenedSession() > 0){
-//							container.setVisible(true);
+							System.out.println((nSrvCtrl.getServerOpenedSession()-cli));
 							cli++;
+							//JDialog ss = new SimpleAboutDialog(f);
+							//ss.show();
+							JOptionPane.showMessageDialog(f, "There are " + cli + " players connected. Waiting " + (maxPlayers-cli) + " players.");
 						}
 
 						//when all the client are connected
