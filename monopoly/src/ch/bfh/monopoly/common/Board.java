@@ -8,8 +8,6 @@ import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import ch.bfh.monopoly.exception.TransactionException;
 import ch.bfh.monopoly.gui.MonopolyGUI;
-import ch.bfh.monopoly.net.Messages;
-import ch.bfh.monopoly.net.NetMessage;
 import ch.bfh.monopoly.observer.PlayerListener;
 import ch.bfh.monopoly.observer.PlayerStateEvent;
 import ch.bfh.monopoly.observer.PlayerSubject;
@@ -176,6 +174,15 @@ public class Board {
 		return t.getTileEventPanel();
 	}
 
+	/**
+	 * get the name of the event
+	 * @return the name of the event
+	 */
+	public String getTileEventName(int tileId) {
+		Tile t = getTileById(tileId);
+		return t.getName();
+	}
+	
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index

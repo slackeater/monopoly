@@ -234,7 +234,7 @@ public class MonopolyGUI extends JFrame {
 
 						trade.setEnabled(true);
 
-						tabPane.add("EVENT!", gc.getTileEventPanel());
+						tabPane.add(gc.getTileEventName(), gc.getTileEventPanel());
 
 						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
 							tabPane.setEnabledAt(j, false);
@@ -618,7 +618,7 @@ public class MonopolyGUI extends JFrame {
 				throwDice.setEnabled(false);
 				beginTurnClicked = true;
 
-				tabPane.addTab("EVENT!",  gc.getStartTurnPanel());	
+				tabPane.addTab(res.getString("roll"),  gc.getStartTurnPanel());	
 
 				tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 

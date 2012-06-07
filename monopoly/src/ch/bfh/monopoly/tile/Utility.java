@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import ch.bfh.monopoly.common.GameClient;
 import ch.bfh.monopoly.common.Player;
 import ch.bfh.monopoly.event.EventManager;
+import ch.bfh.monopoly.gui.EventPanelFactory;
 
 public class Utility extends Property implements EventPanelSource {
 

@@ -752,23 +752,16 @@ public class GameClient {
 		}
 		return jpanel;
 	}
+	
 
-	// TODO This method might never be used?
-	// /**
-	// * checks if a given player is the owner of a given tile
-	// *
-	// * @param playerName
-	// * the player's name to check
-	// * @param tileId
-	// * tile to check ownership of
-	// * @param sendNetMessage
-	// * true if a net message should be sent to the server
-	// */
-	// public boolean playerIsOwnerOfTile(String playerName, int tileId) {
-	// boolean isOwner = false;
-	// isOwner = board.checkPlayerIsOwnerOfTile(playerName, tileId);
-	// return isOwner;
-	// }
+	/**
+	 * get the name of the event
+	 * @return the name of the event
+	 */
+	public String getTileEventName() {
+		return board.getTileEventName(currentPlayer.getPosition());
+	}
+
 
 	/**
 	 * checks if the current player has sufficient funds to pay a fee
