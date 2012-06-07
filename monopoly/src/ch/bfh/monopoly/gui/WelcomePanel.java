@@ -199,7 +199,7 @@ public class WelcomePanel extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				throwValue = dices.throwDice();
+				throwValue = dices.throwDice(false);
 				info.append("The value of your throw is: " + dices.getDiceValues() + " => " + throwValue + "\n");	
 				generateNum.setEnabled(false);
 			}

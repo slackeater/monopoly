@@ -67,12 +67,15 @@ public class Dice implements EventPanelSource {
 				gameClient.getLoc());
 	}
 
+	public int throwDice(){
+		return throwDice(true);
+	}
 	/**
 	 * Throw the dice
 	 * 
 	 * @return int an integer representing the throw of the two dice
 	 */
-	public int throwDice() {
+	public int throwDice(boolean sound) {
 		// generates number between 1 and 12
 		// the one is added because Math.random() generates
 		// number between 0.0 and 1.0. But 1.0 is not included.
@@ -81,7 +84,8 @@ public class Dice implements EventPanelSource {
 		// 6*0.99 = 5.94 rounded => 5 + 1 = 6
 		throwValueOne = (int) (maxValDiceOne * Math.random()) + 1;
 		throwValueTwo = (int) (maxValDiceTwo * Math.random()) + 1;
-		gameClient.playSound(Sounds.ROLL);
+		if (sound)
+			gameClient.playSound(Sounds.ROLL);
 		// throwValueOne = 4;
 		// throwValueTwo = 4;
 		return throwValueOne + throwValueTwo;
@@ -274,7 +278,7 @@ public class Dice implements EventPanelSource {
 				// gameClient.sendTransactionSuccesToGUI(true);
 				int curPos = gameClient.getCurrentPlayer().getPosition();
 				System.out.println("PrevPos" + prevPos + "  CurPos" + curPos);
-				
+
 			}
 		};
 
