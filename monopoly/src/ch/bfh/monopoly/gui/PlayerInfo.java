@@ -28,21 +28,50 @@ import ch.bfh.monopoly.observer.PlayerStateEvent;
 public class PlayerInfo extends JPanel{
 
 	private static final long serialVersionUID = 1312492036490100077L;
-	
-	private static final int MYTERRAIN_PANEL_SIZE = 20;
-	private static final int PLAYER_LABEL_SPACE = 4;
 
+	/**
+	 * Size and dimension of small squares that represent the properties
+	 */
+	private static final int SQUARE_SIZE = 20;
+	private Dimension squareDim = new Dimension(SQUARE_SIZE, SQUARE_SIZE);
+	
+	/**
+	 * Graphical elements 
+	 */
 	private JLabel playerName = new JLabel(), account = new JLabel(), jailCard = new JLabel(), userInJail = new JLabel();
 	private JPanel terrainUp = new JPanel();
 	private JPanel terrainDown = new JPanel();
 	private JPanel turn = new JPanel();
+	
+	/**
+	 * List of terrains 
+	 */
 	private List<SmallTerrain> smlTer = new ArrayList<SmallTerrain>();
 	
+	/**
+	 * Toggle panel visibility when click on user name
+	 */
 	private boolean toggleVisibility = false;
+	
+	/**
+	 * Index of the player inside the pse array
+	 */
 	private int playerIndex;
+	
+	/**
+	 * Local player name
+	 */
 	private String localPlayerName;
 	
+	/**
+	 * Listener for the observer patter.
+	 * Used to manage changements
+	 */
 	private PlayerUpdate plU = new PlayerUpdate();
+	
+	/**
+	 * Board Controller used to query the game intelligence
+	 */
 	private BoardController bc;
 
 	/**
@@ -66,7 +95,7 @@ public class PlayerInfo extends JPanel{
 		LabelClick lblClick = new LabelClick();
 		playerName.addMouseListener(lblClick);
 		
-		turn.setMaximumSize(new Dimension(20, 20));
+		turn.setMaximumSize(this.squareDim);
 		turn.setBorder(BorderFactory.createEtchedBorder());
 
 		terrainUp.setLayout(new BoxLayout(terrainUp, BoxLayout.LINE_AXIS));
@@ -89,7 +118,7 @@ public class PlayerInfo extends JPanel{
 		add(ctrInfo);
 		add(terrainUp);
 		add(terrainDown);
-		add(Box.createRigidArea(new Dimension(0, PLAYER_LABEL_SPACE)));
+		add(Box.createVerticalGlue());
 	}
 
 	/**
@@ -186,7 +215,7 @@ public class PlayerInfo extends JPanel{
 	 */
 	private JPanel drawFiller(){
 		JPanel filler = new JPanel();
-		filler.setMaximumSize(new Dimension(MYTERRAIN_PANEL_SIZE,MYTERRAIN_PANEL_SIZE));
+		filler.setMaximumSize(this.squareDim);
 		filler.setBorder(BorderFactory.createEtchedBorder());
 		filler.setBackground(Color.GRAY);
 		return filler;
@@ -212,7 +241,7 @@ public class PlayerInfo extends JPanel{
 		private Color backgroundColor;
 		
 		public SmallTerrain(int id, Color backgroundColor){
-			setMaximumSize(new Dimension(MYTERRAIN_PANEL_SIZE,MYTERRAIN_PANEL_SIZE));
+			setMaximumSize(squareDim);
 			setBorder(BorderFactory.createEtchedBorder());
 			setBackground(Color.WHITE);
 			this.id = id;
@@ -275,15 +304,14 @@ public class PlayerInfo extends JPanel{
 	
 	/**
 	 * This inner class represent the listener of this component
+	 * used to draw the changement when something change.
+	 * It's notified by the observer pattern
 	 * @author snake
 	 *
 	 */
 	class PlayerUpdate implements PlayerListener{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-			
-//				System.out.println("UPDATING PANEL BEGIN");
-			
 				String name = playerStates.get(playerIndex).getName();
 				int plAccount = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
@@ -293,7 +321,7 @@ public class PlayerInfo extends JPanel{
 				
 				boolean[] smallTerrainState = playerStates.get(playerIndex).getTerrains();
 									
-				//if a terrain is owned (smallTerrainState => true) set the background
+				//if a terrain is owned (smallTerrainState[j] => true) set the background
 				//color to the corresponding one, else set the background to white
 				for(int j = 0 ; j < smlTer.size() ; j++){
 						boolean terrainOwned = smallTerrainState[smlTer.get(j).getID()];
@@ -302,33 +330,25 @@ public class PlayerInfo extends JPanel{
 							smlTer.get(j).setBackgroundColor();
 						else
 							smlTer.get(j).resetBackgroundColor();
-					
 				}
-				
-//				System.out.println("UPDATING PANEL AFTER TERRAIN BACKGROUND");
-				
+								
 				setTurnPanelBackground(turn, c);
 				playerName.setText(name);		
 				account.setText(Integer.toString(plAccount));
 				
-				if(jailCardValue == 2 || jailCardValue == 1){
+				if(jailCardValue == 2 || jailCardValue == 1)
 					jailCard.setText("JCard");
-				}
 				else
 					jailCard.setText("");
 				
-				if(isInJail){
+				if(isInJail)
 					userInJail.setText("Jail");
-				}
 				else
 					userInJail.setText("");
 				
-				if(localPlayerName.equals(name)){
+				if(localPlayerName.equals(name))
 					showTerrains();
-				}
-				
-				
-//				System.out.println("UPDATING PANEL AFTER JAIL CARD AND JAIL");
+
 				
 				repaint();
 				revalidate();

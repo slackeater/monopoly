@@ -243,10 +243,10 @@ public class MonopolyGUI extends JFrame {
 
 						tabPane.add(gc.getTileEventName(), gc.getTileEventPanel());
 
-						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
-							tabPane.setEnabledAt(j, false);
-
-						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
+//						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
+//							tabPane.setEnabledAt(j, false);
+//
+//						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
 						tabPane.setSelectedIndex(tabPane.getTabCount()-1);
 					}
 				}

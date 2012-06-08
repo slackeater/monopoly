@@ -24,19 +24,37 @@ public class BoardBuilder extends JPanel {
 
 	private static final long serialVersionUID = 4140219449792816066L;
 	
+	/**
+	 * Weight of tiles and corners
+	 */
 	private final double WEIGHT_TILE_X = 0.1;
 	private final double WEIGHT_TILE_Y = 0.1;
 	private final double WEIGHT_CORNER_X = 0.12;
 	private final double WEIGHT_CORNER_Y = 0.12;
 	
+	/**
+	 * The central tabbed pane where to show events
+	 */
 	private JTabbedPane eventPane;
 
+	/**
+	 * List of tiles
+	 */
 	private List<BoardTile> tilesList;
 	
+	/**
+	 * Buttons in the first tab
+	 */
 	private List<JButton> btns;
 	
+	/**
+	 * Area where to write messages
+	 */
 	private JTextArea txt;
 
+	/**
+	 * Resource bundle used to i18n for buttons and other elements
+	 */
 	private ResourceBundle res;
 	
 	/**
@@ -77,9 +95,8 @@ public class BoardBuilder extends JPanel {
 		scrollBtn.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		//add the buttons to the central panel
-		for(JButton btn : btns){
+		for(JButton btn : btns)
 			btnPanel.add(btn);
-		}
 	
 		JScrollPane scrollEventPane = new JScrollPane(this.txt);
 		scrollEventPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -93,8 +110,6 @@ public class BoardBuilder extends JPanel {
 		add(this.eventPane, new GridBagConstraints(3,3, 5,5, WEIGHT_TILE_X, WEIGHT_TILE_Y, 
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 
-		/****************************************/
-		/****************************************/
 	}
 
 	/**
@@ -105,9 +120,6 @@ public class BoardBuilder extends JPanel {
 		for(int j = 0 ; j < this.tilesList.size() ; j++){
 			BoardTile tile = this.tilesList.get(j);
 		
-			System.out.println("X COORD " + tile.getTileInfoX());
-			System.out.println("Y COORD " + tile.getTileInfoY());
-			
 			//corner
 			if(j % 10 == 0)
 				add(tile, new GridBagConstraints(tile.getTileInfoX(), tile.getTileInfoY(), 1, 1, WEIGHT_CORNER_X, WEIGHT_CORNER_Y, 

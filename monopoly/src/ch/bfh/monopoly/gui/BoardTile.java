@@ -43,7 +43,16 @@ public class BoardTile extends JPanel{
 
 	private static final long serialVersionUID = 3335141445010622095L;
 
-	private int numberOfTokens = 0;
+	/**
+	 * Minimal and maximal number of token on a single tile
+	 */
+	private static int MIN_TOKEN_NUM = 1;
+	private static int MAX_TOKEN_NUM = 8;
+	
+	private static double TOKEN_SIZE_RATIO = 0.25;
+	
+	private static int MAX_HOUSE_NUM = 4;
+	
 	private int houseCount = 0;
 	private boolean isHotel = false;
 
@@ -59,7 +68,6 @@ public class BoardTile extends JPanel{
 
 	//used when we right click on a tile
 	private PerformActionMenu ac;
-
 
 	//used to update the tile
 	private InformationUpdate iu = new InformationUpdate();
@@ -81,6 +89,7 @@ public class BoardTile extends JPanel{
 		this.bc = bc;
 		this.gc = gc;
 		this.res = res;
+
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridLayout(3,1));
 
@@ -90,21 +99,11 @@ public class BoardTile extends JPanel{
 		btnListener = new ButtonListener();
 		ac = new PerformActionMenu();
 
-
-		if(ti.getGroup() != null && 
-				(!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") 
-						|| !ti.getGroup().equals("Chance"))){
-
-			System.out.println("=============================================================== THE GROUP IS " + ti.getGroup());
-			System.out.println("=============================================================== THE ID IS " + ti.getTileId());
-			System.out.println("=============================================================== THE RENT IS " + ti.getRent());
-
-
+		//add the mouse listener only on the tile that are properties
+		if(ti.getGroup() != null && (!ti.getGroup().equals("cornersAndTax") || !ti.getGroup().equals("Community Chest") || !ti.getGroup().equals("Chance"))){
 			this.addMouseListener(btnListener);
 			bc.getSubjectForPlayer().addListener(new OwnerUpdater());
 			displayInfo = true;
-
-			System.out.println("CUAI");
 
 			//check if there is a color and add the menu
 			if(ti.getRGB() != null)
@@ -112,38 +111,21 @@ public class BoardTile extends JPanel{
 			else
 				color.setBackground(Color.WHITE);
 
-			System.out.println("AFTER COL");
-
-			if(ti.getGroup().equals("railroad") || ti.getGroup().equals("utility")){
-				System.out.println("BEF");
+			if(ti.getGroup().equals("railroad") || ti.getGroup().equals("utility"))
 				btnListener.addPopUp(onlyMortgage());
-				System.out.println("GROUP IS RR OR UT");}
 			else
 				btnListener.addPopUp(popMenu());
-			//	}
 		}
 
-
-
-		System.out.println("HERouoE");
-
 		add(color);
-
-
-		System.out.println("HERioiE");
 
 		Font f = new Font(getFont().getName(), Font.PLAIN, getFont().getSize()-1);
 
 		JLabel name = new JLabel(ti.getName());
 		name.setFont(f);
 
-
-		System.out.println("HEREoioi");
-
 		setMaximumSize(new Dimension(75, 75));
 		add(name);
-
-		System.out.println("HERE");
 	}
 
 
@@ -260,8 +242,6 @@ public class BoardTile extends JPanel{
 					tab.add(houseCost);
 					tab.add(hotelCost);
 				}
-
-
 			}
 
 			owner = new JLabel(res.getString("label-owner") + bc.getTileInfoById(ti.getTileId()).getOwner());
@@ -292,47 +272,33 @@ public class BoardTile extends JPanel{
 		buyHouse = new JMenuItem(res.getString("label-buyhouse"));
 		buyHouse.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 1");
-
 		buyHouseRow = new JMenuItem(res.getString("label-buyhouserow"));
 		buyHouseRow.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 2");
 		buyHotel = new JMenuItem(res.getString("label-buyhotel"));
 		buyHotel.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 3");
 		buyHotelRow = new JMenuItem(res.getString("label-buyhotelrow"));
 		buyHotelRow.addActionListener(ac);
-
-		System.out.println("INSIDE POP MEN 4");
 
 		sellHouse = new JMenuItem(res.getString("label-sellhouse"));
 		sellHouse.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 5");
 		sellHotel = new JMenuItem(res.getString("label-sellhotel"));
 		sellHotel.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 6");
 		sellHouseRow = new JMenuItem(res.getString("label-sellhouserow"));
 		sellHouseRow.addActionListener(ac);
-		System.out.println("INSIDE POP MEN 7");
 
 		sellHotelRow = new JMenuItem(res.getString("label-sellhotelrow"));
 		sellHotelRow.addActionListener(ac);
-		System.out.println("INSIDE POP MEN 8");
 
 		mortgage = new JMenuItem(res.getString("label-mortgage"));
 		mortgage.addActionListener(ac);
 
-		System.out.println("INSIDE POP MEN 9");
-
 		unmortgage = new JMenuItem(res.getString("label-unmortgage"));
 		unmortgage.addActionListener(ac);
 		unmortgage.setEnabled(false);
-
-		System.out.println("INSIDE POP MEN  10");
 
 		pop.add(buyHouse);
 		pop.add(buyHouseRow);
@@ -347,8 +313,6 @@ public class BoardTile extends JPanel{
 		pop.add(mortgage);
 		pop.add(unmortgage);
 
-		System.out.println("AFTER ALL ADD");
-
 		return pop;
 	}
 
@@ -361,19 +325,12 @@ public class BoardTile extends JPanel{
 	private JPopupMenu onlyMortgage(){
 		JPopupMenu pop = new JPopupMenu();
 
-		System.out.println("INSIDE MMMMMM");
-
 		mortgage = new JMenuItem(res.getString("label-mortgage"));
 		mortgage.addActionListener(ac);
-
-		System.out.println("AFTER ONE");
 
 		unmortgage = new JMenuItem(res.getString("label-unmortgage"));
 		unmortgage.addActionListener(ac);
 		unmortgage.setEnabled(false);
-
-
-		System.out.println("AFTER ONE");
 
 		pop.add(mortgage);
 		pop.add(unmortgage);
@@ -396,23 +353,20 @@ public class BoardTile extends JPanel{
 	@Override 
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setRenderingHint(
-				RenderingHints.KEY_TEXT_ANTIALIASING,
-				RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
+		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 
-		this.numberOfTokens = tokens.size();
+		int numberOfTokens = tokens.size();
 
-		if(this.numberOfTokens >= 1 && this.numberOfTokens <= 8){
-			for(int i = 0 ; i < this.numberOfTokens ; i++){
+		if(numberOfTokens >= MIN_TOKEN_NUM && numberOfTokens <= MAX_TOKEN_NUM)
+			for(int i = 0 ; i < numberOfTokens ; i++){
 				Iterator<Token> itr = this.tokens.iterator();
 
 				while(itr.hasNext()){
 					Token t = itr.next();
 					g2.setColor(t.getColor());
-					g2.fillOval((int)(getWidth()*t.getXRatio()), (int)(getHeight()*t.getYRatio()), (int)(getHeight()*0.25), (int)(getHeight()*0.25));
+					g2.fillOval((int)(getWidth()*t.getXRatio()), (int)(getHeight()*t.getYRatio()), (int)(getHeight()*TOKEN_SIZE_RATIO), (int)(getHeight()*TOKEN_SIZE_RATIO));
 				}
 			}
-		}
 	}
 
 	/**
@@ -447,20 +401,19 @@ public class BoardTile extends JPanel{
 	 */
 	public void drawBuilding(boolean type){
 		//if true is hotel
-		if(type && !isHotel && houseCount == 4){
+		if(type && !isHotel && houseCount == MAX_HOUSE_NUM){
 			color.removeAll();
 			//we have drawn an hotel
 			isHotel = true;
 			color.add(drawHotel());
 		}
-		else if(!type && houseCount < 4){
+		else if(!type && houseCount < MAX_HOUSE_NUM){
 			houseCount++;
 			color.add(drawHouse());
 		}
 
 		revalidate();
 		repaint();
-
 	}
 
 	/**
@@ -471,13 +424,12 @@ public class BoardTile extends JPanel{
 	 */
 	public void removeBuilding(boolean type){
 		//remove house
-		if(!type && houseCount > 0 && houseCount <= 4){
+		if(!type && houseCount > 0 && houseCount <= MAX_HOUSE_NUM){
 			color.remove(0);
 			houseCount--;
-			System.out.println("REMOVED HOUSE INSIDE REMOVE BUILDING");
 		}
 		//remove hotel
-		else if(type && isHotel && houseCount == 4){
+		else if(type && isHotel && houseCount == MAX_HOUSE_NUM){
 			color.remove(0);
 			color.add(drawHouse());
 			color.add(drawHouse());
@@ -488,14 +440,12 @@ public class BoardTile extends JPanel{
 
 		revalidate();
 		repaint();
-
 	}
 
 	/**
 	 * Change the color of the background to show that is mortgaged
 	 */
 	private void mortgagePanel(){
-		System.out.println("INSIDE MORTGAGA PENAL");
 		color.setBackground(Color.BLACK);
 		repaint();
 		revalidate();
@@ -508,9 +458,8 @@ public class BoardTile extends JPanel{
 	private void unmortgagePanel(){
 		System.out.println("UNMORTGAGIN THE PANEL");
 
-		if(ti.getRGB() != null){
+		if(ti.getRGB() != null)
 			color.setBackground(Color.decode(ti.getRGB()));
-		}
 		else 
 			color.setBackground(Color.WHITE);
 
@@ -538,11 +487,10 @@ public class BoardTile extends JPanel{
 			}
 			//right click, isControlDown is for a macintosh personal computer
 			else if(e.getButton() == MouseEvent.BUTTON3 || (e.isControlDown() && e.getButton() == 1)){
-				System.out.println("OUTSIDE OWNER");
-				if(owner){
-					System.out.println("INSIDE OWNER");
+
+				//if we are the owner shot the menu
+				if(owner)
 					showPopup(e);
-				}
 			}
 		}
 
@@ -551,10 +499,8 @@ public class BoardTile extends JPanel{
 		}
 
 		private void showPopup(MouseEvent e) {
-			if (e.isPopupTrigger() && popup != null) {
-				popup.show(e.getComponent(),
-						e.getX(), e.getY());
-			}
+			if (e.isPopupTrigger() && popup != null) 
+				popup.show(e.getComponent(),e.getX(), e.getY());
 		}
 	}
 
@@ -567,39 +513,26 @@ public class BoardTile extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
-			if(e.getSource().equals(buyHouse)){
+			if(e.getSource().equals(buyHouse))
 				gc.buyHouse(ti.getTileId());
-			}
-			else if(e.getSource().equals(buyHotel)){
+			else if(e.getSource().equals(buyHotel))
 				gc.buyHotel(ti.getTileId());
-			}
-			else if(e.getSource().equals(buyHouseRow)){
+			else if(e.getSource().equals(buyHouseRow))
 				gc.buyHouseRow(ti.getTileId());
-			}
-			else if(e.getSource().equals(buyHotelRow)){
+			else if(e.getSource().equals(buyHotelRow))
 				gc.buyHotelRow(ti.getTileId());
-			}
-			else if(e.getSource().equals(sellHouse)){
+			else if(e.getSource().equals(sellHouse))
 				gc.sellHouse(ti.getTileId());
-			}
-			else if(e.getSource().equals(sellHotel)){
+			else if(e.getSource().equals(sellHotel))
 				gc.sellHotel(ti.getTileId());
-			}
-			else if(e.getSource().equals(sellHouseRow)){
+			else if(e.getSource().equals(sellHouseRow))
 				gc.sellHouseRow(ti.getTileId());
-			}
-			else if(e.getSource().equals(sellHotelRow)){
+			else if(e.getSource().equals(sellHotelRow))
 				gc.sellHotelRow(ti.getTileId());
-			}
-			else if(e.getSource().equals(mortgage)){
-
-				System.out.println("üüüüüüüüüüüüüüüüüüüüüüüü ==================== === === INSIDE MORTGAGE EVENT AFTER CLICK ON MENU");
+			else if(e.getSource().equals(mortgage))
 				gc.toggleMortgageStatus(ti.getTileId());
-
-			}
-			else if(e.getSource().equals(unmortgage)){
+			else if(e.getSource().equals(unmortgage))
 				gc.toggleMortgageStatus(ti.getTileId());
-			}
 		}	
 	}
 
@@ -609,39 +542,27 @@ public class BoardTile extends JPanel{
 	 */
 	private class InformationUpdate implements TileListener{
 
-
 		@Override
 		public void updateTile(TileStateEvent tsi) {
-
-			System.out.println("HOUSES : " + tsi.getHouseCount());
-			System.out.println("HOTELS : " + tsi.getHotelsCount());
-			System.out.println("MORTGAGE STATUS: " + tsi.isMortgageActive());
-
-			if(tsi.getHouseCount() > houseCount){
+			if(tsi.getHouseCount() > houseCount)
 				drawBuilding(false);
-			}
 
-			if(tsi.getHouseCount() < houseCount){
+			if(tsi.getHouseCount() < houseCount)
 				removeBuilding(false);
-			}
 
-			if(tsi.getHotelsCount() == 1){
+			if(tsi.getHotelsCount() == 1)
 				drawBuilding(true);
-			}
 
-			if(tsi.getHotelsCount() == 0){
+			if(tsi.getHotelsCount() == 0)
 				removeBuilding(true);
-			}
 
 			if(tsi.isMortgageActive()){
-				System.out.println("============== INSIDE INFORMATION UPDATE MORTGAGE");
 				mortgage.setEnabled(false);
 				unmortgage.setEnabled(true);
 				mortgagePanel();
 			}
 
 			if(!tsi.isMortgageActive()){
-				System.out.println("============== INSIDE INFORMATION UPDATE UNMORTGAGE");
 				unmortgage.setEnabled(false);
 				mortgage.setEnabled(true);
 				unmortgagePanel();
@@ -649,6 +570,12 @@ public class BoardTile extends JPanel{
 		}
 	}
 
+	/**
+	 * This class is used to update the information about the owner 
+	 * by the observer
+	 * @author snake
+	 *
+	 */
 	class OwnerUpdater implements PlayerListener{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
@@ -661,14 +588,9 @@ public class BoardTile extends JPanel{
 	}
 
 	/**
-	 * This method is called by an external
-	 * class to update the information on this tile
-	 * @param tsi
+	 * Return the tile listener 
+	 * @return
 	 */
-	public void updateTile(TileStateEvent tse){
-		iu.updateTile(tse);
-	}
-
 	public TileListener getTileListener(){
 		return this.iu;
 	}
