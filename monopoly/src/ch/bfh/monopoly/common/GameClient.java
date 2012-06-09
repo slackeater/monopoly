@@ -1109,7 +1109,7 @@ public class GameClient {
 			currentPlayerName = currentPlayer.getName();
 		} else
 			currentPlayerName = null;
-
+		playSound(Sounds.TURN);
 		board.updateTurnTokens(playerName, currentPlayerName);
 		// USED FOR DEBUGGING THE GUI
 		// System.out

@@ -25,7 +25,7 @@ public class EventPanelFactory  implements PlayerListener{
 	private static EventPanelSource eps;
 	EventPanelInfo epi;
 
-	
+
 
 //	public EventPanelFactory(EventPanelSource eps) {
 //		master = createMasterPanel();
@@ -34,7 +34,7 @@ public class EventPanelFactory  implements PlayerListener{
 //
 //		this.eps = eps;
 //	}
-	
+
 	public EventPanelFactory(EventPanelSource epsIn, PlayerSubject ps) {
 		master = createMasterPanel();
 		buttonPanel = new JPanel();
@@ -63,7 +63,7 @@ public class EventPanelFactory  implements PlayerListener{
 		epi = eps.getEventPanelInfoForStep(step);
 		changePanel(epi);
 	}
-	
+
 	public void changePanel(EventPanelInfo epi) {
 		JPanel newButtonPanel = new JPanel();
 		label.setText("\n"+epi.getText());
@@ -95,7 +95,7 @@ public class EventPanelFactory  implements PlayerListener{
 			buttonPanel.getComponent(i).setEnabled(false);
 		}
 	}
-	
+
 	private JPanel imageLogo(String name) {
 		JPanel img = new JPanel();
 		java.net.URL urlImg = Monopoly.class
@@ -106,7 +106,7 @@ public class EventPanelFactory  implements PlayerListener{
 		return img;
 	}
 
-	
+
 	@Override
 	public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
 		int currentPlayerAccount=0;
@@ -130,13 +130,13 @@ public class EventPanelFactory  implements PlayerListener{
 				else
 					epi.getButtonAtIndex(i).setEnabled(true);
 			}
-				
+
 		}
 	}
-	
+
 	public void setEventPanelSource(EventPanelSource epsIn){
 		eps=epsIn;
 	}
-	
+
 
 }

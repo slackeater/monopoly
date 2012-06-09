@@ -33,6 +33,9 @@ public class SoundPlayer {
 		case THEME:
 			playSound("/ch/bfh/monopoly/resources/theme.wav");
 			break;
+		case TURN:
+			playSound("/ch/bfh/monopoly/resources/chime.wav");
+			break;
 		default:
 			break;
 		}

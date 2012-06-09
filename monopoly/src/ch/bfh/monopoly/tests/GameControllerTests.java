@@ -907,6 +907,139 @@ public class GameControllerTests {
 		gameClient.sellHotel(tileId, sendNetMessage);
 		assertTrue(plyr.getAccount() == accountBefore + houseCost);
 	}
+	
+	
+	/**
+	 * sell house row removes 1 house from each tile
+	 */
+	@Test
+	public void sellHouseRowRemoves1House() {
+		int tileId = 6;
+		Player plyr = board.getPlayerByName("Justin");
+		Terrain terrain = (Terrain) board.getTileById(1);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 8;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 9;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(6, sendNetMessage); 
+		gameClient.buyHouse(8, sendNetMessage);
+		gameClient.buyHouse(9, sendNetMessage); //9 has 1 house
+		gameClient.buyHouse(6, sendNetMessage); //6 has 2 houses
+		gameClient.buyHouse(8, sendNetMessage); //8 has 2 houses
+//		System.out.println(board.castTileToTerrain(board.getTileById(6)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(8)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(9)).getOwner().getName());
+		assertTrue(board.castTileToTerrain(board.getTileById(6)).getHouseCount()==2);
+		assertTrue(board.castTileToTerrain(board.getTileById(8)).getHouseCount()==2);
+		assertTrue(board.castTileToTerrain(board.getTileById(9)).getHouseCount()==1);
+		gameClient.sellHouseRow(6, sendNetMessage);
+		assertTrue(board.castTileToTerrain(board.getTileById(6)).getHouseCount()==1);
+		assertTrue(board.castTileToTerrain(board.getTileById(8)).getHouseCount()==1);
+		assertTrue(board.castTileToTerrain(board.getTileById(9)).getHouseCount()==0);
+//		int accountBefore = plyr.getAccount();
+//		int houseCost = terrain.getHotelCost();
+//		gameClient.sellHotel(tileId, sendNetMessage);
+		
+	}
+	
+	
+	/**
+	 * sell house row removes 1 house from each tile
+	 */
+	@Test
+	public void sellHouseRowRemoves1HouseFrom344() {
+		int tileId = 6;
+		Player plyr = board.getPlayerByName("Justin");
+		Terrain terrain = (Terrain) board.getTileById(1);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 8;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 9;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(6, sendNetMessage); 
+		gameClient.buyHouse(8, sendNetMessage);
+		gameClient.buyHouse(9, sendNetMessage);
+		gameClient.buyHouse(6, sendNetMessage); 
+		gameClient.buyHouse(8, sendNetMessage);
+		gameClient.buyHouse(9, sendNetMessage);
+		gameClient.buyHouse(6, sendNetMessage); 
+		gameClient.buyHouse(8, sendNetMessage);
+		gameClient.buyHouse(9, sendNetMessage);//9 has 3 house
+		gameClient.buyHouse(6, sendNetMessage); //6 has 4 houses
+		gameClient.buyHouse(8, sendNetMessage); //8 has 4 houses
+//		System.out.println(board.castTileToTerrain(board.getTileById(6)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(8)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(9)).getOwner().getName());
+		assertTrue(board.castTileToTerrain(board.getTileById(6)).getHouseCount()==4);
+		assertTrue(board.castTileToTerrain(board.getTileById(8)).getHouseCount()==4);
+		assertTrue(board.castTileToTerrain(board.getTileById(9)).getHouseCount()==3);
+		gameClient.sellHouseRow(6, sendNetMessage);
+		assertTrue(board.castTileToTerrain(board.getTileById(6)).getHouseCount()==3);
+		assertTrue(board.castTileToTerrain(board.getTileById(8)).getHouseCount()==3);
+		assertTrue(board.castTileToTerrain(board.getTileById(9)).getHouseCount()==2);
+//		int accountBefore = plyr.getAccount();
+//		int houseCost = terrain.getHotelCost();
+//		gameClient.sellHotel(tileId, sendNetMessage);
+		
+	}
+	
+	
+	/**
+	 * sell house row removes 1 house from each tile
+	 */
+	@Test
+	public void sellHouseRowRemoves1HouseFrom344FromGreenGroup() {
+		int tileId = 31;
+		Player plyr = board.getPlayerByName("Justin");
+		plyr.depositMoney(100000);
+		Terrain terrain = (Terrain) board.getTileById(1);
+		gameClient.setCurrentPlayer(plyr, sendNetMessage);
+		
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 32;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		tileId = 34;
+		gameClient.advancePlayerToTile(tileId, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer("Justin", sendNetMessage);
+		gameClient.buyHouse(31, sendNetMessage); 
+		gameClient.buyHouse(32, sendNetMessage);
+		gameClient.buyHouse(34, sendNetMessage);
+		gameClient.buyHouse(31, sendNetMessage); 
+		gameClient.buyHouse(32, sendNetMessage);
+		gameClient.buyHouse(34, sendNetMessage);
+		gameClient.buyHouse(31, sendNetMessage); 
+		gameClient.buyHouse(32, sendNetMessage);
+		gameClient.buyHouse(34, sendNetMessage);//34 has 3 house
+		gameClient.buyHouse(31, sendNetMessage); //31 has 4 houses
+		gameClient.buyHouse(32, sendNetMessage); //32 has 4 houses
+//		System.out.println(board.castTileToTerrain(board.getTileById(31)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(32)).getOwner().getName());
+//		System.out.println(board.castTileToTerrain(board.getTileById(34)).getOwner().getName());
+		assertTrue(board.castTileToTerrain(board.getTileById(31)).getHouseCount()==4);
+		assertTrue(board.castTileToTerrain(board.getTileById(32)).getHouseCount()==4);
+		assertTrue(board.castTileToTerrain(board.getTileById(34)).getHouseCount()==3);
+		gameClient.sellHouseRow(31, sendNetMessage);
+		assertTrue(board.castTileToTerrain(board.getTileById(31)).getHouseCount()==3);
+		assertTrue(board.castTileToTerrain(board.getTileById(32)).getHouseCount()==3);
+		assertTrue(board.castTileToTerrain(board.getTileById(34)).getHouseCount()==2);
+//		int accountBefore = plyr.getAccount();
+//		int houseCost = terrain.getHotelCost();
+//		gameClient.sellHotel(tileId, sendNetMessage);
+		
+	}
 
 	/**
 	 * check that the method toggleMortgageStatus toggles the status of the

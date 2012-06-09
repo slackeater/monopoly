@@ -8,5 +8,6 @@ public enum Sounds {
 		ROLL,
 		SAW,
 		CASH,
+		TURN,
 		THEME;
 }
