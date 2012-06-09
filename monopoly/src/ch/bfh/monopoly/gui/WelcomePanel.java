@@ -372,16 +372,15 @@ public class WelcomePanel extends JFrame{
 						
 						
 						
-						if((nSrvCtrl.getServerOpenedSession()-cli) == 1 && nSrvCtrl.getServerOpenedSession() > 0){
+						if((nSrvCtrl.getServerOpenedSession()-cli) == 1 && nSrvCtrl.getServerOpenedSession() > 0 && nSrvCtrl.getServerOpenedSession() != maxPlayers){
 							System.out.println((nSrvCtrl.getServerOpenedSession()-cli));
 							cli++;
-							//JDialog ss = new SimpleAboutDialog(f);
-							//ss.show();
 							JOptionPane.showMessageDialog(f, "There are " + cli + " players connected. Waiting " + (maxPlayers-cli) + " players.");
 						}
 
 						//when all the client are connected
 						if(nSrvCtrl.getServerOpenedSession() == maxPlayers){
+							JOptionPane.showMessageDialog(f, "All players connected, click OK to start the game");
 							//send a NetMessage GAME_START with the chosen locale
 							nSrvCtrl.sendStartGame(loc);
 
