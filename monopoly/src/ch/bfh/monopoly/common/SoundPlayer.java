@@ -34,6 +34,7 @@ public class SoundPlayer {
 			playSound("/ch/bfh/monopoly/resources/theme.wav");
 			break;
 		case TURN:
+			System.out.println("CHIME SHOULD PLAY");
 			playSound("/ch/bfh/monopoly/resources/chime.wav");
 			break;
 		default:
