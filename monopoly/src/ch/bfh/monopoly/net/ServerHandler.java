@@ -198,9 +198,11 @@ public class ServerHandler implements IoHandler{
 			if(plWrap.get(j).getSession() == session){
 				System.out.println("USER QUIT: " + plWrap.get(j).getUsername());
 
+				String quitPlayer = usernames.get(j);
+				
 				//send token the quit game message
-				NetMessage turn = new NetMessage(usernames.get(j), Messages.QUIT_GAME);
-				sendBroadcast(turn, null);
+				//NetMessage turn = new NetMessage(usernames.get(j), Messages.QUIT_GAME);
+				//sendBroadcast(turn, null);
 
 				//wait before sending turn token
 				try {
@@ -227,6 +229,10 @@ public class ServerHandler implements IoHandler{
 
 				usernames.remove(j);
 				plWrap.remove(j);
+				
+				NetMessage ass = new NetMessage(quitPlayer, Messages.DIVIDE_ASSETS);
+				sendBroadcast(ass, null);
+				
 				
 				//there is only one player, so the game must ends
 				if(usernames.size() == 1){
