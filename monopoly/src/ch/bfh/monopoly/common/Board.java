@@ -1059,7 +1059,7 @@ public class Board {
 				e.printStackTrace();
 			}
 		}
-		players.remove(plyrGone);
+//		players.remove(plyrGone);
 	}
 
 	/**
