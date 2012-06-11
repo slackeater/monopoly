@@ -83,6 +83,7 @@ public class MonopolyGUI extends JFrame {
 	private JComboBox usersBox, myTerrainBox, hisTerrainBox;
 	private JSpinner moneySpinner, rcvrMoneySpinner;
 	private JLabel jailCardLbl, rcvrJailCardLbl;
+	private List<PlayerInfo> plInfoList = new ArrayList<PlayerInfo>();
 
 	/**
 	 * Counter for dice throw
@@ -366,11 +367,16 @@ public class MonopolyGUI extends JFrame {
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
 					//delete token
+					int plCounter = 0;
+					
 					for(PlayerStateEvent p : pse){
 						if(p.getName().equals(wse.getEventDescription())){
 							tiles.get(p.getPosition()).removeToken(p.getT());
+							remove(plInfoList.get(plCounter));
 							repaint();
 						}
+						
+						plCounter++;
 					}
 				}
 				
@@ -483,6 +489,8 @@ public class MonopolyGUI extends JFrame {
 			//TODO remove bc
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
 
+			plInfoList.add(plInfo);
+			
 
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
