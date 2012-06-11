@@ -105,6 +105,10 @@ public class GameClient {
 		dice = new Dice(6, 6, this, testOff);
 		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc);
 		playSound(Sounds.THEME);
+		
+		board.distributeProperties();
+		
+		
 	}
 
 	/**
@@ -247,7 +251,7 @@ public class GameClient {
 				modifiedN, dir);
 		if (passedGo) {
 			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_EVENT_INFO, rb.getString("passedGo"),
+					WindowMessage.MSG_FOR_EVENT_INFO, currentPlayer.getName() + " " +rb.getString("passedGo"),
 					0);
 			ws.notifyListeners(wse);
 		}

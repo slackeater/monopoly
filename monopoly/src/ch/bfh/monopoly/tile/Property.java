@@ -63,11 +63,12 @@ public abstract class Property extends AbstractTile implements IProperty {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (gameClient.isDoublesRoll()) {
+					epf.disableAfterClick();
 					epf.setEventPanelSource(gameClient.getDice());
 					epf.changePanel(Step.DOUBLES_TRANSITION);
 				} else {
-					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					epf.disableAfterClick();
+					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 				}
 			}
 		};

@@ -146,9 +146,22 @@ public class Terrain extends Property implements EventPanelSource {
 	public void removeHouse() {
 		houseCount--;
 	}
+	
+
+	public void removeAllHouses() {
+		houseCount=0;
+	}
 
 	public void removeHotel() {
 		hotelCount--;
+	}
+	
+	public void removeAllHotels() {
+		hotelCount=0;
+	}
+	
+	public void setHousesTo4(){
+		houseCount=4;
 	}
 
 	public int getRentByHouseCount(int houseCount) {

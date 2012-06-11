@@ -144,6 +144,7 @@ public class Dice implements EventPanelSource {
 				al = new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
+						epf.disableAfterClick();
 						epf.changePanel(Step.ROLL_NORMAL);
 					}
 				};

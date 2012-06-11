@@ -57,7 +57,7 @@ public class Board {
 		public void notifyListeners() {
 			ArrayList<PlayerStateEvent> playerStates = new ArrayList<PlayerStateEvent>();
 			for (Player plyr : players) {
-				System.err.println("board: PLAYER SUBJECT: LOOOOOOPED" );
+				System.err.println("board: PLAYER SUBJECT: LOOOOOOPED");
 				// generate a list of booleans that represent the terrains that
 				// the player owns
 				boolean[] terrains = new boolean[40];
@@ -74,7 +74,9 @@ public class Board {
 			for (PlayerListener pl : listeners) {
 				pl.updatePlayer(playerStates);
 			}
-			System.err.println("board: PLAYER SUBJECT:  size of playerState LIST: " + playerStates.size());
+			System.err
+					.println("board: PLAYER SUBJECT:  size of playerState LIST: "
+							+ playerStates.size());
 		}
 	}
 
@@ -178,13 +180,14 @@ public class Board {
 
 	/**
 	 * get the name of the event
+	 * 
 	 * @return the name of the event
 	 */
 	public String getTileEventName(int tileId) {
 		Tile t = getTileById(tileId);
 		return t.getName();
 	}
-	
+
 	/**
 	 * returns a Subject / Concreted Subject which corresponds to a tile at the
 	 * given index
@@ -222,7 +225,8 @@ public class Board {
 			Player plyrEnd = getPlayerByName(playerEndingTurn);
 			plyrEnd.setTurnToken(false);
 		}
-		System.err.println("\t board: updateTurnTokens: received player "+ playerBeginningTurn);
+		System.err.println("\t board: updateTurnTokens: received player "
+				+ playerBeginningTurn);
 		playerSubject.notifyListeners();
 	}
 
@@ -360,6 +364,7 @@ public class Board {
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.buildHotel();
+			groupMember.removeAllHouses();
 			availableHotels--;
 			tileSubjects[groupMember.getTileId()].notifyListeners();
 		}
@@ -394,6 +399,7 @@ public class Board {
 		int costToBuild = terrain.getHotelCost();
 		playerHasSufficientFunds(playerName, costToBuild);
 		terrain.buildHotel();
+		terrain.removeAllHouses();
 		availableHotels--;
 		int price = terrain.getHotelCost();
 		terrain.getOwner().withdawMoney(price);
@@ -475,6 +481,7 @@ public class Board {
 					rb.getString("noHotelsPresentOnTile") + " "
 							+ getTileById(tileId).getName());
 		terrain.removeHotel();
+		terrain.setHousesTo4();
 		availableHotels++;
 		int price = terrain.getHotelCost();
 		plyr.depositMoney(price);
@@ -508,6 +515,7 @@ public class Board {
 		}
 		for (Terrain groupMember : groupMembers) {
 			groupMember.removeHotel();
+			groupMember.setHousesTo4();
 			availableHotels++;
 			tileSubjects[groupMember.getTileId()].notifyListeners();
 		}
@@ -613,8 +621,9 @@ public class Board {
 							+ rb.getString("hasntEnoughMoney-Requested") + " "
 							+ +price + " " + rb.getString("accountBalance")
 							+ " " + fromPlayer.getAccount());
-		System.out.println("Board: transferMoney: to "+ toName + " from " + fromPlayer.getName()
-				+ " " + +price + " " + rb.getString("accountBalance") + " "
+		System.out.println("Board: transferMoney: to " + toName + " from "
+				+ fromPlayer.getName() + " " + +price + " "
+				+ rb.getString("accountBalance") + " "
 				+ fromPlayer.getAccount());
 		Player toPlayer = getPlayerByName(toName);
 		fromPlayer.withdawMoney(price);
@@ -930,7 +939,7 @@ public class Board {
 	 */
 	public boolean advancePlayerNSpacesInDirection(String playerName, int n,
 			MonopolyGUI.Direction dir) {
-		boolean passedGo=false;
+		boolean passedGo = false;
 		Player plyr = getPlayerByName(playerName);
 		String direction = "forwards";
 		if (dir == MonopolyGUI.Direction.BACKWARDS)
@@ -950,8 +959,8 @@ public class Board {
 		// System.out.println("BOARDadvance:" + playerName
 		// + "'s new position is: " + newPosition);
 		// if passes go
-		if (newPosition < previousPosition && !plyr.isInJail()){
-			passedGo=true;
+		if (newPosition < previousPosition && !plyr.isInJail()) {
+			passedGo = true;
 			passGo(plyr);
 		}
 		movementSubject.notifyListeners();
@@ -1009,7 +1018,8 @@ public class Board {
 	}
 
 	public void dividePlayerAssets(String playerWhoLeft) {
-		System.err.println("board: dividePlayerAssets:  size of PLAYER LIST: " + players.size());
+		System.err.println("board: dividePlayerAssets:  size of PLAYER LIST: "
+				+ players.size());
 		// put in a new list all the players except the one who is leaving
 		ArrayList<Player> playersMinusOne = new ArrayList<Player>();
 		for (Player p : players) {
@@ -1064,8 +1074,10 @@ public class Board {
 				e.printStackTrace();
 			}
 		}
-		System.err.println("board: LEAVING dividePlayerAssets:  size of PLAYER LIST: " + players.size());
-//		players.remove(plyrGone);
+		System.err
+				.println("board: LEAVING dividePlayerAssets:  size of PLAYER LIST: "
+						+ players.size());
+		// players.remove(plyrGone);
 	}
 
 	/**
@@ -1171,6 +1183,22 @@ public class Board {
 
 	public int getBail() {
 		return bail;
+	}
+
+	public void distributeProperties() {
+		int playerIndex = 0;
+		for (int i = 0; i < tiles.length; i++) {
+			if (tiles[i] instanceof Terrain) {
+				String playerName = players.get(playerIndex++ % players.size())
+						.getName();
+				try {
+					buyCurrentPropertyForPlayer(playerName, i);
+				} catch (TransactionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }
