@@ -380,6 +380,7 @@ public class MonopolyGUI extends JFrame {
 					if(wse.getEventDescription().equals(gc.getLocalPlayerName())){
 						System.err.println("CLOSING WINDOW FOR PLAYER: " + wse.getEventDescription());
 						dispose();
+						System.exit(0);
 					}
 
 					tabPane.remove(kickTabIndex);
