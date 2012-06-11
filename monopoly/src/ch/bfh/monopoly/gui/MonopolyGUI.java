@@ -371,6 +371,7 @@ public class MonopolyGUI extends JFrame {
 					kickTabIndex = tabPane.getComponentCount()-1;
 				
 					System.out.println("KICK REQUEST ");
+					eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
 					
