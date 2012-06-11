@@ -104,6 +104,8 @@ public class MonopolyGUI extends JFrame {
 	private boolean beginTurnClicked = false;
 	private JFrame thisFrame;
 
+	private int kickTabIndex;
+
 	//TODO TO BE MOVED AWAY
 	public enum Direction{
 		FORWARDS,
@@ -344,10 +346,12 @@ public class MonopolyGUI extends JFrame {
 
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
 					tabPane.setSelectedIndex(0);
+					eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
 					tabPane.setSelectedIndex(0);
 					endTurn.setEnabled(true);
+					eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
 					System.out.println("TRADE REQUEST NAME OTHER : " + wse.getTei().getOtherPlayer());
@@ -358,14 +362,19 @@ public class MonopolyGUI extends JFrame {
 						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 						System.out.println("TRADE REQUEST");
 					}
+					
+					eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 					tabPane.add(res.getString("label-kickrequest"), kickRequest());
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+					kickTabIndex = tabPane.getComponentCount()-1;
 				
 					System.out.println("KICK REQUEST ");
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
+					
+					tabPane.remove(kickTabIndex);
 					//delete token
 					int plCounter = 0;
 					
@@ -378,14 +387,10 @@ public class MonopolyGUI extends JFrame {
 						
 						plCounter++;
 					}
+		
 				}
 				
-
-				if(wse.getType() != WindowMessage.MSG_FOR_CHAT && wse.getType() != WindowMessage.MSG_KICK){
-					eventTextArea.append(wse.getEventDescription() + "\n");
-					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
-				}
-
+				eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
 			}
 		}
 
@@ -491,10 +496,9 @@ public class MonopolyGUI extends JFrame {
 
 			plInfoList.add(plInfo);
 			
-
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
-			info.add(plInfo);
+			info.add(plInfoList.get(j));
 		}
 
 		return info;
