@@ -43,7 +43,7 @@ public class EventManager {
 	private void shuffleChanceCards() {
 		chanceEventsShuffled = shuffleDeck();
 		//set a number here to test that event in particular
-		chanceDrawIndex = 5;
+		chanceDrawIndex = 0;
 		if (testing)
 			gameClient.updateChanceDrawOrder(chanceEventsShuffled, testing);
 	}
@@ -58,11 +58,11 @@ public class EventManager {
 
 	private int[] shuffleDeck() {
 		//uncomment if you wish to have a fixed order of events
-		if (!testing) {
-			int[] notShuffled = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-					14, 15 };
-			return notShuffled;
-		}
+//		if (!testing) {
+//			int[] notShuffled = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+//					14, 15 };
+//			return notShuffled;
+//		}
 		int[] newOrder = new int[16];
 		for (int i = 0; i < newOrder.length; i++) {
 			Random r = new Random();
