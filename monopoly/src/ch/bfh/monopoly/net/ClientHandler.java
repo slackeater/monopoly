@@ -204,6 +204,9 @@ public class ClientHandler implements IoHandler {
 			break;
 		case QUIT_GAME:
 			System.out.println("The player quit the game: " + n.getString1());
+			break;
+		case DIVIDE_ASSETS:
+			System.out.println("clientHandler: divideAssets called");
 			gameClient.dividePlayerAssets(n.getString1());
 			break;
 		case GAME_WINNER:

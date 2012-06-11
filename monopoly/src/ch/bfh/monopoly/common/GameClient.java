@@ -1552,18 +1552,18 @@ public class GameClient {
 		}
 		// if I am the player who got kicked, end my turn and tell server to
 		// remove me from the player list
-		if (localPlayer == playerVotedToBeKicked) {
-			endTurn();
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			NetMessage nm = new NetMessage(playerVotedToBeKicked,
-					Messages.REMOVE_ME_FROM_LIST);
-			nc.sendMessage(nm);
-		}
+//		if (localPlayer == playerVotedToBeKicked) {
+//			endTurn();
+//			try {
+//				Thread.sleep(500);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			NetMessage nm = new NetMessage(playerVotedToBeKicked,
+//					Messages.REMOVE_ME_FROM_LIST);
+//			nc.sendMessage(nm);
+//		}
 
 	}
 
