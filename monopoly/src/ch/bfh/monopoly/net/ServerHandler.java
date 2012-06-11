@@ -107,6 +107,9 @@ public class ServerHandler implements IoHandler{
 	 * Send the turn token to the next player
 	 */
 	public void sendTurnToken(){
+		
+		System.out.println("SEND TURN TOKEN: " + userTokenIndex);
+		
 		//reset turn token
 		for(PlayerWrapper p : plWrap){
 			p.setTurnToken(false);
