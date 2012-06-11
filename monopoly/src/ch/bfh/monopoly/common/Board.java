@@ -1004,7 +1004,7 @@ public class Board {
 	}
 
 	public void dividePlayerAssets(String playerWhoLeft) {
-		System.err.println("board: dividePlayerAssets:  here we are!");
+		System.err.println("board: dividePlayerAssets:  size of PLAYER LIST: " + players.size());
 		// put in a new list all the players except the one who is leaving
 		ArrayList<Player> playersMinusOne = new ArrayList<Player>();
 		for (Player p : players) {
@@ -1059,6 +1059,7 @@ public class Board {
 				e.printStackTrace();
 			}
 		}
+		System.err.println("board: LEAVING dividePlayerAssets:  size of PLAYER LIST: " + players.size());
 //		players.remove(plyrGone);
 	}
 
