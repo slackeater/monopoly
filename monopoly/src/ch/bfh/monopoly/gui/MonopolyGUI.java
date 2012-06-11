@@ -366,6 +366,7 @@ public class MonopolyGUI extends JFrame {
 				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 					tabPane.add(res.getString("label-kickrequest"), kickRequest());
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+				
 					System.out.println("KICK REQUEST ");
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
@@ -373,12 +374,13 @@ public class MonopolyGUI extends JFrame {
 					for(PlayerStateEvent p : pse){
 						if(p.getName().equals(wse.getEventDescription())){
 							tiles.get(p.getPosition()).removeToken(p.getT());
+							repaint();
 						}
 					}
 				}
 				
 
-				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
+				if(wse.getType() != WindowMessage.MSG_FOR_CHAT && wse.getType() != WindowMessage.MSG_KICK){
 					eventTextArea.append(wse.getEventDescription() + "\n");
 					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
 				}
