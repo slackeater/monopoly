@@ -1496,7 +1496,7 @@ public class GameClient {
 			if (answer)
 				kickVotes++;
 			if (kickVotes >= board.getPlayers().size() / 2) {
-				kickThePlayer(playerToKick);
+				kickThePlayer(playerToKick, true);
 				playerToKick = "";
 				votesReceived = 0;
 				kickVotePending = false;
@@ -1511,13 +1511,16 @@ public class GameClient {
 						+ kickVotes);
 	}
 
-	public void kickThePlayer(String playerVotedToBeKicked) {
+	public void kickThePlayer(String playerVotedToBeKicked,
+			boolean sendNetMessage) {
 		System.err
 				.println("gameClient: kickThePlayer:  enough votes were made to KICK "
 						+ playerVotedToBeKicked);
-		NetMessage nm = new NetMessage(playerVotedToBeKicked,
-				Messages.KICK_PLAYER);
-		nc.sendMessage(nm);
+		if (sendNetMessage) {
+			NetMessage nm = new NetMessage(playerVotedToBeKicked,
+					Messages.KICK_PLAYER);
+			nc.sendMessage(nm);
+		}
 
 		dividePlayerAssets(playerVotedToBeKicked);
 	}
@@ -1568,10 +1571,9 @@ public class GameClient {
 
 		return epi;
 	}
-	
-	public void playSound(Sounds sound){
+
+	public void playSound(Sounds sound) {
 		soundPlayer.playSound(sound);
 	}
-	
 
 }
