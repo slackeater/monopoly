@@ -243,8 +243,14 @@ public class GameClient {
 		// rollCount++;
 
 		String playerName = currentPlayer.getName();
-		board.advancePlayerNSpacesInDirection(playerName, modifiedN, dir);
-
+		boolean passedGo = board.advancePlayerNSpacesInDirection(playerName,
+				modifiedN, dir);
+		if (passedGo) {
+			WindowStateEvent wse = new WindowStateEvent(
+					WindowMessage.MSG_FOR_EVENT_INFO, rb.getString("passedGo"),
+					0);
+			ws.notifyListeners(wse);
+		}
 		String eventText = playerName + " " + rb.getString("rolledDice") + " "
 				+ modifiedN;
 		sendEventInformationToGUI(eventText);
@@ -917,13 +923,12 @@ public class GameClient {
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		board.setPlayerJailStatus(currentPlayer.getName(), true);
-		
-		MonopolyGUI.Direction direction=MonopolyGUI.Direction.FORWARDS;
-		if (currentPlayer.getPosition()>10)
-			direction=MonopolyGUI.Direction.BACKWARDS;	
-		
-		advancePlayerToTileInDirection(jail, direction,
-				false);
+
+		MonopolyGUI.Direction direction = MonopolyGUI.Direction.FORWARDS;
+		if (currentPlayer.getPosition() > 10)
+			direction = MonopolyGUI.Direction.BACKWARDS;
+
+		advancePlayerToTileInDirection(jail, direction, false);
 
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
@@ -1101,9 +1106,9 @@ public class GameClient {
 	 */
 	public void updateTurnTokens(String playerName) {
 		String currentPlayerName;
-		 System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-		 System.out.println(">>UpdateTurnToken<< playerName received"
-		 + playerName);
+		System.out.println("GAME CLIENT UPDATE TURN TOKEN");
+		System.out.println(">>UpdateTurnToken<< playerName received"
+				+ playerName);
 
 		if (currentPlayer != null) {
 			// System.out.println(">>UpdateTurnToken<< Current Player is "
@@ -1552,18 +1557,18 @@ public class GameClient {
 		}
 		// if I am the player who got kicked, end my turn and tell server to
 		// remove me from the player list
-//		if (localPlayer == playerVotedToBeKicked) {
-//			endTurn();
-//			try {
-//				Thread.sleep(500);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			NetMessage nm = new NetMessage(playerVotedToBeKicked,
-//					Messages.REMOVE_ME_FROM_LIST);
-//			nc.sendMessage(nm);
-//		}
+		// if (localPlayer == playerVotedToBeKicked) {
+		// endTurn();
+		// try {
+		// Thread.sleep(500);
+		// } catch (InterruptedException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// NetMessage nm = new NetMessage(playerVotedToBeKicked,
+		// Messages.REMOVE_ME_FROM_LIST);
+		// nc.sendMessage(nm);
+		// }
 
 	}
 

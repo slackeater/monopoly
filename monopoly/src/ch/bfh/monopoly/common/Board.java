@@ -928,8 +928,9 @@ public class Board {
 	/**
 	 * advance the current player a given number n spaces forward
 	 */
-	public void advancePlayerNSpacesInDirection(String playerName, int n,
+	public boolean advancePlayerNSpacesInDirection(String playerName, int n,
 			MonopolyGUI.Direction dir) {
+		boolean passedGo=false;
 		Player plyr = getPlayerByName(playerName);
 		String direction = "forwards";
 		if (dir == MonopolyGUI.Direction.BACKWARDS)
@@ -949,11 +950,13 @@ public class Board {
 		// System.out.println("BOARDadvance:" + playerName
 		// + "'s new position is: " + newPosition);
 		// if passes go
-		if (newPosition < previousPosition && !plyr.isInJail())
+		if (newPosition < previousPosition && !plyr.isInJail()){
+			passedGo=true;
 			passGo(plyr);
-
+		}
 		movementSubject.notifyListeners();
 		plyr.resetRollValue();
+		return passedGo;
 	}
 
 	// /**
