@@ -498,11 +498,11 @@ public class MonopolyGUI extends JFrame {
 	private JPanel infoPanel(){
 		JPanel info = new JPanel();
 		info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
-
+	
+		
 		//for each player create the panel 
 		//with his info
-		for(int j = 0 ; j < playerNumber ; j++){
-
+		for(int j = 0 ; j < playerNumber ; j++){			
 			//TODO remove bc
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
 
