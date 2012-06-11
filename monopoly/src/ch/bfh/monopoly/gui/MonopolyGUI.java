@@ -374,6 +374,11 @@ public class MonopolyGUI extends JFrame {
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
 					
+					if(wse.getEventDescription().equals(gc.getLocalPlayerName())){
+						dispose();
+					}
+					
+					
 					tabPane.remove(kickTabIndex);
 					//delete token
 					int plCounter = 0;
