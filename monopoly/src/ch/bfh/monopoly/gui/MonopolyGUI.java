@@ -772,7 +772,7 @@ public class MonopolyGUI extends JFrame {
 		this.rcvrTerrainCheck.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(terrainCheck.isSelected())
+				if(rcvrTerrainCheck.isSelected())
 					hisTerrainBox.setEnabled(true);
 				else
 					hisTerrainBox.setEnabled(false);
