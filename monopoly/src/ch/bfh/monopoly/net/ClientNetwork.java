@@ -47,7 +47,15 @@ public class ClientNetwork {
 	public void sendMessage(NetMessage nm) {
 		try {
 			System.out.println("SENT MESSAGW FROM CLIENT NETWORK");
+			
+			long t1 = System.currentTimeMillis();
+			
 			this.clientSession.write(nm).await();
+			
+			long t2 = System.currentTimeMillis();
+			
+			System.out.println("ELAPSED TIME TO SENT THE MESSAGE: " + (t2-t1));
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
