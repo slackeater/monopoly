@@ -301,7 +301,7 @@ public class PlayerInfo extends JPanel{
 		@Override
 		public void mouseExited(MouseEvent e) {}
 	}
-	
+		
 	/**
 	 * This inner class represent the listener of this component
 	 * used to draw the changement when something change.
@@ -312,17 +312,7 @@ public class PlayerInfo extends JPanel{
 	class PlayerUpdate implements PlayerListener{
 		@Override
 		public void updatePlayer(ArrayList<PlayerStateEvent> playerStates) {
-			
-				int fakeIndex = 0;
-			
-				for(PlayerStateEvent p : playerStates){
-					if(localPlayerName.equals(p.getName())){
-						playerIndex = fakeIndex;
-					}
-					
-					fakeIndex++;
-				}
-			
+						
 				String name = playerStates.get(playerIndex).getName();
 				int plAccount = playerStates.get(playerIndex).getAccount();
 				Color c = playerStates.get(playerIndex).getT().getColor();
