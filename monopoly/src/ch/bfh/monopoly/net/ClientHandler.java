@@ -143,6 +143,8 @@ public class ClientHandler implements IoHandler {
 		case TURN_TOKEN:
 			System.out.println("TURN TOKEN RECEIVED");
 			String username = n.getString1();
+			System.out.println("THE USER WITH THE TURN TOKEN IS: " + username);
+			
 			gameClient.updateTurnTokens(username);
 			break;
 		case START_TURN_PANEL:
