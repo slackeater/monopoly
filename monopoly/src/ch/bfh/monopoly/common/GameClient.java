@@ -917,8 +917,14 @@ public class GameClient {
 	public void goToJail(boolean sendNetMessage) {
 		int jail = 10;
 		board.setPlayerJailStatus(currentPlayer.getName(), true);
-		advancePlayerToTileInDirection(jail, MonopolyGUI.Direction.BACKWARDS,
+		
+		MonopolyGUI.Direction direction=MonopolyGUI.Direction.FORWARDS;
+		if (currentPlayer.getPosition()>10)
+			direction=MonopolyGUI.Direction.BACKWARDS;	
+		
+		advancePlayerToTileInDirection(jail, direction,
 				false);
+
 		if (sendNetMessage) {
 			NetMessage msg = new NetMessage(currentPlayer.getName(),
 					Messages.GO_TO_JAIL);
@@ -1095,9 +1101,9 @@ public class GameClient {
 	 */
 	public void updateTurnTokens(String playerName) {
 		String currentPlayerName;
-		// System.out.println("GAME CLIENT UPDATE TURN TOKEN");
-		// System.out.println(">>UpdateTurnToken<< playerName received"
-		// + playerName);
+		 System.out.println("GAME CLIENT UPDATE TURN TOKEN");
+		 System.out.println(">>UpdateTurnToken<< playerName received"
+		 + playerName);
 
 		if (currentPlayer != null) {
 			// System.out.println(">>UpdateTurnToken<< Current Player is "
@@ -1532,7 +1538,6 @@ public class GameClient {
 						+ "  after call to DividePlayerAssets    TIME: "
 						+ System.currentTimeMillis());
 
-		
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
 				playerVotedToBeKicked, 0);
 		ws.notifyListeners(wse);
@@ -1545,6 +1550,21 @@ public class GameClient {
 					Messages.KICK_PLAYER);
 			nc.sendMessage(nm);
 		}
+		// if I am the player who got kicked, end my turn and tell server to
+		// remove me from the player list
+		if (localPlayer == playerVotedToBeKicked) {
+			endTurn();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			NetMessage nm = new NetMessage(playerVotedToBeKicked,
+					Messages.REMOVE_ME_FROM_LIST);
+			nc.sendMessage(nm);
+		}
+
 	}
 
 	public void dividePlayerAssets(String playerName) {
