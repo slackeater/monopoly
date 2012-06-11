@@ -1516,9 +1516,9 @@ public class GameClient {
 		System.err
 				.println("gameClient: kickThePlayer:  enough votes were made to KICK "
 						+ playerVotedToBeKicked);
-		
+		int playerVotedToBeKickedPosition = board.getPlayerByName(playerVotedToBeKicked).getPosition();
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
-				"NULLLLLL", playerVotedToBeKicked);
+			playerVotedToBeKicked, playerVotedToBeKickedPosition );
 		ws.notifyListeners(wse);
 		
 		if (sendNetMessage) {
