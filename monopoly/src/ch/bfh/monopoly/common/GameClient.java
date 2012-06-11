@@ -1522,6 +1522,7 @@ public class GameClient {
 
 	public void kickThePlayer(String playerVotedToBeKicked,
 			boolean sendNetMessage) {
+
 		System.out
 				.println("gameClient: kickThePlayer: before call to DividePlayerAssets    TIME: "
 						+ System.currentTimeMillis());
@@ -1532,11 +1533,13 @@ public class GameClient {
 						+ "  after call to DividePlayerAssets    TIME: "
 						+ System.currentTimeMillis());
 
-		int playerVotedToBeKickedPosition = board.getPlayerByName(
-				playerVotedToBeKicked).getPosition();
+		
 		
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
-				playerVotedToBeKicked, playerVotedToBeKickedPosition);
+				playerVotedToBeKicked, 0);
+		ws.notifyListeners(wse);
+		wse = new WindowStateEvent(WindowMessage.MSG_FOR_EVENT_INFO,
+				playerVotedToBeKicked + rb.getString("wasKicked"), 0);
 		ws.notifyListeners(wse);
 
 		if (sendNetMessage) {
