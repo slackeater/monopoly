@@ -193,7 +193,7 @@ public class MonopolyGUI extends JFrame {
 					trade.setEnabled(false);
 				}
 
-//				System.out.println("==== MOVE TOKEN VALUES ====");
+				//				System.out.println("==== MOVE TOKEN VALUES ====");
 
 				//move the token for "step" times
 				if(step < val){
@@ -206,7 +206,7 @@ public class MonopolyGUI extends JFrame {
 						numberTile = startPosition-step;
 
 					//removing the token at the previous tile
-//					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+					//					System.out.println("GET TOKEN TO REMOVE ON POSITION: " + (numberTile+40)%TILE_NUMBER);
 					tiles.get((numberTile+40)%TILE_NUMBER).removeToken(t);
 
 					step++;
@@ -217,13 +217,13 @@ public class MonopolyGUI extends JFrame {
 					else if(dir == Direction.BACKWARDS)
 						numberTile = startPosition-step;
 
-					
+
 					gc.playSound(Sounds.FOOT_STEP);
-					
-					
+
+
 					//add the token to the tile we are on
 					tiles.get((numberTile+40)%TILE_NUMBER).addToken(t);
-//					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
+					//					System.out.println("GET TOKEN TO ADD ON POSITION: " + (numberTile+40)%TILE_NUMBER);
 
 					repaint();
 				}
@@ -346,12 +346,12 @@ public class MonopolyGUI extends JFrame {
 
 				if (wse.getType() == WindowMessage.MSG_FOR_ERROR){
 					tabPane.setSelectedIndex(0);
-					eventTextArea.append(wse.getEventDescription() + "\n");
+					//eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_EVENT_COMPLETION){
 					tabPane.setSelectedIndex(0);
 					endTurn.setEnabled(true);
-					eventTextArea.append(wse.getEventDescription() + "\n");
+					//eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_TRADE_REQUEST){
 					System.out.println("TRADE REQUEST NAME OTHER : " + wse.getTei().getOtherPlayer());
@@ -362,40 +362,43 @@ public class MonopolyGUI extends JFrame {
 						tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 						System.out.println("TRADE REQUEST");
 					}
-					
-					eventTextArea.append(wse.getEventDescription() + "\n");
+
+
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 					tabPane.add(res.getString("label-kickrequest"), kickRequest());
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					kickTabIndex = tabPane.getComponentCount()-1;
-				
+
 					System.out.println("KICK REQUEST ");
-					eventTextArea.append(wse.getEventDescription() + "\n");
+					//eventTextArea.append(wse.getEventDescription() + "\n");
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
-					
+
 					if(wse.getEventDescription().equals(gc.getLocalPlayerName())){
 						dispose();
 					}
-			
+
 					tabPane.remove(kickTabIndex);
 					//delete token
 					int plCounter = 0;
-					
+
 					for(PlayerStateEvent p : pse){
 						if(p.getName().equals(wse.getEventDescription())){
 							tiles.get(p.getPosition()).removeToken(p.getT());
 							remove(plInfoList.get(plCounter));
 							repaint();
 						}
-						
+
 						plCounter++;
 					}
-		
+
 				}
-				
-				eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
+
+				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
+					eventTextArea.append(wse.getEventDescription() + "\n");
+					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
+				}
 			}
 		}
 
@@ -500,7 +503,7 @@ public class MonopolyGUI extends JFrame {
 			PlayerInfo plInfo = new PlayerInfo(j, this.bc, gc.getLocalPlayerName());
 
 			plInfoList.add(plInfo);
-			
+
 			bc.getSubjectForPlayer().addListener(plInfo.getPlayerListener());
 
 			info.add(plInfoList.get(j));
@@ -1221,7 +1224,7 @@ public class MonopolyGUI extends JFrame {
 
 		return kickp;
 	}
-	
+
 
 
 }
