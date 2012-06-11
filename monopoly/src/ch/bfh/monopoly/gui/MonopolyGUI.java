@@ -58,7 +58,7 @@ import ch.bfh.monopoly.tile.TileInfo;
  * This class is used to show the 
  * window with the all the graphical components 
  * of the game after the welcome panel
- * @author snake
+ * @author snake 
  *
  */
 public class MonopolyGUI extends JFrame {
