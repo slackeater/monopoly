@@ -47,6 +47,7 @@ public class GameClient {
 	private static int attemptedRolls = 0;
 	ResourceBundle rb;
 	SoundPlayer soundPlayer;
+	boolean distributeProperties = true;
 
 	/**
 	 * a subject that is used in an observer pattern with the GUI information
@@ -105,10 +106,6 @@ public class GameClient {
 		dice = new Dice(6, 6, this, testOff);
 		rb = ResourceBundle.getBundle("ch.bfh.monopoly.resources.tile", loc);
 		playSound(Sounds.THEME);
-		
-		board.distributeProperties();
-		
-		
 	}
 
 	/**
@@ -251,8 +248,8 @@ public class GameClient {
 				modifiedN, dir);
 		if (passedGo) {
 			WindowStateEvent wse = new WindowStateEvent(
-					WindowMessage.MSG_FOR_EVENT_INFO, currentPlayer.getName() + " " +rb.getString("passedGo"),
-					0);
+					WindowMessage.MSG_FOR_EVENT_INFO, currentPlayer.getName()
+							+ " " + rb.getString("passedGo"), 0);
 			ws.notifyListeners(wse);
 		}
 		String eventText = playerName + " " + rb.getString("rolledDice") + " "
@@ -263,6 +260,10 @@ public class GameClient {
 			NetMessage netMsg = new NetMessage(currentPlayer.getName(), n, dir,
 					Messages.DICE_ROLL);
 			nc.sendMessage(netMsg);
+		}
+		if (distributeProperties) {
+			distributeProperties = false;
+			board.distributeProperties();
 		}
 	}
 

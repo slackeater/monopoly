@@ -34,7 +34,16 @@ public class GameControllerTests {
 		board = tig.getBoard();
 		gc = tig.getGc();
 	}
-
+	
+	/**
+	 * distribute properties
+	 */
+	@Test
+	public void distributePropertiesWorked(){
+		
+	}
+	
+	
 	/**
 	 * test that you get your go money when you go around the board
 	 */

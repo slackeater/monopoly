@@ -57,7 +57,7 @@ public class Board {
 		public void notifyListeners() {
 			ArrayList<PlayerStateEvent> playerStates = new ArrayList<PlayerStateEvent>();
 			for (Player plyr : players) {
-				System.err.println("board: PLAYER SUBJECT: LOOOOOOPED");
+//				System.err.println("board: PLAYER SUBJECT: LOOOOOOPED");
 				// generate a list of booleans that represent the terrains that
 				// the player owns
 				boolean[] terrains = new boolean[40];
@@ -74,9 +74,9 @@ public class Board {
 			for (PlayerListener pl : listeners) {
 				pl.updatePlayer(playerStates);
 			}
-			System.err
-					.println("board: PLAYER SUBJECT:  size of playerState LIST: "
-							+ playerStates.size());
+//			System.err
+//					.println("board: PLAYER SUBJECT:  size of playerState LIST: "
+//							+ playerStates.size());
 		}
 	}
 
@@ -1187,16 +1187,17 @@ public class Board {
 
 	public void distributeProperties() {
 		int playerIndex = 0;
+		for (Player p : players) {
+			p.depositMoney(105000);
+		}
 		for (int i = 0; i < tiles.length; i++) {
 			if (tiles[i] instanceof Terrain) {
-				String playerName = players.get(playerIndex++ % players.size())
-						.getName();
-				try {
-					buyCurrentPropertyForPlayer(playerName, i);
-				} catch (TransactionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				Player plyr = players.get(playerIndex++ % players.size());
+				Player plyr = players.get(0);
+				System.out.println("DISTRIBUTE " + tiles[i].getName() + " GOES TO  "+ plyr.getName());
+				plyr.addProperty(tiles[i]);
+				castTileToTerrain(tiles[i]).setOwner(plyr);
+
 			}
 		}
 	}
