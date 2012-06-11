@@ -13,7 +13,7 @@ public class SoundPlayer {
 	public void playSound(Sounds sound) {
 		switch (sound) {
 		case FOOT_STEP:
-			playSound("/ch/bfh/monopoly/resources/footstep.wav");
+			playSound("/ch/bfh/monopoly/resources/footstep2.wav");
 			break;
 		case MOUSE_DOWN:
 			playSound("/ch/bfh/monopoly/resources/mouseDown.wav");

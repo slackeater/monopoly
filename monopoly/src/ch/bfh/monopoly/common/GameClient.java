@@ -1488,7 +1488,7 @@ public class GameClient {
 		String vote = rb.getString("votedYes");
 		if (!answer)
 			vote = rb.getString("votedNo");
-		String eventText = playerName + " " + vote + " " + playerName;
+		String eventText = localPlayer + " " + vote + " " + playerName;
 		sendEventInformationToGUI(eventText);
 
 		if (kickVotePending) {
@@ -1516,6 +1516,11 @@ public class GameClient {
 		System.err
 				.println("gameClient: kickThePlayer:  enough votes were made to KICK "
 						+ playerVotedToBeKicked);
+		
+		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
+				"NULLLLLL", playerVotedToBeKicked);
+		ws.notifyListeners(wse);
+		
 		if (sendNetMessage) {
 			NetMessage nm = new NetMessage(playerVotedToBeKicked,
 					Messages.KICK_PLAYER);
