@@ -79,6 +79,7 @@ public class ClientHandler implements IoHandler {
 			gameClient.receiveKickVote(n.getString1(), n.getTradeAnswer());
 			break;	
 		case KICK_PLAYER:
+			System.err.println("clientHandler received message KICK_PLAYER");
 			gameClient.kickThePlayer(n.getString1(), false);
 			break;
 		case BUY_HOUSE:

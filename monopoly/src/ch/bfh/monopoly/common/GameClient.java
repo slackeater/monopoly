@@ -1435,7 +1435,8 @@ public class GameClient {
 		NetMessage nm = new NetMessage(localPlayer, playerName,
 				Messages.KICK_REQUEST);
 		System.err.println("gameClient: sentNetMessage: to kick "
-				+ nm.getString2() + "  created by " + nm.getString1()  + "      TIME: "+ System.currentTimeMillis());
+				+ nm.getString2() + "  created by " + nm.getString1()
+				+ "      TIME: " + System.currentTimeMillis());
 		nc.sendMessage(nm);
 
 		String eventText = localPlayer + " " + rb.getString("kickOutInitiate")
@@ -1448,8 +1449,9 @@ public class GameClient {
 	 * send a your vote in response to a kick request
 	 */
 	public void sendKickVote(boolean kick) {
-		System.err.println("gameClient: sendKickVote:  " + localPlayer
-				+ "voted:" + kick  + "      TIME: "+ System.currentTimeMillis());
+		System.err
+				.println("gameClient: sendKickVote:  " + localPlayer + "voted:"
+						+ kick + "      TIME: " + System.currentTimeMillis());
 		NetMessage nm = new NetMessage(localPlayer, kick, Messages.KICK_ANSWER);
 		nc.sendMessage(nm);
 
@@ -1462,9 +1464,10 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickRequest(String playerName, String playerToKick) {
-		this.playerToKick=playerToKick;
+		this.playerToKick = playerToKick;
 		System.err.println("gameClient: receiveKickRequest:  from" + playerName
-				+ "to kick:" + playerToKick  + "      TIME: "+ System.currentTimeMillis());
+				+ "to kick:" + playerToKick + "      TIME: "
+				+ System.currentTimeMillis());
 		// send message to GUI history panel
 		String eventText = playerName + " " + rb.getString("kickOutInitiate")
 				+ " " + playerToKick;
@@ -1484,7 +1487,8 @@ public class GameClient {
 	 */
 	public void receiveKickVote(String playerName, boolean answer) {
 		System.err.println("gameClient: receiveKickVote: from " + playerName
-				+ "voted: " + answer  + "      TIME: "+ System.currentTimeMillis());
+				+ "voted: " + answer + "      TIME: "
+				+ System.currentTimeMillis());
 
 		String vote = rb.getString("votedYes");
 		if (!answer)
@@ -1493,9 +1497,18 @@ public class GameClient {
 		sendEventInformationToGUI(eventText);
 
 		if (kickVotePending) {
+
 			votesReceived++;
 			if (answer)
 				kickVotes++;
+
+			System.err
+					.println("gameClient: receiveKickVote: number of votes received "
+							+ votesReceived);
+			System.err
+					.println("gameClient: receiveKickVote: votes in favor of kicking "
+							+ kickVotes);
+
 			if (kickVotes >= board.getPlayers().size() / 2) {
 				kickThePlayer(playerToKick, true);
 				playerToKick = "";
@@ -1504,29 +1517,28 @@ public class GameClient {
 			}
 
 		}
-		System.err
-				.println("gameClient: receiveKickVote: number of votes received "
-						+ votesReceived);
-		System.err
-				.println("gameClient: receiveKickVote: votes in favor of kicking "
-						+ kickVotes);
+
 	}
 
 	public void kickThePlayer(String playerVotedToBeKicked,
 			boolean sendNetMessage) {
-		System.out.println("gameClient: kickThePlayer: before call to DividePlayerAssets    TIME: "+ System.currentTimeMillis());
+		System.out
+				.println("gameClient: kickThePlayer: before call to DividePlayerAssets    TIME: "
+						+ System.currentTimeMillis());
 		dividePlayerAssets(playerVotedToBeKicked);
 		System.err
 				.println("gameClient: kickThePlayer:  enough votes were made to KICK "
-						+ playerVotedToBeKicked + "  after call to DividePlayerAssets    TIME: "+ System.currentTimeMillis());
+						+ playerVotedToBeKicked
+						+ "  after call to DividePlayerAssets    TIME: "
+						+ System.currentTimeMillis());
+
+		int playerVotedToBeKickedPosition = board.getPlayerByName(
+				playerVotedToBeKicked).getPosition();
 		
-		int playerVotedToBeKickedPosition = board.getPlayerByName(playerVotedToBeKicked).getPosition();
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
-			playerVotedToBeKicked, playerVotedToBeKickedPosition );
+				playerVotedToBeKicked, playerVotedToBeKickedPosition);
 		ws.notifyListeners(wse);
 
-
-		
 		if (sendNetMessage) {
 			NetMessage nm = new NetMessage(playerVotedToBeKicked,
 					Messages.KICK_PLAYER);
