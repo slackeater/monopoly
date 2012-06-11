@@ -57,6 +57,7 @@ public class Board {
 		public void notifyListeners() {
 			ArrayList<PlayerStateEvent> playerStates = new ArrayList<PlayerStateEvent>();
 			for (Player plyr : players) {
+				System.err.println("board: PLAYER SUBJECT: LOOOOOOPED" );
 				// generate a list of booleans that represent the terrains that
 				// the player owns
 				boolean[] terrains = new boolean[40];
@@ -73,6 +74,7 @@ public class Board {
 			for (PlayerListener pl : listeners) {
 				pl.updatePlayer(playerStates);
 			}
+			System.err.println("board: PLAYER SUBJECT:  size of playerState LIST: " + playerStates.size());
 		}
 	}
 
