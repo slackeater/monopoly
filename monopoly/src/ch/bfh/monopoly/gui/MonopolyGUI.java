@@ -242,11 +242,6 @@ public class MonopolyGUI extends JFrame {
 						trade.setEnabled(true);
 
 						tabPane.add(gc.getTileEventName(), gc.getTileEventPanel());
-
-//						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
-//							tabPane.setEnabledAt(j, false);
-//
-//						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
 						tabPane.setSelectedIndex(tabPane.getTabCount()-1);
 					}
 				}
@@ -1011,7 +1006,7 @@ public class MonopolyGUI extends JFrame {
 		JPanel btnCtr = new JPanel();
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
 
-		JButton sendKick = new JButton(res.getString("button-kickvote"));
+		final JButton sendKick = new JButton(res.getString("button-kickvote"));
 		sendKick.addMouseListener(new MouseListener(){
 
 			@Override
@@ -1020,7 +1015,7 @@ public class MonopolyGUI extends JFrame {
 
 				if(!selectedName.equals("-") && !selectedName.equals(gc.getLocalPlayerName())){
 					gc.createKickRequest(selectedName);
-				
+					sendKick.setEnabled(false);
 				}
 				else{
 					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));
