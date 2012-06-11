@@ -375,7 +375,10 @@ public class MonopolyGUI extends JFrame {
 				}
 				else if(wse.getType() == WindowMessage.MSG_KICK){
 
+					System.err.println("NAME OF THE PLAYER TO KICK: " + wse.getEventDescription());
+					
 					if(wse.getEventDescription().equals(gc.getLocalPlayerName())){
+						System.err.println("CLOSING WINDOW FOR PLAYER: " + wse.getEventDescription());
 						dispose();
 					}
 
