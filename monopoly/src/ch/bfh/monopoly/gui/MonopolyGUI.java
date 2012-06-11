@@ -242,11 +242,6 @@ public class MonopolyGUI extends JFrame {
 						trade.setEnabled(true);
 
 						tabPane.add(gc.getTileEventName(), gc.getTileEventPanel());
-
-//						for(int j = 1 ; j < tabPane.getTabCount()-1 ; j++)
-//							tabPane.setEnabledAt(j, false);
-//
-//						tabPane.setEnabledAt(tabPane.getTabCount()-1, true);
 						tabPane.setSelectedIndex(tabPane.getTabCount()-1);
 					}
 				}
@@ -366,10 +361,21 @@ public class MonopolyGUI extends JFrame {
 				else if(wse.getType() == WindowMessage.MSG_KICK_REQUEST){
 					tabPane.add(res.getString("label-kickrequest"), kickRequest());
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
+				
 					System.out.println("KICK REQUEST ");
 				}
+				else if(wse.getType() == WindowMessage.MSG_KICK){
+					//delete token
+					for(PlayerStateEvent p : pse){
+						if(p.getName().equals(wse.getEventDescription())){
+							tiles.get(p.getPosition()).removeToken(p.getT());
+							repaint();
+						}
+					}
+				}
+				
 
-				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
+				if(wse.getType() != WindowMessage.MSG_FOR_CHAT && wse.getType() != WindowMessage.MSG_KICK){
 					eventTextArea.append(wse.getEventDescription() + "\n");
 					eventTextArea.setCaretPosition(eventTextArea.getDocument().getLength());
 				}
@@ -588,7 +594,6 @@ public class MonopolyGUI extends JFrame {
 		guiButtons.add(trade);
 		guiButtons.add(kickPlayer);
 		guiButtons.add(endTurn);
-
 
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);
@@ -1001,7 +1006,7 @@ public class MonopolyGUI extends JFrame {
 		JPanel btnCtr = new JPanel();
 		btnCtr.setLayout(new BoxLayout(btnCtr, BoxLayout.LINE_AXIS));
 
-		JButton sendKick = new JButton(res.getString("button-kickvote"));
+		final JButton sendKick = new JButton(res.getString("button-kickvote"));
 		sendKick.addMouseListener(new MouseListener(){
 
 			@Override
@@ -1010,7 +1015,7 @@ public class MonopolyGUI extends JFrame {
 
 				if(!selectedName.equals("-") && !selectedName.equals(gc.getLocalPlayerName())){
 					gc.createKickRequest(selectedName);
-				
+					sendKick.setEnabled(false);
 				}
 				else{
 					JOptionPane.showMessageDialog(thisFrame, res.getString("jdialog-tradeErrorParameter"));

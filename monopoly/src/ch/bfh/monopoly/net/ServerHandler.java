@@ -273,6 +273,11 @@ public class ServerHandler implements IoHandler{
 	public void sessionClosed(IoSession arg0) throws Exception {
 		System.out.println("QUIT GAME RECEIVED");
 		playerQuit(arg0);
+		
+		Thread.sleep(500);
+		
+		
+		
 		System.out.println("A player went down. Taking his properties and money.");
 
 	}

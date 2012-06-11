@@ -333,7 +333,8 @@ public class PlayerInfo extends JPanel{
 				}
 								
 				setTurnPanelBackground(turn, c);
-				playerName.setText(name);		
+				playerName.setText(name);	
+				playerName.setForeground(c);
 				account.setText(Integer.toString(plAccount));
 				
 				if(jailCardValue == 2 || jailCardValue == 1)
