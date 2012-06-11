@@ -1429,7 +1429,7 @@ public class GameClient {
 	public void createKickRequest(String playerName) {
 		System.err.println("gameClient: createKickRequest: to kick "
 				+ playerName + "  created by " + localPlayer);
-		kickVotes = 0;
+		kickVotes = 1;
 		kickVotePending = true;
 		playerToKick = playerName;
 		NetMessage nm = new NetMessage(localPlayer, playerName,
