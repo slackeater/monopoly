@@ -368,6 +368,15 @@ public class MonopolyGUI extends JFrame {
 					tabPane.setSelectedIndex(tabPane.getComponentCount()-1);
 					System.out.println("KICK REQUEST ");
 				}
+				else if(wse.getType() == WindowMessage.MSG_KICK){
+					//delete token
+					for(PlayerStateEvent p : pse){
+						if(p.getName().equals(wse.getEventDescription())){
+							tiles.get(p.getPosition()).removeToken(p.getT());
+						}
+					}
+				}
+				
 
 				if(wse.getType() != WindowMessage.MSG_FOR_CHAT){
 					eventTextArea.append(wse.getEventDescription() + "\n");
@@ -588,7 +597,6 @@ public class MonopolyGUI extends JFrame {
 		guiButtons.add(trade);
 		guiButtons.add(kickPlayer);
 		guiButtons.add(endTurn);
-
 
 		//set the parameters for the event window
 		this.eventTextArea = new JTextArea(13,23);

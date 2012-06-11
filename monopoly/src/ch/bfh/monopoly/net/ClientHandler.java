@@ -218,7 +218,6 @@ public class ClientHandler implements IoHandler {
 
 	@Override
 	public void sessionClosed(IoSession arg0) throws Exception {
-
 		// TODO Auto-generated method stub
 	}
 
