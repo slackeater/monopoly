@@ -62,8 +62,6 @@ public class WindowStateEvent {
 		return tei;
 	}
 	
-	public String getPlayerToKick(){
-		return playerToKick;
-	}
+
 	
 }
