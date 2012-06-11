@@ -1520,14 +1520,14 @@ public class GameClient {
 		WindowStateEvent wse = new WindowStateEvent(WindowMessage.MSG_KICK,
 			playerVotedToBeKicked, playerVotedToBeKickedPosition );
 		ws.notifyListeners(wse);
-		
+
+
+		dividePlayerAssets(playerVotedToBeKicked);
 		if (sendNetMessage) {
 			NetMessage nm = new NetMessage(playerVotedToBeKicked,
 					Messages.KICK_PLAYER);
 			nc.sendMessage(nm);
 		}
-
-		dividePlayerAssets(playerVotedToBeKicked);
 	}
 
 	public void dividePlayerAssets(String playerName) {
