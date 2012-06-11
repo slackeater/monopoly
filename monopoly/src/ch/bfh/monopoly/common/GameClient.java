@@ -1462,6 +1462,7 @@ public class GameClient {
 	 *            name of the player who might be kicked out of the game
 	 */
 	public void receiveKickRequest(String playerName, String playerToKick) {
+		this.playerToKick=playerToKick;
 		System.err.println("gameClient: receiveKickRequest:  from" + playerName
 				+ "to kick:" + playerToKick);
 		// send message to GUI history panel
@@ -1488,7 +1489,7 @@ public class GameClient {
 		String vote = rb.getString("votedYes");
 		if (!answer)
 			vote = rb.getString("votedNo");
-		String eventText = localPlayer + " " + vote + " " + playerName;
+		String eventText = playerName + " " + vote + " " + playerToKick;
 		sendEventInformationToGUI(eventText);
 
 		if (kickVotePending) {
