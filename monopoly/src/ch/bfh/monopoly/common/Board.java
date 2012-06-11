@@ -220,6 +220,7 @@ public class Board {
 			Player plyrEnd = getPlayerByName(playerEndingTurn);
 			plyrEnd.setTurnToken(false);
 		}
+		System.err.println("\t board: updateTurnTokens: received player "+ playerBeginningTurn);
 		playerSubject.notifyListeners();
 	}
 
