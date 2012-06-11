@@ -141,6 +141,7 @@ public class ClientHandler implements IoHandler {
 			gameClient.payRent(false);
 			break;
 		case TURN_TOKEN:
+			System.out.println("TURN TOKEN RECEIVED");
 			String username = n.getString1();
 			gameClient.updateTurnTokens(username);
 			break;
