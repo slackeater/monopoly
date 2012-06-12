@@ -405,6 +405,7 @@ public class BoardTile extends JPanel{
 			color.removeAll();
 			//we have drawn an hotel
 			isHotel = true;
+			houseCount = 0;
 			color.add(drawHotel());
 		}
 		else if(!type && houseCount < MAX_HOUSE_NUM){
@@ -429,12 +430,13 @@ public class BoardTile extends JPanel{
 			houseCount--;
 		}
 		//remove hotel
-		else if(type && isHotel && houseCount == MAX_HOUSE_NUM){
+		else if(type && isHotel){
 			color.remove(0);
 			color.add(drawHouse());
 			color.add(drawHouse());
 			color.add(drawHouse());
 			color.add(drawHouse());
+			houseCount = 4;
 			isHotel = false;
 		}
 
