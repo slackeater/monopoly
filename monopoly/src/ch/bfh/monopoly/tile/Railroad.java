@@ -84,7 +84,7 @@ public class Railroad extends Property implements EventPanelSource {
 				}
 			};
 			epi.setText(getPayRentText(feeToCharge()));
-			epi.addButton(buttonTextPay, 0, al);
+			epi.addButton(buttonTextPay, feeToCharge(), al);
 			break;
 		case TILE_OWNED2:
 			epi = new EventPanelInfo(gameClient);

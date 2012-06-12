@@ -55,7 +55,7 @@ public class GetFixedSumEvent extends AbstractTileEvent {
 				}
 			};
 			epi.setText(eventDescription);
-			epi.addButton(buttonText, 0, al);
+			epi.addButton(buttonText, -1*fixedSum, al);
 			break;
 
 		default:

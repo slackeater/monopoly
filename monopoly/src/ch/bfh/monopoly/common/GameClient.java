@@ -47,7 +47,7 @@ public class GameClient {
 	private static int attemptedRolls = 0;
 	ResourceBundle rb;
 	SoundPlayer soundPlayer;
-	boolean distributeProperties = true;
+	boolean distributeProperties = false;
 
 	/**
 	 * a subject that is used in an observer pattern with the GUI information

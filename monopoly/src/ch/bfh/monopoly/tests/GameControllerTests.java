@@ -422,6 +422,49 @@ public class GameControllerTests {
 		assertTrue(terrainOriental.getHouseCount() == 4
 				&& terrainVermont.getHouseCount() == 4);
 	}
+	
+	/**
+	 * test that buyHotelRow doesn't allow purchase if at least 1 tile has 1
+	 * hotel already
+	 */
+	@Test
+	public void buyHotelRemovesTheExistingHouses() {
+		int oriental = 6;
+		int vermont = 8;
+		int connecticut = 9;
+		String player1name = "Justin";
+		Player plyr1 = board.getPlayerByName("Justin");
+		gameClient.setCurrentPlayer(plyr1, sendNetMessage);
+		gameClient.advancePlayerNSpaces(6, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(2, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		gameClient.advancePlayerNSpaces(1, sendNetMessage);
+		gameClient.buyCurrentPropertyForPlayer(player1name, sendNetMessage);
+		Tile t1 = board.getTileById(oriental);
+		Terrain terrainOriental = board.castTileToTerrain(t1);
+		Tile t2 = board.getTileById(vermont);
+		Terrain terrainVermont = board.castTileToTerrain(t2);
+		Tile t3 = board.getTileById(connecticut);
+		Terrain terrainConnecticut = board.castTileToTerrain(t3);
+		for (int i = 0; i < 4; i++) {
+			gameClient.buyHouse(6, sendNetMessage);
+			gameClient.buyHouse(8, sendNetMessage);
+			gameClient.buyHouse(9, sendNetMessage);
+		}
+		// tile 9 will have 4 houses, the others have 3, so buildRow is not
+		// possible
+		gameClient.buyHotel(9, sendNetMessage);
+		int plyr1AccountBefore = plyr1.getAccount();
+		gameClient.buyHouseRow(6, sendNetMessage);
+		int plyr1AccountAfter = plyr1.getAccount();
+		assertTrue(plyr1AccountAfter == plyr1AccountBefore);
+		assertTrue(terrainConnecticut.getHotelCount() == 1
+				&& terrainOriental.getHotelCount() == 0
+				&& terrainVermont.getHotelCount() == 0);
+		assertTrue(terrainOriental.getHouseCount() == 4
+				&& terrainVermont.getHouseCount() == 4);
+	}
 
 	/**
 	 * test that buyHotelRow doesn't change any state if player doesn't have

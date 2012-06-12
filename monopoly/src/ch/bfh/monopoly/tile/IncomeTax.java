@@ -58,9 +58,10 @@ public class IncomeTax extends AbstractTile implements EventPanelSource{
 			};
 			
 			epi.setText(description);
-			
-			epi.addButton("10%", 0, tenPercent);
-			epi.addButton(String.valueOf(amount), 0, tenPercent);
+			int tenPercentAmount =gameClient.getCurrentPlayer().getAccount()/10;
+
+			epi.addButton("10%", tenPercentAmount, tenPercent);
+			epi.addButton(String.valueOf(amount), fee, payFlat);
 			break;
 		case PAID_INCOME_TAX:
 			epi = new EventPanelInfo(gameClient);

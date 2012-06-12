@@ -43,16 +43,17 @@ public class LuxuryTax extends AbstractTile implements EventPanelSource {
 				public void actionPerformed(ActionEvent e) {
 					gameClient.payFee(fee, sendNetMessage);
 					if (gameClient.isDoublesRoll()) {
+						epf.disableAfterClick();
 						epf.setEventPanelSource(gameClient.getDice());
 						epf.changePanel(Step.DOUBLES_TRANSITION);
 					} else {
-						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 						epf.disableAfterClick();
+						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					}
 				}
 			};
 			epi.setText(description);
-			epi.addButton(buttonText, 0, al);
+			epi.addButton(buttonText, fee, al);
 			break;
 
 		default:
