@@ -546,6 +546,13 @@ public class BoardTile extends JPanel{
 
 		@Override
 		public void updateTile(TileStateEvent tsi) {
+			
+			System.out.println("HOUSE COUNT: " + tsi.getHouseCount());
+			System.out.println("HOTEL COUNT: " + tsi.getHotelsCount());
+			
+			System.out.println("GUI HOUSE COUNT: " + houseCount);
+			System.out.println("GUI HOTEL COUNT: " + isHotel);
+			
 			if(tsi.getHouseCount() > houseCount)
 				drawBuilding(false);
 
