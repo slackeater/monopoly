@@ -553,11 +553,16 @@ public class BoardTile extends JPanel{
 			System.out.println("GUI HOUSE COUNT: " + houseCount);
 			System.out.println("GUI HOTEL COUNT: " + isHotel);
 			
-			if(tsi.getHouseCount() > houseCount)
+			if(tsi.getHouseCount() > houseCount){
+				System.out.println("DRAWING HOUSE");
 				drawBuilding(false);
+				
+			}
 
-			if(tsi.getHouseCount() < houseCount)
+			if(tsi.getHouseCount() < houseCount){
+				System.out.println("REMOVING HOUSE");
 				removeBuilding(false);
+			}
 
 			if(tsi.getHotelsCount() == 1)
 				drawBuilding(true);
