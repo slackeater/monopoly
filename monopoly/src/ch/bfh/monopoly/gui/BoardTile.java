@@ -559,7 +559,7 @@ public class BoardTile extends JPanel{
 				
 			}
 
-			if(tsi.getHouseCount() < houseCount){
+			if(tsi.getHouseCount() < houseCount && tsi.getHotelsCount() == 0){
 				System.out.println("REMOVING HOUSE");
 				removeBuilding(false);
 			}
