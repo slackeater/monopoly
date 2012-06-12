@@ -63,12 +63,12 @@ public class RepairsEvent extends AbstractTileEvent {
 			al = new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					epf.disableAfterClick();
 					performEvent();
 					if (gameClient.isDoublesRoll()) {
 						epf.setEventPanelSource(gameClient.getDice());
 						epf.changePanel(Step.DOUBLES_TRANSITION);
 					} else {
-						epf.disableAfterClick();
 						gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 					}
 				}

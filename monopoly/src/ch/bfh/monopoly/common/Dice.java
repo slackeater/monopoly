@@ -262,7 +262,7 @@ public class Dice implements EventPanelSource {
 
 		System.out.println("DICE CLASS rolled: " + roll);
 
-		labelText = rb.getString("youRolled") + getDiceValues() + "\n\n "
+		labelText = rb.getString("youRolled") +" "+ getDiceValues() + "\n\n "
 				+ rb.getString("advance") + " " + roll + " "
 				+ rb.getString("spaces");
 		buttonText = rb.getString("continueButton");

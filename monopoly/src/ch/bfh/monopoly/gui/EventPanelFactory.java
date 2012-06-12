@@ -121,7 +121,7 @@ public class EventPanelFactory  implements PlayerListener{
 		for (int i = 0; i < buttonCount; i++) {
 			if (epi.getButtonAtIndex(i).getAmount() > currentPlayerAccount)
 				epi.getButtonAtIndex(i).setEnabled(false);
-			else
+			else if (epi.getButtonAtIndex(i).getAmount()>0)
 				epi.getButtonAtIndex(i).setEnabled(true);
 			//if the amount is -100 this signals the button is for using a jail card
 			if (epi.getButtonAtIndex(i).getAmount()==-100){

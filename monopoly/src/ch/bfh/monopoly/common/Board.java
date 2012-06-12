@@ -959,7 +959,7 @@ public class Board {
 		// System.out.println("BOARDadvance:" + playerName
 		// + "'s new position is: " + newPosition);
 		// if passes go
-		if (newPosition < previousPosition && !plyr.isInJail()) {
+		if (newPosition < previousPosition && !plyr.isInJail() && dir==MonopolyGUI.Direction.FORWARDS) {
 			passedGo = true;
 			passGo(plyr);
 		}

@@ -40,6 +40,7 @@ public class GoToJailEvent extends MovementEvent{
 			al =new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					epf.disableAfterClick();
 					performEvent();
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 				}

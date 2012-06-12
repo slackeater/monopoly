@@ -64,6 +64,7 @@ public class MovementEvent extends AbstractTileEvent {
 			al =new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					epf.disableAfterClick();
 					performEvent();
 					gameClient.sendTransactionSuccesToGUI(sendNetMessage);
 				}
